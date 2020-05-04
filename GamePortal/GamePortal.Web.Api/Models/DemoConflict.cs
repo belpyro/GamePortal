@@ -7,5 +7,6 @@ namespace GamePortal.Web.Api.Models
 {
     public class DemoConflict
     {
+        public int Demo { get; set; }
     }
 }
