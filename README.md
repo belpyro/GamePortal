@@ -1,6 +1,8 @@
 # GamePortal
 Education project
 
+1. Ivan Gromyko - Quoridor
+
 ## Список рекомендованных игр
 - морской бой
 - виселица
