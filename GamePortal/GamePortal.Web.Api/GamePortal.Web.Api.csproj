@@ -121,6 +121,7 @@
     <Compile Include="Controllers\Quoridor\GameController.cs" />
     <Compile Include="Controllers\Sapper\SapperGameController.cs" />
     <Compile Include="Controllers\TouchType\RegisterUsersController.cs" />
+    <Compile Include="Controllers\TouchType\TextsController.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>

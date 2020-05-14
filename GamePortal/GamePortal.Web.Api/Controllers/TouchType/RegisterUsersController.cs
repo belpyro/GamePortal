@@ -18,7 +18,7 @@ namespace GamePortal.Web.Api.Controllers.TouchType
                 NickName = "firstUser",
                 Avatar = "pathToId1Ava",
                 Password = "1234",
-                LevelOfGame = 1,
+                LevelOfText = 1,
                 Role = "admin",
                 MaxSpeedRecord = 50,
                 NumberOfGamesPlayed = 329
@@ -29,7 +29,7 @@ namespace GamePortal.Web.Api.Controllers.TouchType
                 NickName = "secondUser",
                 Avatar = "pathToId2Ava",
                 Password = "1111",
-                LevelOfGame = 3,
+                LevelOfText = 3,
                 Role = "user",
                 MaxSpeedRecord = 43,
                 NumberOfGamesPlayed = 215
