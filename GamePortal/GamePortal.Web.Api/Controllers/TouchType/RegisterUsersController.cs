@@ -67,18 +67,34 @@ namespace GamePortal.Web.Api.Controllers.TouchType
         //Update User by Id
         [HttpPut]
         [Route("{id}")]
-        public IHttpActionResult Update(int Id, [FromBody]RegisterUserDto model)
+        public IHttpActionResult Update(int id, [FromBody]RegisterUserDto model)
         {
                 for (int i = 0; i < _registerUsers.Count; i++)
                 {
-                    if (_registerUsers[i].Id == Id)
+                    if (_registerUsers[i].Id == id)
                     {
                         _registerUsers[i] = model;
-                        _registerUsers[i].Id = Id;                
-                        return Created($"/registerusers/{Id}", _registerUsers[i]);
+                        _registerUsers[i].Id =id;                
+                        return Created($"/registerusers/{id}", _registerUsers[i]);
                     }                       
                 }
                 return NotFound();
+        }
+
+        //Delete User by Id
+        [HttpDelete]
+        [Route("{id}")]
+        public IHttpActionResult Delete(int id)
+        {
+            for (int i = 0; i < _registerUsers.Count; i++)
+            {
+                if (_registerUsers[i].Id == id)
+                {
+                    _registerUsers.RemoveAt(i);
+                    return Ok();
+                }
+            }
+            return NotFound();
         }
 
     }
