@@ -120,7 +120,7 @@
     <Compile Include="Controllers\Sudoku\GameController.cs" />
     <Compile Include="Controllers\Quoridor\GameController.cs" />
     <Compile Include="Controllers\Sapper\SapperGameController.cs" />
-    <Compile Include="Controllers\TouchType\GameController.cs" />
+    <Compile Include="Controllers\TouchType\RegisterUsersController.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
@@ -141,6 +141,12 @@
     <Folder Include="App_Data\" />
     <Folder Include="Models\" />
     <Folder Include="Views\Default\" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Kbalan.TouchType.Logic\Kbalan.TouchType.Logic.csproj">
+      <Project>{4118173a-5fa8-4258-85ef-b7dc939042c3}</Project>
+      <Name>Kbalan.TouchType.Logic</Name>
+    </ProjectReference>
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>

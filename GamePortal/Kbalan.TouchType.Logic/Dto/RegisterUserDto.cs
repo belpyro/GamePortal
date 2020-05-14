@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Kbalan.TouchType.Logic.Dto
 {
-    public class RegiterUserDto
+    public class RegisterUserDto
     {
         public int Id { get; set; }
         public string NickName { get; set; }
