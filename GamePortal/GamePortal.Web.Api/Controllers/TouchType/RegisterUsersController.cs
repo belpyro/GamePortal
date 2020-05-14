@@ -63,5 +63,23 @@ namespace GamePortal.Web.Api.Controllers.TouchType
             _registerUsers.Add(model);
             return Created($"/registerusers/{id}", model);
         }
+
+        //Update User by Id
+        [HttpPut]
+        [Route("{id}")]
+        public IHttpActionResult Update(int Id, [FromBody]RegisterUserDto model)
+        {
+                for (int i = 0; i < _registerUsers.Count; i++)
+                {
+                    if (_registerUsers[i].Id == Id)
+                    {
+                        _registerUsers[i] = model;
+                        _registerUsers[i].Id = Id;                
+                        return Created($"/registerusers/{Id}", _registerUsers[i]);
+                    }                       
+                }
+                return NotFound();
+        }
+
     }
 }
