@@ -34,13 +34,28 @@ namespace GamePortal.Web.Api.Controllers.TouchType
             return Ok(_textSets);
         }
 
-        //Get User by Id
+        //Get TextSet by Id
         [HttpGet]
         [Route("{id}")]
-        public IHttpActionResult GetById(int Id)
+        public IHttpActionResult GetById(int id)
         {
-            var textSet = _textSets.FirstOrDefault(x => x.Id == Id);
+            var textSet = _textSets.FirstOrDefault(x => x.Id == id);
             return textSet == null ? (IHttpActionResult)NotFound() : Ok(textSet);
+        }
+
+        //Get Random TextSet by Level of the text
+        [HttpGet]
+        [Route("searchbylevel/{level}")]
+        public IHttpActionResult GetRandomByLevel(int level)
+        {
+            if (level <= 0 || level > 3)
+                return BadRequest();
+            var textSet = _textSets.Where(x => x.LevelOfText == level).ToList();
+            if (textSet.Count == 0)
+                return (IHttpActionResult)NotFound();
+            Random rnd = new Random();
+            int index = rnd.Next(0, textSet.Count-1);
+             return Ok(textSet[index]);
         }
 
         //Add new text
