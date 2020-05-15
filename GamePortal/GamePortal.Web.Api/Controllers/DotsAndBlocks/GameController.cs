@@ -5,9 +5,10 @@ using System.Net;
 using System.Net.Http;
 using System.Web.Http;
 
-namespace GamePortal.Web.Api.Controllers.Quoridor
+namespace GamePortal.Web.Api.Controllers.DotsAndBlocks
 {
     public class GameController : ApiController
     {
+        
     }
 }
