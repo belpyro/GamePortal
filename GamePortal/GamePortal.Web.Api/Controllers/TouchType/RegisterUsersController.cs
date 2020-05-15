@@ -16,6 +16,7 @@ namespace GamePortal.Web.Api.Controllers.TouchType
             {
                 Id = 1,
                 NickName = "firstUser",
+                Email = "firstUser@gmail.com",
                 Avatar = "pathToId1Ava",
                 Password = "1234",
                 LevelOfText = 1,
@@ -27,6 +28,7 @@ namespace GamePortal.Web.Api.Controllers.TouchType
             {
                 Id = 2,
                 NickName = "secondUser",
+                Email = "secondUser@gmail.com",
                 Avatar = "pathToId2Ava",
                 Password = "1111",
                 LevelOfText = 3,
@@ -53,11 +55,26 @@ namespace GamePortal.Web.Api.Controllers.TouchType
             return registerUser == null ? (IHttpActionResult)NotFound() : Ok(registerUser);
         }
 
+        //Get User by NickName
+        [HttpGet]
+        [Route("searchbynick/{nickname}")]
+        public IHttpActionResult GetByName(string nickname)
+        {
+            var registerUser = _registerUsers.FirstOrDefault(x => x.NickName == nickname);
+            return registerUser == null ? (IHttpActionResult)NotFound() : Ok(registerUser);
+        }
+
         //Add new user
         [HttpPost]
         [Route("")]
         public IHttpActionResult Add([FromBody]RegisterUserDto model)
         {
+            var check = _registerUsers.FirstOrDefault(x => x.NickName == model.NickName);
+            if (check != null)
+                return Conflict();
+            check = _registerUsers.FirstOrDefault(x => x.Email == model.Email);
+            if (check != null)
+                return Conflict();
             var id = _registerUsers.Last().Id + 1;
             model.Id = id;
             _registerUsers.Add(model);

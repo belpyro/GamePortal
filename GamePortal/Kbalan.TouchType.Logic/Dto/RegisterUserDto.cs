@@ -10,6 +10,7 @@ namespace Kbalan.TouchType.Logic.Dto
     {
         public int Id { get; set; }
         public string NickName { get; set; }
+        public string Email { get; set; }
         public string Avatar { get; set; }
         public string Password { get; set; }
         public int LevelOfText { get; set; }
