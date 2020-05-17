@@ -13,14 +13,30 @@ using RoutePrefixAttribute = System.Web.Http.RoutePrefixAttribute;
 
 namespace GamePortal.Web.Api.Controllers.Quoridor
 {
-    [RoutePrefix("api/Quoridor/User")]
-    public class UserController : ApiController
+    [RoutePrefix("api/Quoridor/UnregUser")]
+    public class UnregUserController : ApiController
     {
+        // Log in
+        [HttpGet]
+        [Route("LogIn")]
+        public IHttpActionResult LogIn(string email, string password)
+        {
+            if (email == null || password == null)
+                return BadRequest("Not a valid player id");
+            var user = RepoFromPrototypes._users.FirstOrDefault(x => x.Password == password && x.Email == email);
+            return user == null ? (IHttpActionResult)Unauthorized() : Ok("authorization completed successfully");
+        }
+        
         // Register new account
         [HttpPost]
         [Route("regUser")]
         public IHttpActionResult RegisterNewPlayer([FromBody]RegPlayer regUser)
         {
+            var userEmail = RepoFromPrototypes._users.FirstOrDefault(x => x.Email == regUser.Email);
+            if (userEmail != null)
+            {
+                return BadRequest($"This email address is already associated to a {userEmail.UserName} user.");
+            }
             var id = RepoFromPrototypes._users.Last().Id + 1;
             regUser.Id = id;
             RepoFromPrototypes._users.Add(regUser);
@@ -38,7 +54,7 @@ namespace GamePortal.Web.Api.Controllers.Quoridor
 
         // View leaderboard
         [HttpGet]
-        [Route("UserViewLeaderboard")]
+        [Route("ViewLeaderboard")]
         public IHttpActionResult UserViewLeaderboard()
         {
             string viewLeader = null;

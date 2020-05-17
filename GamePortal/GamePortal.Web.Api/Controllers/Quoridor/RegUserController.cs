@@ -8,25 +8,25 @@ using System.Web.Http;
 
 namespace GamePortal.Web.Api.Controllers.Quoridor
 {
+    [RoutePrefix("api/Quoridor/RegUser")]
     public class RegUserController : ApiController
     {
-        // Log in
-        [HttpGet]
-        [Route("LogIn")]
-        public IHttpActionResult LogIn(string loggin, string password)
-        {
-            var user = RepoFromPrototypes._users.FirstOrDefault(x => x.Password == password && x.Loggin == loggin);
-            return user == null ? (IHttpActionResult)BadRequest("Invalid Loggin/Password!") : Ok("authorization completed successfully");
-        }
         // Log out
         [HttpGet]
         [Route("LogOut")]
         public IHttpActionResult LogOut()
         {
-            return Redirect("https://localhost:44313/swagger/ui/index#!/RegUser/RegUser_LogIn");
+            return Redirect("https://localhost:44313/swagger/ui/index#!/UnregUser/UnregUser_LogIn");
         }
         // Delete account
+
         // Open settings panel
+        [HttpGet]
+        [Route("OpenSettings")]
+        public IHttpActionResult OpenSettings()
+        {
+            return Ok();
+        }
         // Change move timeout
         // Enable the function "random fences"
         // Open edit profile panel

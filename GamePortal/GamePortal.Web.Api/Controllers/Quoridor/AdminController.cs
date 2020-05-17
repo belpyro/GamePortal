@@ -8,31 +8,20 @@ using System.Web.Http;
 
 namespace GamePortal.Web.Api.Controllers.Quoridor
 {
-    [RoutePrefix("Quoridor")]
+    [RoutePrefix("api/Quoridor/Admin")]
     public class AdminController : ApiController
     {
-        // Log in
-        [HttpGet]
-        [Route("LogIn")]
-        public IHttpActionResult LogIn(string loggin, string password)
-        {
-        if (loggin == null || password == null)
-                return BadRequest("Not a valid player id");
-            var user = RepoFromPrototypes._users.FirstOrDefault(x => x.Password == password && x.Loggin == loggin);
-            return user == null ? (IHttpActionResult)Unauthorized() : Ok("authorization completed successfully");
-        }
-
         // Show all users
         [HttpGet]
-        [Route("getAll")]
-        public IHttpActionResult GetAll()
+        [Route("ShowAllPlayers")]
+        public IHttpActionResult ShowAllPlayers()
         {
             return Ok(RepoFromPrototypes._users);
         }
         
         //Search player by id
         [HttpGet]
-        [Route("{id}")]
+        [Route("SearchPlayer/{id}")]
         public IHttpActionResult GetById(int id)
         {
             if (id <= 0)
@@ -43,7 +32,7 @@ namespace GamePortal.Web.Api.Controllers.Quoridor
 
         // Edit profile RegUser
         [HttpPut]
-        [Route("{id}")]
+        [Route("EditProfileUser/{id}")]
         public IHttpActionResult  EditProfileUsers(int id, [FromBody]RegPlayer user)
         {
             var oldUser = RepoFromPrototypes._users.FirstOrDefault(x => x.Id == id);
@@ -51,33 +40,36 @@ namespace GamePortal.Web.Api.Controllers.Quoridor
             oldUser.UserName = user.UserName;
             oldUser.FirstName = user.FirstName;
             oldUser.LastName = user.LastName;
-            oldUser.Loggin = user.Loggin;
             oldUser.Password = user.Password;
             oldUser.Email = user.Email;
             oldUser.DateOfBirth = user.DateOfBirth;
             oldUser.Avatar = user.Avatar;
-            //RepoFromPrototypes._users.Remove(oldUser);
-            //RepoFromPrototypes._users.Add(user);
             return Ok(oldUser);
         }
 
-        //Delete account RegUser
+        // Delete account RegUser
         [HttpDelete]
-        [Route("{id}")]
+        [Route("DeletePlayer/{id}")]
         public IHttpActionResult DeleteProfileUsers(int id)
         {
             if (id <= 0)
                 return BadRequest("Not a valid player id");
             var user = RepoFromPrototypes._users.FirstOrDefault(x => x.Id == id);
             RepoFromPrototypes._users.Remove(user);
-            return user == null ? (IHttpActionResult)NotFound() : Ok($"Delete user with id: {id}");
+            return user == null ? (IHttpActionResult)NotFound() : StatusCode(HttpStatusCode.NoContent); 
+            // or Ok($"Delete user with id: {id}");
         }
 
         // Register new player
         [HttpPost]
-        [Route("regUser")]
+        [Route("RegNewPlayer")]
         public IHttpActionResult RegisterNewPlayer([FromBody]RegPlayer regUser)
         {
+            var userEmail = RepoFromPrototypes._users.FirstOrDefault(x => x.Email == regUser.Email);
+            if (userEmail != null)
+            {
+                return BadRequest($"This email address is already associated to a {userEmail.UserName} user.");
+            }
             var id = RepoFromPrototypes._users.Last().Id + 1;
             regUser.Id = id;
             RepoFromPrototypes._users.Add(regUser);
@@ -85,6 +77,12 @@ namespace GamePortal.Web.Api.Controllers.Quoridor
         }
 
         // Log out
+        [HttpGet]
+        [Route("LogOut")]
+        public IHttpActionResult LogOut()
+        {
+            return Redirect("https://localhost:44313/swagger/ui/index#!/UnregUser/UnregUser_LogIn");
+        }
         // Watch messeges
         // Answer the questions
         // View leaderboard
