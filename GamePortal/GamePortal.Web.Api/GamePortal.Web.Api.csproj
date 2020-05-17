@@ -109,8 +109,11 @@
     <Compile Include="App_Start\WebApiConfig.cs" />
     <Compile Include="Controllers\Battleship\GameController.cs" />
     <Compile Include="Controllers\BlackJack\GameController.cs" />
-    <Compile Include="Controllers\Sapper\SapperGameController.cs" />
+    <Compile Include="Controllers\DotsAndBlocks\GameController.cs" />
     <Compile Include="Controllers\Sudoku\GameController.cs" />
+    <Compile Include="Controllers\Sudoku\GameController.cs" />
+    <Compile Include="Controllers\Quoridor\GameController.cs" />
+    <Compile Include="Controllers\Sapper\SapperGameController.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
