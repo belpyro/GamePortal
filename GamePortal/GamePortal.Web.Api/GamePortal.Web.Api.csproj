@@ -121,7 +121,10 @@
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="App_Start\SwaggerConfig.cs" />
     <Compile Include="App_Start\WebApiConfig.cs" />
-    <Compile Include="Controllers\Battleship\GameController.cs" />
+    <Compile Include="Controllers\Battleship\LogInController.cs" />
+    <Compile Include="Controllers\Battleship\RegistrationController.cs" />
+    <Compile Include="Controllers\Battleship\StatisticController.cs" />
+    <Compile Include="Controllers\Battleship\UserController.cs" />
     <Compile Include="Controllers\BlackJack\GameController.cs" />
     <Compile Include="Controllers\DotsAndBlocks\GameController.cs" />
     <Compile Include="Controllers\Quoridor\AdminController.cs" />
@@ -154,6 +157,12 @@
   <ItemGroup>
     <Folder Include="App_Data\" />
     <Folder Include="Views\Default\" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\AliaksNad.Battleship.Logic\AliaksNad.Battleship.Logic.csproj">
+      <Project>{56dcd764-ed73-409b-961b-521fe4d34f27}</Project>
+      <Name>AliaksNad.Battleship.Logic</Name>
+    </ProjectReference>
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
