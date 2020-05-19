@@ -13,12 +13,23 @@ using RoutePrefixAttribute = System.Web.Http.RoutePrefixAttribute;
 
 namespace GamePortal.Web.Api.Controllers.Quoridor
 {
+    /// <summary>
+    /// Controller for unregistered user 
+    /// </summary>
     [RoutePrefix("api/Quoridor/UnregUser")]
     public class UnregUserController : ApiController
     {
-        // Log in
+        /// <summary>
+        ///  Verify the username and password with the database
+        /// </summary>
+        /// <param name="email"> Registered User Email </param>
+        /// <param name="password"> Registered User Email </param>
+        /// <returns>
+        /// <para> if player was found: Status Code: 200 </para>
+        /// <para> else: Status Code: 401 </para>
+        /// </returns>
         [HttpGet]
-        [Route("LogIn")]
+        [Route("")]
         public IHttpActionResult LogIn(string email, string password)
         {
             if (email == null || password == null)
@@ -26,10 +37,17 @@ namespace GamePortal.Web.Api.Controllers.Quoridor
             var user = RepoFromPrototypes._users.FirstOrDefault(x => x.Password == password && x.Email == email);
             return user == null ? (IHttpActionResult)Unauthorized() : Ok("authorization completed successfully");
         }
-        
-        // Register new account
+
+
+        /// <summary>
+        /// Register new player
+        /// </summary>
+        /// <param name="regUser"> Player model </param>
+        /// <returns>
+        /// <para>  Player model, StatusCode: 201 </para>
+        /// </returns>
         [HttpPost]
-        [Route("regUser")]
+        [Route("")]
         public IHttpActionResult RegisterNewPlayer([FromBody]RegPlayer regUser)
         {
             var userEmail = RepoFromPrototypes._users.FirstOrDefault(x => x.Email == regUser.Email);
@@ -43,18 +61,28 @@ namespace GamePortal.Web.Api.Controllers.Quoridor
             return Created($"/User/{id}", regUser);
         }
 
-        // Restore password
+        /// <summary>
+        /// Restore password
+        /// </summary>
+        /// <param name="email"> Email registered user </param>
+        /// <returns>
+        /// if registered user was found: Password, StatusCode: 200 </para>
+        /// <para> else: Status Code: 404 </para>
+        /// </returns>
         [HttpGet]
-        [Route("rePassword")]
-        public IHttpActionResult RestorePassword(string rePassword)
+        [Route("{email}")]
+        public IHttpActionResult RestorePassword(string email)
         {
-            var user = RepoFromPrototypes._users.FirstOrDefault(x => x.Email == rePassword);
+            var user = RepoFromPrototypes._users.FirstOrDefault(x => x.Email == email);
             return user == null ? (IHttpActionResult)NotFound() : Ok(user.Password);
         }
 
-        // View leaderboard
+        /// <summary>
+        /// View leaderboard
+        /// </summary>
+        /// <returns> dictionary containing statistics of the best players, StatusCode: 200 </returns>
         [HttpGet]
-        [Route("ViewLeaderboard")]
+        [Route("Leaderboard")]
         public IHttpActionResult UserViewLeaderboard()
         {
             string viewLeader = null;

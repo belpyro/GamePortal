@@ -144,7 +144,6 @@
     <Compile Include="Controllers\BlackJack\GameController.cs" />
     <Compile Include="Controllers\DotsAndBlocks\GameController.cs" />
     <Compile Include="Controllers\Quoridor\AdminController.cs" />
-    <Compile Include="Controllers\Quoridor\QuoridorController.cs" />
     <Compile Include="Controllers\Quoridor\RegUserController.cs" />
     <Compile Include="Controllers\Quoridor\UserController.cs" />
     <Compile Include="Controllers\Sudoku\GameController.cs" />
