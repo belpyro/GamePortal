@@ -5,11 +5,11 @@ using System.Runtime.InteropServices;
 // General Information about an assembly is controlled through the following
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
-[assembly: AssemblyTitle("Nmihay.BlackJack.Logic")]
+[assembly: AssemblyTitle("Nmihay.BlackJack.Mappers")]
 [assembly: AssemblyDescription("")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("")]
-[assembly: AssemblyProduct("Nmihay.BlackJack.Logic")]
+[assembly: AssemblyProduct("Nmihay.BlackJack.Mappers")]
 [assembly: AssemblyCopyright("Copyright ©  2020")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
@@ -20,7 +20,7 @@ using System.Runtime.InteropServices;
 [assembly: ComVisible(false)]
 
 // The following GUID is for the ID of the typelib if this project is exposed to COM
-[assembly: Guid("d28eccf9-70ca-4167-aadb-e356696ed1f6")]
+[assembly: Guid("9d7d8fae-44dc-4a49-bbae-1829caee8330")]
 
 // Version information for an assembly consists of the following four values:
 //
