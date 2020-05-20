@@ -152,10 +152,6 @@
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
-    <Compile Include="Models\Quoridor\Admin.cs" />
-    <Compile Include="Models\Quoridor\RegPlayer.cs" />
-    <Compile Include="Models\Quoridor\RepoFromPrototypes.cs" />
-    <Compile Include="Models\Quoridor\User.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -171,12 +167,17 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
+    <Folder Include="Models\" />
     <Folder Include="Views\Default\" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\AliaksNad.Battleship.Logic\AliaksNad.Battleship.Logic.csproj">
       <Project>{56dcd764-ed73-409b-961b-521fe4d34f27}</Project>
       <Name>AliaksNad.Battleship.Logic</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Igro.Quoridor.Logic\Igro.Quoridor.Logic.csproj">
+      <Project>{645c087d-0f20-45e8-83a0-703051fcbc14}</Project>
+      <Name>Igro.Quoridor.Logic</Name>
     </ProjectReference>
   </ItemGroup>
   <PropertyGroup>

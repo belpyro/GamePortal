@@ -3,9 +3,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 
-namespace GamePortal.Web.Api.Models.Quoridor
+namespace GamePortal.Logic.Igro.Quoridor.Logic.Models
 {
-    public class RegPlayer
+    public class RegPlayerDTO
     {
         public int Id { get; set; }
         public string UserName { get; set; }

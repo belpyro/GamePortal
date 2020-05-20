@@ -1,4 +1,6 @@
-﻿using GamePortal.Web.Api.Models.Quoridor;
+﻿using GamePortal.Logic.Igro.Quoridor.Logic.Models;
+using GamePortal.Logic.Igro.Quoridor.Logic.Services;
+using Igro.Quoridor.Logic.Services;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -15,6 +17,11 @@ namespace GamePortal.Web.Api.Controllers.Quoridor
 
     public class AdminController : ApiController
     {
+        private readonly IRegUserService _regUserService;
+        public AdminController(IRegUserService regUserService)
+        {
+            this._regUserService = regUserService;
+        }
         /// <summary>
         /// Return all users
         /// </summary>
@@ -23,7 +30,7 @@ namespace GamePortal.Web.Api.Controllers.Quoridor
         [Route("")]
         public IHttpActionResult ShowAllPlayers()
         {
-            return Ok(RepoFromPrototypes._users);
+            return Ok(_regUserService.GetAllUsers());
         }
 
         /// <summary>
@@ -40,7 +47,7 @@ namespace GamePortal.Web.Api.Controllers.Quoridor
         {
             if (id <= 0)
                 return BadRequest("Not a valid player id");
-            var user = RepoFromPrototypes._users.FirstOrDefault(x => x.Id == id);
+            var user = _regUserService.GetById(id);
             return user == null ? (IHttpActionResult)NotFound() : Ok(user);
         }
 
@@ -52,17 +59,9 @@ namespace GamePortal.Web.Api.Controllers.Quoridor
         /// <returns>  Modified model, StatusCode: 200  </returns>
         [HttpPut]
         [Route("{id}")]
-        public IHttpActionResult EditProfileUsers(int id, [FromBody]RegPlayer user)
+        public IHttpActionResult EditProfileUsers(int id, [FromBody]RegPlayerDTO user)
         {
-            var oldUser = RepoFromPrototypes._users.FirstOrDefault(x => x.Id == id);
-            oldUser.Id = user.Id;
-            oldUser.UserName = user.UserName;
-            oldUser.FirstName = user.FirstName;
-            oldUser.LastName = user.LastName;
-            oldUser.Password = user.Password;
-            oldUser.Email = user.Email;
-            oldUser.DateOfBirth = user.DateOfBirth;
-            oldUser.Avatar = user.Avatar;
+            var oldUser = _regUserService.EditProfileUsers(id, user);
             return Ok(oldUser);
         }
 
@@ -80,10 +79,8 @@ namespace GamePortal.Web.Api.Controllers.Quoridor
         {
             if (id <= 0)
                 return BadRequest("Not a valid player id");
-            var user = RepoFromPrototypes._users.FirstOrDefault(x => x.Id == id);
-            RepoFromPrototypes._users.Remove(user);
-            return user == null ? (IHttpActionResult)NotFound() : StatusCode(HttpStatusCode.NoContent);
-            // or Ok($"Delete user with id: {id}");
+            var find = _regUserService.DeleteProfileUsers(id);
+            return find == false ? (IHttpActionResult)NotFound() : StatusCode(HttpStatusCode.NoContent);
         }
 
         /// <summary>
@@ -95,17 +92,16 @@ namespace GamePortal.Web.Api.Controllers.Quoridor
         /// </returns>
         [HttpPost]
         [Route("")]
-        public IHttpActionResult RegisterNewPlayer([FromBody]RegPlayer regUser)
+        public IHttpActionResult RegisterNewPlayer([FromBody]RegPlayerDTO regUser)
         {
-            var userEmail = RepoFromPrototypes._users.FirstOrDefault(x => x.Email == regUser.Email);
+            var userEmail = _regUserService.GetAllUsers().FirstOrDefault(x => x.Email == regUser.Email);
             if (userEmail != null)
             {
                 return BadRequest($"This email address is already associated to a {userEmail.UserName} user.");
             }
-            var id = RepoFromPrototypes._users.Last().Id + 1;
-            regUser.Id = id;
-            RepoFromPrototypes._users.Add(regUser);
-            return Created($"/User/{id}", regUser);
+            _regUserService.RegisterNewPlayer(regUser);
+            var id = regUser.Id;
+            return Created($"/UserDTO/{id}", regUser);
         }
 
         /*

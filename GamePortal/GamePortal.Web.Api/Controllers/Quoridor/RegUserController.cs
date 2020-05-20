@@ -1,5 +1,4 @@
-﻿using GamePortal.Web.Api.Models.Quoridor;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
