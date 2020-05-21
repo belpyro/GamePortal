@@ -13,7 +13,7 @@ namespace Igro.Quoridor.Logic.Services
         RegPlayerDTO GetById(int id);
         RegPlayerDTO EditProfileUsers(int id, RegPlayerDTO user);
         bool DeleteProfileUsers(int id);
-        RegPlayerDTO RegisterNewPlayer(RegPlayerDTO regUser);
+        (RegPlayerDTO, bool) RegisterNewPlayer(RegPlayerDTO regUser);
         bool LogIn(string email, string password);
         string RestorePassword(string email);
     }

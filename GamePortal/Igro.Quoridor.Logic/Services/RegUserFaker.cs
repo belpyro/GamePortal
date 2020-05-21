@@ -11,7 +11,7 @@ namespace Igro.Quoridor.Logic.Services
     internal class RegUserFaker
     {
         private static Faker<RegPlayerDTO> _fakerList;
-        //private static Dictionary<RegPlayerDTO, int> _fakerDictionary;
+        public static Dictionary<RegPlayerDTO, int> _leaderBoard;
         static RegUserFaker()
         {
             _fakerList = new Faker<RegPlayerDTO>();
@@ -20,14 +20,17 @@ namespace Igro.Quoridor.Logic.Services
                 .RuleFor(x => x.FirstName, f => f.Name.FirstName())
                 .RuleFor(x => x.LastName, f => f.Name.LastName())
                 .RuleFor(x => x.Email, f => f.Person.Email)
-                .RuleFor(x => x.Password, f => f.Random.Int(1, 10000).ToString())
-                .RuleFor(x => x.DateOfBirth, f => f.Person.DateOfBirth)
+                .RuleFor(x => x.Password, f => f.Random.Int(1000, 10000).ToString())
+                .RuleFor(x => x.DateOfBirth, f => f.Date.Between(Convert.ToDateTime("1930, 01, 01"), DateTime.Now))
                 .RuleFor(x => x.Avatar, f => f.Person.Avatar);
+
+            _leaderBoard = new Dictionary<RegPlayerDTO, int>();
 
         }
         internal static List<RegPlayerDTO> GenerateList(int count = 100)
         {
             return _fakerList.Generate(count);
         }
+
     }
 }

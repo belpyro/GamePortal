@@ -49,12 +49,16 @@ namespace GamePortal.Logic.Igro.Quoridor.Logic.Services
         }
 
 
-        public RegPlayerDTO RegisterNewPlayer(RegPlayerDTO regUser)
+        public (RegPlayerDTO, bool) RegisterNewPlayer(RegPlayerDTO regUser)
         {
+            bool alreadyUse = false;
+            var userEmail = _users.FirstOrDefault(x => x.Email == regUser.Email);
+            if(userEmail == null) 
+                alreadyUse = true;
             var id = _users.Last().Id + 1;
             regUser.Id = id;
             _users.Add(regUser);
-            return regUser;
+            return (regUser, alreadyUse);
         }
 
         public bool LogIn(string email, string password)

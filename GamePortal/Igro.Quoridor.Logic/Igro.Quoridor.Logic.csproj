@@ -38,6 +38,7 @@
       <HintPath>..\packages\Ninject.3.3.4\lib\net45\Ninject.dll</HintPath>
     </Reference>
     <Reference Include="System" />
+    <Reference Include="System.ComponentModel.DataAnnotations" />
     <Reference Include="System.Core" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
@@ -50,6 +51,7 @@
     <Compile Include="LogicDIModule.cs" />
     <Compile Include="Models\AdminDTO.cs" />
     <Compile Include="Models\RegPlayerDTO.cs" />
+    <Compile Include="Models\ScoreDTO.cs" />
     <Compile Include="Services\RegUserFaker.cs" />
     <Compile Include="Services\RegUserService.cs" />
     <Compile Include="Models\UserDTO.cs" />

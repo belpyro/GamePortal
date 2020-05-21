@@ -61,6 +61,10 @@ namespace GamePortal.Web.Api.Controllers.Quoridor
         [Route("{id}")]
         public IHttpActionResult EditProfileUsers(int id, [FromBody]RegPlayerDTO user)
         {
+            if (id <= 0)
+                return BadRequest("Not a valid player id");
+            if (!ModelState.IsValid)
+                return BadRequest("Non Valid");
             var oldUser = _regUserService.EditProfileUsers(id, user);
             return Ok(oldUser);
         }
@@ -94,13 +98,14 @@ namespace GamePortal.Web.Api.Controllers.Quoridor
         [Route("")]
         public IHttpActionResult RegisterNewPlayer([FromBody]RegPlayerDTO regUser)
         {
-            var userEmail = _regUserService.GetAllUsers().FirstOrDefault(x => x.Email == regUser.Email);
-            if (userEmail != null)
+            if (!ModelState.IsValid)
+                return BadRequest("Non Valid");
+            var (model, alreadyUse) = _regUserService.RegisterNewPlayer(regUser);
+            if (alreadyUse == true)
             {
-                return BadRequest($"This email address is already associated to a {userEmail.UserName} user.");
+                return BadRequest($"This email address is already associated to a {model.UserName} user.");
             }
-            _regUserService.RegisterNewPlayer(regUser);
-            var id = regUser.Id;
+            var id = model.Id;
             return Created($"/UserDTO/{id}", regUser);
         }
 
