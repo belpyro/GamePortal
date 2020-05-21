@@ -6,15 +6,15 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Igro.Quoridor.Logic.Services
+namespace Igro.Quoridor.Logic.Services.User
 {
-    internal class RegUserFaker
+    internal class UserFaker
     {
-        private static Faker<RegPlayerDTO> _fakerList;
-        public static Dictionary<RegPlayerDTO, int> _leaderBoard;
-        static RegUserFaker()
+        private static Faker<UserDTO> _fakerList;
+        public static Dictionary<UserDTO, int> _leaderBoard;
+        static UserFaker()
         {
-            _fakerList = new Faker<RegPlayerDTO>();
+            _fakerList = new Faker<UserDTO>();
             _fakerList.RuleFor(x => x.Id, f => f.IndexFaker)
                 .RuleFor(x => x.UserName, f => f.Person.UserName)
                 .RuleFor(x => x.FirstName, f => f.Name.FirstName())
@@ -24,10 +24,10 @@ namespace Igro.Quoridor.Logic.Services
                 .RuleFor(x => x.DateOfBirth, f => f.Date.Between(Convert.ToDateTime("1930, 01, 01"), DateTime.Now))
                 .RuleFor(x => x.Avatar, f => f.Person.Avatar);
 
-            _leaderBoard = new Dictionary<RegPlayerDTO, int>();
+            _leaderBoard = new Dictionary<UserDTO, int>();
 
         }
-        internal static List<RegPlayerDTO> GenerateList(int count = 100)
+        internal static List<UserDTO> GenerateList(int count = 6)
         {
             return _fakerList.Generate(count);
         }

@@ -5,15 +5,15 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Igro.Quoridor.Logic.Services
+namespace Igro.Quoridor.Logic.Services.User
 {
-    public interface IRegUserService
+    public interface IUserService
     {
-        IEnumerable<RegPlayerDTO> GetAllUsers();
-        RegPlayerDTO GetById(int id);
-        RegPlayerDTO EditProfileUsers(int id, RegPlayerDTO user);
+        IEnumerable<UserDTO> GetAllUsers();
+        UserDTO GetById(int id);
+        UserDTO EditProfileUsers(int id, UserDTO user);
         bool DeleteProfileUsers(int id);
-        (RegPlayerDTO, bool) RegisterNewPlayer(RegPlayerDTO regUser);
+        (UserDTO, bool) RegisterNewPlayer(UserDTO regUser);
         bool LogIn(string email, string password);
         string RestorePassword(string email);
     }

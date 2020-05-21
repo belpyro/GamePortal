@@ -1,5 +1,5 @@
-﻿using GamePortal.Logic.Igro.Quoridor.Logic.Services;
-using Igro.Quoridor.Logic.Services;
+﻿using GamePortal.Logic.Igro.Quoridor.Logic.Services.User;
+using Igro.Quoridor.Logic.Services.User;
 using Ninject.Modules;
 using System;
 using System.Collections.Generic;
@@ -13,7 +13,7 @@ namespace Igro.Quoridor.Logic
     {
     public override void Load()
     {
-            this.Bind<IRegUserService>().To<RegUserService>();
+            this.Bind<IUserService>().To<UserService>();
     }
     }
 }

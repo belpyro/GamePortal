@@ -1,32 +1,113 @@
 ﻿using GamePortal.Logic.Igro.Quoridor.Logic.Models;
 using GamePortal.Logic.Igro.Quoridor.Logic.Services;
 using Igro.Quoridor.Logic.Services;
+using Igro.Quoridor.Logic.Services.User;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Web.Http;
-using System.Web.Mvc;
-using HttpGetAttribute = System.Web.Http.HttpGetAttribute;
-using HttpPostAttribute = System.Web.Http.HttpPostAttribute;
-using RouteAttribute = System.Web.Http.RouteAttribute;
-using RoutePrefixAttribute = System.Web.Http.RoutePrefixAttribute;
+using System.Web.UI.WebControls;
 
 namespace GamePortal.Web.Api.Controllers.Quoridor
 {
-
     /// <summary>
-    /// Controller for unregistered user 
+    /// Controller for user
     /// </summary>
-    [RoutePrefix("api/Quoridor/UnregUser")]
-    public class UnregUserController : ApiController
+    [RoutePrefix("api/Quoridor/User")]
+    public class QuorUserController : ApiController
     {
-        private readonly IRegUserService _regUserService;
-        public UnregUserController(IRegUserService regUserService)
+        private readonly IUserService _regUserService;
+        public QuorUserController(IUserService regUserService)
         {
             this._regUserService = regUserService;
         }
+        /// <summary>
+        /// Return all users
+        /// </summary>
+        /// <returns> List of all players, StatusCode: 200 </returns>
+        [HttpGet]
+        [Route("")]
+        public IHttpActionResult ShowAllPlayers()
+        {
+            return Ok(_regUserService.GetAllUsers());
+        }
+
+        /// <summary>
+        /// Search player by id
+        /// </summary>
+        /// <param name="id"> User id </param>
+        /// <returns> 
+        /// <para> if player was found: Player model, Status Code: 200 </para>
+        /// <para> else: Status Code: 404 </para>
+        /// Player model </returns>
+        [HttpGet]
+        [Route("{id}")]
+        public IHttpActionResult GetById(int id)
+        {
+            if (id <= 0)
+                return BadRequest("Not a valid player id");
+            var user = _regUserService.GetById(id);
+            return user == null ? (IHttpActionResult)NotFound() : Ok(user);
+        }
+
+        /// <summary>
+        /// Edit profile registered user
+        /// </summary>
+        /// <param name="id"> Registered user id </param>
+        /// <param name="user"> Registered user model </param>
+        /// <returns>  Modified model, StatusCode: 200  </returns>
+        [HttpPut]
+        [Route("{id}")]
+        public IHttpActionResult EditProfileUsers(int id, [FromBody]UserDTO user)
+        {
+            if (id <= 0)
+                return BadRequest("Not a valid player id");
+            var oldUser = _regUserService.EditProfileUsers(id, user);
+            return Ok(oldUser);
+        }
+
+        /// <summary>
+        /// Delete account registered user
+        /// </summary>
+        /// <param name="id"> Registered user id </param>
+        /// <returns>
+        /// <para> if player was found: Status Code: 204 </para>
+        /// <para> else: Status Code: 404 </para>
+        /// </returns>
+        [HttpDelete]
+        [Route("{id}")]
+        public IHttpActionResult DeleteProfileUsers(int id)
+        {
+            if (id <= 0)
+                return BadRequest("Not a valid player id");
+            var find = _regUserService.DeleteProfileUsers(id);
+            return find == false ? (IHttpActionResult)NotFound() : StatusCode(HttpStatusCode.NoContent);
+        }
+
+        /// <summary>
+        /// Register new player
+        /// </summary>
+        /// <param name="regUser"> Player model </param>
+        /// <returns>
+        /// <para>  Player model, Status Code: 201 </para>
+        /// </returns>
+        [HttpPost]
+        [Route("")]
+        public IHttpActionResult RegisterNewPlayer([FromBody]UserDTO regUser)
+        {
+            if (!ModelState.IsValid)
+                return BadRequest("Non Valid");
+            var (model, alreadyUse) = _regUserService.RegisterNewPlayer(regUser);
+            if (alreadyUse == true)
+            {
+                return BadRequest($"This email address is already associated to a {model.UserName} user.");
+            }
+            var id = model.Id;
+            return Created($"/UserDTO/{id}", regUser);
+        }
+
         /// <summary>
         ///  Verify the username and password with the database
         /// </summary>
@@ -37,34 +118,13 @@ namespace GamePortal.Web.Api.Controllers.Quoridor
         /// <para> else: Status Code: 401 </para>
         /// </returns>
         [HttpGet]
-        [Route("")]
+        [Route("LogIn")]
         public IHttpActionResult LogIn(string email, string password)
         {
             if (email == null || password == null)
-                return BadRequest("Not a valid player id");
+                return BadRequest("Not a valid email or password");
             bool findAccount = _regUserService.LogIn(email, password);
             return findAccount != true ? (IHttpActionResult)Unauthorized() : Ok("authorization completed successfully");
-        }
-
-        /// <summary>
-        /// Register new player
-        /// </summary>
-        /// <param name="regUser"> Player model </param>
-        /// <returns>
-        /// <para>  Player model, StatusCode: 201 </para>
-        /// </returns>
-        [HttpPost]
-        [Route("")]
-        public IHttpActionResult RegisterNewPlayer([FromBody]RegPlayerDTO regUser)
-        {
-            var userEmail = _regUserService.GetAllUsers().FirstOrDefault(x => x.Email == regUser.Email);
-            if (userEmail != null)
-            {
-                return BadRequest($"This email address is already associated to a {userEmail.UserName} user.");
-            }
-            _regUserService.RegisterNewPlayer(regUser);
-            var id = regUser.Id;
-            return Created($"/UserDTO/{id}", regUser);
         }
 
         /// <summary>
@@ -76,11 +136,11 @@ namespace GamePortal.Web.Api.Controllers.Quoridor
         /// <para> else: Status Code: 404 </para>
         /// </returns>
         [HttpGet]
-        [Route("{email}")]
-        public IHttpActionResult RestorePassword(string email)
+        [Route("rePass")]
+        public IHttpActionResult RestorePassword([FromUri]string email) 
         {
             var password = _regUserService.RestorePassword(email);
-            return password == null ? (IHttpActionResult)NotFound() : Ok(password);
+            return password == "Not found" ? (IHttpActionResult)NotFound() : Ok(password);
         }
 
         /// <summary>
@@ -99,5 +159,7 @@ namespace GamePortal.Web.Api.Controllers.Quoridor
         //    }
         //    return Ok(viewLeader);
         //}
+
+
     }
 }
