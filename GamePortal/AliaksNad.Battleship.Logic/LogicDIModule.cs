@@ -1,4 +1,5 @@
-﻿using AliaksNad.Battleship.Logic.Services;
+﻿using AliaksNad.Battleship.Data.Contexts;
+using AliaksNad.Battleship.Logic.Services;
 using Ninject.Modules;
 using System;
 using System.Collections.Generic;
@@ -12,7 +13,8 @@ namespace AliaksNad.Battleship.Logic
     {
         public override void Load()
         {
-            Bind<IUserService>().To<UserService>();
+            this.Bind<UsersContexts>().ToSelf();
+            this.Bind<IUserService>().To<UserService>();
         }
     }
 }
