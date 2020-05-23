@@ -24,31 +24,31 @@ namespace GamePortal.Web.Api.Controllers.Battleship
             return Ok(_db.GetUsers());
         }
 
-        /// <summary>
-        /// Returns user by id.
-        /// </summary>
-        [HttpGet]
-        [Route("{id}")]
-        public IHttpActionResult GetById(int id)
-        {
-            var user = _db.GetUsers().FirstOrDefault(x => x.Id == id);
-            return user == null ? (IHttpActionResult)NotFound() : Ok(user);
-        }
+        ///// <summary>
+        ///// Returns user by id.
+        ///// </summary>
+        //[HttpGet]
+        //[Route("{id}")]
+        //public IHttpActionResult GetById(int id)
+        //{
+        //    var user = _db.GetUsers().FirstOrDefault(x => x.Id == id);
+        //    return user == null ? (IHttpActionResult)NotFound() : Ok(user);
+        //}
 
-        /// <summary>
-        /// Update user by id.
-        /// </summary>
-        [HttpPut]
-        [Route("")]
-        public IHttpActionResult UpdateById([FromBody]UserDto model)
-        {
-            var user = _db.GetUsers().FirstOrDefault(x => x.Id == model.Id);
-            if (user != null)
-            {
-                _db.UpdateUser(model);
-                return Ok();
-            }
-            return NotFound();
-        }
+        ///// <summary>
+        ///// Update user by id.
+        ///// </summary>
+        //[HttpPut]
+        //[Route("")]
+        //public IHttpActionResult UpdateById([FromBody]UserDto model)
+        //{
+        //    var user = _db.GetUsers().FirstOrDefault(x => x.Id == model.Id);
+        //    if (user != null)
+        //    {
+        //        _db.UpdateUser(model);
+        //        return Ok();
+        //    }
+        //    return NotFound();
+        //}
     }
 }
