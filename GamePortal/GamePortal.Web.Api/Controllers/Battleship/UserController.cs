@@ -42,6 +42,17 @@ namespace GamePortal.Web.Api.Controllers.Battleship
             return user == null ? (IHttpActionResult)NotFound() : Ok(user);
         }
 
+        /// <summary>
+        /// Add user.
+        /// </summary>
+        [HttpPost]
+        [Route("")]
+        public IHttpActionResult Add([FromBody]UserDto model)
+        {
+            model = _userService.Add(model);
+            return Created($"/api/battleship/users/{model.Id}", model);
+        }
+
         ///// <summary>
         ///// Update user by id.
         ///// </summary>
