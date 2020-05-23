@@ -5,7 +5,7 @@ namespace GamePortal.Web.Api.App_Start
 {
     using System;
     using System.Web;
-
+    using AliaksNad.Battleship.Logic;
     using Microsoft.Web.Infrastructure.DynamicModuleHelper;
 
     using Ninject;
@@ -61,6 +61,8 @@ namespace GamePortal.Web.Api.App_Start
         /// <param name="kernel">The kernel.</param>
         private static void RegisterServices(IKernel kernel)
         {
+            //Battleship
+            kernel.Load(new LogicDIModule());
         }
     }
 }
