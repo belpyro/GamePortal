@@ -6,13 +6,20 @@ using System.Net;
 using System.Net.Http;
 using System.Web.Http;
 using AliaksNad.Battleship.Logic.Models;
+using GamePortal.Web.Api.Models.Quoridor;
+using AliaksNad.Battleship.Logic.Services;
 
 namespace GamePortal.Web.Api.Controllers.Battleship
 {
     [RoutePrefix("api/battleship/users")]
     public class UserController : ApiController
     {
-        protected DataBase _db = new DataBase();
+        private readonly IUserService _userService;
+
+        public UserController(IUserService userService)
+        {
+            this._userService = userService;
+        }
 
         /// <summary>
         /// Returns all users.
@@ -21,19 +28,19 @@ namespace GamePortal.Web.Api.Controllers.Battleship
         [Route("")]
         public IHttpActionResult GetAll()
         {
-            return Ok(_db.GetUsers());
+            return Ok(_userService.GetAll());
         }
 
-        ///// <summary>
-        ///// Returns user by id.
-        ///// </summary>
-        //[HttpGet]
-        //[Route("{id}")]
-        //public IHttpActionResult GetById(int id)
-        //{
-        //    var user = _db.GetUsers().FirstOrDefault(x => x.Id == id);
-        //    return user == null ? (IHttpActionResult)NotFound() : Ok(user);
-        //}
+        /// <summary>
+        /// Returns user by id.
+        /// </summary>
+        [HttpGet]
+        [Route("{id}")]
+        public IHttpActionResult GetById(int id)
+        {
+            var user = _userService.GetById(id);
+            return user == null ? (IHttpActionResult)NotFound() : Ok(user);
+        }
 
         ///// <summary>
         ///// Update user by id.
@@ -42,6 +49,7 @@ namespace GamePortal.Web.Api.Controllers.Battleship
         //[Route("")]
         //public IHttpActionResult UpdateById([FromBody]UserDto model)
         //{
+
         //    var user = _db.GetUsers().FirstOrDefault(x => x.Id == model.Id);
         //    if (user != null)
         //    {

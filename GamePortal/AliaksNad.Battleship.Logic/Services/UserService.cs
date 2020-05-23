@@ -15,5 +15,15 @@ namespace AliaksNad.Battleship.Logic.Services
         {
             return _users;
         }
+
+        public UserDto GetById(int id)
+        {
+            return _users.FirstOrDefault(x => x.Id == id);
+        }
+
+        public void UpdateById()
+        {
+            throw new NotImplementedException();
+        }
     }
 }
