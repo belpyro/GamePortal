@@ -6,11 +6,11 @@ namespace AliaksNad.Battleship.Logic.DB
 {
     internal class UsersDB
     {
-        internal static List<User> _users = new List<User>
+        internal static List<UserDto> _users = new List<UserDto>
         {
-            new User { Id = 1, Name = "Jeck", Password = "666", Email = "Jeck@"},
-            new User { Id = 2, Name = "Jesus", Password = "102", Email = "Jesus@"},
-            new User { Id = 3, Name = "SpanchBob", Password = "314", Email = "SpanchBob@"}
+            new UserDto { Id = 1, Name = "Jeck", Password = "666", Email = "Jeck@"},
+            new UserDto { Id = 2, Name = "Jesus", Password = "102", Email = "Jesus@"},
+            new UserDto { Id = 3, Name = "SpanchBob", Password = "314", Email = "SpanchBob@"}
         };
     }
 }

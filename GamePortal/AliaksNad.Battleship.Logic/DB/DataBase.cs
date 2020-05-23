@@ -13,7 +13,7 @@ namespace AliaksNad.Battleship.Logic.DB
         /// <summary>
         /// Returns list of all users from current DB.
         /// </summary>
-        public List<User> GetUsers()
+        public List<UserDto> GetUsers()
         {
             return UsersDB._users;
         }
@@ -21,7 +21,7 @@ namespace AliaksNad.Battleship.Logic.DB
         /// <summary>
         /// Update user from current DB.
         /// </summary>
-        public void UpdateUser(User user)
+        public void UpdateUser(UserDto user)
         {
             var z = UsersDB._users.FindIndex(x => x.Id == user.Id);
             UsersDB._users[z] = user;

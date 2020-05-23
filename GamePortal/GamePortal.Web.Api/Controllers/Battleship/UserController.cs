@@ -40,7 +40,7 @@ namespace GamePortal.Web.Api.Controllers.Battleship
         /// </summary>
         [HttpPut]
         [Route("")]
-        public IHttpActionResult UpdateById([FromBody]User model)
+        public IHttpActionResult UpdateById([FromBody]UserDto model)
         {
             var user = _db.GetUsers().FirstOrDefault(x => x.Id == model.Id);
             if (user != null)

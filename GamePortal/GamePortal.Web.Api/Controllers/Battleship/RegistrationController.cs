@@ -19,7 +19,7 @@ namespace GamePortal.Web.Api.Controllers.Battleship
         /// </summary>
         [HttpPost]
         [Route("")]
-        public IHttpActionResult Registration([FromBody]User model)
+        public IHttpActionResult Registration([FromBody]UserDto model)
         {
             var user = _db.GetUsers().FirstOrDefault(x => x.Email == model.Email);
             if (user == null)
