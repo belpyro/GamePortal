@@ -10,8 +10,10 @@ namespace AliaksNad.Battleship.Logic.Services
 
         UserDto GetById(int id);
 
-        void UpdateById();
-
         UserDto Add(UserDto model);
+
+        void Update(UserDto model);
+
+        void Delete(int id);
     }
 }

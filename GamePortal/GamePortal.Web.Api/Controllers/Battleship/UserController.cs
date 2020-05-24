@@ -1,12 +1,6 @@
-﻿using AliaksNad.Battleship.Logic.DTO;
-using AliaksNad.Battleship.Logic.DB;
-using System.Collections.Generic;
-using System.Linq;
-using System.Net;
-using System.Net.Http;
+﻿using System.Net;
 using System.Web.Http;
 using AliaksNad.Battleship.Logic.Models;
-using GamePortal.Web.Api.Models.Quoridor;
 using AliaksNad.Battleship.Logic.Services;
 
 namespace GamePortal.Web.Api.Controllers.Battleship
@@ -53,21 +47,23 @@ namespace GamePortal.Web.Api.Controllers.Battleship
             return Created($"/api/battleship/users/{model.Id}", model);
         }
 
-        ///// <summary>
-        ///// Update user by id.
-        ///// </summary>
-        //[HttpPut]
-        //[Route("")]
-        //public IHttpActionResult UpdateById([FromBody]UserDto model)
-        //{
+        /// <summary>
+        /// Update user by id.
+        /// </summary>
+        [HttpPut]
+        [Route("")]
+        public IHttpActionResult Update([FromBody]UserDto model)
+        {
+            _userService.Update(model);
+            return StatusCode(HttpStatusCode.NoContent);
+        }
 
-        //    var user = _db.GetUsers().FirstOrDefault(x => x.Id == model.Id);
-        //    if (user != null)
-        //    {
-        //        _db.UpdateUser(model);
-        //        return Ok();
-        //    }
-        //    return NotFound();
-        //}
+        [HttpDelete]
+        [Route("{id}")]
+        public IHttpActionResult Delete(int id)
+        {
+            _userService.Delete(id);
+            return StatusCode(HttpStatusCode.NoContent);
+        } 
     }
 }

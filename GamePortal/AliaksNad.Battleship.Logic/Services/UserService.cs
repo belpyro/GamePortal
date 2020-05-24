@@ -21,7 +21,10 @@ namespace AliaksNad.Battleship.Logic.Services
 
         public IEnumerable<UserDto> GetAll()
         {
-            return _users;
+            //return _users;
+            return _context.Users
+                .Select(x => new UserDto {Id = x.Id, Name = x.Name, Email = x.Email, Password = x.Password })
+                .ToArray();
         }
 
         public UserDto Add(UserDto model)
@@ -43,12 +46,34 @@ namespace AliaksNad.Battleship.Logic.Services
 
         public UserDto GetById(int id)
         {
-            return _users.FirstOrDefault(x => x.Id == id);
+            //return _users.FirstOrDefault(x => x.Id == id);
+
+            var model = _context.Users.SingleOrDefault(x => x.Id == id);
+            return new UserDto
+            {
+                Id = model.Id,
+                Name = model.Name,
+                Email = model.Email,
+                Password = model.Password
+            };
         }
 
-        public void UpdateById()
+        public void Update(UserDto model)
         {
-            throw new NotImplementedException();
+            var dbModel = _context.Users.SingleOrDefault(x => x.Id == model.Id);
+            dbModel.Name = model.Name;
+            dbModel.Email = model.Email;
+            dbModel.Password = model.Password;
+
+            _context.SaveChanges();
+        }
+
+        public void Delete(int id)
+        {
+            var dbModel = _context.Users.SingleOrDefault(x => x.Id == id);
+            _context.Users.Remove(dbModel);
+
+            _context.SaveChanges();
         }
 
         #region IDisposable Support
