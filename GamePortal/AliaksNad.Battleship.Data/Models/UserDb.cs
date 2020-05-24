@@ -18,6 +18,6 @@ namespace AliaksNad.Battleship.Data.Models
     
         public int? UpdatedBy { get; set; }
 
-        public DateTime? UpdatedOn { get; set; } = DateTime.UtcNow;
+        public DateTime? UpdatedOn { get; set; }
     }
 }

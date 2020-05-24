@@ -57,9 +57,6 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="DB\DataBase.cs" />
-    <Compile Include="DB\StatisticDB.cs" />
-    <Compile Include="DB\UsersDB.cs" />
     <Compile Include="LogicDIModule.cs" />
     <Compile Include="Models\StatisticDto.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
