@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace Igro.Quoridor.Logic.Services.User
 {
-    public interface IUserService
+    public interface IUserService : IDisposable
     {
         IEnumerable<UserDTO> GetAllUsers();
         UserDTO GetById(int id);

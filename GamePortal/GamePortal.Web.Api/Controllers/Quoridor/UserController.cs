@@ -19,6 +19,7 @@ namespace GamePortal.Web.Api.Controllers.Quoridor
     public class QuorUserController : ApiController
     {
         private readonly IUserService _regUserService;
+
         public QuorUserController(IUserService regUserService)
         {
             this._regUserService = regUserService;
@@ -62,10 +63,8 @@ namespace GamePortal.Web.Api.Controllers.Quoridor
         [Route("{id}")]
         public IHttpActionResult EditProfileUsers(int id, [FromBody]UserDTO user)
         {
-            if (id <= 0)
-                return BadRequest("Not a valid player id");
-            var oldUser = _regUserService.EditProfileUsers(id, user);
-            return Ok(oldUser);
+            _regUserService.EditProfileUsers(id, user);
+            return StatusCode(HttpStatusCode.NoContent);
         }
 
         /// <summary>
@@ -104,8 +103,7 @@ namespace GamePortal.Web.Api.Controllers.Quoridor
             {
                 return BadRequest($"This email address is already associated to a {model.UserName} user.");
             }
-            var id = model.Id;
-            return Created($"/UserDTO/{id}", regUser);
+            return Created($"/UserDTO/{model.Id}", regUser);
         }
 
         /// <summary>
@@ -142,24 +140,6 @@ namespace GamePortal.Web.Api.Controllers.Quoridor
             var password = _regUserService.RestorePassword(email);
             return password == "Not found" ? (IHttpActionResult)NotFound() : Ok(password);
         }
-
-        /// <summary>
-        /// View leaderboard
-        /// </summary>
-        /// <returns> dictionary containing statistics of the best players, StatusCode: 200 </returns>
-        //[HttpGet]
-        //[Route("Leaderboard")]
-        //public IHttpActionResult UserViewLeaderboard()
-        //{
-        //    string viewLeader = null;
-        //    foreach (var v in QuoridorService._leaderBoard)
-        //    {
-        //        string viewLeaderBoard = $"{v.Key.UserName} - {v.Value}  ";
-        //        viewLeader += viewLeaderBoard;
-        //    }
-        //    return Ok(viewLeader);
-        //}
-
 
     }
 }
