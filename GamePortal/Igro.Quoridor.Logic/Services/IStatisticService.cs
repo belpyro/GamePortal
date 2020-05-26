@@ -4,9 +4,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Igro.Quoridor.Data
+namespace Igro.Quoridor.Logic.Services
 {
-    public class Class1
+    public interface IStatisticService
     {
     }
 }

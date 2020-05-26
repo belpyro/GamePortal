@@ -5,7 +5,8 @@ namespace GamePortal.Web.Api.App_Start
 {
     using System;
     using System.Web;
-
+    using Igro.Quoridor.Logic;
+    using Igro.Quoridor.Logic.Services;
     using Microsoft.Web.Infrastructure.DynamicModuleHelper;
 
     using Ninject;
@@ -61,6 +62,7 @@ namespace GamePortal.Web.Api.App_Start
         /// <param name="kernel">The kernel.</param>
         private static void RegisterServices(IKernel kernel)
         {
+            kernel.Load(new LogicDIModule());
         }
     }
 }
