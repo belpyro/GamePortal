@@ -1,6 +1,7 @@
 ﻿using AliaksNad.Battleship.Data.Contexts;
 using AliaksNad.Battleship.Data.Models;
 using AliaksNad.Battleship.Logic.Models;
+using AutoMapper;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -12,50 +13,63 @@ namespace AliaksNad.Battleship.Logic.Services
     internal class UserService : IUserService
     {
         private readonly UsersContexts _context;
+        private readonly IMapper _mapper;
         private static IEnumerable<UserDto> _users = UserFaker.Generate();
 
-        public UserService(UsersContexts context)
+        public UserService(UsersContexts context, IMapper mapper)
         {
             this._context = context;
+            this._mapper = mapper;
         }
 
         public IEnumerable<UserDto> GetAll()
         {
             //return _users;
-            return _context.Users
-                .Select(x => new UserDto {Id = x.Id, Name = x.Name, Email = x.Email, Password = x.Password })
-                .ToArray();
+
+            //return _context.Users
+            //    .Select(x => new UserDto {Id = x.Id, Name = x.Name, Email = x.Email, Password = x.Password })
+            //    .ToArray();
+
+            //var models = _context.Users.ToArray();
+            //return _mapper.Map<IEnumerable<UserDto>>(models);
+
+            return _context.Users.ProjectToArray<UserDto>(_mapper.ConfigurationProvider);
         }
 
         public UserDto Add(UserDto model)
         {
-            var dbModel = new UserDb
-            {
-                Name = model.Name,
-                Email = model.Email,
-                Password = model.Password,
-                CreatorId = 666
-            };
+            //var dbModel = new UserDb
+            //{
+            //    Name = model.Name,
+            //    Email = model.Email,
+            //    Password = model.Password,
+            //    CreatorId = 666
+            //};
+
+            var dbModel = _mapper.Map<UserDb>(model);
 
             _context.Users.Add(dbModel);
             _context.SaveChanges();
 
             model.Id = dbModel.Id;
             return model;
+
         }
 
         public UserDto GetById(int id)
         {
             //return _users.FirstOrDefault(x => x.Id == id);
 
-            var model = _context.Users.SingleOrDefault(x => x.Id == id);
-            return new UserDto
-            {
-                Id = model.Id,
-                Name = model.Name,
-                Email = model.Email,
-                Password = model.Password
-            };
+            //var model = _context.Users.SingleOrDefault(x => x.Id == id);
+            //return new UserDto
+            //{
+            //    Id = model.Id,
+            //    Name = model.Name,
+            //    Email = model.Email,
+            //    Password = model.Password
+            //};
+
+            return _context.Users.Where(x => x.Id == id).ProjectToSingleOrDefault<UserDto>(_mapper.ConfigurationProvider);
         }
 
         public void Update(UserDto model)

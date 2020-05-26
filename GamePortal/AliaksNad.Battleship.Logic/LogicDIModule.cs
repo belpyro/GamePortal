@@ -1,5 +1,7 @@
 ﻿using AliaksNad.Battleship.Data.Contexts;
+using AliaksNad.Battleship.Logic.Profiles;
 using AliaksNad.Battleship.Logic.Services;
+using AutoMapper;
 using Ninject.Modules;
 using System;
 using System.Collections.Generic;
@@ -13,6 +15,12 @@ namespace AliaksNad.Battleship.Logic
     {
         public override void Load()
         {
+            Mapper.Initialize(cfg => cfg.AddProfile<UserProfile>());
+            var mapper = Mapper.Configuration.CreateMapper();
+
+            this.Bind<IMapper>().ToConstant(mapper);
+
+
             this.Bind<UsersContexts>().ToSelf();
             this.Bind<IUserService>().To<UserService>();
         }
