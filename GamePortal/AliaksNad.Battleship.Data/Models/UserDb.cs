@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 
 namespace AliaksNad.Battleship.Data.Models
 {
@@ -22,5 +23,16 @@ namespace AliaksNad.Battleship.Data.Models
         public string Email { get; set; }
 
         public string Password { get; set; }
+
+        public ICollection<StatisticDb> Statistics { get; set; }
+    }
+
+    public class StatisticDb
+    {
+        public int Id { get; set; }
+
+        public int Score { get; set; }
+
+        public DateTime Date { get; set; } = DateTime.UtcNow;
     }
 }

@@ -1,4 +1,5 @@
 ﻿using AliaksNad.Battleship.Data.Models;
+using AliaksNad.Battleship.Logic.DTO;
 using AliaksNad.Battleship.Logic.Models;
 using AutoMapper; // or Mapster
 using System;
@@ -15,6 +16,15 @@ namespace AliaksNad.Battleship.Logic.Profiles
         {
             CreateMap<UserDb, UserDto>()
                 .ForMember(x => x.Password, opt => opt.Ignore())
+                .ReverseMap();
+        }
+    }
+
+    class StatisticProfile : Profile
+    {
+        public StatisticProfile()
+        {
+            CreateMap<StatisticDb, StatisticDto>()
                 .ReverseMap();
         }
     }

@@ -74,10 +74,15 @@ namespace AliaksNad.Battleship.Logic.Services
 
         public void Update(UserDto model)
         {
-            var dbModel = _context.Users.SingleOrDefault(x => x.Id == model.Id);
-            dbModel.Name = model.Name;
-            dbModel.Email = model.Email;
-            dbModel.Password = model.Password;
+            //var dbModel = _context.Users.SingleOrDefault(x => x.Id == model.Id);
+            //dbModel.Name = model.Name;
+            //dbModel.Email = model.Email;
+            //dbModel.Password = model.Password;
+
+            var dbModel = _mapper.Map<UserDb>(model);
+            _context.Users.Attach(dbModel);
+            var entry = _context.Entry(dbModel);
+            entry.State = System.Data.Entity.EntityState.Modified;
 
             _context.SaveChanges();
         }

@@ -15,7 +15,7 @@ namespace AliaksNad.Battleship.Logic
     {
         public override void Load()
         {
-            Mapper.Initialize(cfg => cfg.AddProfile<UserProfile>());
+            Mapper.Initialize(cfg => cfg.AddProfiles(typeof(UserProfile)));
             var mapper = Mapper.Configuration.CreateMapper();
 
             this.Bind<IMapper>().ToConstant(mapper);
