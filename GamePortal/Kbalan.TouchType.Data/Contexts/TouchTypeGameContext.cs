@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Data.Entity;
 using System.Data.Entity.Core.Metadata.Edm;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -22,7 +23,8 @@ namespace Kbalan.TouchType.Data.Contexts
 
         public TouchTypeGameContext() : base ("TouchTypeGameContext")
         {
-            Database.SetInitializer(new DropCreateDatabaseIfModelChanges<TouchTypeGameContext>());
+            Database.SetInitializer(new DropCreateDatabaseAlways<TouchTypeGameContext>());
+            Database.Log = msg => Debug.WriteLine(msg);
         }
 
         protected override void OnModelCreating(DbModelBuilder modelBuilder)
