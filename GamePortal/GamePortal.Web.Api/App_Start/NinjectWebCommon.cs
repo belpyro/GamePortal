@@ -5,6 +5,8 @@ namespace GamePortal.Web.Api.App_Start
 {
     using System;
     using System.Web;
+    using Igro.Quoridor.Logic;
+    using Igro.Quoridor.Logic.Services;
     using AliaksNad.Battleship.Logic;
     using Microsoft.Web.Infrastructure.DynamicModuleHelper;
 
@@ -61,6 +63,7 @@ namespace GamePortal.Web.Api.App_Start
         /// <param name="kernel">The kernel.</param>
         private static void RegisterServices(IKernel kernel)
         {
+            kernel.Load(new LogicDIModule());
             //Battleship
             kernel.Load(new LogicDIModule());
         }

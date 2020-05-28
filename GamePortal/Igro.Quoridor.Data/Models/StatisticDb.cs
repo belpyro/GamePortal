@@ -4,9 +4,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Igro.Quoridor.Logic
+namespace Igro.Quoridor.Data.Models
 {
-    public class Class1
+    class StatisticDb
     {
     }
 }
