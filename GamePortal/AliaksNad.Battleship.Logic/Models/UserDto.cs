@@ -1,5 +1,4 @@
-﻿using AliaksNad.Battleship.Logic.DTO;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 
 namespace AliaksNad.Battleship.Logic.Models
 {
