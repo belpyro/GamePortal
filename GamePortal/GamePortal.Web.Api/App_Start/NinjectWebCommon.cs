@@ -63,9 +63,7 @@ namespace GamePortal.Web.Api.App_Start
         /// <param name="kernel">The kernel.</param>
         private static void RegisterServices(IKernel kernel)
         {
-            kernel.Load(new LogicDIModule());
-            //Battleship
-            kernel.Load(new LogicDIModule());
+            kernel.Load(new LogicDIModule(), new BattleshipLogicDIModule());
         }
     }
 }

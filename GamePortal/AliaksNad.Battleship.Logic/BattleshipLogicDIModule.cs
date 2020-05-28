@@ -11,11 +11,11 @@ using System.Threading.Tasks;
 
 namespace AliaksNad.Battleship.Logic
 {
-    public class LogicDIModule : NinjectModule
+    public class BattleshipLogicDIModule : NinjectModule
     {
         public override void Load()
         {
-            Mapper.Initialize(cfg => cfg.AddProfiles(typeof(UserProfile)));
+            Mapper.Configuration.AssertConfigurationIsValid();
             var mapper = Mapper.Configuration.CreateMapper();
 
             this.Bind<IMapper>().ToConstant(mapper);

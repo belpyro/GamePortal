@@ -75,7 +75,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="LogicDIModule.cs" />
+    <Compile Include="BattleshipLogicDIModule.cs" />
     <Compile Include="Models\StatisticDto.cs" />
     <Compile Include="Profiles\StatisticProfile.cs" />
     <Compile Include="Profiles\UserProfile.cs" />
