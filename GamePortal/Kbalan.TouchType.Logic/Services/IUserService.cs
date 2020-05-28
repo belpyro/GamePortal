@@ -10,28 +10,28 @@ namespace Kbalan.TouchType.Logic.Services
         /// Return all register user from RegisterUserDto
         /// </summary>
         /// <returns>All Registered user from RegisterUserDto</returns>
-        IEnumerable<RegisterUserDto> GetAll();
+        IEnumerable<UserDto> GetAll();
 
         /// <summary>
         /// Returns registered user from RegisterUserDto collection by it's id. 
         /// </summary>
         /// <param name="Id">User ID</param>
         /// <returns>Single user from RegisterUserDto or null</returns>
-        RegisterUserDto GetById(int Id);
+        UserDto GetById(int Id);
 
         /// <summary>
         /// Returns registered user from RegisterUserDto by it's name. 
         /// </summary>
         /// <param name="nickname">User nickname</param>
         /// <returns>Single user from RegisterUserDto or null</returns>
-        RegisterUserDto GetByName(string nickname);
+        UserDto GetByName(string nickname);
 
         /// <summary>
         /// Add new user to RegisterUserDto collection
         /// </summary>
         /// <param name="model">New user</param>
         /// <returns>New registered user or null</returns>
-        RegisterUserDto Add(RegisterUserDto model);
+        UserDto Add(UserDto model);
 
         /// <summary>
         /// Updating existing user in RegisteredUserDto collection by id
@@ -39,7 +39,7 @@ namespace Kbalan.TouchType.Logic.Services
         /// <param name="id">User id</param>
         /// <param name="model">New user model</param>
         /// <returns>New user or null</returns>
-        void Update(RegisterUserDto model);
+        void Update(UserDto model);
 
         /// <summary>
         /// Delete existing user in RegisterUserDto by it's id

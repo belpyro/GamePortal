@@ -27,18 +27,18 @@ namespace Kbalan.TouchType.Logic.Services
         /// Implementation of IUserService GetAll() method
         /// </summary>
         /// <returns></returns>
-        public IEnumerable<RegisterUserDto> GetAll()
+        public IEnumerable<UserDto> GetAll()
         {
-            return _gameContext.Users.ProjectToArray<RegisterUserDto>(_mapper.ConfigurationProvider);
+            return _gameContext.Users.ProjectToArray<UserDto>(_mapper.ConfigurationProvider);
         }
 
         /// <summary>
         /// Implementation of IUserService GetById() method. If no user with such id exist's, null will be returned
         /// </summary>
-        public RegisterUserDto GetById(int Id)
+        public UserDto GetById(int Id)
         {
             return _gameContext.Users.Where(x => x.Id == Id)
-                .ProjectToSingleOrDefault<RegisterUserDto>(_mapper.ConfigurationProvider);
+                .ProjectToSingleOrDefault<UserDto>(_mapper.ConfigurationProvider);
         }
 
         /// <summary>
@@ -46,10 +46,10 @@ namespace Kbalan.TouchType.Logic.Services
         /// </summary>
         /// <param name="nickname">User nickname</param>
         /// <returns>User from RegisterUserDto collection or null</returns>
-        public RegisterUserDto GetByName(string nickname)
+        public UserDto GetByName(string nickname)
         {
             return _gameContext.Users.Where(x => x.NickName == nickname)
-                         .ProjectToSingleOrDefault<RegisterUserDto>(_mapper.ConfigurationProvider);
+                         .ProjectToSingleOrDefault<UserDto>(_mapper.ConfigurationProvider);
         }
 
         /// <summary>
@@ -58,7 +58,7 @@ namespace Kbalan.TouchType.Logic.Services
         /// </summary>
         /// <param name="model">RegisterUserDto model</param>
         /// <returns>New User or null</returns>
-        public RegisterUserDto Add(RegisterUserDto model)
+        public UserDto Add(UserDto model)
         {
             var DbModel = _mapper.Map<UserDb>(model);
             _gameContext.Users.Add(DbModel);
@@ -140,7 +140,7 @@ namespace Kbalan.TouchType.Logic.Services
             // GC.SuppressFinalize(this);
         }
 
-        public void Update(RegisterUserDto model)
+        public void Update(UserDto model)
         {
             throw new NotImplementedException();
         }

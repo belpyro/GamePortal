@@ -45,7 +45,7 @@ namespace GamePortal.Web.Api.Controllers.TouchType
         //Add new user
         [HttpPost]
         [Route("")]
-        public IHttpActionResult Add([FromBody]RegisterUserDto model)
+        public IHttpActionResult Add([FromBody]UserDto model)
         {
             return _userService.Add(model) == null ? (IHttpActionResult)Conflict() : Created($"/registerusers/{model.Id}", model);
         }
@@ -53,7 +53,7 @@ namespace GamePortal.Web.Api.Controllers.TouchType
         //Update User by Id
         [HttpPut]
         [Route("{id}")]
-        public IHttpActionResult Update(int id, [FromBody]RegisterUserDto model)
+        public IHttpActionResult Update([FromBody]UserDto model)
         {
             _userService.Update(model);
             return StatusCode(HttpStatusCode.NoContent);

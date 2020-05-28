@@ -19,7 +19,7 @@ namespace Kbalan.TouchType.Logic
             
             Mapper.Initialize(cfg =>
             {
-                cfg.AddProfile<RegisterUserProfile>();
+                cfg.AddProfile<UserProfile>();
                 cfg.AddProfile<TextSetProfile>();
             });
             var mapper = Mapper.Configuration.CreateMapper();

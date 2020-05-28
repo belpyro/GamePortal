@@ -9,11 +9,11 @@ using System.Threading.Tasks;
 
 namespace Kbalan.TouchType.Logic.Profiles
 {
-    class RegisterUserProfile : Profile
+    class UserProfile : Profile
     {
-        public RegisterUserProfile()
+        public UserProfile()
         {
-            CreateMap<UserDb, RegisterUserDto>().ReverseMap();
+            CreateMap<UserDb, UserDto>().ReverseMap();
         }
     }
 }
