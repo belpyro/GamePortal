@@ -16,4 +16,21 @@ namespace Kbalan.TouchType.Logic.Profiles
             CreateMap<UserDb, UserDto>().ReverseMap();
         }
     }
+
+    class UserStatisticProfile : Profile
+    {
+        public UserStatisticProfile()
+        {
+            CreateMap<UserStatisticDb, UserStatisticDto>().ReverseMap();
+        }
+    }
+
+    class UserSettingProfile : Profile
+    {
+        public UserSettingProfile()
+        {
+            CreateMap<UserSettingDb, UserSettingDto>().ReverseMap();
+        }
+    }
+
 }
