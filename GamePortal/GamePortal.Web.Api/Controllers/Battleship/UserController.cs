@@ -16,8 +16,9 @@ namespace GamePortal.Web.Api.Controllers.Battleship
         }
 
         /// <summary>
-        /// Returns all users.
+        /// Get all users from logic layer.
         /// </summary>
+        /// <returns></returns>
         [HttpGet]
         [Route("")]
         public IHttpActionResult GetAll()
@@ -26,8 +27,10 @@ namespace GamePortal.Web.Api.Controllers.Battleship
         }
 
         /// <summary>
-        /// Returns user by id.
+        /// Get user from logic layer by id.
         /// </summary>
+        /// <param name="id">user id.</param>
+        /// <returns></returns>
         [HttpGet]
         [Route("{id}")]
         public IHttpActionResult GetById(int id)
@@ -37,8 +40,10 @@ namespace GamePortal.Web.Api.Controllers.Battleship
         }
 
         /// <summary>
-        /// Add user.
+        /// Add user to data via logic layer.
         /// </summary>
+        /// <param name="model">User model.</param>
+        /// <returns></returns>
         [HttpPost]
         [Route("")]
         public IHttpActionResult Add([FromBody]UserDto model)
@@ -48,8 +53,9 @@ namespace GamePortal.Web.Api.Controllers.Battleship
         }
 
         /// <summary>
-        /// Update user by id.
+        /// Update user model in data via logic layer.
         /// </summary>
+        /// <param name="model">User model.</param>
         [HttpPut]
         [Route("")]
         public IHttpActionResult Update([FromBody]UserDto model)
@@ -58,6 +64,10 @@ namespace GamePortal.Web.Api.Controllers.Battleship
             return StatusCode(HttpStatusCode.NoContent);
         }
 
+        /// <summary>
+        /// Delete user in data via logic layer by id.
+        /// </summary>
+        /// <param name="id">User id.</param>
         [HttpDelete]
         [Route("{id}")]
         public IHttpActionResult Delete(int id)

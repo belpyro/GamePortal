@@ -4,12 +4,11 @@ using AutoMapper; // or Mapster
 
 namespace AliaksNad.Battleship.Logic.Profiles
 {
-    class UserProfile : Profile
+    class StatisticProfile : Profile
     {
-        public UserProfile()
+        public StatisticProfile()
         {
-            CreateMap<UserDb, UserDto>()
-                .ForMember(x => x.Password, opt => opt.Ignore())
+            CreateMap<StatisticDb, StatisticDto>()
                 .ReverseMap();
         }
     }

@@ -22,6 +22,10 @@ namespace AliaksNad.Battleship.Logic.Services
             this._mapper = mapper;
         }
 
+        /// <summary>
+        /// Get all users from Data.
+        /// </summary>
+        /// <returns></returns>
         public IEnumerable<UserDto> GetAll()
         {
             //return _users;
@@ -36,6 +40,11 @@ namespace AliaksNad.Battleship.Logic.Services
             return _context.Users.ProjectToArray<UserDto>(_mapper.ConfigurationProvider);
         }
 
+        /// <summary>
+        /// Add user to data.
+        /// </summary>
+        /// <param name="model">User model.</param>
+        /// <returns></returns>
         public UserDto Add(UserDto model)
         {
             //var dbModel = new UserDb
@@ -53,9 +62,13 @@ namespace AliaksNad.Battleship.Logic.Services
 
             model.Id = dbModel.Id;
             return model;
-
         }
 
+        /// <summary>
+        /// Get user from data by id.
+        /// </summary>
+        /// <param name="id">user id.</param>
+        /// <returns></returns>
         public UserDto GetById(int id)
         {
             //return _users.FirstOrDefault(x => x.Id == id);
@@ -72,6 +85,10 @@ namespace AliaksNad.Battleship.Logic.Services
             return _context.Users.Where(x => x.Id == id).ProjectToSingleOrDefault<UserDto>(_mapper.ConfigurationProvider);
         }
 
+        /// <summary>
+        /// Update user model in data.
+        /// </summary>
+        /// <param name="model">User model.</param>
         public void Update(UserDto model)
         {
             //var dbModel = _context.Users.SingleOrDefault(x => x.Id == model.Id);
@@ -87,6 +104,10 @@ namespace AliaksNad.Battleship.Logic.Services
             _context.SaveChanges();
         }
 
+        /// <summary>
+        /// Delete user in data by id.
+        /// </summary>
+        /// <param name="id">User id.</param>
         public void Delete(int id)
         {
             var dbModel = _context.Users.SingleOrDefault(x => x.Id == id);

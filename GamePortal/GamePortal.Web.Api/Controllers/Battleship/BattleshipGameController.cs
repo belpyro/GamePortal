@@ -16,7 +16,12 @@ namespace GamePortal.Web.Api.Controllers.Battleship
         {
             this._gameService = gameService;
         }
-        
+
+        /// <summary>
+        /// Checks location for hit.
+        /// </summary>
+        /// <param name="point">Location.</param>
+        /// <returns></returns>
         [HttpPost]
         [Route("point")]
         public IHttpActionResult Fire([FromUri]Point point)
@@ -24,6 +29,11 @@ namespace GamePortal.Web.Api.Controllers.Battleship
             return Ok(_gameService.HitCheck(point));
         }
 
+        /// <summary>
+        /// Fleet Placement.
+        /// </summary>
+        /// <param name="fleet">Fleet.</param>
+        /// <returns></returns>
         [HttpPost]
         [Route("")]
         public IHttpActionResult PlaceFleet([FromBody]IEnumerable<Point> fleet)
