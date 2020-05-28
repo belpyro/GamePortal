@@ -5,33 +5,26 @@ using System.Net;
 using System.Net.Http;
 using System.Web.Http;
 using Kbalan.TouchType.Logic.Dto;
+using Kbalan.TouchType.Logic.Services;
+
 namespace GamePortal.Web.Api.Controllers.TouchType
 {
     [RoutePrefix("api/textsets")]
     public class TextsController : ApiController
     {
-        private static List<TextSetDto> _textSets = new List<TextSetDto>
+        private readonly ITextSetService _textSetService;
+
+        public TextsController(ITextSetService textSetService)
         {
-            new TextSetDto
-            {
-                Id = 1,
-                LevelOfText = 1,
-                TextForTyping = "It's easy text for touch typing"
-            },
-            new TextSetDto
-            {
-                Id = 2,
-                LevelOfText = 2,
-                TextForTyping = "It's medium text for touch typing"
-            },
-        };
+            this._textSetService = textSetService;
+        }
 
         //Get All TextSets
         [HttpGet]
         [Route("")]
         public IHttpActionResult GetAll()
         {
-            return Ok(_textSets);
+            return Ok(_textSetService.GetAll());
         }
 
         //Get TextSet by Id
@@ -39,23 +32,15 @@ namespace GamePortal.Web.Api.Controllers.TouchType
         [Route("{id}")]
         public IHttpActionResult GetById(int id)
         {
-            var textSet = _textSets.FirstOrDefault(x => x.Id == id);
-            return textSet == null ? (IHttpActionResult)NotFound() : Ok(textSet);
+            return _textSetService.GetById(id) == null ? (IHttpActionResult)NotFound() : Ok(_textSetService.GetById(id));
         }
 
-        //Get Random TextSet by Level of the text
+        ///Get Random TextSet by Level of the text
         [HttpGet]
         [Route("searchbylevel/{level}")]
         public IHttpActionResult GetRandomByLevel(int level)
         {
-            if (level <= 0 || level > 3)
-                return BadRequest();
-            var textSet = _textSets.Where(x => x.LevelOfText == level).ToList();
-            if (textSet.Count == 0)
-                return (IHttpActionResult)NotFound();
-            Random rnd = new Random();
-            int index = rnd.Next(0, textSet.Count-1);
-             return Ok(textSet[index]);
+            return _textSetService.GetByLevel(level) == null ? (IHttpActionResult)NotFound() : Ok(_textSetService.GetByLevel(level));
         }
 
         //Add new text
@@ -63,10 +48,7 @@ namespace GamePortal.Web.Api.Controllers.TouchType
         [Route("")]
         public IHttpActionResult Add([FromBody]TextSetDto model)
         {
-            var id = _textSets.Last().Id + 1;
-            model.Id = id;
-            _textSets.Add(model);
-            return Created($"/textsets/{id}", model);
+            return _textSetService.Add(model) == null ? (IHttpActionResult)Conflict() : Created($"/textsets/{model.Id}", model);
         }
 
         //Update Text by Id
@@ -74,16 +56,8 @@ namespace GamePortal.Web.Api.Controllers.TouchType
         [Route("{id}")]
         public IHttpActionResult Update(int id, [FromBody]TextSetDto model)
         {
-            for (int i = 0; i < _textSets.Count; i++)
-            {
-                if (_textSets[i].Id == id)
-                {
-                    _textSets[i] = model;
-                    _textSets[i].Id = id;
-                    return Created($"/textsets/{id}", _textSets[i]);
-                }
-            }
-            return NotFound();
+            _textSetService.Update(model);
+            return StatusCode(HttpStatusCode.NoContent);
         }
 
         //Delete Text by Id
@@ -91,15 +65,8 @@ namespace GamePortal.Web.Api.Controllers.TouchType
         [Route("{id}")]
         public IHttpActionResult Delete(int id)
         {
-            for (int i = 0; i < _textSets.Count; i++)
-            {
-                if (_textSets[i].Id == id)
-                {
-                    _textSets.RemoveAt(i);
-                    return Ok();
-                }
-            }
-            return NotFound();
+            _textSetService.Delete(id);
+            return StatusCode(HttpStatusCode.NoContent);
         }
     }
 }
