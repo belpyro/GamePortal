@@ -83,7 +83,6 @@
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="System.Web.Extensions" />
     <Reference Include="System.Xml.Linq" />
-    <Reference Include="System.Drawing" />
     <Reference Include="System.Web" />
     <Reference Include="System.Xml" />
     <Reference Include="System.Configuration" />
@@ -137,6 +136,7 @@
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="App_Start\SwaggerConfig.cs" />
     <Compile Include="App_Start\WebApiConfig.cs" />
+    <Compile Include="Controllers\Battleship\BattleshipGameController.cs" />
     <Compile Include="Controllers\Battleship\LogInController.cs" />
     <Compile Include="Controllers\Battleship\RegistrationController.cs" />
     <Compile Include="Controllers\Battleship\StatisticController.cs" />

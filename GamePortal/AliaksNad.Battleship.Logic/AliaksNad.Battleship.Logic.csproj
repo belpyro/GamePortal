@@ -80,7 +80,10 @@
     <Compile Include="Profiles\UserProfile.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Models\UserDto.cs" />
+    <Compile Include="Services\GameService.cs" />
+    <Compile Include="Services\IGameService.cs" />
     <Compile Include="Services\IUserService.cs" />
+    <Compile Include="Models\Point.cs" />
     <Compile Include="Services\UserFaker.cs" />
     <Compile Include="Services\UserService.cs" />
   </ItemGroup>

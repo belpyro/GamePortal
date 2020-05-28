@@ -23,6 +23,7 @@ namespace AliaksNad.Battleship.Logic
 
             this.Bind<UsersContexts>().ToSelf();
             this.Bind<IUserService>().To<UserService>();
+            this.Bind<IGameService>().To<GameService>();
         }
     }
 }
