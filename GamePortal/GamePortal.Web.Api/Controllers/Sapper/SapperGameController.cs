@@ -1,4 +1,4 @@
-﻿using System;
+﻿using Vitaly.Sapper.Logic.Services;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
@@ -10,6 +10,23 @@ namespace GamePortal.Web.Api.Controllers.Sapper
     [RoutePrefix("api/SapperGame")]
     public class SapperGameController : ApiController
     {
+        private readonly ISapperService _sapperService;
+
+        //public SapperGameController(ISapperService sapperService)
+        //{
+        //    this._sapperService = sapperService;
+        //}
+
+        /// <summary>
+        /// Get all users
+        /// </summary>
+        /// <returns>All users info</returns>
+        [HttpGet,Route("users/all")]
+        public IHttpActionResult GetAll()
+        {
+            return Ok();
+           // return Ok(_sapperService.GetAll());
+        }
 
         /// <summary>
         /// Get user info by id
