@@ -7,24 +7,70 @@ namespace Kbalan.TouchType.Logic.Services
     public interface IUserService : IDisposable
     {
         /// <summary>
-        /// Return all register user from RegisterUserDto
+        /// Return full information(with statistic and settings) about all register user from UserDto
         /// </summary>
-        /// <returns>All Registered user from RegisterUserDto</returns>
+        /// <returns>All Registered user from UserDto</returns>
         IEnumerable<UserDto> GetAll();
 
         /// <summary>
-        /// Returns registered user from RegisterUserDto collection by it's id. 
+        /// Return full information(with statistic and settings) about all register user from UserDto
+        /// </summary>
+        /// <returns>All Registered user from UserDto</returns>
+        IEnumerable<UserDto> GetAllFull();
+
+        /// <summary>
+        /// Return all registered user with settings from UserDb
+        /// </summary>
+        /// <returns></returns>
+        IEnumerable<UserDto> GetAllWithSettings();
+
+        /// <summary>
+        /// Return all registered user with statistic from UserDb
+        /// </summary>
+        /// <returns></returns>
+        IEnumerable<UserDto> GetAllWithStatistic();
+
+        /// <summary>
+        /// Returns full info about registered user from RegisterUserDto collection by it's id. 
         /// </summary>
         /// <param name="Id">User ID</param>
         /// <returns>Single user from RegisterUserDto or null</returns>
-        UserDto GetById(int Id);
+        UserDto GetFullById(int Id);
 
         /// <summary>
-        /// Returns registered user from RegisterUserDto by it's name. 
+        /// Returns registered user with Statistics from RegisterUserDto collection by it's id. 
         /// </summary>
-        /// <param name="nickname">User nickname</param>
+        /// <param name="Id">User ID</param>
         /// <returns>Single user from RegisterUserDto or null</returns>
-        UserDto GetByName(string nickname);
+        UserDto GetStatById(int Id);
+
+        /// <summary>
+        /// Returns registered user  with Settings from RegisterUserDto collection by it's id. 
+        /// </summary>
+        /// <param name="Id">User ID</param>
+        /// <returns>Single user from RegisterUserDto or null</returns>
+        UserDto GetSetById(int Id);
+
+        /// <summary>
+        /// Returns full info about registered user from RegisterUserDto collection by it's id. 
+        /// </summary>
+        /// <param name="Id">User ID</param>
+        /// <returns>Single user from RegisterUserDto or null</returns>
+        UserDto GetFullByNick(string nick);
+
+        /// <summary>
+        /// Returns registered user with Statistics from RegisterUserDto collection by it's id. 
+        /// </summary>
+        /// <param name="Id">User ID</param>
+        /// <returns>Single user from RegisterUserDto or null</returns>
+        UserDto GetStatByNick(string nick);
+
+        /// <summary>
+        /// Returns registered user  with Settings from RegisterUserDto collection by it's id. 
+        /// </summary>
+        /// <param name="Id">User ID</param>
+        /// <returns>Single user from RegisterUserDto or null</returns>
+        UserDto GetSetByNick(string nick);
 
         /// <summary>
         /// Add new user to RegisterUserDto collection

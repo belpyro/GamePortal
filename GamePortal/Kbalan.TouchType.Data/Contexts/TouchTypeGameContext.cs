@@ -42,13 +42,6 @@ namespace Kbalan.TouchType.Data.Contexts
             Userentity.HasRequired(stat => stat.Statistic);
             Userentity.HasRequired(set => set.Setting);
             
-            
-              
-
-          /*  Userentity.HasRequired(set => set.UserSetting)
-                .WithRequiredPrincipal(op => op.User);*/
-
-            
         }
     }
 }

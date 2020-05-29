@@ -29,27 +29,74 @@ namespace Kbalan.TouchType.Logic.Services
         /// <returns></returns>
         public IEnumerable<UserDto> GetAll()
         {
+            var models = _gameContext.Users.ToArray();
+            return _mapper.Map<IEnumerable<UserDto>>(models);
+        }
+
+        /// <summary>
+        /// Implementation of IUserService GetAllFull() method
+        /// </summary>
+        /// <returns></returns>
+        public IEnumerable<UserDto> GetAllFull()
+        {
             return _gameContext.Users.ProjectToArray<UserDto>(_mapper.ConfigurationProvider);
         }
 
         /// <summary>
-        /// Implementation of IUserService GetById() method. If no user with such id exist's, null will be returned
+        /// Implementation of IUserService GetAllWithSettings()
         /// </summary>
-        public UserDto GetById(int Id)
+        /// <returns></returns>
+        public IEnumerable<UserDto> GetAllWithSettings()
+        {
+            var models = _gameContext.Users.Include("Setting").ToArray();
+            return _mapper.Map<IEnumerable<UserDto>>(models);
+        }
+
+        /// <summary>
+        /// Implementation of IUserService GetAllWithStatistic()
+        /// </summary>
+        /// <returns></returns>
+        public IEnumerable<UserDto> GetAllWithStatistic()
+        {
+            var models = _gameContext.Users.Include("Statistic").ToArray();
+            return _mapper.Map<IEnumerable<UserDto>>(models);
+        }
+
+        public UserDto GetFullById(int Id)
         {
             return _gameContext.Users.Where(x => x.Id == Id)
                 .ProjectToSingleOrDefault<UserDto>(_mapper.ConfigurationProvider);
         }
 
-        /// <summary>
-        /// Implementation of IUserService GetByName() method. If no user with nickname exist's, null will be returned
-        /// </summary>
-        /// <param name="nickname">User nickname</param>
-        /// <returns>User from RegisterUserDto collection or null</returns>
-        public UserDto GetByName(string nickname)
+        public UserDto GetStatById(int Id)
         {
-            return _gameContext.Users.Where(x => x.NickName == nickname)
-                         .ProjectToSingleOrDefault<UserDto>(_mapper.ConfigurationProvider);
+            var model = _gameContext.Users.Include("Statistic").SingleOrDefault(x => x.Id == Id);
+            return _mapper.Map<UserDto>(model);
+        }
+
+        public UserDto GetSetById(int Id)
+        {
+            var model = _gameContext.Users.Include("Setting").SingleOrDefault(x => x.Id == Id);
+            return _mapper.Map<UserDto>(model);
+        }
+
+
+        public UserDto GetFullByNick(string nick)
+        {
+            return _gameContext.Users.Where(x => x.NickName == nick)
+                .ProjectToSingleOrDefault<UserDto>(_mapper.ConfigurationProvider);
+        }
+
+        public UserDto GetStatByNick(string nick)
+        {
+            var model = _gameContext.Users.Include("Statistic").SingleOrDefault(x => x.NickName == nick);
+            return _mapper.Map<UserDto>(model);
+        }
+
+        public UserDto GetSetByNick(string nick)
+        {
+            var model = _gameContext.Users.Include("Setting").SingleOrDefault(x => x.NickName == nick);
+            return _mapper.Map<UserDto>(model);
         }
 
         /// <summary>
@@ -144,6 +191,10 @@ namespace Kbalan.TouchType.Logic.Services
         {
             throw new NotImplementedException();
         }
+
+
+
+
         #endregion
     }
 }

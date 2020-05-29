@@ -26,21 +26,78 @@ namespace GamePortal.Web.Api.Controllers.TouchType
             return Ok(_userService.GetAll());
         }
 
-        //Get User by Id
+        //Get All RegisterUsers
         [HttpGet]
-        [Route("{id}")]
-        public IHttpActionResult GetById([FromUri]int Id)
+        [Route("full")]
+        public IHttpActionResult GetAllFull()
         {
-            return _userService.GetById(Id) == null ? (IHttpActionResult)NotFound() : Ok(_userService.GetById(Id));
+            return Ok(_userService.GetAllFull());
         }
 
-        //Get User by NickName
+        //Get All RegisterUsers with settings
         [HttpGet]
-        [Route("searchbynick")]
-        public IHttpActionResult GetByName([FromUri]string nickname)
+        [Route("settings")]
+        public IHttpActionResult GetAllWithSettings()
         {
-            return _userService.GetByName(nickname) == null ? (IHttpActionResult)NotFound() : Ok(_userService.GetByName(nickname));
+            return Ok(_userService.GetAllWithSettings());
         }
+
+        //Get All RegisterUsers with statistic
+        [HttpGet]
+        [Route("statistic")]
+        public IHttpActionResult GetAllWithStatistic()
+        {
+            return Ok(_userService.GetAllWithStatistic());
+        }
+
+        //Get Full User Info by Id
+        [HttpGet]
+        [Route("{id}/fullbyid")]
+        public IHttpActionResult GetFullById([FromUri]int Id)
+        {
+            return _userService.GetFullById(Id) == null ? (IHttpActionResult)NotFound() : Ok(_userService.GetFullById(Id));
+        }
+
+        //Get User Statistic by Id
+        [HttpGet]
+        [Route("{id}/statisticbyid")]
+        public IHttpActionResult GetStatById([FromUri]int Id)
+        {
+            return _userService.GetStatById(Id) == null ? (IHttpActionResult)NotFound() : Ok(_userService.GetStatById(Id));
+        }
+
+        //Get User Setting by Id
+        [HttpGet]
+        [Route("{id}/settingbyid")]
+        public IHttpActionResult GetSetById([FromUri]int Id)
+        {
+            return _userService.GetSetById(Id) == null ? (IHttpActionResult)NotFound() : Ok(_userService.GetSetById(Id));
+        }
+
+        //Get Full User Info by Nick
+        [HttpGet]
+        [Route("{nick}/fullbynick")]
+        public IHttpActionResult GetFullByNick([FromUri]string nick)
+        {
+            return _userService.GetFullByNick(nick) == null ? (IHttpActionResult)NotFound() : Ok(_userService.GetFullByNick(nick));
+        }
+
+        //Get User Statistic by Nick
+        [HttpGet]
+        [Route("{nick}/statisticbynick")]
+        public IHttpActionResult GetStatByNick([FromUri]string nick)
+        {
+            return _userService.GetStatByNick(nick) == null ? (IHttpActionResult)NotFound() : Ok(_userService.GetStatByNick(nick));
+        }
+
+        //Get User Setting by Nick
+        [HttpGet]
+        [Route("{nick}/settingbynick")]
+        public IHttpActionResult GetSetByNick([FromUri]string nick)
+        {
+            return _userService.GetSetByNick(nick) == null ? (IHttpActionResult)NotFound() : Ok(_userService.GetSetByNick(nick));
+        }
+
 
         //Add new user
         [HttpPost]
