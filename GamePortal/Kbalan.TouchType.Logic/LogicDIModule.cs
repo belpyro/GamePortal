@@ -16,8 +16,12 @@ namespace Kbalan.TouchType.Logic
     {
         public override void Load()
         {
-            
-            Mapper.Initialize(cfg => cfg.AddProfiles(typeof(UserProfile)));
+
+            Mapper.Initialize(cfg =>
+            {
+                cfg.AddProfile<UserProfile>();
+                cfg.AddProfile<UserSettingProfile>();
+            });
                 
             
             var mapper = Mapper.Configuration.CreateMapper();

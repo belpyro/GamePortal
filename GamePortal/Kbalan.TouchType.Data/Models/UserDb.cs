@@ -11,9 +11,9 @@ namespace Kbalan.TouchType.Data.Models
 
         public string NickName { get; set; }
 
-        public UserStatisticDb UserStatistic { get; set; }
+        public StatisticDb Statistic { get; set; }
 
-        public UserSettingDb UserSetting { get; set; }
+        public SettingDb Setting { get; set; }
 
     }
 }

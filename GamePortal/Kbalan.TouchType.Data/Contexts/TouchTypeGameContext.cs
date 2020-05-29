@@ -13,19 +13,21 @@ namespace Kbalan.TouchType.Data.Contexts
     public sealed class TouchTypeGameContext : DbContext
     {
 
+       // public DbSet<UserSettingDb> UserSettings { get; set; }
+
+        public TouchTypeGameContext() : base ("TouchTypeGameContext")
+        {
+            //Database.SetInitializer<TouchTypeGameContext>(new DropCreateDatabaseAlways<TouchTypeGameContext>());
+            Database.Log = msg => Debug.WriteLine(msg);
+        }
+
         public DbSet<TextSetDb> TextSets { get; set; }
 
         public DbSet<UserDb> Users { get; set; }
 
-        public DbSet<UserStatisticDb> UserStatistics { get; set; }
+        public DbSet<StatisticDb> Statistics { get; set; }
 
-        public DbSet<UserSettingDb> UserSettings { get; set; }
-
-        public TouchTypeGameContext() : base ("TouchTypeGameContext")
-        {
-            Database.SetInitializer(new DropCreateDatabaseAlways<TouchTypeGameContext>());
-            Database.Log = msg => Debug.WriteLine(msg);
-        }
+        public DbSet<SettingDb> Setting { get; set; }
 
         protected override void OnModelCreating(DbModelBuilder modelBuilder)
         {
@@ -33,25 +35,20 @@ namespace Kbalan.TouchType.Data.Contexts
 
             var Userentity = modelBuilder.Entity<UserDb>();
             var Textentity = modelBuilder.Entity<TextSetDb>();
-            var UserStatentity = modelBuilder.Entity<UserStatisticDb>();
-            var UserSetentity = modelBuilder.Entity<UserSettingDb>();
-
-            Userentity.HasKey(x => x.Id).ToTable("Users");
-            UserStatentity.HasKey(x => x.Id).ToTable("UsersStatistic");
-            UserSetentity.HasKey(x => x.Id).ToTable("UsersSettings");
-
-            Userentity.HasOptional(set => set.UserStatistic)
-                .WithOptionalDependent(op => op.User)
-                .Map(m => m.MapKey("UserStatisticId"));
-
-            Userentity.HasOptional(set => set.UserSetting)
-                .WithOptionalDependent(op => op.User)
-                .Map(m => m.MapKey("UserSettingId"));
-
-            Userentity.Property(x => x.NickName).IsRequired().HasMaxLength(150).IsUnicode().IsVariableLength();
-
-           
+            
             Textentity.HasKey(x => x.Id).ToTable("Text_sets");
+            Userentity.HasKey(x => x.Id).ToTable("Users");
+
+            Userentity.HasRequired(stat => stat.Statistic);
+            Userentity.HasRequired(set => set.Setting);
+            
+            
+              
+
+          /*  Userentity.HasRequired(set => set.UserSetting)
+                .WithRequiredPrincipal(op => op.User);*/
+
+            
         }
     }
 }

@@ -1,6 +1,6 @@
 ﻿namespace Kbalan.TouchType.Data.Models
 {
-    public class UserSettingDb
+    public class SettingDb
     {
         public int Id { get; set; }
 

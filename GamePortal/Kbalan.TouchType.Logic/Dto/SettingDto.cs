@@ -2,7 +2,7 @@
 
 namespace Kbalan.TouchType.Logic.Dto
 {
-    public class UserSettingDto
+    public class SettingDto
     {
         public int Id { get; set; }
 
