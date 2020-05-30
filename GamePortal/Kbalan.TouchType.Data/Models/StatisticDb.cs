@@ -10,6 +10,6 @@
 
         public int AvarageSpeed { get; set; }
 
-        /*public int User { get; set; }*/
+        public UserDb User { get; set; }
     }
 }
