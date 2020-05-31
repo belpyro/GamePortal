@@ -10,27 +10,27 @@ namespace Kbalan.TouchType.Logic.Services
         /// Return full information(with statistic and settings) about all users
         /// </summary>
         /// <returns>All users</returns>
-        IEnumerable<UserDto> GetAll();
+        IEnumerable<UserSettingStatisticDto> GetAll();
 
         /// <summary>
         /// Return full information(with statistic and settings) about user by id
         /// </summary>
         /// <param name="id">user id</param>
         /// <returns>user</returns>
-        UserDto GetAllById(int id);
+        UserSettingStatisticDto GetById(int id);
 
         /// <summary>
         /// Add new user 
         /// </summary>
         /// <param name="model">New user</param>
         /// <returns>New registered user</returns>
-        UserAddDto Add(UserAddDto model);
+        UserSettingDto Add(UserSettingDto model);
 
         /// <summary>
         /// Updating existing user by id
         /// </summary>
         /// <param name="model">New user model</param>
-        void Update(UserUpdateDto model);
+        void Update(UserDto model);
 
         /// <summary>
         /// Delete existing user by it's id

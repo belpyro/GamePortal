@@ -67,11 +67,12 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Dto\TextSetDto.cs" />
-    <Compile Include="Dto\UserDto%27s\UserAddDto.cs" />
-    <Compile Include="Dto\UserDto%27s\UserDto.cs" />
+    <Compile Include="Dto\UserDto%27s\UserStatisticDto.cs" />
+    <Compile Include="Dto\UserDto%27s\UserSettingDto.cs" />
+    <Compile Include="Dto\UserDto%27s\UserSettingStatisticDto.cs" />
     <Compile Include="Dto\SettingDto.cs" />
     <Compile Include="Dto\StatisticDto.cs" />
-    <Compile Include="Dto\UserDto%27s\UserUpdateDto.cs" />
+    <Compile Include="Dto\UserDto%27s\UserDto.cs" />
     <Compile Include="LogicDIModule.cs" />
     <Compile Include="Profiles\TextSetProfile.cs" />
     <Compile Include="Profiles\UserProfile.cs" />

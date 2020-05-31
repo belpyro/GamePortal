@@ -4,17 +4,19 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Kbalan.TouchType.Logic.Dto
+namespace Kbalan.TouchType.Logic.Dto.UserDto_s
 {
     /// <summary>
-    /// Class for info about user(id, Nickname and Password) without setting or statistic
+    /// Class for info about user with statistic(without settings)
     /// </summary>
-    public class UserDto
+    class UserStatisticDto
     {
         public int Id { get; set; }
 
         public string NickName { get; set; }
 
         public string Password { get; set; }
+
+        public StatisticDto Statistic { get; set; }
     }
 }

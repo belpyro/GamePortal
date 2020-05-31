@@ -27,9 +27,9 @@ namespace Kbalan.TouchType.Logic.Services
         /// Implementation of IUserService GetAll() method
         /// </summary>
         /// <returns></returns>
-        public IEnumerable<UserDto> GetAll()
+        public IEnumerable<UserSettingStatisticDto> GetAll()
         {
-            return _gameContext.Users.ProjectToArray<UserDto>(_mapper.ConfigurationProvider);
+            return _gameContext.Users.ProjectToArray<UserSettingStatisticDto>(_mapper.ConfigurationProvider);
         }
 
         /// <summary>
@@ -37,10 +37,10 @@ namespace Kbalan.TouchType.Logic.Services
         /// </summary>
         /// <param name="Id"></param>
         /// <returns></returns>
-        public UserDto GetAllById(int Id)
+        public UserSettingStatisticDto GetById(int Id)
         {
             return _gameContext.Users.Where(x => x.Id == Id)
-                .ProjectToSingleOrDefault<UserDto>(_mapper.ConfigurationProvider);
+                .ProjectToSingleOrDefault<UserSettingStatisticDto>(_mapper.ConfigurationProvider);
         }
 
         /// <summary>
@@ -49,7 +49,7 @@ namespace Kbalan.TouchType.Logic.Services
         /// </summary>
         /// <param name="model">RegisterUserDto model</param>
         /// <returns>New User or null</returns>
-        public UserAddDto Add(UserAddDto model)
+        public UserSettingDto Add(UserSettingDto model)
         {
             var DbModel = _mapper.Map<UserDb>(model);
             _gameContext.Users.Add(DbModel);
@@ -63,7 +63,7 @@ namespace Kbalan.TouchType.Logic.Services
         /// Implementation of Update()
         /// </summary>
         /// <param name="model"></param>
-        public void Update(UserUpdateDto model)
+        public void Update(UserDto model)
         {
             var dbModel = _mapper.Map<UserDb>(model);
             _gameContext.Users.Attach(dbModel);

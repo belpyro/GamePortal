@@ -6,7 +6,10 @@ using System.Threading.Tasks;
 
 namespace Kbalan.TouchType.Logic.Dto
 {
-    public class UserAddDto
+    /// <summary>
+    /// Class for info about user and setting(without statistic)
+    /// </summary>
+    public class UserSettingDto
     {
         public int Id { get; set; }
 

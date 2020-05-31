@@ -10,11 +10,11 @@ using Kbalan.TouchType.Logic.Services;
 namespace GamePortal.Web.Api.Controllers.TouchType
 {
     [RoutePrefix("api/textsets")]
-    public class TextsController : ApiController
+    public class TTGTextsController : ApiController
     {
         private readonly ITextSetService _textSetService;
 
-        public TextsController(ITextSetService textSetService)
+        public TTGTextsController(ITextSetService textSetService)
         {
             this._textSetService = textSetService;
         }

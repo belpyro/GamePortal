@@ -9,11 +9,11 @@ using Kbalan.TouchType.Logic.Services;
 
 namespace GamePortal.Web.Api.Controllers.TouchType
 {
-    [RoutePrefix("api/registerusers")]
-    public class RegisterUsersController : ApiController
+    [RoutePrefix("api/users")]
+    public class TTGUsersController : ApiController
     {
         private readonly IUserService _userService;
-        public RegisterUsersController(IUserService userService)
+        public TTGUsersController(IUserService userService)
         {
             this._userService = userService;
         }
@@ -29,15 +29,15 @@ namespace GamePortal.Web.Api.Controllers.TouchType
         //Get Full User Info by Id
         [HttpGet]
         [Route("{id}")]
-        public IHttpActionResult GetAllById([FromUri]int Id)
+        public IHttpActionResult GetById([FromUri]int Id)
         {
-            return _userService.GetAllById(Id) == null ? (IHttpActionResult)NotFound() : Ok(_userService.GetAllById(Id));
+            return _userService.GetById(Id) == null ? (IHttpActionResult)NotFound() : Ok(_userService.GetById(Id));
         }
 
         //Add new user
         [HttpPost]
         [Route("")]
-        public IHttpActionResult Add([FromBody]UserAddDto model)
+        public IHttpActionResult Add([FromBody]UserSettingDto model)
         {
             return _userService.Add(model) == null ? (IHttpActionResult)Conflict() : Created($"/registerusers/{model.Id}", model);
         }
@@ -45,7 +45,7 @@ namespace GamePortal.Web.Api.Controllers.TouchType
         //Update User by Id
         [HttpPut]
         [Route("")]
-        public IHttpActionResult Update([FromBody]UserUpdateDto model)
+        public IHttpActionResult Update([FromBody]UserDto model)
         {
             _userService.Update(model);
             return StatusCode(HttpStatusCode.NoContent);

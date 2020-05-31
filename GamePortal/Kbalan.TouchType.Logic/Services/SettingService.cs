@@ -4,6 +4,7 @@ using Kbalan.TouchType.Data.Models;
 using Kbalan.TouchType.Logic.Dto;
 using System;
 using System.Collections.Generic;
+using System.Data.Entity;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -21,26 +22,46 @@ namespace Kbalan.TouchType.Logic.Services
             this._mapper = mapper;
         }
 
-        public IEnumerable<SettingDto> GetAll()
+        /// <summary>
+        /// Return all User with settings from Db
+        /// </summary>
+        /// <returns>All Users with settings</returns>
+        public IEnumerable<UserSettingDto> GetAll()
         {
-            return _gameContext.Setting.ProjectToArray<SettingDto>(_mapper.ConfigurationProvider);
+            var models = _gameContext.Users.Include("Setting").ToArray();
+            return _mapper.Map<IEnumerable<UserSettingDto>>(models);
         }
 
-        public SettingDto GetById(int id)
+        /// <summary>
+        /// Return User with it's setting by user id
+        /// </summary>
+        /// <param name="id">user id</param>
+        /// <returns>user with setting</returns>
+        public UserSettingDto GetById(int id)
         {
-            return _gameContext.Setting.Where(x => x.SettingId == id)
-                   .ProjectToSingleOrDefault<SettingDto>(_mapper.ConfigurationProvider);
+            return _gameContext.Users.Where(x => x.Id == id)
+                   .ProjectToSingleOrDefault<UserSettingDto>(_mapper.ConfigurationProvider);
         }
 
-        public void Update(SettingDto model)
+
+        public void Update(int id, SettingDto model)
         {
-            var dbModel = _mapper.Map<SettingDb>(model);
-            _gameContext.Setting.Attach(dbModel);
-            var entry = _gameContext.Entry(dbModel);
-            entry.Property(x => x.Email).IsModified = true;
-            entry.Property(x => x.LevelOfText).IsModified = true;
-            entry.Property(x => x.Role).IsModified = true;
-            entry.Property(x => x.Avatar).IsModified = true;
+            var userModel = _gameContext.Users.Include("Setting").SingleOrDefault(x => x.Id == id);
+            var modelDb = _mapper.Map<SettingDb>(model);
+            modelDb.SettingId = userModel.Setting.SettingId;
+            modelDb.User = userModel.Setting.User;
+            userModel.Setting = modelDb;
+            _gameContext.Users.Attach(userModel);
+         _gameContext.SaveChanges();
+
+
+            /*    var dbModel = _mapper.Map<SettingDb>(model);
+                _gameContext.Setting.Attach(dbModel);
+                var entry = _gameContext.Entry(dbModel);
+                entry.Property(x => x.Email).IsModified = true;
+                entry.Property(x => x.LevelOfText).IsModified = true;
+                entry.Property(x => x.Role).IsModified = true;
+                entry.Property(x => x.Avatar).IsModified = true;*/
         }
 
         #region IDisposable Support

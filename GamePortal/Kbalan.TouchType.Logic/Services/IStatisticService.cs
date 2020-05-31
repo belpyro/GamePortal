@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace Kbalan.TouchType.Logic.Services
 {
-    interface IStatisticService
+    public interface IStatisticService
     {
         /// <summary>
         /// Return information about all statistics with it's user
