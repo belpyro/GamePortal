@@ -33,14 +33,18 @@ namespace Kbalan.TouchType.Data.Contexts
         {
             base.OnModelCreating(modelBuilder);
 
-            var Userentity = modelBuilder.Entity<UserDb>();
-            var Textentity = modelBuilder.Entity<TextSetDb>();
+            var UserEntity = modelBuilder.Entity<UserDb>();
+            var TextEntity = modelBuilder.Entity<TextSetDb>();
+            var StatisticEntity = modelBuilder.Entity<StatisticDb>();
+            var SettingEntity = modelBuilder.Entity<SettingDb>();
             
-            Textentity.HasKey(x => x.Id).ToTable("Text_sets");
-            Userentity.HasKey(x => x.Id).ToTable("Users");
+            TextEntity.HasKey(x => x.Id).ToTable("Text_set");
+            UserEntity.HasKey(x => x.Id).ToTable("User");
+            StatisticEntity.HasKey(x => x.StatisticId).ToTable("Statistic");
+            SettingEntity.HasKey(x => x.SettingId).ToTable("Setting");
 
-            Userentity.HasRequired(stat => stat.Statistic);
-            Userentity.HasRequired(set => set.Setting);
+            UserEntity.HasRequired(stat => stat.Statistic).WithRequiredPrincipal(us => us.User);
+            UserEntity.HasRequired(set => set.Setting).WithRequiredPrincipal(us => us.User);
             
         }
     }
