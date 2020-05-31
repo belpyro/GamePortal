@@ -53,8 +53,8 @@ namespace GamePortal.Web.Api.Controllers.TouchType
 
         //Update Text by Id
         [HttpPut]
-        [Route("{id}")]
-        public IHttpActionResult Update(int id, [FromBody]TextSetDto model)
+        [Route("")]
+        public IHttpActionResult Update([FromBody]TextSetDto model)
         {
             _textSetService.Update(model);
             return StatusCode(HttpStatusCode.NoContent);

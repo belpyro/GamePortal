@@ -5,6 +5,7 @@ using Kbalan.TouchType.Logic.Dto;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Cryptography.X509Certificates;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -23,7 +24,16 @@ namespace Kbalan.TouchType.Logic.Services
         }
 
         /// <summary>
-        /// Implementation of ITextService Add method
+        /// Get All TextSet's
+        /// </summary>
+        /// <returns></returns>
+        public IEnumerable<TextSetDto> GetAll()
+        {
+            return _gameContext.TextSets.ProjectToArray<TextSetDto>(_mapper.ConfigurationProvider);
+        }
+
+        /// <summary>
+        /// Add new TextSet
         /// </summary>
         public TextSetDto Add(TextSetDto model)
         {
@@ -36,28 +46,7 @@ namespace Kbalan.TouchType.Logic.Services
         }
 
         /// <summary>
-        /// Implementation of ITextSetService
-        /// </summary>
-        /// <param name="id"></param>
-        /// <returns></returns>
-       public void Delete(int id)
-        {
-            var dbModel = _gameContext.TextSets.Find(id);
-            _gameContext.TextSets.Remove(dbModel);
-            _gameContext.SaveChanges();
-        }
-
-        /// <summary>
-        /// Implementation of ITextSetSetvice GetAllMethod
-        /// </summary>
-        /// <returns></returns>
-        public IEnumerable<TextSetDto> GetAll()
-        {
-            return _gameContext.TextSets.ProjectToArray<TextSetDto>(_mapper.ConfigurationProvider);
-        }
-
-        /// <summary>
-        /// Implementation of ITextSetService GetById method
+        /// GetTextSet by Id
         /// </summary>
         public TextSetDto GetById(int Id)
         {
@@ -66,26 +55,43 @@ namespace Kbalan.TouchType.Logic.Services
         }
 
         /// <summary>
-        /// Implementation of ITextSetService GetByLevel method
+        /// Get TextSet by level
         /// </summary>
-/*        public TextSetDto GetByLevel(int level)
+        public TextSetDto GetByLevel(int level)
         {
-            return _gameContext.TextSets.Where(x => x.LevelOfText == level)
-                    .ProjectToSingleOrDefault<TextSetDto>(_mapper.ConfigurationProvider);
+            var texts = _gameContext.TextSets.Where(x => x.LevelOfText == (LevelOfText)level).ToArray();
+            var text = texts.ElementAt(new Random().Next(0, texts.Length));
+            return _mapper.Map<TextSetDto>(text);
+                
         }
 
         /// <summary>
-        /// Implementation of ITextSetService Update method
+        /// Update TextSet 
         /// </summary>
-        public void Update( TextSetDto model)
+        /// <param name="model">TextSet model</param>
+        public void Update(TextSetDto model)
         {
-            var dbModel = _gameContext.TextSets.Find(model.Id);
-
-            dbModel.LevelOfText = model.LevelOfText;
-            dbModel.TextForTyping = model.TextForTyping;
+            var dbModel = _mapper.Map<TextSetDb>(model);
+            _gameContext.TextSets.Attach(dbModel);
+            var entry = _gameContext.Entry(dbModel);
+            entry.Property(x => x.LevelOfText).IsModified = true;
+            entry.Property(x => x.Name).IsModified = true;
+            entry.Property(x => x.TextForTyping).IsModified = true;
 
             _gameContext.SaveChanges();
-        }*/
+        }
+
+        /// <summary>
+        /// Delete TextSet by it's id
+        /// </summary>
+        /// <param name="id">TextSet Id</param>
+        /// <returns></returns>
+        public void Delete(int id)
+        {
+            var dbModel = _gameContext.TextSets.Find(id);
+            _gameContext.TextSets.Remove(dbModel);
+            _gameContext.SaveChanges();
+        }
 
         #region IDisposable Support
         private bool disposedValue = false; // To detect redundant calls
@@ -122,17 +128,6 @@ namespace Kbalan.TouchType.Logic.Services
             // TODO: uncomment the following line if the finalizer is overridden above.
             // GC.SuppressFinalize(this);
         }
-
-        public TextSetDto GetByLevel(int level)
-        {
-            throw new NotImplementedException();
-        }
-
-        public void Update(TextSetDto model)
-        {
-            throw new NotImplementedException();
-        }
-
 
         #endregion
     }

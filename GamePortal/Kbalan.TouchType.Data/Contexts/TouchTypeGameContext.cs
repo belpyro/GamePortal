@@ -17,7 +17,6 @@ namespace Kbalan.TouchType.Data.Contexts
 
         public TouchTypeGameContext() : base ("TouchTypeGameContext")
         {
-            //Database.SetInitializer<TouchTypeGameContext>(new DropCreateDatabaseAlways<TouchTypeGameContext>());
             Database.Log = msg => Debug.WriteLine(msg);
         }
 

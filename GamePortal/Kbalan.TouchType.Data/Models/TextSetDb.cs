@@ -8,6 +8,7 @@ namespace Kbalan.TouchType.Data.Models
 {
     public class TextSetDb:Entity
     {
+        public string Name { get; set; }
 
         public string TextForTyping { get; set; }
 
