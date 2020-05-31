@@ -4,11 +4,11 @@ using Kbalan.TouchType.Logic.Dto;
 
 namespace Kbalan.TouchType.Logic.Profiles
 {
-    public class UserSettingProfile : Profile
+    public class StatisticProfile : Profile
     {
-        public UserSettingProfile()
+        public StatisticProfile()
         {
-            CreateMap<SettingDb, SettingDto>().ReverseMap();
+            CreateMap<StatisticDb, StatisticDto>().ReverseMap();
         }
     }
 

@@ -28,6 +28,7 @@ namespace Kbalan.TouchType.Logic
             this.Bind<IUserService>().To<UserService>();
             this.Bind<ITextSetService>().To<TextSetService>();
             this.Bind<ISettingService>().To<SettingService>();
+            this.Bind<IStatisticService>().To<StatisticService>();
         }
     }
 }

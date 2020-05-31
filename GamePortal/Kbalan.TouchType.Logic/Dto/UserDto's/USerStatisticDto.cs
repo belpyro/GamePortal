@@ -4,12 +4,12 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Kbalan.TouchType.Logic.Dto.UserDto_s
+namespace Kbalan.TouchType.Logic.Dto
 {
     /// <summary>
     /// Class for info about user with statistic(without settings)
     /// </summary>
-    class UserStatisticDto
+    public class UserStatisticDto
     {
         public int Id { get; set; }
 

@@ -21,25 +21,41 @@ namespace Kbalan.TouchType.Logic.Services
             this._mapper = mapper;
         }
 
-        public IEnumerable<StatisticDto> GetAll()
+        /// <summary>
+        /// Return all User with statistic from Db
+        /// </summary>
+        /// <returns>All Users with statistic</returns>
+        public IEnumerable<UserStatisticDto> GetAll()
         {
-            return _gameContext.Statistics.ProjectToArray<StatisticDto>(_mapper.ConfigurationProvider);
+            var models = _gameContext.Users.Include("Statistic").ToArray();
+            return _mapper.Map<IEnumerable<UserStatisticDto>>(models);
         }
 
-        public StatisticDto GetById(int id)
+        /// <summary>
+        /// Return User with it's statistic by user id
+        /// </summary>
+        /// <param name="id">user id</param>
+        /// <returns>user with statistic</returns>
+        public UserStatisticDto GetById(int id)
         {
-            return _gameContext.Statistics.Where(x => x.StatisticId == id)
-                   .ProjectToSingleOrDefault<StatisticDto>(_mapper.ConfigurationProvider);
+            return _gameContext.Users.Where(x => x.Id == id)
+                   .ProjectToSingleOrDefault<UserStatisticDto>(_mapper.ConfigurationProvider);
         }
 
-        public void Update(StatisticDto model)
+        /// <summary>
+        /// Update existing user statistic
+        /// </summary>
+        /// <param name="id">user's id</param>
+        /// <param name="model">new statistic model</param>
+        public void Update(int id, StatisticDto model)
         {
-            var dbModel = _mapper.Map<StatisticDb>(model);
-            _gameContext.Statistics.Attach(dbModel);
-            var entry = _gameContext.Entry(dbModel);
-            entry.Property(x => x.AvarageSpeed).IsModified = true;
-            entry.Property(x => x.MaxSpeedRecord).IsModified = true;
-            entry.Property(x => x.NumberOfGamesPlayed).IsModified = true;
+            var userModel = _gameContext.Users.Include("Statistic").SingleOrDefault(x => x.Id == id);
+            var modelDb = _mapper.Map<StatisticDb>(model);
+            modelDb.StatisticId = userModel.Statistic.StatisticId;
+            modelDb.User = userModel.Statistic.User;
+            userModel.Statistic = modelDb;
+            _gameContext.Users.Attach(userModel);
+            _gameContext.SaveChanges();
         }
 
         #region IDisposable Support

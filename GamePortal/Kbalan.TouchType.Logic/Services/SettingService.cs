@@ -43,7 +43,11 @@ namespace Kbalan.TouchType.Logic.Services
                    .ProjectToSingleOrDefault<UserSettingDto>(_mapper.ConfigurationProvider);
         }
 
-
+        /// <summary>
+        /// Update existing user setting
+        /// </summary>
+        /// <param name="id">user's id</param>
+        /// <param name="model">new settting model</param>
         public void Update(int id, SettingDto model)
         {
             var userModel = _gameContext.Users.Include("Setting").SingleOrDefault(x => x.Id == id);
@@ -52,16 +56,7 @@ namespace Kbalan.TouchType.Logic.Services
             modelDb.User = userModel.Setting.User;
             userModel.Setting = modelDb;
             _gameContext.Users.Attach(userModel);
-         _gameContext.SaveChanges();
-
-
-            /*    var dbModel = _mapper.Map<SettingDb>(model);
-                _gameContext.Setting.Attach(dbModel);
-                var entry = _gameContext.Entry(dbModel);
-                entry.Property(x => x.Email).IsModified = true;
-                entry.Property(x => x.LevelOfText).IsModified = true;
-                entry.Property(x => x.Role).IsModified = true;
-                entry.Property(x => x.Avatar).IsModified = true;*/
+           _gameContext.SaveChanges();
         }
 
         #region IDisposable Support

@@ -76,8 +76,8 @@
     <Compile Include="LogicDIModule.cs" />
     <Compile Include="Profiles\TextSetProfile.cs" />
     <Compile Include="Profiles\UserProfile.cs" />
-    <Compile Include="Profiles\UserSettingProfile.cs" />
-    <Compile Include="Profiles\UserStatisticProfile.cs" />
+    <Compile Include="Profiles\SettingProfile.cs" />
+    <Compile Include="Profiles\StatisticProfile.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Services\ISettingService.cs" />
     <Compile Include="Services\IStatisticService.cs" />

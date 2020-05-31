@@ -9,37 +9,37 @@ using System.Web.Http;
 
 namespace GamePortal.Web.Api.Controllers.TouchType
 {
-    [RoutePrefix("api/settings")]
-    public class TTGSettingsController : ApiController
+    [RoutePrefix("api/statistic")]
+    public class TTGStatisticsController : ApiController
     {
-        private readonly ISettingService _settingService;
-        public TTGSettingsController(ISettingService settingService)
+        private readonly IStatisticService _statisticService;
+        public TTGStatisticsController(IStatisticService statisticService)
         {
-            this._settingService = settingService;
+            this._statisticService = statisticService;
         }
 
-        //Get All Settings with user
+        //Get All Statistic with user
         [HttpGet]
         [Route("")]
         public IHttpActionResult GetAll()
         {
-            return Ok(_settingService.GetAll());
+            return Ok(_statisticService.GetAll());
         }
 
-        //Get Full Statistic Info by User Id
+        //Get Statistic Info by user Id
         [HttpGet]
         [Route("{id}")]
         public IHttpActionResult GetAllById([FromUri]int Id)
         {
-            return _settingService.GetById(Id) == null ? (IHttpActionResult)NotFound() : Ok(_settingService.GetById(Id));
+            return _statisticService.GetById(Id) == null ? (IHttpActionResult)NotFound() : Ok(_statisticService.GetById(Id));
         }
 
         //Update User Statistic by User Id
         [HttpPut]
         [Route("")]
-        public IHttpActionResult Update(int id ,[FromBody]SettingDto model)
+        public IHttpActionResult Update(int id, [FromBody]StatisticDto model)
         {
-            _settingService.Update(id, model);
+            _statisticService.Update(id, model);
             return StatusCode(HttpStatusCode.NoContent);
         }
     }

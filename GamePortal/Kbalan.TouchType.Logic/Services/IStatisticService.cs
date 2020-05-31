@@ -10,23 +10,23 @@ namespace Kbalan.TouchType.Logic.Services
     public interface IStatisticService
     {
         /// <summary>
-        /// Return information about all statistics with it's user
+        /// Return information about all statistic with it's user
         /// </summary>
-        /// <returns>All user with statistics</returns>
-        IEnumerable<StatisticDto> GetAll();
+        /// <returns>All user with statistic</returns>
+        IEnumerable<UserStatisticDto> GetAll();
 
         /// <summary>
-        /// Returns information about statistic with it's user by user id
+        /// Returns information about statistic's with it's user by user id
         /// </summary>
         /// <param name="Id">User ID</param>
-        /// <returns>Statistic with userl</returns>
-        StatisticDto GetById(int id);
+        /// <returns>Statistic with user</returns>
+        UserStatisticDto GetById(int id);
 
         /// <summary>
         /// Updating existing user statistic
         /// </summary>
-        /// <param name="model">New statistic model</param>
+        /// <param name="id">User id</param>
         /// <returns></returns>
-        void Update(StatisticDto model);
+        void Update(int id, StatisticDto model);
     }
 }
