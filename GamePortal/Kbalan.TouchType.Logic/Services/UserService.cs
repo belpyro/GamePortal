@@ -49,7 +49,7 @@ namespace Kbalan.TouchType.Logic.Services
         /// </summary>
         /// <param name="model">RegisterUserDto model</param>
         /// <returns>New User or null</returns>
-        public UserDto Add(UserDto model)
+        public UserAddDto Add(UserAddDto model)
         {
             var DbModel = _mapper.Map<UserDb>(model);
             _gameContext.Users.Add(DbModel);
@@ -63,13 +63,15 @@ namespace Kbalan.TouchType.Logic.Services
         /// Implementation of Update()
         /// </summary>
         /// <param name="model"></param>
-        public void Update(UserDto model)
+        public void Update(UserUpdateDto model)
         {
             var dbModel = _mapper.Map<UserDb>(model);
             _gameContext.Users.Attach(dbModel);
             var entry = _gameContext.Entry(dbModel);
             entry.Property(x => x.NickName).IsModified = true;
             entry.Property(x => x.Password).IsModified = true;
+            
+            _gameContext.SaveChanges();
         }
 
         /// <summary>

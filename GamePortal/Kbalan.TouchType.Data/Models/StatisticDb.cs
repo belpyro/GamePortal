@@ -10,6 +10,6 @@
 
         public int AvarageSpeed { get; set; }
 
-        virtual public UserDb User { get; set; }
+        public UserDb User { get; set; }
     }
 }

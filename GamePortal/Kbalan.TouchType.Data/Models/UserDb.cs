@@ -13,9 +13,9 @@ namespace Kbalan.TouchType.Data.Models
 
         public string Password { get; set; }
 
-        virtual public StatisticDb Statistic { get; set; }
+        public StatisticDb Statistic { get; set; }
 
-        virtual public SettingDb Setting { get; set; }
+        public SettingDb Setting { get; set; }
 
     }
 }

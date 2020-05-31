@@ -43,8 +43,10 @@ namespace Kbalan.TouchType.Data.Contexts
             StatisticEntity.HasKey(x => x.StatisticId).ToTable("Statistic");
             SettingEntity.HasKey(x => x.SettingId).ToTable("Setting");
 
-            UserEntity.HasRequired(stat => stat.Statistic).WithRequiredPrincipal(us => us.User);
-            UserEntity.HasRequired(set => set.Setting).WithRequiredPrincipal(us => us.User);
+            UserEntity.HasRequired(stat => stat.Statistic).WithRequiredPrincipal(us => us.User)
+                .WillCascadeOnDelete();
+            UserEntity.HasRequired(set => set.Setting).WithRequiredPrincipal(us => us.User)
+                .WillCascadeOnDelete();
             
         }
     }

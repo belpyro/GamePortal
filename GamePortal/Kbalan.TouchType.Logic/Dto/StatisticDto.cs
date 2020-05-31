@@ -9,5 +9,6 @@
         public int NumberOfGamesPlayed { get; set; }
 
         public int AvarageSpeed { get; set; }
+
     }
 }

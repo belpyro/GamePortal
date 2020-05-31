@@ -12,6 +12,6 @@
 
         public Role Role { get; set; } = Role.User;
 
-        virtual public UserDb User { get; set; }
+        public UserDb User { get; set; }
     }
 }

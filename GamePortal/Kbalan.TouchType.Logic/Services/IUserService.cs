@@ -24,13 +24,13 @@ namespace Kbalan.TouchType.Logic.Services
         /// </summary>
         /// <param name="model">New user</param>
         /// <returns>New registered user</returns>
-        UserDto Add(UserDto model);
+        UserAddDto Add(UserAddDto model);
 
         /// <summary>
         /// Updating existing user by id
         /// </summary>
         /// <param name="model">New user model</param>
-        void Update(UserDto model);
+        void Update(UserUpdateDto model);
 
         /// <summary>
         /// Delete existing user by it's id
