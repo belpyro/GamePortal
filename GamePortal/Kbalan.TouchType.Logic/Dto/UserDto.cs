@@ -12,6 +12,8 @@ namespace Kbalan.TouchType.Logic.Dto
 
         public string NickName { get; set; }
 
+        public string Password { get; set; }
+
         public StatisticDto Statistic { get; set; }
 
         public SettingDto Setting { get; set; }

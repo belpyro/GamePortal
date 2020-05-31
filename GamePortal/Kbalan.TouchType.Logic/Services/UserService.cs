@@ -29,74 +29,18 @@ namespace Kbalan.TouchType.Logic.Services
         /// <returns></returns>
         public IEnumerable<UserDto> GetAll()
         {
-            var models = _gameContext.Users.ToArray();
-            return _mapper.Map<IEnumerable<UserDto>>(models);
-        }
-
-        /// <summary>
-        /// Implementation of IUserService GetAllFull() method
-        /// </summary>
-        /// <returns></returns>
-        public IEnumerable<UserDto> GetAllFull()
-        {
             return _gameContext.Users.ProjectToArray<UserDto>(_mapper.ConfigurationProvider);
         }
 
         /// <summary>
-        /// Implementation of IUserService GetAllWithSettings()
+        /// Implementation of GetById()
         /// </summary>
+        /// <param name="Id"></param>
         /// <returns></returns>
-        public IEnumerable<UserDto> GetAllWithSettings()
-        {
-            var models = _gameContext.Users.Include("Setting").ToArray();
-            return _mapper.Map<IEnumerable<UserDto>>(models);
-        }
-
-        /// <summary>
-        /// Implementation of IUserService GetAllWithStatistic()
-        /// </summary>
-        /// <returns></returns>
-        public IEnumerable<UserDto> GetAllWithStatistic()
-        {
-            var models = _gameContext.Users.Include("Statistic").ToArray();
-            return _mapper.Map<IEnumerable<UserDto>>(models);
-        }
-
-        public UserDto GetFullById(int Id)
+        public UserDto GetAllById(int Id)
         {
             return _gameContext.Users.Where(x => x.Id == Id)
                 .ProjectToSingleOrDefault<UserDto>(_mapper.ConfigurationProvider);
-        }
-
-        public UserDto GetStatById(int Id)
-        {
-            var model = _gameContext.Users.Include("Statistic").SingleOrDefault(x => x.Id == Id);
-            return _mapper.Map<UserDto>(model);
-        }
-
-        public UserDto GetSetById(int Id)
-        {
-            var model = _gameContext.Users.Include("Setting").SingleOrDefault(x => x.Id == Id);
-            return _mapper.Map<UserDto>(model);
-        }
-
-
-        public UserDto GetFullByNick(string nick)
-        {
-            return _gameContext.Users.Where(x => x.NickName == nick)
-                .ProjectToSingleOrDefault<UserDto>(_mapper.ConfigurationProvider);
-        }
-
-        public UserDto GetStatByNick(string nick)
-        {
-            var model = _gameContext.Users.Include("Statistic").SingleOrDefault(x => x.NickName == nick);
-            return _mapper.Map<UserDto>(model);
-        }
-
-        public UserDto GetSetByNick(string nick)
-        {
-            var model = _gameContext.Users.Include("Setting").SingleOrDefault(x => x.NickName == nick);
-            return _mapper.Map<UserDto>(model);
         }
 
         /// <summary>
@@ -116,31 +60,20 @@ namespace Kbalan.TouchType.Logic.Services
         }
 
         /// <summary>
-        /// Update existing user in RegisterUserDto collection by id. If no user's with such id found null will
-        /// be returned
+        /// Implementation of Update()
         /// </summary>
-        /// <param name="id">user id</param>
-        /// <param name="model">new RegisterUserId model</param>
-        /// <returns>New User or null</returns>
-/*        public void Update(RegisterUserDto model)
+        /// <param name="model"></param>
+        public void Update(UserDto model)
         {
-            var dbModel = _gameContext.Users.Find(model.Id);
-            
-            dbModel.NickName = model.NickName;
-            dbModel.Avatar = model.Avatar;
-            dbModel.Email = model.Email;
-            dbModel.LevelOfText = model.LevelOfText;
-            dbModel.MaxSpeedRecord = model.MaxSpeedRecord;
-            dbModel.NumberOfGamesPlayed = model.NumberOfGamesPlayed;
-            dbModel.Password = dbModel.Password;
-            dbModel.Role = dbModel.Role;
-
-            _gameContext.SaveChanges();
-        }*/
+            var dbModel = _mapper.Map<UserDb>(model);
+            _gameContext.Users.Attach(dbModel);
+            var entry = _gameContext.Entry(dbModel);
+            entry.Property(x => x.NickName).IsModified = true;
+            entry.Property(x => x.Password).IsModified = true;
+        }
 
         /// <summary>
-        /// Delete user in RegisterUserDto collection by id. If no user with such id found, false will be
-        /// returned. If user deleted true will be returned.
+        /// Implementation of Delete()
         /// </summary>
         /// <param name="id">User id</param>
         /// <returns>true or false</returns>
@@ -150,6 +83,85 @@ namespace Kbalan.TouchType.Logic.Services
             _gameContext.Users.Remove(dbModel);
             _gameContext.SaveChanges();
         }
+
+        /*        /// <summary>
+                /// Implementation of IUserService GetAllWithSettings()
+                /// </summary>
+                /// <returns></returns>
+                public IEnumerable<UserDto> GetAllWithSettings()
+                {
+                    var models = _gameContext.Users.Include("Setting").ToArray();
+                    return _mapper.Map<IEnumerable<UserDto>>(models);
+                }
+
+                /// <summary>
+                /// Implementation of IUserService GetAllWithStatistic()
+                /// </summary>
+                /// <returns></returns>
+                public IEnumerable<UserDto> GetAllWithStatistic()
+                {
+                    var models = _gameContext.Users.Include("Statistic").ToArray();
+                    return _mapper.Map<IEnumerable<UserDto>>(models);
+                }*/
+
+
+
+        /* public UserDto GetStatById(int Id)
+         {
+             var model = _gameContext.Users.Include("Statistic").SingleOrDefault(x => x.Id == Id);
+             return _mapper.Map<UserDto>(model);
+         }
+
+         public UserDto GetSetById(int Id)
+         {
+             var model = _gameContext.Users.Include("Setting").SingleOrDefault(x => x.Id == Id);
+             return _mapper.Map<UserDto>(model);
+         }
+
+
+         public UserDto GetFullByNick(string nick)
+         {
+             return _gameContext.Users.Where(x => x.NickName == nick)
+                 .ProjectToSingleOrDefault<UserDto>(_mapper.ConfigurationProvider);
+         }
+
+         public UserDto GetStatByNick(string nick)
+         {
+             var model = _gameContext.Users.Include("Statistic").SingleOrDefault(x => x.NickName == nick);
+             return _mapper.Map<UserDto>(model);
+         }
+
+         public UserDto GetSetByNick(string nick)
+         {
+             var model = _gameContext.Users.Include("Setting").SingleOrDefault(x => x.NickName == nick);
+             return _mapper.Map<UserDto>(model);
+         }*/
+
+
+        /// <summary>
+        /// Update existing user in RegisterUserDto collection by id. If no user's with such id found null will
+        /// be returned
+        /// </summary>
+        /// <param name="id">user id</param>
+        /// <param name="model">new RegisterUserId model</param>
+        /// <returns>New User or null</returns>
+        /*        public void Update(RegisterUserDto model)
+                {
+                    var dbModel = _gameContext.Users.Find(model.Id);
+
+                    dbModel.NickName = model.NickName;
+                    dbModel.Avatar = model.Avatar;
+                    dbModel.Email = model.Email;
+                    dbModel.LevelOfText = model.LevelOfText;
+                    dbModel.MaxSpeedRecord = model.MaxSpeedRecord;
+                    dbModel.NumberOfGamesPlayed = model.NumberOfGamesPlayed;
+                    dbModel.Password = dbModel.Password;
+                    dbModel.Role = dbModel.Role;
+
+                    _gameContext.SaveChanges();
+                }*/
+
+
 
         #region IDisposable Support
         private bool disposedValue = false; // To detect redundant calls
@@ -186,14 +198,6 @@ namespace Kbalan.TouchType.Logic.Services
             // TODO: uncomment the following line if the finalizer is overridden above.
             // GC.SuppressFinalize(this);
         }
-
-        public void Update(UserDto model)
-        {
-            throw new NotImplementedException();
-        }
-
-
-
 
         #endregion
     }

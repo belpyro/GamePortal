@@ -22,7 +22,6 @@ namespace Kbalan.TouchType.Logic.Services
         /// <returns>Setting with user</returns>
         SettingDto GetById(int id);
 
-
         /// <summary>
         /// Updating existing user setting
         /// </summary>

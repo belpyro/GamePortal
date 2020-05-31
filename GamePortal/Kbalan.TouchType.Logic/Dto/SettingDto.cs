@@ -4,16 +4,15 @@ namespace Kbalan.TouchType.Logic.Dto
 {
     public class SettingDto
     {
-        public int Id { get; set; }
+        public int SettingId { get; set; }
 
         public string Email { get; set; }
 
         public string Avatar { get; set; }
 
-        public string Password { get; set; }
+        public LevelOfText LevelOfText { get; set; } = LevelOfText.Easy;
 
-        public LevelOfText LevelOfText { get; set; }
+        public Role Role { get; set; } = Role.User;
 
-        public Role Role { get; set; }
     }
 }
