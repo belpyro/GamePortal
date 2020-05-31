@@ -2,7 +2,7 @@
 {
     public class StatisticDb
     {
-        public int Id { get; set; }
+        public int StatisticId { get; set; }
 
         public int MaxSpeedRecord { get; set; } 
 
@@ -10,6 +10,6 @@
 
         public int AvarageSpeed { get; set; }
 
-        public UserDb User { get; set; }
+        virtual public UserDb User { get; set; }
     }
 }
