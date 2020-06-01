@@ -2,6 +2,9 @@
 
 namespace Kbalan.TouchType.Logic.Dto
 {
+    /// <summary>
+    /// Model for transfering Setting Set from SettingDb without related User
+    /// </summary>
     public class SettingDto
     {
         public int SettingId { get; set; }

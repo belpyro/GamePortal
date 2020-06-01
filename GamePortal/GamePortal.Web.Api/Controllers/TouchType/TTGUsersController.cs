@@ -9,6 +9,9 @@ using Kbalan.TouchType.Logic.Services;
 
 namespace GamePortal.Web.Api.Controllers.TouchType
 {
+    /// <summary>
+    /// Controller for User
+    /// </summary>
     [RoutePrefix("api/users")]
     public class TTGUsersController : ApiController
     {

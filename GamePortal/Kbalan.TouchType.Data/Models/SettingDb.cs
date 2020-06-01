@@ -1,5 +1,9 @@
 ﻿namespace Kbalan.TouchType.Data.Models
 {
+    /// <summary>
+    /// Model for Setting Table. Setting table has PK - SettingId and FK - User(one-to-one with UserDb). Each User has one Setting Set and each Setting Set
+    /// has one user whom this setting set belong to.
+    /// </summary>
     public class SettingDb
     {
         public int SettingId { get; set; }

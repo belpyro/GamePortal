@@ -7,6 +7,9 @@ using System.Threading.Tasks;
 
 namespace Kbalan.TouchType.Logic.Dto
 {
+    /// <summary>
+    /// Model for transfering Text Set from TextSetDb
+    /// </summary>
     public class TextSetDto
     {
         public string Name { get; set; }

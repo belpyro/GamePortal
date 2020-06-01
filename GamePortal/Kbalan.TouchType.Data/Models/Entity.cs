@@ -2,6 +2,9 @@
 
 namespace Kbalan.TouchType.Data.Models
 {
+    /// <summary>
+    /// Class with most popular entites for TouchTypeGame models 
+    /// </summary>
     public class Entity
     {
         public int Id { get; set; }

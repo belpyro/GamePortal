@@ -4,6 +4,9 @@ using System.Collections.Generic;
 
 namespace Kbalan.TouchType.Logic.Services
 {
+    /// <summary>
+    /// Service for User
+    /// </summary>
     public interface IUserService : IDisposable
     {
         /// <summary>

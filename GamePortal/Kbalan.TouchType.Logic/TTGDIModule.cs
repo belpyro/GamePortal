@@ -12,14 +12,12 @@ using System.Threading.Tasks;
 
 namespace Kbalan.TouchType.Logic
 {
-    public class LogicDIModule : NinjectModule
+    public class TTGDIModule : NinjectModule
     {
         public override void Load()
         {
-
             Mapper.Initialize(cfg => cfg.AddProfiles(typeof(UserProfile)));
-                
-            
+
             var mapper = Mapper.Configuration.CreateMapper();
 
             this.Bind<IMapper>().ToConstant(mapper);

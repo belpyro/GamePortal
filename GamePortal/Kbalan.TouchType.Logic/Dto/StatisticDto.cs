@@ -1,5 +1,8 @@
 ﻿namespace Kbalan.TouchType.Logic.Dto
 {
+    /// <summary>
+    /// Model for transfering Statistic Set from StatisticDb without related User
+    /// </summary>
     public class StatisticDto
     {
         public int StatisticId { get; set; }

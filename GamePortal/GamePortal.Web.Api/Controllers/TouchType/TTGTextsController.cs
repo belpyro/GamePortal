@@ -9,6 +9,9 @@ using Kbalan.TouchType.Logic.Services;
 
 namespace GamePortal.Web.Api.Controllers.TouchType
 {
+    /// <summary>
+    /// Controller for TextSet
+    /// </summary>
     [RoutePrefix("api/textsets")]
     public class TTGTextsController : ApiController
     {

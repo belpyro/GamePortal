@@ -7,6 +7,9 @@ using System.Threading.Tasks;
 
 namespace Kbalan.TouchType.Logic.Services
 {
+    /// <summary>
+    /// Service for Text Set. 
+    /// </summary>
     public interface ITextSetService: IDisposable
     {
         /// <summary>

@@ -10,11 +10,11 @@ using System.Threading.Tasks;
 
 namespace Kbalan.TouchType.Data.Contexts
 {
+    /// <summary>
+    /// Context for TouchTypeGame
+    /// </summary>
     public sealed class TouchTypeGameContext : DbContext
     {
-
-       // public DbSet<UserSettingDb> UserSettings { get; set; }
-
         public TouchTypeGameContext() : base ("TouchTypeGameContext")
         {
             Database.Log = msg => Debug.WriteLine(msg);
@@ -32,21 +32,7 @@ namespace Kbalan.TouchType.Data.Contexts
         {
             base.OnModelCreating(modelBuilder);
 
-            var UserEntity = modelBuilder.Entity<UserDb>();
-            var TextEntity = modelBuilder.Entity<TextSetDb>();
-            var StatisticEntity = modelBuilder.Entity<StatisticDb>();
-            var SettingEntity = modelBuilder.Entity<SettingDb>();
-            
-            TextEntity.HasKey(x => x.Id).ToTable("Text_set");
-            UserEntity.HasKey(x => x.Id).ToTable("User");
-            StatisticEntity.HasKey(x => x.StatisticId).ToTable("Statistic");
-            SettingEntity.HasKey(x => x.SettingId).ToTable("Setting");
-
-            UserEntity.HasRequired(stat => stat.Statistic).WithRequiredPrincipal(us => us.User)
-                .WillCascadeOnDelete();
-            UserEntity.HasRequired(set => set.Setting).WithRequiredPrincipal(us => us.User)
-                .WillCascadeOnDelete();
-            
+            modelBuilder.Configurations.AddFromAssembly(typeof(TouchTypeGameContext).Assembly);
         }
     }
 }

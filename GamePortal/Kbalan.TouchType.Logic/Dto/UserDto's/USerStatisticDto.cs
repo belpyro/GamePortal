@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 namespace Kbalan.TouchType.Logic.Dto
 {
     /// <summary>
-    /// Class for info about user with statistic(without settings)
+    ///  Model for transfering User information with related statistic, but without related setting
     /// </summary>
     public class UserStatisticDto
     {

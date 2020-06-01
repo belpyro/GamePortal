@@ -6,6 +6,9 @@ using System.Threading.Tasks;
 
 namespace Kbalan.TouchType.Data.Models
 {
+    /// <summary>
+    /// Model for Text Set Table from TouchTypeGame database. Text set has it's name, text for typing during game and Level of difficulty for this text
+    /// </summary>
     public class TextSetDb:Entity
     {
         public string Name { get; set; }

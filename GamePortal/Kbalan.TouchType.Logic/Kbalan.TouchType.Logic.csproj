@@ -73,7 +73,7 @@
     <Compile Include="Dto\SettingDto.cs" />
     <Compile Include="Dto\StatisticDto.cs" />
     <Compile Include="Dto\UserDto%27s\UserDto.cs" />
-    <Compile Include="LogicDIModule.cs" />
+    <Compile Include="TTGDIModule.cs" />
     <Compile Include="Profiles\TextSetProfile.cs" />
     <Compile Include="Profiles\UserProfile.cs" />
     <Compile Include="Profiles\SettingProfile.cs" />

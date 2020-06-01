@@ -9,6 +9,9 @@ using System.Web.Http;
 
 namespace GamePortal.Web.Api.Controllers.TouchType
 {
+    /// <summary>
+    /// Controller for User Settings
+    /// </summary>
     [RoutePrefix("api/settings")]
     public class TTGSettingsController : ApiController
     {

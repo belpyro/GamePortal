@@ -9,6 +9,9 @@ using System.Web.Http;
 
 namespace GamePortal.Web.Api.Controllers.TouchType
 {
+    /// <summary>
+    /// Controller for User Statistic
+    /// </summary>
     [RoutePrefix("api/statistic")]
     public class TTGStatisticsController : ApiController
     {

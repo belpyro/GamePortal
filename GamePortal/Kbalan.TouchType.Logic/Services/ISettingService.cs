@@ -7,6 +7,9 @@ using System.Threading.Tasks;
 
 namespace Kbalan.TouchType.Logic.Services
 {
+    /// <summary>
+    /// Service for Setting
+    /// </summary>
     public interface ISettingService
     {
         /// <summary>
