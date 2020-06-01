@@ -146,8 +146,10 @@
     <Compile Include="Controllers\Quoridor\UserController.cs" />
     <Compile Include="Controllers\Sudoku\GameController.cs" />
     <Compile Include="Controllers\Sapper\SapperGameController.cs" />
-    <Compile Include="Controllers\TouchType\RegisterUsersController.cs" />
-    <Compile Include="Controllers\TouchType\TextsController.cs" />
+    <Compile Include="Controllers\TouchType\TTGSettingsController.cs" />
+    <Compile Include="Controllers\TouchType\TTGStatisticsController.cs" />
+    <Compile Include="Controllers\TouchType\TTGUsersController.cs" />
+    <Compile Include="Controllers\TouchType\TTGTextsController.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
