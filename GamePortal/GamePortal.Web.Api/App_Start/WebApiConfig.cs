@@ -1,6 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
+﻿using FluentValidation.WebApi;
 using System.Web.Http;
 
 namespace GamePortal.Web.Api
@@ -20,6 +18,7 @@ namespace GamePortal.Web.Api
                 defaults: new { id = RouteParameter.Optional }
             );
 
+            FluentValidationModelValidatorProvider.Configure(config, opt => opt.ValidatorFactory = new CustomValidatorFactory(config.DependencyResolver));
         }
     }
 }

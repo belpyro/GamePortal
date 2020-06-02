@@ -2,6 +2,7 @@
 using AliaksNad.Battleship.Data.Models;
 using AliaksNad.Battleship.Logic.Models;
 using AutoMapper;
+using FluentValidation;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -14,12 +15,14 @@ namespace AliaksNad.Battleship.Logic.Services
     {
         private readonly UsersContexts _context;
         private readonly IMapper _mapper;
+        private readonly IValidator<UserDto> _validator;
         private static IEnumerable<UserDto> _users = UserFaker.Generate();
 
-        public UserService(UsersContexts context, IMapper mapper)
+        public UserService(UsersContexts context, IMapper mapper, IValidator<UserDto> validator)
         {
             this._context = context;
             this._mapper = mapper;
+            this._validator = validator;
         }
 
         /// <summary>
@@ -54,6 +57,8 @@ namespace AliaksNad.Battleship.Logic.Services
             //    Password = model.Password,
             //    CreatorId = 666
             //};
+
+            _validator.ValidateAndThrow(model, "PostValidation");
 
             var dbModel = _mapper.Map<UserDb>(model);
 

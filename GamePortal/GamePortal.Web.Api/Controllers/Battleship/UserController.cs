@@ -2,6 +2,8 @@
 using System.Web.Http;
 using AliaksNad.Battleship.Logic.Models;
 using AliaksNad.Battleship.Logic.Services;
+using FluentValidation;
+using FluentValidation.WebApi;
 
 namespace GamePortal.Web.Api.Controllers.Battleship
 {
@@ -46,10 +48,23 @@ namespace GamePortal.Web.Api.Controllers.Battleship
         /// <returns></returns>
         [HttpPost]
         [Route("")]
-        public IHttpActionResult Add([FromBody]UserDto model)
+        public IHttpActionResult Add([CustomizeValidator(RuleSet = "PreValidation")][FromBody]UserDto model)
         {
-            model = _userService.Add(model);
-            return Created($"/api/battleship/users/{model.Id}", model);
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+
+            try
+            {
+                model = _userService.Add(model);
+                return Created($"/api/battleship/users/{model.Id}", model);
+            }
+            catch (ValidationException ex)
+            {
+                return BadRequest(ex.Message);
+            }
+            
         }
 
         /// <summary>
@@ -69,11 +84,16 @@ namespace GamePortal.Web.Api.Controllers.Battleship
         /// </summary>
         /// <param name="id">User id.</param>
         [HttpDelete]
-        [Route("{id}")]
+        [Route("{id}:int:min(1)")]
         public IHttpActionResult Delete(int id)
         {
             _userService.Delete(id);
             return StatusCode(HttpStatusCode.NoContent);
-        } 
+        }
+
+        protected override void Dispose(bool disposing)
+        {
+            base.Dispose(disposing);
+        }
     }
 }
