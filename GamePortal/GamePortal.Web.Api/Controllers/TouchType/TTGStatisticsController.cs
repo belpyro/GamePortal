@@ -1,4 +1,5 @@
-﻿using Kbalan.TouchType.Logic.Dto;
+﻿using FluentValidation;
+using Kbalan.TouchType.Logic.Dto;
 using Kbalan.TouchType.Logic.Services;
 using System;
 using System.Collections.Generic;
@@ -16,9 +17,12 @@ namespace GamePortal.Web.Api.Controllers.TouchType
     public class TTGStatisticsController : ApiController
     {
         private readonly IStatisticService _statisticService;
-        public TTGStatisticsController(IStatisticService statisticService)
+        private readonly IValidator<StatisticDto> _statisticValidator;
+
+        public TTGStatisticsController(IStatisticService statisticService, IValidator<StatisticDto> StatisticValidator)
         {
             this._statisticService = statisticService;
+            _statisticValidator = StatisticValidator;
         }
 
         //Get All Statistic with user
@@ -42,8 +46,18 @@ namespace GamePortal.Web.Api.Controllers.TouchType
         [Route("")]
         public IHttpActionResult Update(int id, [FromBody]StatisticDto model)
         {
-            _statisticService.Update(id, model);
-            return StatusCode(HttpStatusCode.NoContent);
+            try
+            {
+                _statisticValidator.ValidateAndThrow(model, "PreValidation");
+                _statisticService.Update(id, model);
+                return StatusCode(HttpStatusCode.NoContent);
+            }
+            catch (Exception ex)
+            {
+
+                return BadRequest(ex.Message);
+            }
+
         }
     }
 }

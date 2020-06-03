@@ -1,4 +1,5 @@
-﻿using Kbalan.TouchType.Logic.Dto;
+﻿using FluentValidation;
+using Kbalan.TouchType.Logic.Dto;
 using Kbalan.TouchType.Logic.Services;
 using System;
 using System.Collections.Generic;
@@ -16,9 +17,12 @@ namespace GamePortal.Web.Api.Controllers.TouchType
     public class TTGSettingsController : ApiController
     {
         private readonly ISettingService _settingService;
-        public TTGSettingsController(ISettingService settingService)
+        private readonly IValidator<SettingDto> _settingValidator;
+
+        public TTGSettingsController(ISettingService settingService, IValidator<SettingDto> SettingValidator)
         {
             this._settingService = settingService;
+            _settingValidator = SettingValidator;
         }
 
         //Get All Settings with user
@@ -48,6 +52,7 @@ namespace GamePortal.Web.Api.Controllers.TouchType
         {
             try
             {
+                _settingValidator.ValidateAndThrow(model, "PreValidation");
                 _settingService.Update(id, model);
                  return StatusCode(HttpStatusCode.NoContent);
             }

@@ -33,6 +33,7 @@ namespace Kbalan.TouchType.Logic
             this.Bind<IValidator<UserSettingDto>>().To<UserSettingDtoValidator>();
             this.Bind<IValidator<UserDto>>().To<UserDtoValidator>();
             this.Bind<IValidator<SettingDto>>().To<SettingDtoValidator>();
+            this.Bind<IValidator<StatisticDto>>().To<StatisticDtoValidator>();
         }
     }
 }

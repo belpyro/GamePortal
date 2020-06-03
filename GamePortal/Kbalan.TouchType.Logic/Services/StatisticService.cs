@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using FluentValidation;
 using Kbalan.TouchType.Data.Contexts;
 using Kbalan.TouchType.Data.Models;
 using Kbalan.TouchType.Logic.Dto;
@@ -14,11 +15,13 @@ namespace Kbalan.TouchType.Logic.Services
     {
         private readonly TouchTypeGameContext _gameContext;
         private readonly IMapper _mapper;
+        private readonly IValidator<StatisticDto> _statisticValidator;
 
-        public StatisticService(TouchTypeGameContext gameContext, IMapper mapper)
+        public StatisticService(TouchTypeGameContext gameContext, IMapper mapper, IValidator<StatisticDto> StatisticValidator)
         {
             this._gameContext = gameContext;
             this._mapper = mapper;
+            _statisticValidator = StatisticValidator;
         }
 
         /// <summary>
@@ -49,11 +52,21 @@ namespace Kbalan.TouchType.Logic.Services
         /// <param name="model">new statistic model</param>
         public void Update(int id, StatisticDto model)
         {
+            //Cheking if user with id exist
             var userModel = _gameContext.Users.Include("Statistic").SingleOrDefault(x => x.Id == id);
+            if (userModel == null)
+                throw new ArgumentNullException("No user with such Id exist");
+
+            //Replace model setting id from Dto to correct id from Db and Valiate
+            model.StatisticId = userModel.Statistic.StatisticId;
+            _statisticValidator.ValidateAndThrow(model, "PostValidation");
+
             var modelDb = _mapper.Map<StatisticDb>(model);
+
             modelDb.StatisticId = userModel.Statistic.StatisticId;
             modelDb.User = userModel.Statistic.User;
             userModel.Statistic = modelDb;
+
             _gameContext.Users.Attach(userModel);
             _gameContext.SaveChanges();
         }
