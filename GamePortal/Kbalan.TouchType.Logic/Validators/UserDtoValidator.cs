@@ -43,10 +43,20 @@ namespace Kbalan.TouchType.Logic.Validators
             RuleSet("PostValidation", () =>
             {
                 RuleFor(x => x.Id).Must(CheckId).WithMessage("No user with such Id exist");
-                RuleFor(x => x.NickName).Must(CheckDublicate).WithMessage("Such Nickname is already exists");
+                RuleFor(x => x).Must(CheckDublicate).WithMessage("Such Nickname is already exists");
                 
             });
             this._context = context;
+        }
+
+        /// <summary>
+        /// Checking if user with such nickname is alreadu exists in context
+        /// </summary>
+        /// <param name="name"></param>
+        /// <returns></returns>
+        private bool CheckDublicate(UserDto arg)
+        {
+            return !_context.Users.AsNoTracking().Where(x => x.Id != arg.Id).Any(x => x.NickName == arg.NickName);
         }
 
         /// <summary>
@@ -74,10 +84,6 @@ namespace Kbalan.TouchType.Logic.Validators
         /// </summary>
         /// <param name="name"></param>
         /// <returns></returns>
-        private bool CheckDublicate(string name)
-        {
-            return !_context.Users.AsNoTracking().Any(x => x.NickName == name);
-        }
     }
 
 }

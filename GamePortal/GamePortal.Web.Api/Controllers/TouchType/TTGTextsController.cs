@@ -4,6 +4,7 @@ using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Web.Http;
+using FluentValidation;
 using Kbalan.TouchType.Logic.Dto;
 using Kbalan.TouchType.Logic.Services;
 
@@ -16,10 +17,12 @@ namespace GamePortal.Web.Api.Controllers.TouchType
     public class TTGTextsController : ApiController
     {
         private readonly ITextSetService _textSetService;
+        private readonly IValidator<TextSetDto> _textSetValidator;
 
-        public TTGTextsController(ITextSetService textSetService)
+        public TTGTextsController(ITextSetService textSetService, IValidator<TextSetDto> TextSetValidator)
         {
             this._textSetService = textSetService;
+            _textSetValidator = TextSetValidator;
         }
 
         //Get All TextSets
@@ -35,6 +38,11 @@ namespace GamePortal.Web.Api.Controllers.TouchType
         [Route("{id}")]
         public IHttpActionResult GetById(int id)
         {
+            if (id <= 0)
+            {
+                return BadRequest("ID must be greater than 0");
+            }
+
             return _textSetService.GetById(id) == null ? (IHttpActionResult)NotFound() : Ok(_textSetService.GetById(id));
         }
 
@@ -43,6 +51,10 @@ namespace GamePortal.Web.Api.Controllers.TouchType
         [Route("searchbylevel/{level}")]
         public IHttpActionResult GetRandomByLevel(int level)
         {
+            if (level < 0 || level > 2)
+            {
+                return BadRequest("Level must be Easy, Middle or Hard");
+            }
             return _textSetService.GetByLevel(level) == null ? (IHttpActionResult)NotFound() : Ok(_textSetService.GetByLevel(level));
         }
 
@@ -51,7 +63,18 @@ namespace GamePortal.Web.Api.Controllers.TouchType
         [Route("")]
         public IHttpActionResult Add([FromBody]TextSetDto model)
         {
-            return _textSetService.Add(model) == null ? (IHttpActionResult)Conflict() : Created($"/textsets/{model.Id}", model);
+            if (!ModelState.IsValid)
+                return BadRequest(ModelState);
+            try
+            {
+                _textSetValidator.ValidateAndThrow(model, "PreValidation");
+                return _textSetService.Add(model) == null ? (IHttpActionResult)Conflict() : Created($"/textsets/{model.Id}", model);
+            }
+            catch (ValidationException ex)
+            {
+                return BadRequest(ex.Message);
+            }
+            
         }
 
         //Update Text by Id
@@ -59,8 +82,18 @@ namespace GamePortal.Web.Api.Controllers.TouchType
         [Route("")]
         public IHttpActionResult Update([FromBody]TextSetDto model)
         {
-            _textSetService.Update(model);
-            return StatusCode(HttpStatusCode.NoContent);
+
+            try
+            {
+                _textSetValidator.ValidateAndThrow(model, "PreValidation");
+                _textSetService.Update(model);
+                return StatusCode(HttpStatusCode.NoContent);
+            }
+            catch (Exception ex)
+            {
+
+                return BadRequest(ex.Message);
+            }
         }
 
         //Delete Text by Id
@@ -68,8 +101,20 @@ namespace GamePortal.Web.Api.Controllers.TouchType
         [Route("{id}")]
         public IHttpActionResult Delete(int id)
         {
-            _textSetService.Delete(id);
-            return StatusCode(HttpStatusCode.NoContent);
+            if (id <= 0)
+            {
+                return BadRequest("ID must be greater than 0");
+            }
+            try
+            {
+                _textSetService.Delete(id);
+                return StatusCode(HttpStatusCode.NoContent);
+            }
+            catch
+            {
+
+                return BadRequest("No User with such ID");
+            }
         }
     }
 }

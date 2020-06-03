@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using FluentValidation;
 using Kbalan.TouchType.Data.Contexts;
 using Kbalan.TouchType.Data.Models;
 using Kbalan.TouchType.Logic.Dto;
@@ -16,11 +17,13 @@ namespace Kbalan.TouchType.Logic.Services
 
         private readonly TouchTypeGameContext _gameContext;
         private readonly IMapper _mapper;
+        private readonly IValidator<TextSetDto> _textSetValidator;
 
-        public TextSetService(TouchTypeGameContext gameContext, IMapper mapper)
+        public TextSetService(TouchTypeGameContext gameContext, IMapper mapper, IValidator<TextSetDto> TextSetValidator)
         {
             this._gameContext = gameContext;
             this._mapper = mapper;
+            _textSetValidator = TextSetValidator;
         }
 
         /// <summary>
@@ -37,6 +40,7 @@ namespace Kbalan.TouchType.Logic.Services
         /// </summary>
         public TextSetDto Add(TextSetDto model)
         {
+            _textSetValidator.ValidateAndThrow(model, "PostValidation");
             var DbModel = _mapper.Map<TextSetDb>(model);
             _gameContext.TextSets.Add(DbModel);
             _gameContext.SaveChanges();
@@ -71,6 +75,7 @@ namespace Kbalan.TouchType.Logic.Services
         /// <param name="model">TextSet model</param>
         public void Update(TextSetDto model)
         {
+            _textSetValidator.ValidateAndThrow(model, "PostValidation");
             var dbModel = _mapper.Map<TextSetDb>(model);
             _gameContext.TextSets.Attach(dbModel);
             var entry = _gameContext.Entry(dbModel);

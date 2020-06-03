@@ -19,9 +19,9 @@ namespace Kbalan.TouchType.Logic.Validators
         {
              /* Rule Set for validarion on presentation layer. 
                 Rules: 
-                4. Email should have valid email format 
-                5. Level of Text must be matching LevelOfText enum
-                6. Role must be matching Role enum*/
+                1. Email should have valid email format 
+                2. Level of Text must be matching LevelOfText enum
+                3. Role must be matching Role enum*/
             RuleSet("PreValidation", () =>
             {
                 RuleFor(x => x.Email).EmailAddress().WithMessage("Incorrect Email!!1");

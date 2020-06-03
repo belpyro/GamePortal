@@ -98,6 +98,7 @@
     <Compile Include="Services\UserService.cs" />
     <Compile Include="Validators\SettingDtoValidator.cs" />
     <Compile Include="Validators\StatisticDtoValidator.cs" />
+    <Compile Include="Validators\TextSetDtoValidator.cs" />
     <Compile Include="Validators\UserDtoValidator.cs" />
     <Compile Include="Validators\UserSettingDtoValidator.cs" />
   </ItemGroup>
