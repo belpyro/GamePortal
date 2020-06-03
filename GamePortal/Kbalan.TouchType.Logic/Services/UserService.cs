@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using AutoMapper.QueryableExtensions;
+using FluentValidation;
 using Kbalan.TouchType.Data.Contexts;
 using Kbalan.TouchType.Data.Models;
 using Kbalan.TouchType.Logic.Dto;
@@ -16,11 +17,16 @@ namespace Kbalan.TouchType.Logic.Services
     {
         private readonly TouchTypeGameContext _gameContext;
         private readonly IMapper _mapper;
+        private readonly IValidator<UserSettingDto> _userSettingValidator;
+        private readonly IValidator<UserDto> _userValidator;
 
-        public UserService(TouchTypeGameContext gameContext, IMapper mapper)
+        public UserService(TouchTypeGameContext gameContext, IMapper mapper, IValidator<UserSettingDto> UserSettintValidator, IValidator<UserDto> UserValidator)
         {
             this._gameContext = gameContext;
             this._mapper = mapper;
+            this._userSettingValidator = UserSettintValidator;
+            this._userValidator = UserValidator;
+         
         }
 
         /// <summary>
@@ -37,9 +43,9 @@ namespace Kbalan.TouchType.Logic.Services
         /// </summary>
         /// <param name="Id"></param>
         /// <returns></returns>
-        public UserSettingStatisticDto GetById(int Id)
+        public UserSettingStatisticDto GetById(int id)
         {
-            return _gameContext.Users.Where(x => x.Id == Id)
+            return _gameContext.Users.Where(x => x.Id == id)
                 .ProjectToSingleOrDefault<UserSettingStatisticDto>(_mapper.ConfigurationProvider);
         }
 
@@ -51,6 +57,7 @@ namespace Kbalan.TouchType.Logic.Services
         /// <returns>New User or null</returns>
         public UserSettingDto Add(UserSettingDto model)
         {
+            _userSettingValidator.ValidateAndThrow(model, "PostValidation");
             var DbModel = _mapper.Map<UserDb>(model);
             _gameContext.Users.Add(DbModel);
             _gameContext.SaveChanges();
@@ -65,6 +72,7 @@ namespace Kbalan.TouchType.Logic.Services
         /// <param name="model"></param>
         public void Update(UserDto model)
         {
+            _userValidator.ValidateAndThrow(model, "PostValidation");
             var dbModel = _mapper.Map<UserDb>(model);
             _gameContext.Users.Attach(dbModel);
             var entry = _gameContext.Entry(dbModel);
@@ -81,13 +89,15 @@ namespace Kbalan.TouchType.Logic.Services
         /// <returns>true or false</returns>
         public void Delete(int id)
         {
-            var dbModel = _gameContext.Users.Find(id);
-            _gameContext.Users.Remove(dbModel);
-            _gameContext.SaveChanges();
+                var dbModel = _gameContext.Users.Find(id);
+                _gameContext.Users.Remove(dbModel);
+                _gameContext.SaveChanges();
         }
 
         #region IDisposable Support
         private bool disposedValue = false; // To detect redundant calls
+
+        public IValidator<UserDto> UserValidator { get; }
 
         protected virtual void Dispose(bool disposing)
         {

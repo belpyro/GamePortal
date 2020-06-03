@@ -1,4 +1,6 @@
-﻿using System;
+﻿using FluentValidation.Attributes;
+using Kbalan.TouchType.Logic.Validators;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -6,9 +8,10 @@ using System.Threading.Tasks;
 
 namespace Kbalan.TouchType.Logic.Dto
 {
+
     /// <summary>
     /// Model for transfering User information without related statistic and setting
-    /// </summary>
+    /// </summary>   
     public class UserDto
     {
         public int Id { get; set; }

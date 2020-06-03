@@ -32,9 +32,9 @@ namespace GamePortal.Web.Api.Controllers.TouchType
         //Get Full Statistic Info by User Id
         [HttpGet]
         [Route("{id}")]
-        public IHttpActionResult GetAllById([FromUri]int Id)
+        public IHttpActionResult GetAllById([FromUri]int id)
         {
-            return _settingService.GetById(Id) == null ? (IHttpActionResult)NotFound() : Ok(_settingService.GetById(Id));
+            return _settingService.GetById(id) == null ? (IHttpActionResult)NotFound() : Ok(_settingService.GetById(id));
         }
 
         //Update User Statistic by User Id

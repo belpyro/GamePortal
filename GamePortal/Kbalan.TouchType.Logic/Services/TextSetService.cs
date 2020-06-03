@@ -48,9 +48,9 @@ namespace Kbalan.TouchType.Logic.Services
         /// <summary>
         /// GetTextSet by Id
         /// </summary>
-        public TextSetDto GetById(int Id)
+        public TextSetDto GetById(int id)
         {
-            return _gameContext.TextSets.Where(x => x.Id == Id)
+            return _gameContext.TextSets.Where(x => x.Id == id)
                     .ProjectToSingleOrDefault<TextSetDto>(_mapper.ConfigurationProvider);
         }
 

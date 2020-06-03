@@ -1,8 +1,11 @@
 ﻿using AutoMapper;
+using FluentValidation;
 using Kbalan.TouchType.Data.Contexts;
 using Kbalan.TouchType.Data.Models;
+using Kbalan.TouchType.Logic.Dto;
 using Kbalan.TouchType.Logic.Profiles;
 using Kbalan.TouchType.Logic.Services;
+using Kbalan.TouchType.Logic.Validators;
 using Ninject.Modules;
 using System;
 using System.Collections.Generic;
@@ -27,6 +30,8 @@ namespace Kbalan.TouchType.Logic
             this.Bind<ITextSetService>().To<TextSetService>();
             this.Bind<ISettingService>().To<SettingService>();
             this.Bind<IStatisticService>().To<StatisticService>();
+            this.Bind<IValidator<UserSettingDto>>().To<UserSettingDtoValidator>();
+            this.Bind<IValidator<UserDto>>().To<UserDtoValidator>();
         }
     }
 }
