@@ -1,7 +1,9 @@
 ﻿using AutoMapper;
+using FluentValidation;
 using Kbalan.TouchType.Data.Contexts;
 using Kbalan.TouchType.Data.Models;
 using Kbalan.TouchType.Logic.Dto;
+using Kbalan.TouchType.Logic.Validators;
 using System;
 using System.Collections.Generic;
 using System.Data.Entity;
@@ -15,11 +17,13 @@ namespace Kbalan.TouchType.Logic.Services
     {
         private readonly TouchTypeGameContext _gameContext;
         private readonly IMapper _mapper;
+        private readonly IValidator<SettingDto> _settingValidator;
 
-        public SettingService(TouchTypeGameContext gameContext, IMapper mapper)
+        public SettingService(TouchTypeGameContext gameContext, IMapper mapper, IValidator<SettingDto> SettingValidator)
         {
             this._gameContext = gameContext;
             this._mapper = mapper;
+            _settingValidator = SettingValidator;
         }
 
         /// <summary>
@@ -50,11 +54,21 @@ namespace Kbalan.TouchType.Logic.Services
         /// <param name="model">new settting model</param>
         public void Update(int id, SettingDto model)
         {
+            //Cheking if user with id exist
             var userModel = _gameContext.Users.Include("Setting").SingleOrDefault(x => x.Id == id);
-            var modelDb = _mapper.Map<SettingDb>(model);
+            if (userModel == null)
+                throw new ArgumentNullException("No user with such Id exist");
+
+            //Replace model setting id from Dto to correct id from Db and Valiate
+            model.SettingId = userModel.Setting.SettingId;
+            _settingValidator.ValidateAndThrow(model, "PostValidation");
+
+            var modelDb = _mapper.Map<SettingDb>(model);  
+            
             modelDb.SettingId = userModel.Setting.SettingId;
             modelDb.User = userModel.Setting.User;
             userModel.Setting = modelDb;
+
             _gameContext.Users.Attach(userModel);
            _gameContext.SaveChanges();
         }

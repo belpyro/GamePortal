@@ -45,9 +45,20 @@ namespace Kbalan.TouchType.Logic.Validators
                1. No user wiht such nickname shouldn't exist.*/
             RuleSet("PostValidation", () =>
             {
-                RuleFor(x => x.NickName).Must(CheckDublicate).WithMessage("Such Nickname is already exists");
+                RuleFor(x => x.NickName).Must(CheckDublicateName).WithMessage("Such Nickname is already exist");
+                RuleFor(x => x.Setting.Email).Must(CheckDuplicateEmail).WithMessage("Such Email is already exist");
             });
             this._context = context;
+        }
+
+        /// <summary>
+        /// Checking if user with such email is already exists in context
+        /// </summary>
+        /// <param name="name"></param>
+        /// <returns></returns>
+        private bool CheckDuplicateEmail(string email)
+        {
+            return !_context.Users.AsNoTracking().Any(x => x.Setting.Email == email);
         }
 
         /// <summary>
@@ -65,7 +76,7 @@ namespace Kbalan.TouchType.Logic.Validators
         /// </summary>
         /// <param name="name"></param>
         /// <returns></returns>
-        private bool CheckDublicate(string name)
+        private bool CheckDublicateName(string name)
         {
             return  !_context.Users.AsNoTracking().Any(x => x.NickName == name);
         }

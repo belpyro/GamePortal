@@ -29,21 +29,34 @@ namespace GamePortal.Web.Api.Controllers.TouchType
             return Ok(_settingService.GetAll());
         }
 
-        //Get Full Statistic Info by User Id
+        //Get single Setting Info by User Id
         [HttpGet]
         [Route("{id}")]
-        public IHttpActionResult GetAllById([FromUri]int id)
+        public IHttpActionResult GetById([FromUri]int id)
         {
+            if (id <= 0)
+            {
+                return BadRequest("ID must be greater than 0");
+            }
             return _settingService.GetById(id) == null ? (IHttpActionResult)NotFound() : Ok(_settingService.GetById(id));
         }
 
-        //Update User Statistic by User Id
+        //Update single setting by User Id
         [HttpPut]
         [Route("")]
         public IHttpActionResult Update(int id ,[FromBody]SettingDto model)
         {
-            _settingService.Update(id, model);
-            return StatusCode(HttpStatusCode.NoContent);
+            try
+            {
+                _settingService.Update(id, model);
+                 return StatusCode(HttpStatusCode.NoContent);
+            }
+            catch (Exception ex)
+            {
+
+                return BadRequest(ex.Message);
+            }
+            
         }
     }
 }
