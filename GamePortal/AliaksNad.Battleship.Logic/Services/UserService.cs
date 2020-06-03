@@ -2,23 +2,26 @@
 using AliaksNad.Battleship.Data.Models;
 using AliaksNad.Battleship.Logic.Models;
 using AutoMapper;
+using CSharpFunctionalExtensions;
 using FluentValidation;
+using JetBrains.Annotations;
 using System;
 using System.Collections.Generic;
+using System.Data.Entity.Infrastructure;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
 namespace AliaksNad.Battleship.Logic.Services
 {
-    internal class UserService : IUserService
+    public class UserService : IUserService
     {
         private readonly UsersContexts _context;
         private readonly IMapper _mapper;
         private readonly IValidator<UserDto> _validator;
         private static IEnumerable<UserDto> _users = UserFaker.Generate();
 
-        public UserService(UsersContexts context, IMapper mapper, IValidator<UserDto> validator)
+        public UserService([NotNull]UsersContexts context, [NotNull]IMapper mapper, [NotNull]IValidator<UserDto> validator)
         {
             this._context = context;
             this._mapper = mapper;
@@ -26,7 +29,7 @@ namespace AliaksNad.Battleship.Logic.Services
         }
 
         /// <summary>
-        /// Get all users from Data.
+        /// Get all users from data.
         /// </summary>
         /// <returns></returns>
         public IEnumerable<UserDto> GetAll()
@@ -48,7 +51,7 @@ namespace AliaksNad.Battleship.Logic.Services
         /// </summary>
         /// <param name="model">User model.</param>
         /// <returns></returns>
-        public UserDto Add(UserDto model)
+        public Result<UserDto> Add(UserDto model)
         {
             //var dbModel = new UserDb
             //{
@@ -58,15 +61,20 @@ namespace AliaksNad.Battleship.Logic.Services
             //    CreatorId = 666
             //};
 
-            _validator.ValidateAndThrow(model, "PostValidation");
+            try
+            {
+                var dbModel = _mapper.Map<UserDb>(model);
 
-            var dbModel = _mapper.Map<UserDb>(model);
+                _context.Users.Add(dbModel);
+                _context.SaveChanges();
 
-            _context.Users.Add(dbModel);
-            _context.SaveChanges();
-
-            model.Id = dbModel.Id;
-            return model;
+                model.Id = dbModel.Id;
+                return Result.Success(model);
+            }
+            catch (DbUpdateException ex)
+            {
+                return Result.Failure<UserDto>(ex.Message);
+            }
         }
 
         /// <summary>

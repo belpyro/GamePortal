@@ -55,15 +55,8 @@ namespace GamePortal.Web.Api.Controllers.Battleship
                 return BadRequest(ModelState);
             }
 
-            try
-            {
-                model = _userService.Add(model);
-                return Created($"/api/battleship/users/{model.Id}", model);
-            }
-            catch (ValidationException ex)
-            {
-                return BadRequest(ex.Message);
-            }
+            var result = _userService.Add(model);
+            return result.IsSuccess ? Created($"/api/battleship/users/{result.Value.Id}", result.Value) : (IHttpActionResult)BadRequest(result.Error) ;
             
         }
 
@@ -84,7 +77,7 @@ namespace GamePortal.Web.Api.Controllers.Battleship
         /// </summary>
         /// <param name="id">User id.</param>
         [HttpDelete]
-        [Route("{id}:int:min(1)")]
+        [Route("{id}:int:min(1)")]      //check risone 
         public IHttpActionResult Delete(int id)
         {
             _userService.Delete(id);

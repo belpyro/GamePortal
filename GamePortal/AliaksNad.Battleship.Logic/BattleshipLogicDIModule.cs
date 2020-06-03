@@ -6,11 +6,9 @@ using AliaksNad.Battleship.Logic.Validators;
 using AutoMapper;
 using FluentValidation;
 using Ninject.Modules;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using Castle.DynamicProxy;
+using Ninject;
+using AliaksNad.Battleship.Logic.Aspects;
 
 namespace AliaksNad.Battleship.Logic
 {
@@ -24,9 +22,13 @@ namespace AliaksNad.Battleship.Logic
             this.Bind<IMapper>().ToConstant(mapper);
 
             this.Bind<UsersContexts>().ToSelf();
-            this.Bind<IUserService>().To<UserService>();
-            this.Bind<IGameService>().To<GameService>();
             this.Bind<IValidator<UserDto>>().To<UserDtoValidator>();
+            this.Bind<IUserService>().ToMethod(ctx => 
+            {
+                var service = new UserService(ctx.Kernel.Get<UsersContexts>(), ctx.Kernel.Get<IMapper>(), ctx.Kernel.Get<IValidator<UserDto>>());
+                return new ProxyGenerator().CreateInterfaceProxyWithTarget<IUserService>(service, new ValidationInterceptor(ctx.Kernel));
+            });
+            this.Bind<IGameService>().To<GameService>();
         }
     }
 }
