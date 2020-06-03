@@ -59,9 +59,7 @@ namespace GamePortal.Web.Api.Controllers.TouchType
         {
             
             if (!ModelState.IsValid)
-            {
                 return BadRequest(ModelState);
-            }
             try
             {
                 _userSettingvalidator.ValidateAndThrow(model, "PreValidation");
