@@ -10,6 +10,7 @@ namespace Vitaly.Sapper.Logic.Profiles
         public VitalySapperUserProfile()
         {
             CreateMap<UserDb, UserDto>()
+                .ForMember(x => x.Id, opt => opt.MapFrom(x => x.Id))
                 .ForMember(x => x.Name, opt => opt.MapFrom(x => x.Name))
                 .ForMember(x => x.Email, opt => opt.MapFrom(x => x.Email))
                 .ForMember(x => x.Pwd, opt => opt.MapFrom(x => x.Pwd))

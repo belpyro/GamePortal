@@ -1,19 +1,18 @@
-﻿namespace Vitaly.Sapper.Data.Migrations
-{
-    using System;
-    using System.Data.Entity;
-    using System.Data.Entity.Migrations;
-    using System.Linq;
+﻿using System.Data.Entity.Migrations;
+using Vitaly.Sapper.Data.Contexts;
 
+
+namespace Vitaly.Sapper.Data.Migrations
+{
     internal sealed class Configuration : DbMigrationsConfiguration<Vitaly.Sapper.Data.Contexts.SapperContext>
     {
         public Configuration()
         {
-            AutomaticMigrationsEnabled = false;
+            AutomaticMigrationsEnabled = true;
             ContextKey = "Vitaly.Sapper.Data.Contexts.SapperContext";
         }
 
-        protected override void Seed(Vitaly.Sapper.Data.Contexts.SapperContext context)
+        protected override void Seed(SapperContext context)
         {
             //  This method will be called after migrating to the latest version.
 

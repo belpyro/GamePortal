@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data.Entity.Infrastructure;
 using System.Linq;
 using System.Security.Cryptography.X509Certificates;
 using System.Text;
@@ -23,23 +24,31 @@ namespace Vitaly.Sapper.Logic.Services
 
         public IEnumerable<UserDto> GetAll()
         {
-            //return new List<UserDto>() { new UserDto() { Id = 222, Name = "aaa", Email = "1@1.com", Pwd = "gfgf" } };
             var models = _context.Users.AsNoTracking().ToArray();
             return _mapper.Map<IEnumerable<UserDto>>(models);
         }
 
         public UserDto UserInfoById(int id)
         {
-            var dbModel = new UserDb {Id = id};
-            _context.Users.Attach(dbModel);
-            var entry = _context.Entry(dbModel);
+            //var dbModel = new UserDb { Id = id };
+            //_context.Users.Attach(dbModel);
+            //var entry = _context.Entry(dbModel);
 
-            return _mapper.Map<UserDto>(entry.Entity);
+            ////entry.Collection("Users").Load();
+            //return _mapper.Map<UserDto>(entry.Entity);
+            var models = _context.Users.Find(id);
+            return _mapper.Map<UserDto>(models);
         }
 
-        public UserDto UserAdd(int id)
+        public UserDto UserAdd(UserDto model)
         {
-            throw new NotImplementedException();
+            var dbModel = _mapper.Map<UserDb>(model);
+
+            _context.Users.Add(dbModel);
+            _context.SaveChanges();
+
+            model.Id = dbModel.Id;
+            return model;
         }
 
         public UserDto UserUpdate(int id)
@@ -47,9 +56,11 @@ namespace Vitaly.Sapper.Logic.Services
             throw new NotImplementedException();
         }
 
-        public UserDto UserDelete(int id)
+        public void UserDelete(int id)
         {
-            throw new NotImplementedException();
+            var dbModel = _context.Users.Find(id); //SELECT
+            _context.Users.Remove(dbModel);
+            _context.SaveChanges(); //DELETE
         }
 
         #region IDisposable Support

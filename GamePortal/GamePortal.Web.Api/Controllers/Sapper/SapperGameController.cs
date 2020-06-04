@@ -1,9 +1,11 @@
-﻿using Vitaly.Sapper.Logic.Services;
+﻿using System;
+using Vitaly.Sapper.Logic.Services;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Web.Http;
+using Vitaly.Sapper.Logic.Models;
 
 namespace GamePortal.Web.Api.Controllers.Sapper
 {
@@ -12,10 +14,10 @@ namespace GamePortal.Web.Api.Controllers.Sapper
     {
         private readonly ISapperService _sapperService;
 
-        //public SapperGameController(ISapperService sapperService)
-        //{
-        //    this._sapperService = sapperService;
-        //}
+        public SapperGameController(ISapperService sapperService)
+        {
+            this._sapperService = sapperService;
+        }
 
         /// <summary>
         /// Get all users
@@ -24,11 +26,7 @@ namespace GamePortal.Web.Api.Controllers.Sapper
         [HttpGet, Route("users/all")]
         public IHttpActionResult GetAll()
         {
-            //return Ok();
-            var a = 5;
-            a++;
-            //return Ok(_sapperService.GetAll());
-            return Ok(a);
+            return Ok(_sapperService.GetAll());
         }
 
         /// <summary>
@@ -47,9 +45,23 @@ namespace GamePortal.Web.Api.Controllers.Sapper
         /// </summary>
         /// <returns>User id</returns>
         [HttpPost, Route("users/add")]
-        public IHttpActionResult UserAdd(int id)
+        public IHttpActionResult UserAdd([FromBody] UserDto model)
         {
-            return Ok("User add: id = " + id);
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+
+            try
+            {
+                var result = _sapperService.UserAdd(model);
+                return Created($"/users/{result.Id}", result.Id);
+            }
+            catch (Exception e)
+            {
+                return (IHttpActionResult)BadRequest();
+            }
+
         }
 
         /// <summary>
@@ -69,7 +81,8 @@ namespace GamePortal.Web.Api.Controllers.Sapper
         [HttpDelete, Route("users/delete/{id}")]
         public IHttpActionResult UserDelete(int id)
         {
-            return Ok("User delete: id = " + id);
+            _sapperService.UserDelete(id);
+            return Ok("User deleted: id = " + id);
         }
 
         protected override void Dispose(bool disposing)

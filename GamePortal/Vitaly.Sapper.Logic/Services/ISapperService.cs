@@ -13,9 +13,9 @@ namespace Vitaly.Sapper.Logic.Services
 
         UserDto UserInfoById(int id);
 
-        UserDto UserAdd(int id);
+        UserDto UserAdd(UserDto model);
 
         UserDto UserUpdate(int id);
-        UserDto UserDelete(int id);
+        void UserDelete(int id);
     }
 }
