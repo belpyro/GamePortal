@@ -2,6 +2,7 @@
 using CSharpFunctionalExtensions;
 using FluentValidation;
 using FluentValidation.Results;
+using JetBrains.Annotations;
 using Kbalan.TouchType.Data.Contexts;
 using Kbalan.TouchType.Data.Models;
 using Kbalan.TouchType.Logic.Dto;
@@ -14,13 +15,13 @@ using System.Threading.Tasks;
 
 namespace Kbalan.TouchType.Logic.Services
 {
-    class StatisticService : IStatisticService
+    public class StatisticService : IStatisticService
     {
         private readonly TouchTypeGameContext _gameContext;
         private readonly IMapper _mapper;
         private readonly IValidator<StatisticDto> _statisticValidator;
 
-        public StatisticService(TouchTypeGameContext gameContext, IMapper mapper, IValidator<StatisticDto> StatisticValidator)
+        public StatisticService([NotNull]TouchTypeGameContext gameContext, [NotNull]IMapper mapper, [NotNull]IValidator<StatisticDto> StatisticValidator)
         {
             this._gameContext = gameContext;
             this._mapper = mapper;

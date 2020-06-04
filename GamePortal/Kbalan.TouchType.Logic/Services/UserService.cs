@@ -3,6 +3,7 @@ using AutoMapper.QueryableExtensions;
 using CSharpFunctionalExtensions;
 using FluentValidation;
 using FluentValidation.Results;
+using JetBrains.Annotations;
 using Kbalan.TouchType.Data.Contexts;
 using Kbalan.TouchType.Data.Models;
 using Kbalan.TouchType.Logic.Dto;
@@ -16,14 +17,15 @@ using System.Threading.Tasks;
 
 namespace Kbalan.TouchType.Logic.Services
 {
-    internal class UserService : IUserService
+    public class UserService : IUserService
     {
         private readonly TouchTypeGameContext _gameContext;
         private readonly IMapper _mapper;
         private readonly IValidator<UserSettingDto> _userSettingValidator;
         private readonly IValidator<UserDto> _userValidator;
 
-        public UserService(TouchTypeGameContext gameContext, IMapper mapper, IValidator<UserSettingDto> UserSettintValidator, IValidator<UserDto> UserValidator)
+        public UserService([NotNull]TouchTypeGameContext gameContext, [NotNull]IMapper mapper
+            , [NotNull]IValidator<UserSettingDto> UserSettintValidator, [NotNull]IValidator<UserDto> UserValidator)
         {
             this._gameContext = gameContext;
             this._mapper = mapper;
