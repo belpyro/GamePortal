@@ -19,8 +19,12 @@ namespace AliaksNad.Battleship.Logic.Validators
 
             RuleSet("PreValidation", () =>
             {
-                RuleFor(x => x.Name).NotNull().MinimumLength(5) //TODO: check MinLength rule
-                    .WithMessage("Field name is invalid");
+                RuleFor(x => x.Name).NotNull().Length(3, 15) //TODO: check MinLength rule
+                    .WithMessage("Field Name is invalid");
+                RuleFor(x => x.Email).EmailAddress()
+                    .WithMessage("Field Email is invalid");
+                RuleFor(x => x.Password).NotNull().Length(6, 15)
+                    .WithMessage("Field Password is invalid");
             });
             
             RuleSet("PostValidation", () =>

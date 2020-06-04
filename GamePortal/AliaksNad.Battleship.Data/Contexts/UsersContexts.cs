@@ -14,7 +14,8 @@ namespace AliaksNad.Battleship.Data.Contexts
     {
         public UsersContexts()
         {
-            Database.SetInitializer<UsersContexts>(new MigrateDatabaseToLatestVersion<UsersContexts, Configuration>());
+            //Database.SetInitializer<UsersContexts>(new MigrateDatabaseToLatestVersion<UsersContexts, Configuration>());
+            Database.SetInitializer<UsersContexts>(new DropCreateDatabaseAlways<UsersContexts>());
             Database.Log = msg => Debug.WriteLine(msg);
         }
 

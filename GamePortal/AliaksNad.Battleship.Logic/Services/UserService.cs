@@ -34,15 +34,6 @@ namespace AliaksNad.Battleship.Logic.Services
         /// <returns></returns>
         public IEnumerable<UserDto> GetAll()
         {
-            //return _users;
-
-            //return _context.Users
-            //    .Select(x => new UserDto {Id = x.Id, Name = x.Name, Email = x.Email, Password = x.Password })
-            //    .ToArray();
-
-            //var models = _context.Users.ToArray();
-            //return _mapper.Map<IEnumerable<UserDto>>(models);
-
             return _context.Users.ProjectToArray<UserDto>(_mapper.ConfigurationProvider);
         }
 
@@ -53,14 +44,6 @@ namespace AliaksNad.Battleship.Logic.Services
         /// <returns></returns>
         public Result<UserDto> Add(UserDto model)
         {
-            //var dbModel = new UserDb
-            //{
-            //    Name = model.Name,
-            //    Email = model.Email,
-            //    Password = model.Password,
-            //    CreatorId = 666
-            //};
-
             try
             {
                 var dbModel = _mapper.Map<UserDb>(model);
@@ -84,17 +67,6 @@ namespace AliaksNad.Battleship.Logic.Services
         /// <returns></returns>
         public UserDto GetById(int id)
         {
-            //return _users.FirstOrDefault(x => x.Id == id);
-
-            //var model = _context.Users.SingleOrDefault(x => x.Id == id);
-            //return new UserDto
-            //{
-            //    Id = model.Id,
-            //    Name = model.Name,
-            //    Email = model.Email,
-            //    Password = model.Password
-            //};
-
             return _context.Users.Where(x => x.Id == id).ProjectToSingleOrDefault<UserDto>(_mapper.ConfigurationProvider);
         }
 
@@ -104,11 +76,6 @@ namespace AliaksNad.Battleship.Logic.Services
         /// <param name="model">User model.</param>
         public void Update(UserDto model)
         {
-            //var dbModel = _context.Users.SingleOrDefault(x => x.Id == model.Id);
-            //dbModel.Name = model.Name;
-            //dbModel.Email = model.Email;
-            //dbModel.Password = model.Password;
-
             var dbModel = _mapper.Map<UserDb>(model);
             _context.Users.Attach(dbModel);
             var entry = _context.Entry(dbModel);
