@@ -36,10 +36,11 @@ namespace Kbalan.TouchType.Logic.Validators
                
             });
 
-             /* Rule Set for validarion on logic layer with handling to context. 
-                Rules: 
-                1. User with such Id should exist. 
-                2. No user wiht such nickname shouldn't exist.*/
+
+            /* Rule Set for validarion on logic layer with handling to context. 
+               Rules: 
+               1. User with such Id should exist. 
+               2. No user wiht such nickname shouldn't exist.*/
             RuleSet("PostValidation", () =>
             {
                 RuleFor(x => x.Id).Must(CheckId).WithMessage("No user with such Id exist");

@@ -72,7 +72,11 @@ namespace GamePortal.Web.Api.Controllers.TouchType
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
 
-            _textSetValidator.ValidateAndThrow(model, "PreValidation");
+            var preValidResult = _textSetValidator.Validate(model, ruleSet: "PreValidation");
+            if (!preValidResult.IsValid)
+            {
+                return BadRequest(preValidResult.Errors.Select(x => x.ErrorMessage).First());
+            }
 
             var result = _textSetService.Add(model);
             return result.IsSuccess ? Created($"/textsets/{result.Value.Id}", result.Value) : (IHttpActionResult)BadRequest(result.Error); 
@@ -86,7 +90,11 @@ namespace GamePortal.Web.Api.Controllers.TouchType
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
 
-            _textSetValidator.ValidateAndThrow(model, "PreValidation");
+            var preValidResult = _textSetValidator.Validate(model, ruleSet: "PreValidation");
+            if (!preValidResult.IsValid)
+            {
+                return BadRequest(preValidResult.Errors.Select(x => x.ErrorMessage).First());
+            }
 
             var result = _textSetService.Update(model);
             return result.IsSuccess ? Ok($"Text set with id {model.Id} updated succesfully!") : (IHttpActionResult)BadRequest(result.Error);

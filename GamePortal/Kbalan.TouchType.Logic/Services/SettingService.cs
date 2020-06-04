@@ -1,5 +1,7 @@
 ﻿using AutoMapper;
+using CSharpFunctionalExtensions;
 using FluentValidation;
+using FluentValidation.Results;
 using Kbalan.TouchType.Data.Contexts;
 using Kbalan.TouchType.Data.Models;
 using Kbalan.TouchType.Logic.Dto;
@@ -7,6 +9,7 @@ using Kbalan.TouchType.Logic.Validators;
 using System;
 using System.Collections.Generic;
 using System.Data.Entity;
+using System.Data.Entity.Infrastructure;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -30,10 +33,17 @@ namespace Kbalan.TouchType.Logic.Services
         /// Return all User with settings from Db
         /// </summary>
         /// <returns>All Users with settings</returns>
-        public IEnumerable<UserSettingDto> GetAll()
+        public Result<IEnumerable<UserSettingDto>> GetAll()
         {
-            var models = _gameContext.Users.Include("Setting").ToArray();
-            return _mapper.Map<IEnumerable<UserSettingDto>>(models);
+            try
+            {
+                var models = _gameContext.Users.Include("Setting").ToArray();
+                return Result.Success<IEnumerable<UserSettingDto>>(_mapper.Map<IEnumerable<UserSettingDto>>(models));
+            }
+            catch (DbUpdateException ex)
+            {
+                return Result.Failure<IEnumerable<UserSettingDto>>(ex.Message);
+            }
         }
 
         /// <summary>
@@ -41,10 +51,22 @@ namespace Kbalan.TouchType.Logic.Services
         /// </summary>
         /// <param name="id">user id</param>
         /// <returns>user with setting</returns>
-        public UserSettingDto GetById(int id)
+        public Result<UserSettingDto> GetById(int id)
         {
-            return _gameContext.Users.Where(x => x.Id == id)
-                   .ProjectToSingleOrDefault<UserSettingDto>(_mapper.ConfigurationProvider);
+            try
+            {
+                var getResultById = _gameContext.Users.Where(x => x.Id == id)
+                    .ProjectToSingleOrDefault<UserSettingDto>(_mapper.ConfigurationProvider);
+
+                if (getResultById != null)
+                    return Result.Success<UserSettingDto>(getResultById);
+
+                return Result.Failure<UserSettingDto>("No user with such id exist");
+            }
+            catch (DbUpdateException ex)
+            {
+                return Result.Failure<UserSettingDto>(ex.Message);
+            }
         }
 
         /// <summary>
@@ -52,25 +74,40 @@ namespace Kbalan.TouchType.Logic.Services
         /// </summary>
         /// <param name="id">user's id</param>
         /// <param name="model">new settting model</param>
-        public void Update(int id, SettingDto model)
+        public Result Update(int id, SettingDto model)
         {
             //Cheking if user with id exist
             var userModel = _gameContext.Users.Include("Setting").SingleOrDefault(x => x.Id == id);
             if (userModel == null)
-                throw new ArgumentNullException("No user with such Id exist");
+                return Result.Failure($"No user with id {id} exist");
 
             //Replace model setting id from Dto to correct id from Db and Valiate
             model.SettingId = userModel.Setting.SettingId;
-            _settingValidator.ValidateAndThrow(model, "PostValidation");
 
-            var modelDb = _mapper.Map<SettingDb>(model);  
-            
-            modelDb.SettingId = userModel.Setting.SettingId;
-            modelDb.User = userModel.Setting.User;
-            userModel.Setting = modelDb;
+            //Validation
+            ValidationResult validationResult = _settingValidator.Validate(model, ruleSet: "PostValidation");
+            if (!validationResult.IsValid)
+            {
+                return Result.Failure(validationResult.Errors.Select(x => x.ErrorMessage).First());
+            }
 
-            _gameContext.Users.Attach(userModel);
-           _gameContext.SaveChanges();
+            try
+            {
+                var modelDb = _mapper.Map<SettingDb>(model);
+
+                modelDb.SettingId = userModel.Setting.SettingId;
+                modelDb.User = userModel.Setting.User;
+                userModel.Setting = modelDb;
+
+                _gameContext.Users.Attach(userModel);
+                _gameContext.SaveChanges();
+
+                return Result.Success();
+            }
+            catch (DbUpdateException ex)
+            {
+                return Result.Failure(ex.Message);
+            }
         }
 
         #region IDisposable Support

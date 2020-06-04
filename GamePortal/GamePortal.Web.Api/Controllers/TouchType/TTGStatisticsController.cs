@@ -30,7 +30,8 @@ namespace GamePortal.Web.Api.Controllers.TouchType
         [Route("")]
         public IHttpActionResult GetAll()
         {
-            return Ok(_statisticService.GetAll());
+            var result = _statisticService.GetAll();
+            return result.IsSuccess ? Ok(result.Value) : (IHttpActionResult)BadRequest(result.Error);
         }
 
         //Get Statistic Info by user Id
@@ -38,7 +39,12 @@ namespace GamePortal.Web.Api.Controllers.TouchType
         [Route("{id}")]
         public IHttpActionResult GetAllById([FromUri]int id)
         {
-            return _statisticService.GetById(id) == null ? (IHttpActionResult)NotFound() : Ok(_statisticService.GetById(id));
+            if (id <= 0)
+            {
+                return BadRequest("ID must be greater than 0");
+            }
+            var result = _statisticService.GetById(id);
+            return result.IsSuccess ? Ok(result.Value) : (IHttpActionResult)BadRequest(result.Error);
         }
 
         //Update User Statistic by User Id
@@ -46,17 +52,14 @@ namespace GamePortal.Web.Api.Controllers.TouchType
         [Route("")]
         public IHttpActionResult Update(int id, [FromBody]StatisticDto model)
         {
-            try
+            var preValidResult = _statisticValidator.Validate(model, ruleSet: "PreValidation");
+            if (!preValidResult.IsValid)
             {
-                _statisticValidator.ValidateAndThrow(model, "PreValidation");
-                _statisticService.Update(id, model);
-                return StatusCode(HttpStatusCode.NoContent);
+                return BadRequest(preValidResult.Errors.Select(x => x.ErrorMessage).First());
             }
-            catch (Exception ex)
-            {
 
-                return BadRequest(ex.Message);
-            }
+            var result = _statisticService.Update(id, model);
+            return result.IsSuccess ? Ok($"Statistic of user with id {id} updated succesfully!") : (IHttpActionResult)BadRequest(result.Error);
 
         }
     }

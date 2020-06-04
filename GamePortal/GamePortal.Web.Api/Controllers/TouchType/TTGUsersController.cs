@@ -35,7 +35,8 @@ namespace GamePortal.Web.Api.Controllers.TouchType
         [Route("")]
         public IHttpActionResult GetAll()
         {
-            return Ok(_userService.GetAll());
+            var result = _userService.GetAll();
+            return result.IsSuccess ? Ok(result.Value) : (IHttpActionResult)BadRequest(result.Error);
         }
 
         //Get Full User Info by Id
@@ -48,8 +49,9 @@ namespace GamePortal.Web.Api.Controllers.TouchType
                 return BadRequest("ID must be greater than 0");
             }
 
-                return _userService.GetById(id) == null ? (IHttpActionResult)NotFound() : Ok(_userService.GetById(id));
-             
+            var result = _userService.GetById(id);
+            return result.IsSuccess ? Ok(result.Value) : (IHttpActionResult)BadRequest(result.Error);
+
         }
 
         //Add new user
@@ -57,19 +59,17 @@ namespace GamePortal.Web.Api.Controllers.TouchType
         [Route("")]
         public IHttpActionResult Add([FromBody] UserSettingDto model)
         {
-            
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
-            try
+
+            var preValidResult =_userSettingvalidator.Validate(model, ruleSet: "PreValidation");
+            if(!preValidResult.IsValid)
             {
-                _userSettingvalidator.ValidateAndThrow(model, "PreValidation");
-               return _userService.Add(model) == null ? (IHttpActionResult)Conflict() : Created($"/registerusers/{model.Id}", model);
+                return BadRequest(preValidResult.Errors.Select(x => x.ErrorMessage).First());
             }
-            catch (ValidationException ex )
-            {
-                return BadRequest(ex.Message);
-            }
-            
+
+            var result = _userService.Add(model);
+            return result.IsSuccess ? Created($"/textsets/{result.Value.Id}", result.Value) : (IHttpActionResult)BadRequest(result.Error);
         }
 
         //Update User by Id
@@ -77,18 +77,17 @@ namespace GamePortal.Web.Api.Controllers.TouchType
         [Route("")]
         public IHttpActionResult Update([FromBody]UserDto model)
         {
-            try
-            {
-                _userValidator.ValidateAndThrow(model, "PreValidation");
-                _userService.Update(model);
-                return StatusCode(HttpStatusCode.NoContent);
-            }
-            catch (Exception ex)
-            {
+            if (!ModelState.IsValid)
+                return BadRequest(ModelState);
 
-                return BadRequest(ex.Message);
+            var preValidResult = _userValidator.Validate(model, ruleSet: "PreValidation");
+            if (!preValidResult.IsValid)
+            {
+                return BadRequest(preValidResult.Errors.Select(x => x.ErrorMessage).First());
             }
 
+            var result = _userService.Update(model);
+            return result.IsSuccess ? Ok($"User with id {model.Id} updated succesfully!") : (IHttpActionResult)BadRequest(result.Error);
         }
 
         //Delete User by Id
@@ -96,20 +95,13 @@ namespace GamePortal.Web.Api.Controllers.TouchType
         [Route("{id}")]
         public IHttpActionResult Delete(int id)
         {
-            if (id <= 0 )
+            if (id <= 0)
             {
                 return BadRequest("ID must be greater than 0");
             }
-            try
-            {
-                _userService.Delete(id);
-                return StatusCode(HttpStatusCode.NoContent);
-            }
-            catch
-            {
 
-                return BadRequest("No User with such ID");
-            }
+            var result = _userService.Delete(id);
+            return result.IsSuccess ? Ok($"User with id {id} deleted with his setting and statistic succesfully!") : (IHttpActionResult)BadRequest(result.Error);
 
         }
 

@@ -1,10 +1,13 @@
 ﻿using AutoMapper;
+using CSharpFunctionalExtensions;
 using FluentValidation;
+using FluentValidation.Results;
 using Kbalan.TouchType.Data.Contexts;
 using Kbalan.TouchType.Data.Models;
 using Kbalan.TouchType.Logic.Dto;
 using System;
 using System.Collections.Generic;
+using System.Data.Entity.Infrastructure;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -28,10 +31,17 @@ namespace Kbalan.TouchType.Logic.Services
         /// Return all User with statistic from Db
         /// </summary>
         /// <returns>All Users with statistic</returns>
-        public IEnumerable<UserStatisticDto> GetAll()
+        public Result<IEnumerable<UserStatisticDto>> GetAll()
         {
-            var models = _gameContext.Users.Include("Statistic").ToArray();
-            return _mapper.Map<IEnumerable<UserStatisticDto>>(models);
+            try
+            {
+                var models = _gameContext.Users.Include("Statistic").ToArray();
+                return Result.Success<IEnumerable<UserStatisticDto>>(_mapper.Map<IEnumerable<UserStatisticDto>>(models));
+            }
+            catch (DbUpdateException ex)
+            {
+                return Result.Failure<IEnumerable<UserStatisticDto>>(ex.Message);
+            }
         }
 
         /// <summary>
@@ -39,10 +49,22 @@ namespace Kbalan.TouchType.Logic.Services
         /// </summary>
         /// <param name="id">user id</param>
         /// <returns>user with statistic</returns>
-        public UserStatisticDto GetById(int id)
+        public Result<UserStatisticDto> GetById(int id)
         {
-            return _gameContext.Users.Where(x => x.Id == id)
-                   .ProjectToSingleOrDefault<UserStatisticDto>(_mapper.ConfigurationProvider);
+            try
+            {
+                var getResultById = _gameContext.Users.Where(x => x.Id == id)
+                    .ProjectToSingleOrDefault<UserStatisticDto>(_mapper.ConfigurationProvider);
+
+                if (getResultById != null)
+                    return Result.Success<UserStatisticDto>(getResultById);
+
+                return Result.Failure<UserStatisticDto>("No user with such id exist");
+            }
+            catch (DbUpdateException ex)
+            {
+                return Result.Failure<UserStatisticDto>(ex.Message);
+            }
         }
 
         /// <summary>
@@ -50,25 +72,40 @@ namespace Kbalan.TouchType.Logic.Services
         /// </summary>
         /// <param name="id">user's id</param>
         /// <param name="model">new statistic model</param>
-        public void Update(int id, StatisticDto model)
+        public Result Update(int id, StatisticDto model)
         {
             //Cheking if user with id exist
             var userModel = _gameContext.Users.Include("Statistic").SingleOrDefault(x => x.Id == id);
             if (userModel == null)
-                throw new ArgumentNullException("No user with such Id exist");
+                return Result.Failure($"No user with id {id} exist");
 
             //Replace model setting id from Dto to correct id from Db and Valiate
             model.StatisticId = userModel.Statistic.StatisticId;
-            _statisticValidator.ValidateAndThrow(model, "PostValidation");
 
-            var modelDb = _mapper.Map<StatisticDb>(model);
+            //Validation
+            ValidationResult validationResult = _statisticValidator.Validate(model, ruleSet: "PostValidation");
+            if (!validationResult.IsValid)
+            {
+                return Result.Failure(validationResult.Errors.Select(x => x.ErrorMessage).First());
+            }
 
-            modelDb.StatisticId = userModel.Statistic.StatisticId;
-            modelDb.User = userModel.Statistic.User;
-            userModel.Statistic = modelDb;
+            try
+            {
+                var modelDb = _mapper.Map<StatisticDb>(model);
 
-            _gameContext.Users.Attach(userModel);
-            _gameContext.SaveChanges();
+                modelDb.StatisticId = userModel.Statistic.StatisticId;
+                modelDb.User = userModel.Statistic.User;
+                userModel.Statistic = modelDb;
+
+                _gameContext.Users.Attach(userModel);
+                _gameContext.SaveChanges();
+
+                return Result.Success();
+            }
+            catch (DbUpdateException ex)
+            {
+                return Result.Failure(ex.Message);
+            }
         }
 
         #region IDisposable Support

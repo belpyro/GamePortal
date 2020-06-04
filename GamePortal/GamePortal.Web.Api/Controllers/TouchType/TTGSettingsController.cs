@@ -30,7 +30,8 @@ namespace GamePortal.Web.Api.Controllers.TouchType
         [Route("")]
         public IHttpActionResult GetAll()
         {
-            return Ok(_settingService.GetAll());
+            var result = _settingService.GetAll();
+            return result.IsSuccess ? Ok(result.Value) : (IHttpActionResult)BadRequest(result.Error);
         }
 
         //Get single Setting Info by User Id
@@ -42,7 +43,8 @@ namespace GamePortal.Web.Api.Controllers.TouchType
             {
                 return BadRequest("ID must be greater than 0");
             }
-            return _settingService.GetById(id) == null ? (IHttpActionResult)NotFound() : Ok(_settingService.GetById(id));
+            var result = _settingService.GetById(id);
+            return result.IsSuccess ? Ok(result.Value) : (IHttpActionResult)BadRequest(result.Error);
         }
 
         //Update single setting by User Id
@@ -50,18 +52,14 @@ namespace GamePortal.Web.Api.Controllers.TouchType
         [Route("")]
         public IHttpActionResult Update(int id ,[FromBody]SettingDto model)
         {
-            try
+            var preValidResult = _settingValidator.Validate(model, ruleSet: "PreValidation");
+            if (!preValidResult.IsValid)
             {
-                _settingValidator.ValidateAndThrow(model, "PreValidation");
-                _settingService.Update(id, model);
-                 return StatusCode(HttpStatusCode.NoContent);
+                return BadRequest(preValidResult.Errors.Select(x => x.ErrorMessage).First());
             }
-            catch (Exception ex)
-            {
 
-                return BadRequest(ex.Message);
-            }
-            
+            var result = _settingService.Update(id, model);
+            return result.IsSuccess ? Ok($"Settings of user with id {id} updated succesfully!") : (IHttpActionResult)BadRequest(result.Error);
         }
     }
 }

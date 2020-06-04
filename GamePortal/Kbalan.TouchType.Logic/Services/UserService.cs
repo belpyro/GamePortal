@@ -1,11 +1,14 @@
 ﻿using AutoMapper;
 using AutoMapper.QueryableExtensions;
+using CSharpFunctionalExtensions;
 using FluentValidation;
+using FluentValidation.Results;
 using Kbalan.TouchType.Data.Contexts;
 using Kbalan.TouchType.Data.Models;
 using Kbalan.TouchType.Logic.Dto;
 using System;
 using System.Collections.Generic;
+using System.Data.Entity.Infrastructure;
 using System.Data.Entity.Migrations;
 using System.Linq;
 using System.Text;
@@ -33,9 +36,17 @@ namespace Kbalan.TouchType.Logic.Services
         /// Implementation of IUserService GetAll() method
         /// </summary>
         /// <returns></returns>
-        public IEnumerable<UserSettingStatisticDto> GetAll()
+        public Result<IEnumerable<UserSettingStatisticDto>> GetAll()
         {
-            return _gameContext.Users.ProjectToArray<UserSettingStatisticDto>(_mapper.ConfigurationProvider);
+            try
+            {
+                var getAllResult = _gameContext.Users.ProjectToArray<UserSettingStatisticDto>(_mapper.ConfigurationProvider);
+                return Result.Success<IEnumerable<UserSettingStatisticDto>>(getAllResult);
+            }
+            catch (DbUpdateException ex)
+            {
+                return Result.Failure<IEnumerable<UserSettingStatisticDto>>(ex.Message);
+            }
         }
 
         /// <summary>
@@ -43,10 +54,22 @@ namespace Kbalan.TouchType.Logic.Services
         /// </summary>
         /// <param name="Id"></param>
         /// <returns></returns>
-        public UserSettingStatisticDto GetById(int id)
+        public Result<UserSettingStatisticDto> GetById(int id)
         {
-            return _gameContext.Users.Where(x => x.Id == id)
-                .ProjectToSingleOrDefault<UserSettingStatisticDto>(_mapper.ConfigurationProvider);
+            try
+            {
+                var getResultById = _gameContext.Users.Where(x => x.Id == id)
+                    .ProjectToSingleOrDefault<UserSettingStatisticDto>(_mapper.ConfigurationProvider);
+
+                if (getResultById != null)
+                    return Result.Success<UserSettingStatisticDto>(getResultById);
+
+                return Result.Failure<UserSettingStatisticDto>("No user with such id exist");
+            }
+            catch (DbUpdateException ex)
+            {
+                return Result.Failure<UserSettingStatisticDto>(ex.Message);
+            }
         }
 
         /// <summary>
@@ -55,31 +78,58 @@ namespace Kbalan.TouchType.Logic.Services
         /// </summary>
         /// <param name="model">RegisterUserDto model</param>
         /// <returns>New User or null</returns>
-        public UserSettingDto Add(UserSettingDto model)
+        public Result<UserSettingDto> Add(UserSettingDto model)
         {
-            _userSettingValidator.ValidateAndThrow(model, "PostValidation");
-            var DbModel = _mapper.Map<UserDb>(model);
-            _gameContext.Users.Add(DbModel);
-            _gameContext.SaveChanges();
+            ValidationResult validationResult = _userSettingValidator.Validate(model, ruleSet: "PostValidation");
+            if (!validationResult.IsValid)
+            {
+                return Result.Failure<UserSettingDto>(validationResult.Errors.Select(x => x.ErrorMessage).First());
+            }
+            try
+            {
+                var DbModel = _mapper.Map<UserDb>(model);
 
-            model.Id = DbModel.Id;
-            return model;
+                _gameContext.Users.Add(DbModel);
+                _gameContext.SaveChanges();
+
+                model.Id = DbModel.Id;
+                return Result.Success(model);
+            }
+            catch (DbUpdateException ex)
+            {
+                return Result.Failure<UserSettingDto>(ex.Message);
+            }
         }
 
         /// <summary>
         /// Implementation of Update()
         /// </summary>
         /// <param name="model"></param>
-        public void Update(UserDto model)
+        public Result Update(UserDto model)
         {
-            _userValidator.ValidateAndThrow(model, "PostValidation");
-            var dbModel = _mapper.Map<UserDb>(model);
-            _gameContext.Users.Attach(dbModel);
-            var entry = _gameContext.Entry(dbModel);
-            entry.Property(x => x.NickName).IsModified = true;
-            entry.Property(x => x.Password).IsModified = true;
-            
-            _gameContext.SaveChanges();
+            ValidationResult validationResult = _userValidator.Validate(model, ruleSet: "PostValidation");
+            if (!validationResult.IsValid)
+            {
+                return Result.Failure(validationResult.Errors.Select(x => x.ErrorMessage).First());
+            }
+
+            try
+            {
+                var dbModel = _mapper.Map<UserDb>(model);
+
+                _gameContext.Users.Attach(dbModel);
+
+                var entry = _gameContext.Entry(dbModel);
+                entry.Property(x => x.NickName).IsModified = true;
+                entry.Property(x => x.Password).IsModified = true;
+                _gameContext.SaveChanges();
+
+                return Result.Success();
+            }
+            catch (DbUpdateException ex)
+            {
+                return Result.Failure(ex.Message);
+            }
         }
 
         /// <summary>
@@ -87,11 +137,23 @@ namespace Kbalan.TouchType.Logic.Services
         /// </summary>
         /// <param name="id">User id</param>
         /// <returns>true or false</returns>
-        public void Delete(int id)
+        public Result Delete(int id)
         {
+            try
+            {
                 var dbModel = _gameContext.Users.Find(id);
+
+                if (dbModel == null)
+                    return Result.Failure($"No user with id {id} exist");
+
                 _gameContext.Users.Remove(dbModel);
                 _gameContext.SaveChanges();
+                return Result.Success();
+            }
+            catch (DbUpdateException ex)
+            {
+                return Result.Failure(ex.Message);
+            }
         }
 
         #region IDisposable Support

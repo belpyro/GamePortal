@@ -89,7 +89,7 @@ namespace Kbalan.TouchType.Logic.Services
                 if(getResultById != null)
                 return Result.Success<TextSetDto>(getResultById);
 
-                return Result.Failure<TextSetDto>("No user with such id exist");
+                return Result.Failure<TextSetDto>("No text set with such id exist");
             }
             catch (DbUpdateException ex)
             {
@@ -172,7 +172,6 @@ namespace Kbalan.TouchType.Logic.Services
             {
                 return Result.Failure(ex.Message);
             }
-
         }
 
         #region IDisposable Support
