@@ -10,5 +10,12 @@ namespace Vitaly.Sapper.Logic.Services
     public interface ISapperService : IDisposable
     {
         IEnumerable<UserDto> GetAll();
+
+        UserDto UserInfoById(int id);
+
+        UserDto UserAdd(int id);
+
+        UserDto UserUpdate(int id);
+        UserDto UserDelete(int id);
     }
 }

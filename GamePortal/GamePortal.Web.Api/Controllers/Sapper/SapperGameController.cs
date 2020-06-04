@@ -21,11 +21,14 @@ namespace GamePortal.Web.Api.Controllers.Sapper
         /// Get all users
         /// </summary>
         /// <returns>All users info</returns>
-        [HttpGet,Route("users/all")]
+        [HttpGet, Route("users/all")]
         public IHttpActionResult GetAll()
         {
-            return Ok();
-           // return Ok(_sapperService.GetAll());
+            //return Ok();
+            var a = 5;
+            a++;
+            //return Ok(_sapperService.GetAll());
+            return Ok(a);
         }
 
         /// <summary>
@@ -35,7 +38,8 @@ namespace GamePortal.Web.Api.Controllers.Sapper
         [HttpGet, Route("users/info/{id}")]
         public IHttpActionResult UserInfoById(int id)
         {
-            return Ok("User info: id = " + id);
+            var user = _sapperService.UserInfoById(id);
+            return user == null ? (IHttpActionResult)NotFound() : Ok(user);
         }
 
         /// <summary>
@@ -66,6 +70,11 @@ namespace GamePortal.Web.Api.Controllers.Sapper
         public IHttpActionResult UserDelete(int id)
         {
             return Ok("User delete: id = " + id);
+        }
+
+        protected override void Dispose(bool disposing)
+        {
+            base.Dispose(disposing);
         }
     }
 }

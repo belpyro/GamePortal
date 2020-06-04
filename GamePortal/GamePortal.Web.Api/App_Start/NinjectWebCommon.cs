@@ -1,3 +1,5 @@
+using Vitaly.Sapper.Logic;
+
 [assembly: WebActivatorEx.PreApplicationStartMethod(typeof(GamePortal.Web.Api.App_Start.NinjectWebCommon), "Start")]
 [assembly: WebActivatorEx.ApplicationShutdownMethodAttribute(typeof(GamePortal.Web.Api.App_Start.NinjectWebCommon), "Stop")]
 
@@ -8,6 +10,7 @@ namespace GamePortal.Web.Api.App_Start
     using Igro.Quoridor.Logic;
     using Igro.Quoridor.Logic.Services;
     using AliaksNad.Battleship.Logic;
+    using Vitaly.Sapper.Logic;
     using Microsoft.Web.Infrastructure.DynamicModuleHelper;
 
     using Ninject;
@@ -64,6 +67,7 @@ namespace GamePortal.Web.Api.App_Start
         private static void RegisterServices(IKernel kernel)
         {
             kernel.Load(new LogicDIModule(), new BattleshipLogicDIModule());
+            kernel.Load(new VitalySapperLogicDIModule());
         }
     }
 }
