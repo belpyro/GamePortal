@@ -1,11 +1,15 @@
 ﻿using AutoMapper;
+using CSharpFunctionalExtensions;
 using FluentValidation;
+using FluentValidation.Results;
 using Kbalan.TouchType.Data.Contexts;
 using Kbalan.TouchType.Data.Models;
 using Kbalan.TouchType.Logic.Dto;
 using System;
 using System.Collections.Generic;
+using System.Data.Entity.Infrastructure;
 using System.Linq;
+using System.Security.Cryptography;
 using System.Security.Cryptography.X509Certificates;
 using System.Text;
 using System.Threading.Tasks;
@@ -30,60 +34,120 @@ namespace Kbalan.TouchType.Logic.Services
         /// Get All TextSet's
         /// </summary>
         /// <returns></returns>
-        public IEnumerable<TextSetDto> GetAll()
+        public Result<IEnumerable<TextSetDto>> GetAll()
         {
-            return _gameContext.TextSets.ProjectToArray<TextSetDto>(_mapper.ConfigurationProvider);
+            try
+            {
+                var getAllResult = _gameContext.TextSets.ProjectToArray<TextSetDto>(_mapper.ConfigurationProvider);
+                return Result.Success<IEnumerable<TextSetDto>>(getAllResult);
+            }
+            catch (DbUpdateException ex)
+            {
+                return Result.Failure<IEnumerable<TextSetDto>>(ex.Message);
+            }
+
         }
 
         /// <summary>
         /// Add new TextSet
         /// </summary>
-        public TextSetDto Add(TextSetDto model)
+        public Result<TextSetDto> Add(TextSetDto model)
         {
-            _textSetValidator.ValidateAndThrow(model, "PostValidation");
-            var DbModel = _mapper.Map<TextSetDb>(model);
-            _gameContext.TextSets.Add(DbModel);
-            _gameContext.SaveChanges();
+            ValidationResult validationResult = _textSetValidator.Validate(model, ruleSet: "PostValidation");
+            if (!validationResult.IsValid)
+            {
+               return Result.Failure<TextSetDto>(validationResult.Errors.Select(x => x.ErrorMessage).First());
+            }
+            try
+            {
+                var DbModel = _mapper.Map<TextSetDb>(model);
 
-            model.Id = DbModel.Id;
-            return model;
+                _gameContext.TextSets.Add(DbModel);
+                _gameContext.SaveChanges();
+
+                model.Id = DbModel.Id;
+                return Result.Success(model);
+            }
+            catch (DbUpdateException ex)
+            {
+                return Result.Failure<TextSetDto>(ex.Message);
+            }
+
         }
 
         /// <summary>
         /// GetTextSet by Id
         /// </summary>
-        public TextSetDto GetById(int id)
+        public Result<TextSetDto> GetById(int id)
         {
-            return _gameContext.TextSets.Where(x => x.Id == id)
+
+            try
+            {
+                var getResultById = _gameContext.TextSets.Where(x => x.Id == id)
                     .ProjectToSingleOrDefault<TextSetDto>(_mapper.ConfigurationProvider);
+
+                if(getResultById != null)
+                return Result.Success<TextSetDto>(getResultById);
+
+                return Result.Failure<TextSetDto>("No user with such id exist");
+            }
+            catch (DbUpdateException ex)
+            {
+                return Result.Failure<TextSetDto>(ex.Message);
+            }
         }
 
         /// <summary>
         /// Get TextSet by level
         /// </summary>
-        public TextSetDto GetByLevel(int level)
+        public Result<TextSetDto> GetByLevel(int level)
         {
-            var texts = _gameContext.TextSets.Where(x => x.LevelOfText == (LevelOfText)level).ToArray();
-            var text = texts.ElementAt(new Random().Next(0, texts.Length));
-            return _mapper.Map<TextSetDto>(text);
-                
+            try
+            {
+                var texts = _gameContext.TextSets.Where(x => x.LevelOfText == (LevelOfText)level).ToArray();
+                if (texts.Length == 0)
+                    return Result.Failure<TextSetDto>($"No text set with level {level} exists");
+                var text = texts.ElementAt(new Random().Next(0, texts.Length));
+                return Result.Success<TextSetDto>(_mapper.Map<TextSetDto>(text));
+            }
+            catch (DbUpdateException ex)
+            {
+                return Result.Failure<TextSetDto>(ex.Message);
+            }   
         }
 
         /// <summary>
         /// Update TextSet 
         /// </summary>
         /// <param name="model">TextSet model</param>
-        public void Update(TextSetDto model)
+        public Result Update(TextSetDto model)
         {
-            _textSetValidator.ValidateAndThrow(model, "PostValidation");
-            var dbModel = _mapper.Map<TextSetDb>(model);
-            _gameContext.TextSets.Attach(dbModel);
-            var entry = _gameContext.Entry(dbModel);
-            entry.Property(x => x.LevelOfText).IsModified = true;
-            entry.Property(x => x.Name).IsModified = true;
-            entry.Property(x => x.TextForTyping).IsModified = true;
+            ValidationResult validationResult = _textSetValidator.Validate(model, ruleSet: "PostValidationWithId");
+            if (!validationResult.IsValid)
+            {
+                return Result.Failure<TextSetDto>(validationResult.Errors.Select(x => x.ErrorMessage).First());
+            }
 
-            _gameContext.SaveChanges();
+            try
+            {
+                var dbModel = _mapper.Map<TextSetDb>(model);
+
+                _gameContext.TextSets.Attach(dbModel);
+
+                var entry = _gameContext.Entry(dbModel);
+                entry.Property(x => x.LevelOfText).IsModified = true;
+                entry.Property(x => x.Name).IsModified = true;
+                entry.Property(x => x.TextForTyping).IsModified = true;
+
+                _gameContext.SaveChanges();
+
+                return Result.Success();
+            }
+            catch (DbUpdateException ex)
+            {
+                return Result.Failure(ex.Message);
+            }
+
         }
 
         /// <summary>
@@ -91,11 +155,24 @@ namespace Kbalan.TouchType.Logic.Services
         /// </summary>
         /// <param name="id">TextSet Id</param>
         /// <returns></returns>
-        public void Delete(int id)
+        public Result Delete(int id)
         {
-            var dbModel = _gameContext.TextSets.Find(id);
-            _gameContext.TextSets.Remove(dbModel);
-            _gameContext.SaveChanges();
+            try
+            {
+                var dbModel = _gameContext.TextSets.Find(id);
+
+                if (dbModel == null)
+                    return Result.Failure($"No text set with id {id} exist");
+
+                _gameContext.TextSets.Remove(dbModel);
+                _gameContext.SaveChanges();
+                return Result.Success();
+            }
+            catch (DbUpdateException ex)
+            {
+                return Result.Failure(ex.Message);
+            }
+
         }
 
         #region IDisposable Support
