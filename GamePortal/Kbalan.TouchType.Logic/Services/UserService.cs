@@ -82,11 +82,6 @@ namespace Kbalan.TouchType.Logic.Services
         /// <returns>New User or null</returns>
         public Result<UserSettingDto> Add(UserSettingDto model)
         {
-            ValidationResult validationResult = _userSettingValidator.Validate(model, ruleSet: "PostValidation");
-            if (!validationResult.IsValid)
-            {
-                return Result.Failure<UserSettingDto>(validationResult.Errors.Select(x => x.ErrorMessage).First());
-            }
             try
             {
                 var DbModel = _mapper.Map<UserDb>(model);
@@ -109,11 +104,6 @@ namespace Kbalan.TouchType.Logic.Services
         /// <param name="model"></param>
         public Result Update(UserDto model)
         {
-            ValidationResult validationResult = _userValidator.Validate(model, ruleSet: "PostValidation");
-            if (!validationResult.IsValid)
-            {
-                return Result.Failure(validationResult.Errors.Select(x => x.ErrorMessage).First());
-            }
 
             try
             {

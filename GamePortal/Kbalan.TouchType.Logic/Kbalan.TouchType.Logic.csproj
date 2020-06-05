@@ -90,6 +90,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Aspects\TextSetValidationInterceptor.cs" />
+    <Compile Include="Aspects\UserValidationInterceptor.cs" />
     <Compile Include="Dto\TextSetDto.cs" />
     <Compile Include="Dto\UserDto%27s\UserStatisticDto.cs" />
     <Compile Include="Dto\UserDto%27s\UserSettingDto.cs" />

@@ -29,7 +29,6 @@ namespace Kbalan.TouchType.Logic
             this.Bind<IMapper>().ToConstant(mapper);
 
             this.Bind<TouchTypeGameContext>().ToSelf();
-            this.Bind<IUserService>().To<UserService>();
             this.Bind<ISettingService>().To<SettingService>();
             this.Bind<IStatisticService>().To<StatisticService>();
             this.Bind<IValidator<UserSettingDto>>().To<UserSettingDtoValidator>();
@@ -42,6 +41,12 @@ namespace Kbalan.TouchType.Logic
                 var service = new TextSetService(ctx.Kernel.Get<TouchTypeGameContext>(), ctx.Kernel.Get<IMapper>()
                     , ctx.Kernel.Get<IValidator<TextSetDto>>());
                 return new ProxyGenerator().CreateInterfaceProxyWithTarget<ITextSetService>(service, new TextSetValidationInterceptor(ctx.Kernel));
+            });
+            this.Bind<IUserService>().ToMethod(ctx =>
+            {
+                var service = new UserService(ctx.Kernel.Get<TouchTypeGameContext>(), ctx.Kernel.Get<IMapper>()
+                    , ctx.Kernel.Get<IValidator<UserSettingDto>>(), ctx.Kernel.Get<IValidator<UserDto>>());
+                return new ProxyGenerator().CreateInterfaceProxyWithTarget<IUserService>(service, new UserValidationInterceptor(ctx.Kernel));
             });
         }
     }

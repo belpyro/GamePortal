@@ -83,7 +83,7 @@ namespace GamePortal.Web.Api.Controllers.TouchType
             return result.IsSuccess ? Created($"/textsets/{result.Value.Id}", result.Value) : (IHttpActionResult)BadRequest(result.Error); 
         }
 
-        //Update Text by Id
+        //Update Text by Id 
         [HttpPut]
         [Route("")]
         public IHttpActionResult Update([FromBody]TextSetDto model)
