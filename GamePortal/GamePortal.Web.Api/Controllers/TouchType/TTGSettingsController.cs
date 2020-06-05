@@ -1,4 +1,5 @@
 ﻿using FluentValidation;
+using JetBrains.Annotations;
 using Kbalan.TouchType.Logic.Dto;
 using Kbalan.TouchType.Logic.Services;
 using System;
@@ -19,7 +20,7 @@ namespace GamePortal.Web.Api.Controllers.TouchType
         private readonly ISettingService _settingService;
         private readonly IValidator<SettingDto> _settingValidator;
 
-        public TTGSettingsController(ISettingService settingService, IValidator<SettingDto> SettingValidator)
+        public TTGSettingsController([NotNull] ISettingService settingService, [NotNull]IValidator<SettingDto> SettingValidator)
         {
             this._settingService = settingService;
             _settingValidator = SettingValidator;

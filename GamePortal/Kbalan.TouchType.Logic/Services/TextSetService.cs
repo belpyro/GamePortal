@@ -54,11 +54,6 @@ namespace Kbalan.TouchType.Logic.Services
         /// </summary>
         public Result<TextSetDto> Add(TextSetDto model)
         {
-            ValidationResult validationResult = _textSetValidator.Validate(model, ruleSet: "PostValidation");
-            if (!validationResult.IsValid)
-            {
-               return Result.Failure<TextSetDto>(validationResult.Errors.Select(x => x.ErrorMessage).First());
-            }
             try
             {
                 var DbModel = _mapper.Map<TextSetDb>(model);
@@ -123,12 +118,6 @@ namespace Kbalan.TouchType.Logic.Services
         /// <param name="model">TextSet model</param>
         public Result Update(TextSetDto model)
         {
-            ValidationResult validationResult = _textSetValidator.Validate(model, ruleSet: "PostValidationWithId");
-            if (!validationResult.IsValid)
-            {
-                return Result.Failure<TextSetDto>(validationResult.Errors.Select(x => x.ErrorMessage).First());
-            }
-
             try
             {
                 var dbModel = _mapper.Map<TextSetDb>(model);

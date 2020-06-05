@@ -1,4 +1,5 @@
 ﻿using FluentValidation;
+using JetBrains.Annotations;
 using Kbalan.TouchType.Logic.Dto;
 using Kbalan.TouchType.Logic.Services;
 using System;
@@ -19,7 +20,7 @@ namespace GamePortal.Web.Api.Controllers.TouchType
         private readonly IStatisticService _statisticService;
         private readonly IValidator<StatisticDto> _statisticValidator;
 
-        public TTGStatisticsController(IStatisticService statisticService, IValidator<StatisticDto> StatisticValidator)
+        public TTGStatisticsController([NotNull]IStatisticService statisticService, [NotNull]IValidator<StatisticDto> StatisticValidator)
         {
             this._statisticService = statisticService;
             _statisticValidator = StatisticValidator;

@@ -6,6 +6,7 @@ using System.Net.Http;
 using System.Web.Http;
 using CSharpFunctionalExtensions;
 using FluentValidation;
+using JetBrains.Annotations;
 using Kbalan.TouchType.Logic.Dto;
 using Kbalan.TouchType.Logic.Services;
 
@@ -20,7 +21,7 @@ namespace GamePortal.Web.Api.Controllers.TouchType
         private readonly ITextSetService _textSetService;
         private readonly IValidator<TextSetDto> _textSetValidator;
 
-        public TTGTextsController(ITextSetService textSetService, IValidator<TextSetDto> TextSetValidator)
+        public TTGTextsController([NotNull]ITextSetService textSetService, [NotNull]IValidator<TextSetDto> TextSetValidator)
         {
             this._textSetService = textSetService;
             _textSetValidator = TextSetValidator;

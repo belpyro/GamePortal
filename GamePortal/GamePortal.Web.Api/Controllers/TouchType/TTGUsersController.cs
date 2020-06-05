@@ -7,6 +7,7 @@ using System.Web.Configuration;
 using System.Web.Http;
 using FluentValidation;
 using FluentValidation.WebApi;
+using JetBrains.Annotations;
 using Kbalan.TouchType.Logic.Dto;
 using Kbalan.TouchType.Logic.Services;
 using Kbalan.TouchType.Logic.Validators;
@@ -23,7 +24,8 @@ namespace GamePortal.Web.Api.Controllers.TouchType
         private readonly IValidator<UserSettingDto> _userSettingvalidator;
         private readonly IValidator<UserDto> _userValidator;
 
-        public TTGUsersController(IUserService userService, IValidator<UserSettingDto> UserSettingvalidator, IValidator<UserDto> UserValidator)
+        public TTGUsersController([NotNull]IUserService userService, [NotNull]IValidator<UserSettingDto> UserSettingvalidator
+            , [NotNull]IValidator<UserDto> UserValidator)
         {
             this._userService = userService;
             this._userSettingvalidator = UserSettingvalidator;
