@@ -29,8 +29,6 @@ namespace Kbalan.TouchType.Logic
             this.Bind<IMapper>().ToConstant(mapper);
 
             this.Bind<TouchTypeGameContext>().ToSelf();
-            this.Bind<ISettingService>().To<SettingService>();
-            this.Bind<IStatisticService>().To<StatisticService>();
             this.Bind<IValidator<UserSettingDto>>().To<UserSettingDtoValidator>();
             this.Bind<IValidator<UserDto>>().To<UserDtoValidator>();
             this.Bind<IValidator<SettingDto>>().To<SettingDtoValidator>();
@@ -47,6 +45,18 @@ namespace Kbalan.TouchType.Logic
                 var service = new UserService(ctx.Kernel.Get<TouchTypeGameContext>(), ctx.Kernel.Get<IMapper>()
                     , ctx.Kernel.Get<IValidator<UserSettingDto>>(), ctx.Kernel.Get<IValidator<UserDto>>());
                 return new ProxyGenerator().CreateInterfaceProxyWithTarget<IUserService>(service, new UserValidationInterceptor(ctx.Kernel));
+            });
+            this.Bind<ISettingService>().ToMethod(ctx =>
+            {
+                var service = new SettingService(ctx.Kernel.Get<TouchTypeGameContext>(), ctx.Kernel.Get<IMapper>()
+                    , ctx.Kernel.Get<IValidator<SettingDto>>());
+                return new ProxyGenerator().CreateInterfaceProxyWithTarget<ISettingService>(service, new SettingValidationInterceptor(ctx.Kernel));
+            });
+            this.Bind<IStatisticService>().ToMethod(ctx =>
+            {
+                var service = new StatisticService(ctx.Kernel.Get<TouchTypeGameContext>(), ctx.Kernel.Get<IMapper>()
+                    , ctx.Kernel.Get<IValidator<StatisticDto>>());
+                return new ProxyGenerator().CreateInterfaceProxyWithTarget<IStatisticService>(service, new StatisticValidationInterceptor(ctx.Kernel));
             });
         }
     }

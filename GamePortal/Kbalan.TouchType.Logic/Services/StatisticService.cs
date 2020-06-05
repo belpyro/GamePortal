@@ -77,19 +77,9 @@ namespace Kbalan.TouchType.Logic.Services
         {
             //Cheking if user with id exist
             var userModel = _gameContext.Users.Include("Statistic").SingleOrDefault(x => x.Id == id);
-            if (userModel == null)
-                return Result.Failure($"No user with id {id} exist");
 
-            //Replace model setting id from Dto to correct id from Db and Valiate
+            //Replace model statistic id from Dto to correct id from Db and Valiate
             model.StatisticId = userModel.Statistic.StatisticId;
-
-            //Validation
-            ValidationResult validationResult = _statisticValidator.Validate(model, ruleSet: "PostValidation");
-            if (!validationResult.IsValid)
-            {
-                return Result.Failure(validationResult.Errors.Select(x => x.ErrorMessage).First());
-            }
-
             try
             {
                 var modelDb = _mapper.Map<StatisticDb>(model);

@@ -26,8 +26,9 @@ namespace Kbalan.TouchType.Logic.Aspects
         }
         public void Intercept(IInvocation invocation)
         {
-            var arg = invocation.Arguments.SingleOrDefault(x => x.GetType() == typeof(TextSetDto));
-            if(arg == null)
+            //model null checking
+            var text = invocation.Arguments.SingleOrDefault(x => x.GetType() == typeof(TextSetDto));
+            if(text == null)
             {
                 invocation.Proceed();
                 return;
@@ -37,7 +38,7 @@ namespace Kbalan.TouchType.Logic.Aspects
             if (invocation.Method.Name.Equals("Add"))
             {
                 var validator = _kernel.Get<IValidator<TextSetDto>>();
-                var validationResult = validator.Validate(arg as TextSetDto, ruleSet: "PostValidation");
+                var validationResult = validator.Validate(text as TextSetDto, ruleSet: "PostValidation");
 
                 if (!validationResult.IsValid)
                 {
@@ -50,7 +51,7 @@ namespace Kbalan.TouchType.Logic.Aspects
             if (invocation.Method.Name.Equals("Update"))
             {
                 var validator = _kernel.Get<IValidator<TextSetDto>>();
-                var validationResult = validator.Validate(arg as TextSetDto, ruleSet: "PostValidationWithId"); 
+                var validationResult = validator.Validate(text as TextSetDto, ruleSet: "PostValidationWithId"); 
                 
                 if (!validationResult.IsValid)
                 {

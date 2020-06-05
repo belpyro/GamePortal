@@ -79,18 +79,9 @@ namespace Kbalan.TouchType.Logic.Services
         {
             //Cheking if user with id exist
             var userModel = _gameContext.Users.Include("Setting").SingleOrDefault(x => x.Id == id);
-            if (userModel == null)
-                return Result.Failure($"No user with id {id} exist");
 
             //Replace model setting id from Dto to correct id from Db and Valiate
             model.SettingId = userModel.Setting.SettingId;
-
-            //Validation
-            ValidationResult validationResult = _settingValidator.Validate(model, ruleSet: "PostValidation");
-            if (!validationResult.IsValid)
-            {
-                return Result.Failure(validationResult.Errors.Select(x => x.ErrorMessage).First());
-            }
 
             try
             {

@@ -11,6 +11,9 @@ using System.Threading.Tasks;
 
 namespace Kbalan.TouchType.Logic.Aspects
 {
+    /// <summary>
+    /// Interceptor for UserService Proxy. It includes PostValidation for Add and Update method
+    /// </summary>
     class UserValidationInterceptor : IInterceptor
     {
         private readonly IKernel _kernel;
@@ -21,6 +24,7 @@ namespace Kbalan.TouchType.Logic.Aspects
         }
         public void Intercept(IInvocation invocation)
         {
+            //model null checking. One of models must exist
             var user = invocation.Arguments.SingleOrDefault(x => x.GetType() == typeof(UserDto));
             var userSetting = invocation.Arguments.SingleOrDefault(x => x.GetType() == typeof(UserSettingDto));
             if (user == null && userSetting == null)

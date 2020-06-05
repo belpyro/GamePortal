@@ -89,6 +89,8 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Aspects\StatisticValidationInterceptor.cs" />
+    <Compile Include="Aspects\SettingValidationInterceptor.cs" />
     <Compile Include="Aspects\TextSetValidationInterceptor.cs" />
     <Compile Include="Aspects\UserValidationInterceptor.cs" />
     <Compile Include="Dto\TextSetDto.cs" />
