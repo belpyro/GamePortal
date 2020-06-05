@@ -1,4 +1,6 @@
-﻿using Kbalan.TouchType.Logic.Dto;
+﻿using FluentValidation;
+using JetBrains.Annotations;
+using Kbalan.TouchType.Logic.Dto;
 using Kbalan.TouchType.Logic.Services;
 using System;
 using System.Collections.Generic;
@@ -16,9 +18,12 @@ namespace GamePortal.Web.Api.Controllers.TouchType
     public class TTGSettingsController : ApiController
     {
         private readonly ISettingService _settingService;
-        public TTGSettingsController(ISettingService settingService)
+        private readonly IValidator<SettingDto> _settingValidator;
+
+        public TTGSettingsController([NotNull] ISettingService settingService, [NotNull]IValidator<SettingDto> SettingValidator)
         {
             this._settingService = settingService;
+            _settingValidator = SettingValidator;
         }
 
         //Get All Settings with user
@@ -26,24 +31,36 @@ namespace GamePortal.Web.Api.Controllers.TouchType
         [Route("")]
         public IHttpActionResult GetAll()
         {
-            return Ok(_settingService.GetAll());
+            var result = _settingService.GetAll();
+            return result.IsSuccess ? Ok(result.Value) : (IHttpActionResult)BadRequest(result.Error);
         }
 
-        //Get Full Statistic Info by User Id
+        //Get single Setting Info by User Id
         [HttpGet]
         [Route("{id}")]
-        public IHttpActionResult GetAllById([FromUri]int Id)
+        public IHttpActionResult GetById([FromUri]int id)
         {
-            return _settingService.GetById(Id) == null ? (IHttpActionResult)NotFound() : Ok(_settingService.GetById(Id));
+            if (id <= 0)
+            {
+                return BadRequest("ID must be greater than 0");
+            }
+            var result = _settingService.GetById(id);
+            return result.IsSuccess ? Ok(result.Value) : (IHttpActionResult)BadRequest(result.Error);
         }
 
-        //Update User Statistic by User Id
+        //Update single setting by User Id
         [HttpPut]
         [Route("")]
         public IHttpActionResult Update(int id ,[FromBody]SettingDto model)
         {
-            _settingService.Update(id, model);
-            return StatusCode(HttpStatusCode.NoContent);
+            var preValidResult = _settingValidator.Validate(model, ruleSet: "PreValidation");
+            if (!preValidResult.IsValid)
+            {
+                return BadRequest(preValidResult.Errors.Select(x => x.ErrorMessage).First());
+            }
+
+            var result = _settingService.Update(id, model);
+            return result.IsSuccess ? Ok($"Settings of user with id {id} updated succesfully!") : (IHttpActionResult)BadRequest(result.Error);
         }
     }
 }
