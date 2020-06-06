@@ -6,7 +6,7 @@ namespace GamePortal.Web.Api
 {
     public class CustomValidatorFactory : IValidatorFactory
     {
-        private readonly IDependencyResolver _dependencyResolver;
+        private IDependencyResolver _dependencyResolver;
 
         public CustomValidatorFactory(IDependencyResolver dependencyResolver)
         {

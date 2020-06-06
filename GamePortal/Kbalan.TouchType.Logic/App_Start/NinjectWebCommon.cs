@@ -1,22 +1,16 @@
-[assembly: WebActivatorEx.PreApplicationStartMethod(typeof(GamePortal.Web.Api.App_Start.NinjectWebCommon), "Start")]
-[assembly: WebActivatorEx.ApplicationShutdownMethodAttribute(typeof(GamePortal.Web.Api.App_Start.NinjectWebCommon), "Stop")]
+[assembly: WebActivatorEx.PreApplicationStartMethod(typeof(Kbalan.TouchType.Logic.App_Start.NinjectWebCommon), "Start")]
+[assembly: WebActivatorEx.ApplicationShutdownMethodAttribute(typeof(Kbalan.TouchType.Logic.App_Start.NinjectWebCommon), "Stop")]
 
-namespace GamePortal.Web.Api.App_Start
+namespace Kbalan.TouchType.Logic.App_Start
 {
     using System;
     using System.Web;
-    using Igro.Quoridor.Logic;
-    using Igro.Quoridor.Logic.Services;
-    using AliaksNad.Battleship.Logic;
-    using Kbalan.TouchType.Logic;
+
     using Microsoft.Web.Infrastructure.DynamicModuleHelper;
 
     using Ninject;
     using Ninject.Web.Common;
     using Ninject.Web.Common.WebHost;
-    using Serilog;
-    using System.Reflection;
-    using System.IO;
 
     public static class NinjectWebCommon 
     {
@@ -67,7 +61,6 @@ namespace GamePortal.Web.Api.App_Start
         /// <param name="kernel">The kernel.</param>
         private static void RegisterServices(IKernel kernel)
         {
-            kernel.Load(/*new LogicDIModule(),*/ new TTGDIModule()/*, new BattleshipLogicDIModule()*/);
         }
     }
 }
