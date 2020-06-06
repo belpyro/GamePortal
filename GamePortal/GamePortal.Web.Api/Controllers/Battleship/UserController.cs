@@ -1,4 +1,5 @@
-﻿using System.Net;
+﻿using System.Linq;
+using System.Net;
 using System.Web.Http;
 using AliaksNad.Battleship.Logic.Models;
 using AliaksNad.Battleship.Logic.Services;
@@ -11,10 +12,12 @@ namespace GamePortal.Web.Api.Controllers.Battleship
     public class UserController : ApiController
     {
         private readonly IUserService _userService;
+        private readonly IValidator<UserDto> _userDtoValidator;
 
-        public UserController(IUserService userService)
+        public UserController(IUserService userService, IValidator<UserDto> userDtoValidator)
         {
             this._userService = userService;
+            this._userDtoValidator = userDtoValidator;
         }
 
         /// <summary>
@@ -25,7 +28,8 @@ namespace GamePortal.Web.Api.Controllers.Battleship
         [Route("")]
         public IHttpActionResult GetAll()
         {
-            return Ok(_userService.GetAll());
+            var result = _userService.GetAll();
+            return result.IsSuccess ? Ok(result.Value) : (IHttpActionResult)StatusCode(HttpStatusCode.InternalServerError);
         }
 
         /// <summary>
@@ -34,11 +38,15 @@ namespace GamePortal.Web.Api.Controllers.Battleship
         /// <param name="id">user id.</param>
         /// <returns></returns>
         [HttpGet]
-        [Route("{id}")]
+        [Route("{id:int:min(1)}")]      // TODO: Check Route Constraints 
         public IHttpActionResult GetById(int id)
         {
             var user = _userService.GetById(id);
-            return user == null ? (IHttpActionResult)NotFound() : Ok(user);
+            if (user.IsFailure)
+            {
+                return StatusCode(HttpStatusCode.InternalServerError);
+            }
+            return user.Value.HasNoValue ? (IHttpActionResult)NotFound() : Ok(user.Value.Value);
         }
 
         /// <summary>
@@ -48,11 +56,17 @@ namespace GamePortal.Web.Api.Controllers.Battleship
         /// <returns></returns>
         [HttpPost]
         [Route("")]
-        public IHttpActionResult Add([CustomizeValidator(RuleSet = "PreValidation")][FromBody]UserDto model)
+        public IHttpActionResult Add(/*[CustomizeValidator(RuleSet = "PreValidation")]*/[FromBody]UserDto model) // TODO: Check Attribute for validation
         {
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
+            }
+
+            var preValidationResult = _userDtoValidator.Validate(model, ruleSet: "PreValidation");
+            if (!preValidationResult.IsValid)
+            {
+                return BadRequest(preValidationResult.Errors.Select(x => x.ErrorMessage).First());
             }
 
             var result = _userService.Add(model);
@@ -66,10 +80,21 @@ namespace GamePortal.Web.Api.Controllers.Battleship
         /// <param name="model">User model.</param>
         [HttpPut]
         [Route("")]
-        public IHttpActionResult Update([FromBody]UserDto model)
+        public IHttpActionResult Update(/*[CustomizeValidator(RuleSet = "PreValidation")]*/[FromBody]UserDto model) // TODO: Check Attribute for validation
         {
-            _userService.Update(model);
-            return StatusCode(HttpStatusCode.NoContent);
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+
+            var preValidationResult = _userDtoValidator.Validate(model, ruleSet: "PreValidation");
+            if (!preValidationResult.IsValid)
+            {
+                return BadRequest(preValidationResult.Errors.Select(x => x.ErrorMessage).First());
+            }
+
+            var result = _userService.Update(model);
+            return result.IsSuccess ? Ok() : (IHttpActionResult)StatusCode(HttpStatusCode.NoContent);
         }
 
         /// <summary>
@@ -77,7 +102,7 @@ namespace GamePortal.Web.Api.Controllers.Battleship
         /// </summary>
         /// <param name="id">User id.</param>
         [HttpDelete]
-        [Route("{id}:int:min(1)")]      //check risone 
+        [Route("{id:int:min(1)}")]      // TODO: Check Route Constraints 
         public IHttpActionResult Delete(int id)
         {
             _userService.Delete(id);
