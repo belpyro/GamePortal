@@ -18,7 +18,10 @@ namespace GamePortal.Web.Api
                 defaults: new { id = RouteParameter.Optional }
             );
 
-            FluentValidationModelValidatorProvider.Configure(config, opt => opt.ValidatorFactory = new CustomValidatorFactory(config.DependencyResolver));
+            FluentValidationModelValidatorProvider.Configure(config, opt =>
+            {
+                opt.ValidatorFactory = new CustomValidatorFactory(config.DependencyResolver);
+            });
         }
     }
 }

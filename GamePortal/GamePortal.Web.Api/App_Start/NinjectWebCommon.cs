@@ -13,6 +13,9 @@ namespace GamePortal.Web.Api.App_Start
     using Ninject;
     using Ninject.Web.Common;
     using Ninject.Web.Common.WebHost;
+    using Serilog;
+    using System.Reflection;
+    using System.IO;
 
     public static class NinjectWebCommon 
     {
@@ -63,6 +66,19 @@ namespace GamePortal.Web.Api.App_Start
         /// <param name="kernel">The kernel.</param>
         private static void RegisterServices(IKernel kernel)
         {
+            var path = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
+
+            var logger = new LoggerConfiguration()
+                .WriteTo.Debug()
+                .WriteTo.File(Path.Combine(path, "log.txt"))
+                .Enrich.WithHttpRequestType()
+                .Enrich.WithWebApiControllerName()
+                .Enrich.WithWebApiActionName()
+                .MinimumLevel.Verbose()
+                .CreateLogger();
+
+            kernel.Bind<ILogger>().ToConstant(logger);
+
             kernel.Load(new BattleshipLogicDIModule());
         }
     }

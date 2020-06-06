@@ -1,5 +1,6 @@
 ﻿using AliaksNad.Battleship.Data.Migrations;
 using AliaksNad.Battleship.Data.Models;
+using Serilog;
 using System;
 using System.Collections.Generic;
 using System.Data.Entity;
@@ -14,9 +15,13 @@ namespace AliaksNad.Battleship.Data.Contexts
     {
         public UsersContexts()
         {
+        }
+
+        public UsersContexts(ILogger logger)
+        {
             //Database.SetInitializer<UsersContexts>(new MigrateDatabaseToLatestVersion<UsersContexts, Configuration>());
             Database.SetInitializer<UsersContexts>(new DropCreateDatabaseAlways<UsersContexts>());
-            Database.Log = msg => Debug.WriteLine(msg);
+            Database.Log = msg => logger.Warning(msg);
         }
 
         public DbSet<UserDb> Users { get; set; }

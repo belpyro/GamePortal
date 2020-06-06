@@ -22,8 +22,12 @@ namespace AliaksNad.Battleship.Logic.Aspects
 
         public void Intercept(IInvocation invocation)
         {
-            var arg = invocation.Arguments[0] as UserDto;
-            if (arg == null) invocation.Proceed();
+            var arg = invocation.Arguments.OfType<UserDto>().FirstOrDefault();
+            if (arg == null)
+            {
+                invocation.Proceed();
+                return;
+            }
 
             var validator = _kernal.Get<IValidator<UserDto>>();
             var validationResult = validator.Validate(arg, "PostValidation");
