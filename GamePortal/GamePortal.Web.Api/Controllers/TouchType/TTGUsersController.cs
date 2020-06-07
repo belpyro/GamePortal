@@ -3,9 +3,14 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
+using System.Web.Configuration;
 using System.Web.Http;
+using FluentValidation;
+using FluentValidation.WebApi;
+using JetBrains.Annotations;
 using Kbalan.TouchType.Logic.Dto;
 using Kbalan.TouchType.Logic.Services;
+using Kbalan.TouchType.Logic.Validators;
 
 namespace GamePortal.Web.Api.Controllers.TouchType
 {
@@ -16,9 +21,15 @@ namespace GamePortal.Web.Api.Controllers.TouchType
     public class TTGUsersController : ApiController
     {
         private readonly IUserService _userService;
-        public TTGUsersController(IUserService userService)
+        private readonly IValidator<UserSettingDto> _userSettingvalidator;
+        private readonly IValidator<UserDto> _userValidator;
+
+        public TTGUsersController([NotNull]IUserService userService, [NotNull]IValidator<UserSettingDto> UserSettingvalidator
+            , [NotNull]IValidator<UserDto> UserValidator)
         {
             this._userService = userService;
+            this._userSettingvalidator = UserSettingvalidator;
+            this._userValidator = UserValidator;
         }
 
         //Get All RegisterUsers
@@ -26,23 +37,41 @@ namespace GamePortal.Web.Api.Controllers.TouchType
         [Route("")]
         public IHttpActionResult GetAll()
         {
-            return Ok(_userService.GetAll());
+            var result = _userService.GetAll();
+            return result.IsSuccess ? Ok(result.Value) : (IHttpActionResult)BadRequest(result.Error);
         }
 
         //Get Full User Info by Id
         [HttpGet]
         [Route("{id}")]
-        public IHttpActionResult GetById([FromUri]int Id)
+        public IHttpActionResult GetById([FromUri]int id)
         {
-            return _userService.GetById(Id) == null ? (IHttpActionResult)NotFound() : Ok(_userService.GetById(Id));
+            if (id <= 0)
+            {
+                return BadRequest("ID must be greater than 0");
+            }
+
+            var result = _userService.GetById(id);
+            return result.IsSuccess ? Ok(result.Value) : (IHttpActionResult)BadRequest(result.Error);
+
         }
 
         //Add new user
         [HttpPost]
         [Route("")]
-        public IHttpActionResult Add([FromBody]UserSettingDto model)
+        public IHttpActionResult Add([FromBody] UserSettingDto model)
         {
-            return _userService.Add(model) == null ? (IHttpActionResult)Conflict() : Created($"/registerusers/{model.Id}", model);
+            if (!ModelState.IsValid)
+                return BadRequest(ModelState);
+
+            var preValidResult =_userSettingvalidator.Validate(model, ruleSet: "PreValidation");
+            if(!preValidResult.IsValid)
+            {
+                return BadRequest(preValidResult.Errors.Select(x => x.ErrorMessage).First());
+            }
+
+            var result = _userService.Add(model);
+            return result.IsSuccess ? Created($"/textsets/{result.Value.Id}", result.Value) : (IHttpActionResult)BadRequest(result.Error);
         }
 
         //Update User by Id
@@ -50,8 +79,17 @@ namespace GamePortal.Web.Api.Controllers.TouchType
         [Route("")]
         public IHttpActionResult Update([FromBody]UserDto model)
         {
-            _userService.Update(model);
-            return StatusCode(HttpStatusCode.NoContent);
+            if (!ModelState.IsValid)
+                return BadRequest(ModelState);
+
+            var preValidResult = _userValidator.Validate(model, ruleSet: "PreValidation");
+            if (!preValidResult.IsValid)
+            {
+                return BadRequest(preValidResult.Errors.Select(x => x.ErrorMessage).First());
+            }
+
+            var result = _userService.Update(model);
+            return result.IsSuccess ? Ok($"User with id {model.Id} updated succesfully!") : (IHttpActionResult)BadRequest(result.Error);
         }
 
         //Delete User by Id
@@ -59,8 +97,14 @@ namespace GamePortal.Web.Api.Controllers.TouchType
         [Route("{id}")]
         public IHttpActionResult Delete(int id)
         {
-            _userService.Delete(id);
-            return StatusCode(HttpStatusCode.NoContent);
+            if (id <= 0)
+            {
+                return BadRequest("ID must be greater than 0");
+            }
+
+            var result = _userService.Delete(id);
+            return result.IsSuccess ? Ok($"User with id {id} deleted with his setting and statistic succesfully!") : (IHttpActionResult)BadRequest(result.Error);
+
         }
 
     }

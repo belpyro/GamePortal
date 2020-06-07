@@ -1,4 +1,5 @@
-﻿using Kbalan.TouchType.Logic.Dto;
+﻿using CSharpFunctionalExtensions;
+using Kbalan.TouchType.Logic.Dto;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -16,20 +17,20 @@ namespace Kbalan.TouchType.Logic.Services
         /// Return information about all statistic with it's user
         /// </summary>
         /// <returns>All user with statistic</returns>
-        IEnumerable<UserStatisticDto> GetAll();
+        Result<IEnumerable<UserStatisticDto>> GetAll();
 
         /// <summary>
         /// Returns information about statistic's with it's user by user id
         /// </summary>
         /// <param name="Id">User ID</param>
         /// <returns>Statistic with user</returns>
-        UserStatisticDto GetById(int id);
+        Result<UserStatisticDto> GetById(int id);
 
         /// <summary>
         /// Updating existing user statistic
         /// </summary>
         /// <param name="id">User id</param>
         /// <returns></returns>
-        void Update(int id, StatisticDto model);
+        Result Update(int id, StatisticDto model);
     }
 }
