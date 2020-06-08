@@ -17,12 +17,14 @@ namespace AliaksNad.Battleship.Logic
     {
         public override void Load()
         {
-            Mapper.Initialize(cfg => cfg.AddProfiles(typeof(UserProfile)));
+            Mapper.Initialize(cfg => cfg.AddProfiles(typeof(UserProfile), typeof(FleetProfile), typeof(CoordinatesProfile)));
             var mapper = Mapper.Configuration.CreateMapper();
 
             this.Bind<IMapper>().ToConstant(mapper);
             
             this.Bind<UsersContexts>().ToSelf();
+            this.Bind<FleetContexts>().ToSelf();
+
             this.Bind<IValidator<UserDto>>().To<UserDtoValidator>();
 
             this.Bind<IUserService>().ToMethod(ctx => 

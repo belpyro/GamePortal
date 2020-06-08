@@ -13,4 +13,22 @@ namespace AliaksNad.Battleship.Logic.Profiles
                 .ReverseMap();
         }
     }
+
+    class FleetProfile : Profile
+    {
+        public FleetProfile()
+        {
+            CreateMap<FleetDb, FleetDto>()
+                .ReverseMap();
+        }
+    }
+
+    class CoordinatesProfile : Profile
+    {
+        public CoordinatesProfile()
+        {
+            CreateMap<CoordinatesDb, CoordinatesDto>()
+                .ReverseMap();
+        }
+    }
 }

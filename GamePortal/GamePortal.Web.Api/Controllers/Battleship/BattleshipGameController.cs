@@ -36,10 +36,10 @@ namespace GamePortal.Web.Api.Controllers.Battleship
         /// <returns></returns>
         [HttpPost]
         [Route("")]
-        public IHttpActionResult SetFleet([FromBody]IEnumerable<Coordinates> fleetCoordinates)
+        public IHttpActionResult SetFleet([FromBody]FleetDto fleetCoordinates)
         {
-            _gameService.SetFleet(fleetCoordinates);
-            return StatusCode(HttpStatusCode.NoContent);
+            var result = _gameService.SetFleet(fleetCoordinates);
+            return result.IsSuccess ? Created("sds", fleetCoordinates) : (IHttpActionResult)BadRequest(result.Error);
         }
     }
 }

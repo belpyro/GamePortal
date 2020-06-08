@@ -61,6 +61,8 @@
       <DependentUpon>202005261930481_InitialCreate.cs</DependentUpon>
     </Compile>
     <Compile Include="Migrations\Configuration.cs" />
+    <Compile Include="Models\UserEntity.cs" />
+    <Compile Include="Models\StatisticDb.cs" />
     <Compile Include="Models\UserDb.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

@@ -10,7 +10,7 @@ namespace AliaksNad.Battleship.Logic.Services
         /// Set your own fleet coordinates.
         /// </summary>
         /// <param name="fleetCoordinates">Own fleet coordinates.</param>
-        void SetFleet(IEnumerable<Coordinates> fleetCoordinates);
+        Result SetFleet(FleetDto fleetCoordinates);
 
         /// <summary>
         /// Checking hit by enemy coordinates.
