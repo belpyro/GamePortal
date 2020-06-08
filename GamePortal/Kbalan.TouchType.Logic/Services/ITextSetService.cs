@@ -24,14 +24,14 @@ namespace Kbalan.TouchType.Logic.Services
         /// </summary>
         /// <param name="Id">text set ID</param>
         /// <returns>Single text set from TextSetDto or null</returns>
-        Result<TextSetDto> GetById(int Id);
+        Result<Maybe<TextSetDto>> GetById(int Id);
 
         /// <summary>
         /// Returns text set from TextSetDto collection by it's id.
         /// </summary>
         /// <param name="level">text set level</param>
         /// <returns>Single text set from TextSetDto or null</returns>
-        Result<TextSetDto> GetByLevel(int level);
+        Result<Maybe<TextSetDto>> GetByLevel(int level);
 
         /// <summary>
         /// Add new text set to TextSetDto collection

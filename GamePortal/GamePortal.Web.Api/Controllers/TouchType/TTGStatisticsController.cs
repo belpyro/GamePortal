@@ -45,7 +45,9 @@ namespace GamePortal.Web.Api.Controllers.TouchType
                 return BadRequest("ID must be greater than 0");
             }
             var result = _statisticService.GetById(id);
-            return result.IsSuccess ? Ok(result.Value) : (IHttpActionResult)BadRequest(result.Error);
+            if (result.IsFailure)
+                return (IHttpActionResult)StatusCode(HttpStatusCode.InternalServerError);
+            return result.Value.HasNoValue ? (IHttpActionResult)NotFound() : Ok(result.Value.Value);
         }
 
         //Update User Statistic by User Id

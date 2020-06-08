@@ -27,7 +27,7 @@ namespace Kbalan.TouchType.Logic.Aspects
         public void Intercept(IInvocation invocation)
         {
             //model null checking
-            var text = invocation.Arguments.SingleOrDefault(x => x.GetType() == typeof(TextSetDto));
+            var text = invocation.Arguments.OfType<TextSetDto>().FirstOrDefault();
             if(text == null)
             {
                 invocation.Proceed();

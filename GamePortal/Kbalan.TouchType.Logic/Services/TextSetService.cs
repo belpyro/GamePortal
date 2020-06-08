@@ -9,6 +9,7 @@ using Kbalan.TouchType.Logic.Dto;
 using System;
 using System.Collections.Generic;
 using System.Data.Entity.Infrastructure;
+using System.Data.SqlClient;
 using System.Linq;
 using System.Security.Cryptography;
 using System.Security.Cryptography.X509Certificates;
@@ -42,7 +43,7 @@ namespace Kbalan.TouchType.Logic.Services
                 var getAllResult = _gameContext.TextSets.ProjectToArray<TextSetDto>(_mapper.ConfigurationProvider);
                 return Result.Success<IEnumerable<TextSetDto>>(getAllResult);
             }
-            catch (DbUpdateException ex)
+            catch (SqlException ex)
             {
                 return Result.Failure<IEnumerable<TextSetDto>>(ex.Message);
             }
@@ -74,41 +75,38 @@ namespace Kbalan.TouchType.Logic.Services
         /// <summary>
         /// GetTextSet by Id
         /// </summary>
-        public Result<TextSetDto> GetById(int id)
+        public Result<Maybe<TextSetDto>> GetById(int id)
         {
 
             try
             {
-                var getResultById = _gameContext.TextSets.Where(x => x.Id == id)
+                Maybe<TextSetDto> getResultById = _gameContext.TextSets.Where(x => x.Id == id)
                     .ProjectToSingleOrDefault<TextSetDto>(_mapper.ConfigurationProvider);
-
-                if(getResultById != null)
-                return Result.Success<TextSetDto>(getResultById);
-
-                return Result.Failure<TextSetDto>("No text set with such id exist");
+                return Result.Success(getResultById);
+               
             }
-            catch (DbUpdateException ex)
+            catch (SqlException ex)
             {
-                return Result.Failure<TextSetDto>(ex.Message);
+                return Result.Failure<Maybe<TextSetDto>>(ex.Message);
             }
         }
 
         /// <summary>
         /// Get TextSet by level
         /// </summary>
-        public Result<TextSetDto> GetByLevel(int level)
+        public Result<Maybe<TextSetDto>> GetByLevel(int level)
         {
             try
             {
                 var texts = _gameContext.TextSets.Where(x => x.LevelOfText == (LevelOfText)level).ToArray();
                 if (texts.Length == 0)
-                    return Result.Failure<TextSetDto>($"No text set with level {level} exists");
-                var text = texts.ElementAt(new Random().Next(0, texts.Length));
-                return Result.Success<TextSetDto>(_mapper.Map<TextSetDto>(text));
+                    return Result.Failure<Maybe<TextSetDto>>($"No text set with level {level} exists");
+                Maybe<TextSetDto> text = _mapper.Map<TextSetDto>(texts.ElementAt(new Random().Next(0, texts.Length)));
+                return Result.Success(text);
             }
-            catch (DbUpdateException ex)
+            catch (SqlException ex)
             {
-                return Result.Failure<TextSetDto>(ex.Message);
+                return Result.Failure<Maybe<TextSetDto>>(ex.Message);
             }   
         }
 

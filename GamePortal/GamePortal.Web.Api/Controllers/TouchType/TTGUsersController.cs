@@ -52,7 +52,9 @@ namespace GamePortal.Web.Api.Controllers.TouchType
             }
 
             var result = _userService.GetById(id);
-            return result.IsSuccess ? Ok(result.Value) : (IHttpActionResult)BadRequest(result.Error);
+            if (result.IsFailure)
+                return (IHttpActionResult)StatusCode(HttpStatusCode.InternalServerError);
+            return result.Value.HasNoValue ? (IHttpActionResult)NotFound() : Ok(result.Value.Value);
 
         }
 

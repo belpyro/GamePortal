@@ -25,8 +25,8 @@ namespace Kbalan.TouchType.Logic.Aspects
         public void Intercept(IInvocation invocation)
         {
             //model null checking. One of models must exist
-            var user = invocation.Arguments.SingleOrDefault(x => x.GetType() == typeof(UserDto));
-            var userSetting = invocation.Arguments.SingleOrDefault(x => x.GetType() == typeof(UserSettingDto));
+            var user = invocation.Arguments.OfType<UserDto>().SingleOrDefault();
+            var userSetting = invocation.Arguments.OfType<UserSettingDto>().SingleOrDefault();
             if (user == null && userSetting == null)
             {
                 invocation.Proceed();

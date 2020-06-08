@@ -32,7 +32,7 @@ namespace GamePortal.Web.Api.Controllers.TouchType
         public IHttpActionResult GetAll()
         {
             var result = _settingService.GetAll();
-            return result.IsSuccess ? Ok(result.Value) : (IHttpActionResult)BadRequest(result.Error);
+            return result.IsSuccess ? Ok(result.Value) : (IHttpActionResult)StatusCode(HttpStatusCode.InternalServerError);
         }
 
         //Get single Setting Info by User Id
@@ -45,7 +45,9 @@ namespace GamePortal.Web.Api.Controllers.TouchType
                 return BadRequest("ID must be greater than 0");
             }
             var result = _settingService.GetById(id);
-            return result.IsSuccess ? Ok(result.Value) : (IHttpActionResult)BadRequest(result.Error);
+            if (result.IsFailure)
+                return (IHttpActionResult)StatusCode(HttpStatusCode.InternalServerError);
+            return result.Value.HasNoValue ? (IHttpActionResult)NotFound() : Ok(result.Value.Value);
         }
 
         //Update single setting by User Id

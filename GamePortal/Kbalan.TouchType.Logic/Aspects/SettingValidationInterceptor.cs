@@ -28,15 +28,15 @@ namespace Kbalan.TouchType.Logic.Aspects
         public void Intercept(IInvocation invocation)
         {
             //id null checking
-            var userId = invocation.Arguments.SingleOrDefault(x => x.GetType() == typeof(Int32));
-            if (userId == null)
+            var userId = invocation.Arguments.OfType<Int32>().SingleOrDefault();
+            if (userId == 0)
             {
                 invocation.Proceed();
                 return;
             }
 
             //model null checking
-            var model = invocation.Arguments.SingleOrDefault(x => x.GetType() == typeof(SettingDto)) as SettingDto;
+            var model = invocation.Arguments.OfType<SettingDto>().SingleOrDefault() as SettingDto;
             if (model == null)
             {
                 invocation.Proceed();

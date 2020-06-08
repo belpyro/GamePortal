@@ -11,6 +11,7 @@ using System;
 using System.Collections.Generic;
 using System.Data.Entity;
 using System.Data.Entity.Infrastructure;
+using System.Data.SqlClient;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -52,21 +53,18 @@ namespace Kbalan.TouchType.Logic.Services
         /// </summary>
         /// <param name="id">user id</param>
         /// <returns>user with setting</returns>
-        public Result<UserSettingDto> GetById(int id)
+        public Result<Maybe<UserSettingDto>> GetById(int id)
         {
             try
             {
-                var getResultById = _gameContext.Users.Where(x => x.Id == id)
+                Maybe<UserSettingDto> getResultById = _gameContext.Users.Where(x => x.Id == id)
                     .ProjectToSingleOrDefault<UserSettingDto>(_mapper.ConfigurationProvider);
 
-                if (getResultById != null)
-                    return Result.Success<UserSettingDto>(getResultById);
-
-                return Result.Failure<UserSettingDto>("No user with such id exist");
+                    return Result.Success(getResultById);
             }
-            catch (DbUpdateException ex)
+            catch (SqlException ex)
             {
-                return Result.Failure<UserSettingDto>(ex.Message);
+                return Result.Failure<Maybe<UserSettingDto>>(ex.Message);
             }
         }
 

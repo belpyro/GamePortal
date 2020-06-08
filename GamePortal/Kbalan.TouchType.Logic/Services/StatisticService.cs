@@ -9,6 +9,7 @@ using Kbalan.TouchType.Logic.Dto;
 using System;
 using System.Collections.Generic;
 using System.Data.Entity.Infrastructure;
+using System.Data.SqlClient;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -50,21 +51,19 @@ namespace Kbalan.TouchType.Logic.Services
         /// </summary>
         /// <param name="id">user id</param>
         /// <returns>user with statistic</returns>
-        public Result<UserStatisticDto> GetById(int id)
+        public Result<Maybe<UserStatisticDto>> GetById(int id)
         {
             try
             {
-                var getResultById = _gameContext.Users.Where(x => x.Id == id)
+                Maybe<UserStatisticDto> getResultById = _gameContext.Users.Where(x => x.Id == id)
                     .ProjectToSingleOrDefault<UserStatisticDto>(_mapper.ConfigurationProvider);
 
-                if (getResultById != null)
-                    return Result.Success<UserStatisticDto>(getResultById);
+                    return Result.Success(getResultById);
 
-                return Result.Failure<UserStatisticDto>("No user with such id exist");
             }
-            catch (DbUpdateException ex)
+            catch (SqlException ex)
             {
-                return Result.Failure<UserStatisticDto>(ex.Message);
+                return Result.Failure<Maybe<UserStatisticDto>>(ex.Message);
             }
         }
 
