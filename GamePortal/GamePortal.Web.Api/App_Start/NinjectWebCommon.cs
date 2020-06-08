@@ -14,6 +14,9 @@ namespace GamePortal.Web.Api.App_Start
     using Ninject;
     using Ninject.Web.Common;
     using Ninject.Web.Common.WebHost;
+    using Serilog;
+    using System.Reflection;
+    using System.IO;
 
     public static class NinjectWebCommon 
     {

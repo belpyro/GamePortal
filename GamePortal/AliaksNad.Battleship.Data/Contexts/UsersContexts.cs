@@ -1,5 +1,6 @@
 ﻿using AliaksNad.Battleship.Data.Migrations;
 using AliaksNad.Battleship.Data.Models;
+using Serilog;
 using System;
 using System.Collections.Generic;
 using System.Data.Entity;
@@ -14,8 +15,13 @@ namespace AliaksNad.Battleship.Data.Contexts
     {
         public UsersContexts()
         {
-            Database.SetInitializer<UsersContexts>(new MigrateDatabaseToLatestVersion<UsersContexts, Configuration>());
-            Database.Log = msg => Debug.WriteLine(msg);
+        }
+
+        public UsersContexts(ILogger logger)
+        {
+            //Database.SetInitializer<UsersContexts>(new MigrateDatabaseToLatestVersion<UsersContexts, Configuration>());
+            Database.SetInitializer<UsersContexts>(new DropCreateDatabaseAlways<UsersContexts>());
+            Database.Log = msg => logger.Warning(msg);
         }
 
         public DbSet<UserDb> Users { get; set; }
@@ -25,14 +31,7 @@ namespace AliaksNad.Battleship.Data.Contexts
         protected override void OnModelCreating(DbModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
-
-            var entity = modelBuilder.Entity<UserDb>();
-
-            entity.HasKey(x => x.Id).ToTable("Players");
-            entity.Property(x => x.Name).IsRequired().HasMaxLength(150).IsUnicode().IsVariableLength();
-            entity.Property(x => x.Password).IsRequired().HasMaxLength(30).IsUnicode().IsVariableLength();
-            entity.Property(x => x.Email).IsRequired().HasMaxLength(30).IsUnicode().IsVariableLength();
-            entity.HasMany(x => x.Statistics);
+            modelBuilder.Configurations.Add(new UserDbConfiguration());
         }
     }
 }

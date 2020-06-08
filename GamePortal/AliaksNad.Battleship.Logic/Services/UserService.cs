@@ -2,66 +2,56 @@
 using AliaksNad.Battleship.Data.Models;
 using AliaksNad.Battleship.Logic.Models;
 using AutoMapper;
+using CSharpFunctionalExtensions;
+using FluentValidation;
+using JetBrains.Annotations;
+using Serilog;
 using System;
 using System.Collections.Generic;
+using System.Data.Common;
+using System.Data.Entity;
+using System.Data.Entity.Infrastructure;
+using System.Data.SqlClient;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
 namespace AliaksNad.Battleship.Logic.Services
 {
-    internal class UserService : IUserService
+    public class UserService : IUserService
     {
         private readonly UsersContexts _context;
         private readonly IMapper _mapper;
+        private readonly ILogger _logger;
+
         private static IEnumerable<UserDto> _users = UserFaker.Generate();
 
-        public UserService(UsersContexts context, IMapper mapper)
+        public UserService([NotNull]UsersContexts context, 
+                           [NotNull]IMapper mapper, 
+                           [NotNull]ILogger logger)
         {
             this._context = context;
             this._mapper = mapper;
+            this._logger = logger;
         }
 
         /// <summary>
-        /// Get all users from Data.
+        /// Get all users from data.
         /// </summary>
         /// <returns></returns>
-        public IEnumerable<UserDto> GetAll()
+        public Result<IEnumerable<UserDto>> GetAll()
         {
-            //return _users;
-
-            //return _context.Users
-            //    .Select(x => new UserDto {Id = x.Id, Name = x.Name, Email = x.Email, Password = x.Password })
-            //    .ToArray();
-
-            //var models = _context.Users.ToArray();
-            //return _mapper.Map<IEnumerable<UserDto>>(models);
-
-            return _context.Users.ProjectToArray<UserDto>(_mapper.ConfigurationProvider);
-        }
-
-        /// <summary>
-        /// Add user to data.
-        /// </summary>
-        /// <param name="model">User model.</param>
-        /// <returns></returns>
-        public UserDto Add(UserDto model)
-        {
-            //var dbModel = new UserDb
-            //{
-            //    Name = model.Name,
-            //    Email = model.Email,
-            //    Password = model.Password,
-            //    CreatorId = 666
-            //};
-
-            var dbModel = _mapper.Map<UserDb>(model);
-
-            _context.Users.Add(dbModel);
-            _context.SaveChanges();
-
-            model.Id = dbModel.Id;
-            return model;
+            try
+            {
+                //_logger.Warning("Get all users requested by anonymous"); //TODO: log
+                var models = _context.Users.AsNoTracking().Include(x => x.Statistics).ToArray();
+                return Result.Success(_mapper.Map<IEnumerable<UserDto>>(models));
+            }
+            catch (SqlException ex)
+            {
+                //_logger.Error("Connection to db is failed", ex); //TODO: log
+                return Result.Failure<IEnumerable<UserDto>>(ex.Message);
+            }
         }
 
         /// <summary>
@@ -69,51 +59,84 @@ namespace AliaksNad.Battleship.Logic.Services
         /// </summary>
         /// <param name="id">user id.</param>
         /// <returns></returns>
-        public UserDto GetById(int id)
+        public Result<Maybe<UserDto>> GetById(int id)
         {
-            //return _users.FirstOrDefault(x => x.Id == id);
-
-            //var model = _context.Users.SingleOrDefault(x => x.Id == id);
-            //return new UserDto
-            //{
-            //    Id = model.Id,
-            //    Name = model.Name,
-            //    Email = model.Email,
-            //    Password = model.Password
-            //};
-
-            return _context.Users.Where(x => x.Id == id).ProjectToSingleOrDefault<UserDto>(_mapper.ConfigurationProvider);
+            try
+            {
+                Maybe<UserDto> user = _context.Users.Where(x => x.Id == id).ProjectToSingleOrDefault<UserDto>(_mapper.ConfigurationProvider);
+                return Result.Success(user);
+            }
+            catch (SqlException ex)
+            {
+                return Result.Failure<Maybe<UserDto>>(ex.Message);
+            }
         }
 
         /// <summary>
-        /// Update user model in data.
+        /// Add user to data.
         /// </summary>
         /// <param name="model">User model.</param>
-        public void Update(UserDto model)
+        /// <returns></returns>
+        public Result<UserDto> Add(UserDto model)
         {
-            //var dbModel = _context.Users.SingleOrDefault(x => x.Id == model.Id);
-            //dbModel.Name = model.Name;
-            //dbModel.Email = model.Email;
-            //dbModel.Password = model.Password;
+            try
+            {
+                var dbModel = _mapper.Map<UserDb>(model);
 
-            var dbModel = _mapper.Map<UserDb>(model);
-            _context.Users.Attach(dbModel);
-            var entry = _context.Entry(dbModel);
-            entry.State = System.Data.Entity.EntityState.Modified;
+                _context.Users.Add(dbModel);
+                _context.SaveChanges();
 
-            _context.SaveChanges();
+                model.Id = dbModel.Id;
+                return Result.Success(model);
+            }
+            catch (DbUpdateException ex)
+            {
+                return Result.Failure<UserDto>(ex.Message);
+            }
+        }
+
+        /// <summary>
+        /// Update user model in data user id.
+        /// </summary>
+        /// <param name="model">User model.</param>
+        public Result Update(UserDto model)
+        {
+            try
+            {
+                var dbModel = _mapper.Map<UserDb>(model);
+                _context.Users.Attach(dbModel);
+                var entry = _context.Entry(dbModel);
+                entry.State = EntityState.Modified;
+
+                _context.SaveChanges();
+
+                return Result.Success();
+            }
+            catch (DbUpdateException ex)
+            {
+                return Result.Failure<UserDto>(ex.Message);
+            }
         }
 
         /// <summary>
         /// Delete user in data by id.
         /// </summary>
         /// <param name="id">User id.</param>
-        public void Delete(int id)
+        public Result Delete(int id)
         {
-            var dbModel = _context.Users.SingleOrDefault(x => x.Id == id);
-            _context.Users.Remove(dbModel);
+            try
+            {
+                var dbModel = _context.Users.SingleOrDefault(x => x.Id == id);
+                _context.Users.Remove(dbModel);
 
-            _context.SaveChanges();
+                _context.SaveChanges();
+
+                return Result.Success();
+            }
+            catch (DbUpdateException ex)
+            {
+                return Result.Failure<UserDto>(ex.Message);
+            }
         }
 
         #region IDisposable Support
