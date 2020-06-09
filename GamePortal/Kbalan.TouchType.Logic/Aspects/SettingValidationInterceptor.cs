@@ -54,7 +54,7 @@ namespace Kbalan.TouchType.Logic.Aspects
                     return;
                 }
 
-                //Replace model setting id from Dto to correct id from Db 
+                //Replace model setting id from Dto to correct id from Db
                 model.SettingId = userModel.Setting.SettingId;
 
                 //Validation
