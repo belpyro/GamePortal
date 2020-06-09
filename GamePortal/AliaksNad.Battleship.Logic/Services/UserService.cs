@@ -27,12 +27,10 @@ namespace AliaksNad.Battleship.Logic.Services
         private static IEnumerable<UserDto> _users = UserFaker.Generate();
 
         public UserService([NotNull]UsersContext context, 
-                           [NotNull]IMapper mapper, 
-                           [NotNull]ILogger logger)
+                           [NotNull]IMapper mapper)
         {
             this._context = context;
             this._mapper = mapper;
-            this._logger = logger;
         }
 
         /// <summary>

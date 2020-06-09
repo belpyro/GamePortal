@@ -16,10 +16,10 @@ namespace Igro.Quoridor.Logic
     {
         public override void Load()
         {
-            Mapper.Initialize(cfg => cfg.AddProfile<UserProfile>());
-            var mapper = Mapper.Configuration.CreateMapper();
-
-            this.Bind<IMapper>().ToConstant(mapper);
+            var configuration = new MapperConfiguration(cfg => cfg.AddProfile(typeof(UserProfile)));
+            var mapper = configuration.CreateMapper();
+            this.Bind<IMapper>().ToConstant(mapper)
+                .When(r => r.ParentContext != null && r.ParentContext.Plan.Type.Namespace.StartsWith("Igro.Quoridor"));
 
             this.Bind<UserContext>().ToSelf();
             this.Bind<IUserService>().To<UserService>();
