@@ -38,27 +38,29 @@ namespace Kbalan.TouchType.Logic
             this.Bind<ITextSetService>().ToMethod(ctx =>
             {
                 var service = new TextSetService(ctx.Kernel.Get<TouchTypeGameContext>(), ctx.Kernel.Get<IMapper>(), ctx.Kernel.Get<ILogger>());
-                return new ProxyGenerator().CreateInterfaceProxyWithTarget<ITextSetService>(service, new TextSetLoggerInterceptor(ctx.Kernel)
+                return new ProxyGenerator().CreateInterfaceProxyWithTarget<ITextSetService>(service, new LoggerInterceptor(ctx.Kernel)
                     , new TextSetValidationInterceptor(ctx.Kernel)
                     );
             });
             this.Bind<IUserService>().ToMethod(ctx =>
             {
-                var service = new UserService(ctx.Kernel.Get<TouchTypeGameContext>(), ctx.Kernel.Get<IMapper>()
-                    , ctx.Kernel.Get<IValidator<UserSettingDto>>(), ctx.Kernel.Get<IValidator<UserDto>>());
-                return new ProxyGenerator().CreateInterfaceProxyWithTarget<IUserService>(service, new UserValidationInterceptor(ctx.Kernel));
+                var service = new UserService(ctx.Kernel.Get<TouchTypeGameContext>(), ctx.Kernel.Get<IMapper>());
+                return new ProxyGenerator().CreateInterfaceProxyWithTarget<IUserService>(service, new LoggerInterceptor(ctx.Kernel)
+                    , new UserValidationInterceptor(ctx.Kernel));
             });
             this.Bind<ISettingService>().ToMethod(ctx =>
             {
                 var service = new SettingService(ctx.Kernel.Get<TouchTypeGameContext>(), ctx.Kernel.Get<IMapper>()
                     , ctx.Kernel.Get<IValidator<SettingDto>>());
-                return new ProxyGenerator().CreateInterfaceProxyWithTarget<ISettingService>(service, new SettingValidationInterceptor(ctx.Kernel));
+                return new ProxyGenerator().CreateInterfaceProxyWithTarget<ISettingService>(service, new LoggerInterceptor(ctx.Kernel)
+                    , new SettingValidationInterceptor(ctx.Kernel));
             });
             this.Bind<IStatisticService>().ToMethod(ctx =>
             {
                 var service = new StatisticService(ctx.Kernel.Get<TouchTypeGameContext>(), ctx.Kernel.Get<IMapper>()
                     , ctx.Kernel.Get<IValidator<StatisticDto>>());
-                return new ProxyGenerator().CreateInterfaceProxyWithTarget<IStatisticService>(service, new StatisticValidationInterceptor(ctx.Kernel));
+                return new ProxyGenerator().CreateInterfaceProxyWithTarget<IStatisticService>(service, new LoggerInterceptor(ctx.Kernel)
+                    , new StatisticValidationInterceptor(ctx.Kernel));
             });
         }
     }

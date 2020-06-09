@@ -22,18 +22,12 @@ namespace Kbalan.TouchType.Logic.Services
     {
         private readonly TouchTypeGameContext _gameContext;
         private readonly IMapper _mapper;
-        private readonly IValidator<UserSettingDto> _userSettingValidator;
-        private readonly IValidator<UserDto> _userValidator;
 
-        public UserService([NotNull]TouchTypeGameContext gameContext, [NotNull]IMapper mapper
-            , [NotNull]IValidator<UserSettingDto> UserSettintValidator, [NotNull]IValidator<UserDto> UserValidator)
+        public UserService([NotNull]TouchTypeGameContext gameContext, [NotNull]IMapper mapper)
         {
             this._gameContext = gameContext;
             this._mapper = mapper;
-            this._userSettingValidator = UserSettintValidator;
-            this._userValidator = UserValidator;
-         
-        }
+    }
 
         /// <summary>
         /// Implementation of IUserService GetAll() method
@@ -149,7 +143,7 @@ namespace Kbalan.TouchType.Logic.Services
         #region IDisposable Support
         private bool disposedValue = false; // To detect redundant calls
 
-        public IValidator<UserDto> UserValidator { get; }
+     
 
         protected virtual void Dispose(bool disposing)
         {

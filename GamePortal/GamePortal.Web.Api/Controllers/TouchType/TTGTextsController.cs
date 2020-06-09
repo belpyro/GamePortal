@@ -19,12 +19,10 @@ namespace GamePortal.Web.Api.Controllers.TouchType
     public class TTGTextsController : ApiController
     {
         private readonly ITextSetService _textSetService;
-        private readonly IValidator<TextSetDto> _textSetValidator;
 
-        public TTGTextsController([NotNull]ITextSetService textSetService, [NotNull]IValidator<TextSetDto> TextSetValidator)
+        public TTGTextsController([NotNull]ITextSetService textSetService)
         {
             this._textSetService = textSetService;
-            _textSetValidator = TextSetValidator;
         }
 
         //Get All TextSets

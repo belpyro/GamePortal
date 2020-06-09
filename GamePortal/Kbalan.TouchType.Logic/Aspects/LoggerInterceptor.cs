@@ -10,11 +10,11 @@ using System.Threading.Tasks;
 
 namespace Kbalan.TouchType.Logic.Aspects
 {
-    class TextSetLoggerInterceptor : IInterceptor
+    class LoggerInterceptor : IInterceptor
     {
         private readonly IKernel _kernel;
 
-        public TextSetLoggerInterceptor(IKernel kernel)
+        public LoggerInterceptor(IKernel kernel)
         {
             this._kernel = kernel;
         }

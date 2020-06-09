@@ -3,6 +3,7 @@ using CSharpFunctionalExtensions;
 using FluentValidation;
 using Kbalan.TouchType.Logic.Dto;
 using Ninject;
+using Serilog;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -32,8 +33,35 @@ namespace Kbalan.TouchType.Logic.Aspects
                 invocation.Proceed();
                 return;
             }
+            //New logger and validator
+            var logger = _kernel.Get<ILogger>();
+            var userSettingValidator = _kernel.Get<IValidator<UserSettingDto>>();
+            var userValidator = _kernel.Get<IValidator<UserDto>>();
 
-            //Implementation of validation for Add method 
+
+            //Prevalidation for Add method
+            if (invocation.Method.Name.Equals("Add"))
+            {
+                var preValidationResult = userSettingValidator.Validate(userSetting as UserSettingDto, ruleSet: "PreValidation");
+                if (!preValidationResult.IsValid)
+                {
+                    invocation.ReturnValue = Result.Failure<UserSettingDto>(preValidationResult.Errors.Select(x => x.ErrorMessage).First());
+                    return;
+                }
+            }
+
+            //Prevalidation for Update method
+            if (invocation.Method.Name.Equals("Update"))
+            {
+                var preValidationResult = userValidator.Validate(user as UserDto, ruleSet: "PreValidation");
+                if (!preValidationResult.IsValid)
+                {
+                    invocation.ReturnValue = Result.Failure(preValidationResult.Errors.Select(x => x.ErrorMessage).First());
+                    return;
+                }
+            }
+
+            //Postvalidation for Add method 
             if (invocation.Method.Name.Equals("Add"))
             {
                 var validator = _kernel.Get<IValidator<UserSettingDto>>();
@@ -46,7 +74,7 @@ namespace Kbalan.TouchType.Logic.Aspects
                 }
             }
 
-            //Implementation of validation for Update method 
+            //Postvalidation for Update method 
             if (invocation.Method.Name.Equals("Update"))
             {
                 var validator = _kernel.Get<IValidator<UserDto>>();

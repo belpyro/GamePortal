@@ -50,7 +50,6 @@ namespace Kbalan.TouchType.Logic.Aspects
                 }
             }
 
-
             //PostValidation of validation for Add method 
             if (invocation.Method.Name.Equals("Add"))
             {
