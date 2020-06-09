@@ -22,11 +22,10 @@ namespace Kbalan.TouchType.Logic
     {
         public override void Load()
         {
-            Mapper.Initialize(cfg => cfg.AddProfiles(typeof(UserProfile)));
-
-            var mapper = Mapper.Configuration.CreateMapper();
-
-            this.Bind<IMapper>().ToConstant(mapper);
+            var configuration = new MapperConfiguration(cfg => cfg.AddProfile(typeof(UserProfile)));
+            var mapper = configuration.CreateMapper();
+            this.Bind<IMapper>().ToConstant(mapper)
+                .When(r => r.ParentContext != null && r.ParentContext.Plan.Type.Namespace.StartsWith("Kbalan.TouchType"));
 
             this.Bind<TouchTypeGameContext>().ToSelf();
             this.Bind<IValidator<UserSettingDto>>().To<UserSettingDtoValidator>();

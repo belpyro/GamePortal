@@ -18,14 +18,14 @@ namespace GamePortal.Web.Api.App_Start
     using System.Reflection;
     using System.IO;
 
-    public static class NinjectWebCommon 
+    public static class NinjectWebCommon
     {
         private static readonly Bootstrapper bootstrapper = new Bootstrapper();
 
         /// <summary>
         /// Starts the application.
         /// </summary>
-        public static void Start() 
+        public static void Start()
         {
             DynamicModuleUtility.RegisterModule(typeof(OnePerRequestHttpModule));
             DynamicModuleUtility.RegisterModule(typeof(NinjectHttpModule));
@@ -67,7 +67,7 @@ namespace GamePortal.Web.Api.App_Start
         /// <param name="kernel">The kernel.</param>
         private static void RegisterServices(IKernel kernel)
         {
-            kernel.Load(/*new LogicDIModule(),*/ new TTGDIModule()/*, new BattleshipLogicDIModule()*/);
+            kernel.Load(new LogicDIModule(), new TTGDIModule(), new BattleshipLogicDIModule());
         }
     }
 }
