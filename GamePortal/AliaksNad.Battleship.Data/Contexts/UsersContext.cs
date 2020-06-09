@@ -13,11 +13,11 @@ namespace AliaksNad.Battleship.Data.Contexts
 {
     public sealed class UsersContext : DbContext
     {
-        public UsersContext(ILogger logger)
+        public UsersContext()
         {
             //Database.SetInitializer<UsersContexts>(new MigrateDatabaseToLatestVersion<UsersContexts, Configuration>());
             Database.SetInitializer<UsersContext>(new DropCreateDatabaseAlways<UsersContext>());
-            Database.Log = msg => logger.Warning(msg);
+            //Database.Log = msg => logger.Warning(msg);
         }
 
         public DbSet<UserDb> Users { get; set; }

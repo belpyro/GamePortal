@@ -8,6 +8,7 @@ namespace GamePortal.Web.Api.App_Start
     using Igro.Quoridor.Logic;
     using Igro.Quoridor.Logic.Services;
     using AliaksNad.Battleship.Logic;
+    using Kbalan.TouchType.Logic;
     using Microsoft.Web.Infrastructure.DynamicModuleHelper;
 
     using Ninject;
@@ -17,14 +18,14 @@ namespace GamePortal.Web.Api.App_Start
     using System.Reflection;
     using System.IO;
 
-    public static class NinjectWebCommon 
+    public static class NinjectWebCommon
     {
         private static readonly Bootstrapper bootstrapper = new Bootstrapper();
 
         /// <summary>
         /// Starts the application.
         /// </summary>
-        public static void Start() 
+        public static void Start()
         {
             DynamicModuleUtility.RegisterModule(typeof(OnePerRequestHttpModule));
             DynamicModuleUtility.RegisterModule(typeof(NinjectHttpModule));
@@ -66,20 +67,7 @@ namespace GamePortal.Web.Api.App_Start
         /// <param name="kernel">The kernel.</param>
         private static void RegisterServices(IKernel kernel)
         {
-            var path = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
-
-            var logger = new LoggerConfiguration()
-                .WriteTo.Debug()
-                .WriteTo.File(Path.Combine(path, "log.txt"))
-                .Enrich.WithHttpRequestType()
-                .Enrich.WithWebApiControllerName()
-                .Enrich.WithWebApiActionName()
-                .MinimumLevel.Verbose()
-                .CreateLogger();
-
-            kernel.Bind<ILogger>().ToConstant(logger);
-
-            kernel.Load(new BattleshipLogicDIModule());
+            kernel.Load(new LogicDIModule(), new TTGDIModule(), new BattleshipLogicDIModule());
         }
     }
 }

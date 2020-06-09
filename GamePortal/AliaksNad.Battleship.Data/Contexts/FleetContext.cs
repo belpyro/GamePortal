@@ -6,11 +6,11 @@ namespace AliaksNad.Battleship.Data.Contexts
 {
     public sealed class FleetContext : DbContext
     {
-        public FleetContext(ILogger logger)
+        public FleetContext()
         {
             //Database.SetInitializer<UsersContexts>(new MigrateDatabaseToLatestVersion<UsersContexts, Configuration>());
             Database.SetInitializer<FleetContext>(new DropCreateDatabaseAlways<FleetContext>());
-            Database.Log = msg => logger.Warning(msg);
+            //Database.Log = msg => logger.Warning(msg);
         }
 
         public DbSet<FleetDb> Fleets { get; set; }
