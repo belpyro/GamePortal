@@ -18,12 +18,10 @@ namespace GamePortal.Web.Api.Controllers.TouchType
     public class TTGStatisticsController : ApiController
     {
         private readonly IStatisticService _statisticService;
-        private readonly IValidator<StatisticDto> _statisticValidator;
 
-        public TTGStatisticsController([NotNull]IStatisticService statisticService, [NotNull]IValidator<StatisticDto> StatisticValidator)
+        public TTGStatisticsController([NotNull]IStatisticService statisticService)
         {
             this._statisticService = statisticService;
-            _statisticValidator = StatisticValidator;
         }
 
         //Get All Statistic with user
@@ -55,12 +53,6 @@ namespace GamePortal.Web.Api.Controllers.TouchType
         [Route("")]
         public IHttpActionResult Update(int id, [FromBody]StatisticDto model)
         {
-            var preValidResult = _statisticValidator.Validate(model, ruleSet: "PreValidation");
-            if (!preValidResult.IsValid)
-            {
-                return BadRequest(preValidResult.Errors.Select(x => x.ErrorMessage).First());
-            }
-
             var result = _statisticService.Update(id, model);
             return result.IsSuccess ? Ok($"Statistic of user with id {id} updated succesfully!") : (IHttpActionResult)BadRequest(result.Error);
 

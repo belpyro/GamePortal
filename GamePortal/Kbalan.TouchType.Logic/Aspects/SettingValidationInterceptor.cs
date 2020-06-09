@@ -43,6 +43,19 @@ namespace Kbalan.TouchType.Logic.Aspects
                 return;
             }
 
+            var settingValidator = _kernel.Get<IValidator<SettingDto>>();
+
+            //Prevalidation for Update method
+            if (invocation.Method.Name.Equals("Update"))
+            {
+                var preValidationResult = settingValidator.Validate(model, ruleSet: "PreValidation");
+                if (!preValidationResult.IsValid)
+                {
+                    invocation.ReturnValue = Result.Failure(preValidationResult.Errors.Select(x => x.ErrorMessage).First());
+                    return;
+                }
+            }
+ 
             //Implementation of validation for update method
             if ( invocation.Method.Name.Equals("Update"))
              {
@@ -58,8 +71,7 @@ namespace Kbalan.TouchType.Logic.Aspects
                 model.SettingId = userModel.Setting.SettingId;
 
                 //Validation
-                var validator = _kernel.Get<IValidator<SettingDto>>();
-                ValidationResult validationResult = validator.Validate(model, ruleSet: "PostValidation");
+                ValidationResult validationResult = settingValidator.Validate(model, ruleSet: "PostValidation");
                 if (!validationResult.IsValid)
                 {
                     invocation.ReturnValue = Result.Failure(validationResult.Errors.Select(x => x.ErrorMessage).First());

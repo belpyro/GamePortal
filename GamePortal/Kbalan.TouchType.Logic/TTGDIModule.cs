@@ -50,15 +50,13 @@ namespace Kbalan.TouchType.Logic
             });
             this.Bind<ISettingService>().ToMethod(ctx =>
             {
-                var service = new SettingService(ctx.Kernel.Get<TouchTypeGameContext>(), ctx.Kernel.Get<IMapper>()
-                    , ctx.Kernel.Get<IValidator<SettingDto>>());
+                var service = new SettingService(ctx.Kernel.Get<TouchTypeGameContext>(), ctx.Kernel.Get<IMapper>());
                 return new ProxyGenerator().CreateInterfaceProxyWithTarget<ISettingService>(service, new LoggerInterceptor(ctx.Kernel)
                     , new SettingValidationInterceptor(ctx.Kernel));
             });
             this.Bind<IStatisticService>().ToMethod(ctx =>
             {
-                var service = new StatisticService(ctx.Kernel.Get<TouchTypeGameContext>(), ctx.Kernel.Get<IMapper>()
-                    , ctx.Kernel.Get<IValidator<StatisticDto>>());
+                var service = new StatisticService(ctx.Kernel.Get<TouchTypeGameContext>(), ctx.Kernel.Get<IMapper>());
                 return new ProxyGenerator().CreateInterfaceProxyWithTarget<IStatisticService>(service, new LoggerInterceptor(ctx.Kernel)
                     , new StatisticValidationInterceptor(ctx.Kernel));
             });

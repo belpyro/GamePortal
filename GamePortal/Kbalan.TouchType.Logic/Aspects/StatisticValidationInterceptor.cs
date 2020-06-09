@@ -42,6 +42,17 @@ namespace Kbalan.TouchType.Logic.Aspects
                 return;
             }
 
+            var statisticValidator = _kernel.Get<IValidator<StatisticDto>>();
+            //Prevalidation for Update method
+            if (invocation.Method.Name.Equals("Update"))
+            {
+                var preValidationResult = statisticValidator.Validate(model, ruleSet: "PreValidation");
+                if (!preValidationResult.IsValid)
+                {
+                    invocation.ReturnValue = Result.Failure(preValidationResult.Errors.Select(x => x.ErrorMessage).First());
+                    return;
+                }
+            }
             //Implementation of validation for update method
             if (invocation.Method.Name.Equals("Update"))
             {
@@ -57,8 +68,7 @@ namespace Kbalan.TouchType.Logic.Aspects
                 model.StatisticId = userModel.Statistic.StatisticId;
 
                 //Validation
-                var validator = _kernel.Get<IValidator<StatisticDto>>();
-                ValidationResult validationResult = validator.Validate(model, ruleSet: "PostValidation");
+                ValidationResult validationResult = statisticValidator.Validate(model, ruleSet: "PostValidation");
                 if (!validationResult.IsValid)
                 {
                     invocation.ReturnValue = Result.Failure(validationResult.Errors.Select(x => x.ErrorMessage).First());

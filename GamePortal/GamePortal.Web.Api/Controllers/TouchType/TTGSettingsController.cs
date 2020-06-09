@@ -18,12 +18,10 @@ namespace GamePortal.Web.Api.Controllers.TouchType
     public class TTGSettingsController : ApiController
     {
         private readonly ISettingService _settingService;
-        private readonly IValidator<SettingDto> _settingValidator;
 
-        public TTGSettingsController([NotNull] ISettingService settingService, [NotNull]IValidator<SettingDto> SettingValidator)
+        public TTGSettingsController([NotNull] ISettingService settingService)
         {
             this._settingService = settingService;
-            _settingValidator = SettingValidator;
         }
 
         //Get All Settings with user
@@ -55,12 +53,6 @@ namespace GamePortal.Web.Api.Controllers.TouchType
         [Route("")]
         public IHttpActionResult Update(int id ,[FromBody]SettingDto model)
         {
-            var preValidResult = _settingValidator.Validate(model, ruleSet: "PreValidation");
-            if (!preValidResult.IsValid)
-            {
-                return BadRequest(preValidResult.Errors.Select(x => x.ErrorMessage).First());
-            }
-
             var result = _settingService.Update(id, model);
             return result.IsSuccess ? Ok($"Settings of user with id {id} updated succesfully!") : (IHttpActionResult)BadRequest(result.Error);
         }

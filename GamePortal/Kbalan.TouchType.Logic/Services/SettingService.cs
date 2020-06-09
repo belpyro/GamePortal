@@ -22,13 +22,11 @@ namespace Kbalan.TouchType.Logic.Services
     {
         private readonly TouchTypeGameContext _gameContext;
         private readonly IMapper _mapper;
-        private readonly IValidator<SettingDto> _settingValidator;
 
-        public SettingService([NotNull]TouchTypeGameContext gameContext, [NotNull]IMapper mapper, [NotNull]IValidator<SettingDto> SettingValidator)
+        public SettingService([NotNull]TouchTypeGameContext gameContext, [NotNull]IMapper mapper)
         {
             this._gameContext = gameContext;
             this._mapper = mapper;
-            _settingValidator = SettingValidator;
         }
 
         /// <summary>
