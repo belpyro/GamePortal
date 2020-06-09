@@ -38,8 +38,9 @@ namespace Kbalan.TouchType.Logic
             this.Bind<ITextSetService>().ToMethod(ctx =>
             {
                 var service = new TextSetService(ctx.Kernel.Get<TouchTypeGameContext>(), ctx.Kernel.Get<IMapper>(), ctx.Kernel.Get<ILogger>());
-                return new ProxyGenerator().CreateInterfaceProxyWithTarget<ITextSetService>(service, new TextSetValidationInterceptor(ctx.Kernel)
-                    , new TextSetLoggerInterceptor(ctx.Kernel));
+                return new ProxyGenerator().CreateInterfaceProxyWithTarget<ITextSetService>(service, new TextSetLoggerInterceptor(ctx.Kernel)
+                    , new TextSetValidationInterceptor(ctx.Kernel)
+                    );
             });
             this.Bind<IUserService>().ToMethod(ctx =>
             {

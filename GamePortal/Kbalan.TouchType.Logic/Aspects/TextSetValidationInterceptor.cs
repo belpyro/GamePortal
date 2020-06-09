@@ -20,6 +20,7 @@ namespace Kbalan.TouchType.Logic.Aspects
     public class TextSetValidationInterceptor : IInterceptor
     {
         private readonly IKernel _kernel;
+        private object validationResult;
 
         public TextSetValidationInterceptor(IKernel kernel)
         {
@@ -34,38 +35,40 @@ namespace Kbalan.TouchType.Logic.Aspects
                 invocation.Proceed();
                 return;
             }
-            
-            //Implementation of validation for Add method 
-            if (invocation.Method.Name.Equals("Add"))
+            //New logger and validator
+            var logger = _kernel.Get<ILogger>();
+            var validator = _kernel.Get<IValidator<TextSetDto>>();
+
+            //Prevalidation
+            if(invocation.Method.Name.Equals("Add") || invocation.Method.Name.Equals("Update"))
             {
-                var logger = _kernel.Get<ILogger>();
-                var validator = _kernel.Get<IValidator<TextSetDto>>();
                 var preValidationResult = validator.Validate(text as TextSetDto, ruleSet: "PreValidation");
                 if (!preValidationResult.IsValid)
                 {
-                    logger.Information($"PreValidation invalid. {preValidationResult.Errors.Select(x => x.ErrorMessage).First()}");
-                    invocation.ReturnValue = Result.Failure<TextSetDto>(preValidationResult.Errors.Select(x => x.ErrorMessage).First());
+                    invocation.ReturnValue = Result.Failure(preValidationResult.Errors.Select(x => x.ErrorMessage).First());
                     return;
                 }
-                var postValidationResult = validator.Validate(text as TextSetDto, ruleSet: "PostValidation");
+            }
 
+
+            //PostValidation of validation for Add method 
+            if (invocation.Method.Name.Equals("Add"))
+            {
+                var postValidationResult = validator.Validate(text as TextSetDto, ruleSet: "PostValidation");
                 if (!postValidationResult.IsValid)
                 {
-                    logger.Information($"PostValidation invalid. {postValidationResult.Errors.Select(x => x.ErrorMessage).First()}");
                     invocation.ReturnValue = Result.Failure<TextSetDto>(postValidationResult.Errors.Select(x => x.ErrorMessage).First());
                     return;
                 }
             }
 
-            //Implementation of validation for Update method 
+            //PostValidation validation for Update method 
             if (invocation.Method.Name.Equals("Update"))
             {
-                var validator = _kernel.Get<IValidator<TextSetDto>>();
-                var validationResult = validator.Validate(text as TextSetDto, ruleSet: "PostValidationWithId"); 
-                
-                if (!validationResult.IsValid)
+                var postValidationResult = validator.Validate(text as TextSetDto, ruleSet: "PostValidationWithId");                 
+                if (!postValidationResult.IsValid)
                 {
-                    invocation.ReturnValue = Result.Failure(validationResult.Errors.Select(x => x.ErrorMessage).First());
+                    invocation.ReturnValue = Result.Failure(postValidationResult.Errors.Select(x => x.ErrorMessage).First());
                     return;
                 }
             }

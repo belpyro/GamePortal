@@ -4,6 +4,7 @@ using Serilog;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Cryptography.X509Certificates;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -22,6 +23,7 @@ namespace Kbalan.TouchType.Logic.Aspects
             var logger = _kernel.Get<ILogger>();
             logger.Information($"{invocation.Method.Name} method was required from {invocation.InvocationTarget}");
             invocation.Proceed();
+            logger.Information(invocation.ReturnValue.ToString());
         }
     }
 }
