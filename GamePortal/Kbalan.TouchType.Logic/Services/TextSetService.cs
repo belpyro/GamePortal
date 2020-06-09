@@ -6,6 +6,7 @@ using JetBrains.Annotations;
 using Kbalan.TouchType.Data.Contexts;
 using Kbalan.TouchType.Data.Models;
 using Kbalan.TouchType.Logic.Dto;
+using Serilog;
 using System;
 using System.Collections.Generic;
 using System.Data.Entity.Infrastructure;
@@ -23,13 +24,13 @@ namespace Kbalan.TouchType.Logic.Services
 
         private readonly TouchTypeGameContext _gameContext;
         private readonly IMapper _mapper;
-        private readonly IValidator<TextSetDto> _textSetValidator;
+        private readonly ILogger _logger;
 
-        public TextSetService([NotNull] TouchTypeGameContext gameContext, [NotNull]IMapper mapper, [NotNull]IValidator<TextSetDto> TextSetValidator)
+        public TextSetService([NotNull] TouchTypeGameContext gameContext, [NotNull]IMapper mapper, [NotNull]ILogger logger )
         {
             this._gameContext = gameContext;
             this._mapper = mapper;
-            _textSetValidator = TextSetValidator;
+            this._logger = logger;
         }
 
         /// <summary>
@@ -40,11 +41,14 @@ namespace Kbalan.TouchType.Logic.Services
         {
             try
             {
+                _logger.Information("Information about all text set requested");
                 var getAllResult = _gameContext.TextSets.ProjectToArray<TextSetDto>(_mapper.ConfigurationProvider);
+                _logger.Information("Information about all text sended successfully");
                 return Result.Success<IEnumerable<TextSetDto>>(getAllResult);
             }
             catch (SqlException ex)
             {
+                _logger.Error("Connection to Db failed", ex);
                 return Result.Failure<IEnumerable<TextSetDto>>(ex.Message);
             }
 
@@ -57,16 +61,19 @@ namespace Kbalan.TouchType.Logic.Services
         {
             try
             {
+                _logger.Information("Trying to add new text set to Db");
                 var DbModel = _mapper.Map<TextSetDb>(model);
 
                 _gameContext.TextSets.Add(DbModel);
                 _gameContext.SaveChanges();
 
                 model.Id = DbModel.Id;
+                _logger.Information($"New text set {model.Name} with id {model.Id} added successful");
                 return Result.Success(model);
             }
             catch (DbUpdateException ex)
             {
+                _logger.Error("Connection to Db failed", ex);
                 return Result.Failure<TextSetDto>(ex.Message);
             }
 
@@ -80,13 +87,16 @@ namespace Kbalan.TouchType.Logic.Services
 
             try
             {
+                _logger.Information($"Information about text set with {id} requested");
                 Maybe<TextSetDto> getResultById = _gameContext.TextSets.Where(x => x.Id == id)
                     .ProjectToSingleOrDefault<TextSetDto>(_mapper.ConfigurationProvider);
+                _logger.Information($"Information about text set with {id} sended successfully");
                 return Result.Success(getResultById);
                
             }
             catch (SqlException ex)
             {
+                _logger.Error("Connection to Db failed", ex);
                 return Result.Failure<Maybe<TextSetDto>>(ex.Message);
             }
         }
@@ -94,19 +104,26 @@ namespace Kbalan.TouchType.Logic.Services
         /// <summary>
         /// Get TextSet by level
         /// </summary>
-        public Result<Maybe<TextSetDto>> GetByLevel(int level)
+        public Result<TextSetDto> GetByLevel(int level)
         {
             try
             {
+                _logger.Information($"Information about text set's with {level} requested");
                 var texts = _gameContext.TextSets.Where(x => x.LevelOfText == (LevelOfText)level).ToArray();
                 if (texts.Length == 0)
-                    return Result.Failure<Maybe<TextSetDto>>($"No text set with level {level} exists");
-                Maybe<TextSetDto> text = _mapper.Map<TextSetDto>(texts.ElementAt(new Random().Next(0, texts.Length)));
+                {
+                    _logger.Information($"Information about text set's with {level} hasn't found");
+                    return Result.Failure<TextSetDto>($"No text set with level {level} exists");
+                }
+
+                var text = _mapper.Map<TextSetDto>(texts.ElementAt(new Random().Next(0, texts.Length)));
+                _logger.Information($"Information about text set {text.Name} with {text.Id} sended succesfully");
                 return Result.Success(text);
             }
             catch (SqlException ex)
             {
-                return Result.Failure<Maybe<TextSetDto>>(ex.Message);
+                _logger.Error("Connection to Db failed", ex);
+                return Result.Failure<TextSetDto>(ex.Message);
             }   
         }
 
@@ -118,6 +135,7 @@ namespace Kbalan.TouchType.Logic.Services
         {
             try
             {
+                _logger.Information($"Trying to update text set {model.Name} with id {model.Id}");
                 var dbModel = _mapper.Map<TextSetDb>(model);
 
                 _gameContext.TextSets.Attach(dbModel);
@@ -128,11 +146,12 @@ namespace Kbalan.TouchType.Logic.Services
                 entry.Property(x => x.TextForTyping).IsModified = true;
 
                 _gameContext.SaveChanges();
-
+                _logger.Information($"Text set {model.Name} with id {model.Id} updated succsesfully");
                 return Result.Success();
             }
             catch (DbUpdateException ex)
             {
+                _logger.Error("Connection to Db failed", ex);
                 return Result.Failure(ex.Message);
             }
 
@@ -147,17 +166,23 @@ namespace Kbalan.TouchType.Logic.Services
         {
             try
             {
+                _logger.Information($"Trying to delete text set with id {id}");
                 var dbModel = _gameContext.TextSets.Find(id);
 
                 if (dbModel == null)
+                {
+                    _logger.Information($"Text set with id {id} hasn't found");
                     return Result.Failure($"No text set with id {id} exist");
-
+                }
+                    
                 _gameContext.TextSets.Remove(dbModel);
                 _gameContext.SaveChanges();
+                _logger.Information($"Text set {dbModel.Name} with id {dbModel.Id} updated succsesfully");
                 return Result.Success();
             }
             catch (DbUpdateException ex)
             {
+                _logger.Error("Connection to Db failed", ex);
                 return Result.Failure(ex.Message);
             }
         }

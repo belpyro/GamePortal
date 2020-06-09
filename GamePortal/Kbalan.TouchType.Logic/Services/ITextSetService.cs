@@ -31,7 +31,7 @@ namespace Kbalan.TouchType.Logic.Services
         /// </summary>
         /// <param name="level">text set level</param>
         /// <returns>Single text set from TextSetDto or null</returns>
-        Result<Maybe<TextSetDto>> GetByLevel(int level);
+        Result<TextSetDto> GetByLevel(int level);
 
         /// <summary>
         /// Add new text set to TextSetDto collection

@@ -75,12 +75,6 @@ namespace GamePortal.Web.Api.Controllers.TouchType
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
 
-            var preValidResult = _textSetValidator.Validate(model, ruleSet: "PreValidation");
-            if (!preValidResult.IsValid)
-            {
-                return BadRequest(preValidResult.Errors.Select(x => x.ErrorMessage).First());
-            }
-
             var result = _textSetService.Add(model);
             return result.IsSuccess ? Created($"/textsets/{result.Value.Id}", result.Value) : (IHttpActionResult)BadRequest(result.Error); 
         }

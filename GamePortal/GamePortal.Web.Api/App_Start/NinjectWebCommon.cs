@@ -14,6 +14,9 @@ namespace GamePortal.Web.Api.App_Start
     using Ninject;
     using Ninject.Web.Common;
     using Ninject.Web.Common.WebHost;
+    using Serilog;
+    using Serilog.Sinks.MSSqlServer.Sinks.MSSqlServer.Options;
+    using Serilog.Sinks.MSSqlServer;
 
     public static class NinjectWebCommon 
     {
@@ -64,6 +67,27 @@ namespace GamePortal.Web.Api.App_Start
         /// <param name="kernel">The kernel.</param>
         private static void RegisterServices(IKernel kernel)
         {
+            var logDB = @"Data Source=(localdb)\MSSQLLocalDB;Initial Catalog=TouchTypeGameContext;Integrated Security=True;";
+            var sinkOpts = new SinkOptions();
+            sinkOpts.TableName = "Log";
+            sinkOpts.AutoCreateSqlTable = true;
+            var columnOpts = new ColumnOptions();
+            columnOpts.TimeStamp.NonClusteredIndex = true;
+
+            var logger = new LoggerConfiguration()
+                .WriteTo.Debug()
+                .WriteTo.Console()
+                .WriteTo.MSSqlServer(
+                        connectionString: logDB,
+                        sinkOptions: sinkOpts,
+                        columnOptions: columnOpts)
+                .Enrich.WithHttpRequestType()
+                .Enrich.WithWebApiControllerName()
+                .Enrich.WithWebApiActionName()
+                .MinimumLevel.Verbose()
+                .CreateLogger();
+
+            kernel.Bind<ILogger>().ToConstant(logger);
             kernel.Load(/*new LogicDIModule(),*/ new TTGDIModule()/*, new BattleshipLogicDIModule()*/);
         }
     }
