@@ -4,12 +4,14 @@
     {
         public int Id { get; set; }
 
-        public int X { get; set; }
+        public bool IsDamaged { get; set; } = false;
 
-        public int Y { get; set; }
+        public int CoordinateX { get; set; }
+
+        public int CoordinateY { get; set; }
 
         public FleetDb Fleet { get; set; }
 
-        public int FleetId { get; set; }
+        public int? FleetId { get; set; }
     }
 }

@@ -22,14 +22,14 @@ namespace AliaksNad.Battleship.Logic
 
             this.Bind<IMapper>().ToConstant(mapper);
             
-            this.Bind<UsersContexts>().ToSelf();
-            this.Bind<FleetContexts>().ToSelf();
+            this.Bind<UsersContext>().ToSelf();
+            this.Bind<FleetContext>().ToSelf();
 
             this.Bind<IValidator<UserDto>>().To<UserDtoValidator>();
 
             this.Bind<IUserService>().ToMethod(ctx => 
             {
-                var service = new UserService(ctx.Kernel.Get<UsersContexts>(), ctx.Kernel.Get<IMapper>(), ctx.Kernel.Get<ILogger>());
+                var service = new UserService(ctx.Kernel.Get<UsersContext>(), ctx.Kernel.Get<IMapper>(), ctx.Kernel.Get<ILogger>());
                 return new ProxyGenerator().CreateInterfaceProxyWithTarget<IUserService>(service, new ValidationInterceptor(ctx.Kernel));
             });
             this.Bind<IGameService>().To<GameService>();

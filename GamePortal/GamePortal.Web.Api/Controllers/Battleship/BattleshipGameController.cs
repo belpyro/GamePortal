@@ -18,28 +18,39 @@ namespace GamePortal.Web.Api.Controllers.Battleship
         }
 
         /// <summary>
-        /// Checking hit by enemy coordinates on logic layer.
-        /// </summary>
-        /// <param name="fleetCoordinates">Enemy coordinates.</param>
-        /// <returns></returns>
-        [HttpPost]
-        [Route("coordinates")]
-        public IHttpActionResult CheckHit([FromUri]CoordinatesCheck fleetCoordinates)
-        {
-            return Ok(_gameService.CheckHit(fleetCoordinates));
-        }
-
-        /// <summary>
         /// Set your own fleet coordinates on logic layer.
         /// </summary>
         /// <param name="fleetCoordinates">Own fleet coordinates.</param>
         /// <returns></returns>
         [HttpPost]
-        [Route("")]
+        [Route("fleets")]
         public IHttpActionResult SetFleet([FromBody]FleetDto fleetCoordinates)
         {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+
             var result = _gameService.SetFleet(fleetCoordinates);
-            return result.IsSuccess ? Created("sds", fleetCoordinates) : (IHttpActionResult)BadRequest(result.Error);
+            return result.IsSuccess ? Created($"api/battleship/game/fleets{result.Value.FleetId}", result.Value) : (IHttpActionResult)BadRequest(result.Error);
+        }
+
+        /// <summary>
+        /// Checking hit by enemy coordinates on logic layer.
+        /// </summary>
+        /// <param name="coordinatesOfHit">Enemy coordinates.</param>
+        /// <returns></returns>
+        [HttpPost]
+        [Route("coordinates")]
+        public IHttpActionResult CheckHit([FromBody]CoordinatesDto coordinatesOfHit)
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+
+            var result =_gameService.CheckHit(coordinatesOfHit);
+            return result.IsSuccess ? Ok() : (IHttpActionResult)StatusCode(HttpStatusCode.NoContent);
         }
     }
 }

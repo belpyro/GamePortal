@@ -130,7 +130,7 @@
     <Compile Include="Services\GameService.cs" />
     <Compile Include="Services\IGameService.cs" />
     <Compile Include="Services\IUserService.cs" />
-    <Compile Include="Models\Coordinates.cs" />
+    <Compile Include="Models\CoordinatesStruct.cs" />
     <Compile Include="Services\UserFaker.cs" />
     <Compile Include="Services\UserService.cs" />
     <Compile Include="Validators\UserDtoValidator.cs" />

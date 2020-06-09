@@ -2,12 +2,8 @@
 
 namespace AliaksNad.Battleship.Data.Models
 {
-    public class FleetDb
+    public class FleetDb : FleetEntity
     {
-        public int FleetId { get; set; }
-
-        public string Name { get; set; } = "Yes";
-
         public ICollection<CoordinatesDb> Coordinates { get; set; }
     }
 }

@@ -10,13 +10,13 @@ namespace AliaksNad.Battleship.Logic.Services
         /// Set your own fleet coordinates.
         /// </summary>
         /// <param name="fleetCoordinates">Own fleet coordinates.</param>
-        Result SetFleet(FleetDto fleetCoordinates);
+        Result<FleetDto> SetFleet(FleetDto fleetCoordinates);
 
         /// <summary>
         /// Checking hit by enemy coordinates.
         /// </summary>
         /// <param name="coordinates">Enemy coordinates.</param>
         /// <returns></returns>
-        bool CheckHit(CoordinatesCheck coordinates);
+        Result CheckHit(CoordinatesDto coordinates);
     }
 }

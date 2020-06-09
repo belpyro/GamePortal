@@ -11,7 +11,7 @@ namespace AliaksNad.Battleship.Logic.Validators
 {
     class UserDtoValidator : AbstractValidator<UserDto>
     {
-        private readonly UsersContexts _contexts;
+        private readonly UsersContext _contexts;
 
         //public UserDtoValidator(UsersContexts contexts)
         //{

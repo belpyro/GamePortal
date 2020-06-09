@@ -4,16 +4,16 @@ using System.Data.Entity;
 
 namespace AliaksNad.Battleship.Data.Contexts
 {
-    public sealed class FleetContexts : DbContext
+    public sealed class FleetContext : DbContext
     {
-        public FleetContexts(ILogger logger)
+        public FleetContext(ILogger logger)
         {
             //Database.SetInitializer<UsersContexts>(new MigrateDatabaseToLatestVersion<UsersContexts, Configuration>());
-            Database.SetInitializer<FleetContexts>(new DropCreateDatabaseAlways<FleetContexts>());
+            Database.SetInitializer<FleetContext>(new DropCreateDatabaseAlways<FleetContext>());
             Database.Log = msg => logger.Warning(msg);
         }
 
-        public DbSet<FleetDb> FleetCoordinates { get; set; }
+        public DbSet<FleetDb> Fleets { get; set; }
 
         public DbSet<CoordinatesDb> Coordinates { get; set; }
 

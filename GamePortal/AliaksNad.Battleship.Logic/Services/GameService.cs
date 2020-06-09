@@ -7,70 +7,74 @@ using JetBrains.Annotations;
 using Serilog;
 using System;
 using System.Collections.Generic;
+using System.Data.Entity;
 using System.Data.Entity.Infrastructure;
+using System.Data.SqlClient;
+using System.Linq;
 using System.Threading;
 
 namespace AliaksNad.Battleship.Logic.Services
 {
     public class GameService : IGameService 
     {
-        private static IEnumerable<CoordinatesCheck> _enemyFleet;
-        private readonly UsersContexts _userContext;
-        private readonly FleetContexts _fleetContexts;
+        private readonly FleetContext _fleetContext;
         private readonly IMapper _mapper;
 
-        public GameService([NotNull]UsersContexts userContext,
-            [NotNull]FleetContexts fleetContexts,
+        public GameService([NotNull]FleetContext fleetContext,
             [NotNull]IMapper mapper)
         {
-            this._userContext = userContext;
-            this._fleetContexts = fleetContexts;
+            this._fleetContext = fleetContext;
             this._mapper = mapper;
         }
 
         /// <summary>
         /// Set your own fleet coordinates on logic layer.
         /// </summary>
-        /// <param name="fleetCoordinates">Own fleet coordinates.</param>
-        public Result SetFleet(FleetDto fleetCoordinates)
+        /// <param name="fleetModel">Own fleet coordinates.</param>
+        public Result<FleetDto> SetFleet(FleetDto fleetModel)
         {
-            //_enemyFleet = fleetCoordinates;
-
             try
             {
-                var dbModel = _mapper.Map<FleetDb>(fleetCoordinates);
+                var dbFleetModel = _mapper.Map<FleetDb>(fleetModel);
 
-                _fleetContexts.FleetCoordinates.Add(dbModel);
-                _fleetContexts.SaveChanges();
+                _fleetContext.Fleets.Add(dbFleetModel);
+                _fleetContext.SaveChanges();
 
-                //_userContext.Coordinates.Add(dbModel);
-                //_userContext.SaveChanges();
-
-                return Result.Success();
+                fleetModel.FleetId = dbFleetModel.FleetId;
+                return Result.Success(fleetModel);
             }
             catch (DbUpdateException ex)
             {
-                return Result.Failure<CoordinatesCheck>(ex.Message);
+                return Result.Failure<FleetDto>(ex.Message);
             }
         }
 
         /// <summary>
         /// Checking hit by enemy coordinates on logic layer.
         /// </summary>
-        /// <param name="fleetCoordinates">Enemy coordinates.</param>
+        /// <param name="coordinatesOfHit">Enemy coordinates.</param>
         /// <returns></returns>
-        public bool CheckHit(CoordinatesCheck fleetCoordinates)
+        public Result CheckHit(CoordinatesDto coordinatesOfHit)
         {
-            if (_enemyFleet == null)
-                throw new NullReferenceException();
-            
-            foreach (var item in _enemyFleet)
+            try
             {
-                if (item.Equals(fleetCoordinates))
-                    return true;
-            }
+                var dbmodel = _fleetContext.Coordinates.Where(x => x.FleetId == coordinatesOfHit.FleetId)
+                    .SingleOrDefault(c => c.CoordinateX == coordinatesOfHit.CoordinateX
+                    && c.CoordinateY == coordinatesOfHit.CoordinateY);
 
-            return false;
+                if (dbmodel != null)
+                {
+                    dbmodel.IsDamaged = true;
+                    _fleetContext.SaveChanges();
+
+                    return Result.Success(); 
+                }
+                return Result.Failure("not valid model");
+            }
+            catch (DbUpdateException ex)
+            {
+                return Result.Failure<CoordinatesDto>(ex.Message);
+            }
         }
     }
 }

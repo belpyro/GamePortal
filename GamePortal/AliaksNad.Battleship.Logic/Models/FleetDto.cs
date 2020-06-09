@@ -6,8 +6,6 @@ namespace AliaksNad.Battleship.Logic.Models
     {
         public int FleetId { get; set; }
 
-        public string Name { get; set; }
-
         public IEnumerable<CoordinatesDto> Coordinates { get; set; }
     }
 }

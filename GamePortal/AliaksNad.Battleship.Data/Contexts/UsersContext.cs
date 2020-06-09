@@ -11,12 +11,12 @@ using System.Threading.Tasks;
 
 namespace AliaksNad.Battleship.Data.Contexts
 {
-    public sealed class UsersContexts : DbContext
+    public sealed class UsersContext : DbContext
     {
-        public UsersContexts(ILogger logger)
+        public UsersContext(ILogger logger)
         {
             //Database.SetInitializer<UsersContexts>(new MigrateDatabaseToLatestVersion<UsersContexts, Configuration>());
-            Database.SetInitializer<UsersContexts>(new DropCreateDatabaseAlways<UsersContexts>());
+            Database.SetInitializer<UsersContext>(new DropCreateDatabaseAlways<UsersContext>());
             Database.Log = msg => logger.Warning(msg);
         }
 
