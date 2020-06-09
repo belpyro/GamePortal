@@ -24,7 +24,7 @@ namespace GamePortal.Web.Api.Controllers.Battleship
         /// <returns></returns>
         [HttpPost]
         [Route("coordinates")]
-        public IHttpActionResult CheckHit([FromUri]Coordinates fleetCoordinates)
+        public IHttpActionResult CheckHit([FromUri]CoordinatesCheck fleetCoordinates)
         {
             return Ok(_gameService.CheckHit(fleetCoordinates));
         }

@@ -6,13 +6,13 @@
     //Warning CS0659  'Point' overrides Object.Equals(object o) but does not override Object.GetHashCode() AliaksNad.Battleship.Logic
     //
     //// does it make sense?
-    public struct Coordinates
+    public struct CoordinatesCheck
     {
         public int X { get; set; }
 
         public int Y { get; set; }
 
-        public Coordinates(int x, int y)
+        public CoordinatesCheck(int x, int y)
         {
             this.X = x;
             this.Y = y;
@@ -25,10 +25,10 @@
         /// <returns></returns>
         public override bool Equals(object obj)
         {
-            if (!(obj is Coordinates))
+            if (!(obj is CoordinatesCheck))
                 return false;
 
-            Coordinates other = (Coordinates)obj;
+            CoordinatesCheck other = (CoordinatesCheck)obj;
             return X == other.X && Y == other.Y;
         }
 
@@ -37,7 +37,7 @@
         /// </summary>
         /// <param name="other"></param>
         /// <returns></returns>
-        public bool Equals(Coordinates other)
+        public bool Equals(CoordinatesCheck other)
         {
             return X == other.X && Y == other.Y;
         }

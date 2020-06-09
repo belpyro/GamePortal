@@ -19,20 +19,4 @@ namespace AliaksNad.Battleship.Logic.Models
 
         public IEnumerable<StatisticDto> Statistics { get; set; }
     }
-
-    public class FleetDto
-    {
-        public int FleetId { get; set; }
-
-        public IEnumerable<CoordinatesDto> FleetCoordinates { get; set; }
-    }
-
-    public class CoordinatesDto
-    {
-        public int Id { get; set; }
-
-        public int X { get; set; }
-
-        public int Y { get; set; }
-    }
 }

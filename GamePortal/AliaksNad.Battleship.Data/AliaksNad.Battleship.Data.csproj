@@ -54,6 +54,8 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Contexts\FleetContexts.cs" />
+    <Compile Include="Contexts\FleetDbConfiguration.cs" />
     <Compile Include="Contexts\UserDbConfiguration.cs" />
     <Compile Include="Contexts\UsersContexts.cs" />
     <Compile Include="Migrations\202005261930481_InitialCreate.cs" />
@@ -61,6 +63,8 @@
       <DependentUpon>202005261930481_InitialCreate.cs</DependentUpon>
     </Compile>
     <Compile Include="Migrations\Configuration.cs" />
+    <Compile Include="Models\CoordinatesDb.cs" />
+    <Compile Include="Models\FleetDb.cs" />
     <Compile Include="Models\UserEntity.cs" />
     <Compile Include="Models\StatisticDb.cs" />
     <Compile Include="Models\UserDb.cs" />

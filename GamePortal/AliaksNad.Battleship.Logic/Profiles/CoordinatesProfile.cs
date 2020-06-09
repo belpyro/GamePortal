@@ -1,16 +1,14 @@
 ﻿using AliaksNad.Battleship.Data.Models;
 using AliaksNad.Battleship.Logic.Models;
 using AutoMapper; // or Mapster
-using System.Security.Cryptography.X509Certificates;
 
 namespace AliaksNad.Battleship.Logic.Profiles
 {
-    class UserProfile : Profile
+    public class CoordinatesProfile : Profile
     {
-        public UserProfile()
+        public CoordinatesProfile()
         {
-            CreateMap<UserDb, UserDto>()
-                .ForMember(x => x.Password, opt => opt.Ignore())
+            CreateMap<CoordinatesDb, CoordinatesDto>()
                 .ReverseMap();
         }
     }

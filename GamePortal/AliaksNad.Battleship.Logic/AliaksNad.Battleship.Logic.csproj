@@ -118,7 +118,11 @@
   <ItemGroup>
     <Compile Include="Aspects\ValidationInterceptor.cs" />
     <Compile Include="BattleshipLogicDIModule.cs" />
+    <Compile Include="Models\CoordinatesDto.cs" />
+    <Compile Include="Models\FleetDto.cs" />
     <Compile Include="Models\StatisticDto.cs" />
+    <Compile Include="Profiles\CoordinatesProfile.cs" />
+    <Compile Include="Profiles\FleetProfile.cs" />
     <Compile Include="Profiles\StatisticProfile.cs" />
     <Compile Include="Profiles\UserProfile.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

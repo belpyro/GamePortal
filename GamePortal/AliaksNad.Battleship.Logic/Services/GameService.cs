@@ -14,7 +14,7 @@ namespace AliaksNad.Battleship.Logic.Services
 {
     public class GameService : IGameService 
     {
-        private static IEnumerable<Coordinates> _enemyFleet;
+        private static IEnumerable<CoordinatesCheck> _enemyFleet;
         private readonly UsersContexts _userContext;
         private readonly FleetContexts _fleetContexts;
         private readonly IMapper _mapper;
@@ -41,7 +41,6 @@ namespace AliaksNad.Battleship.Logic.Services
                 var dbModel = _mapper.Map<FleetDb>(fleetCoordinates);
 
                 _fleetContexts.FleetCoordinates.Add(dbModel);
-                _
                 _fleetContexts.SaveChanges();
 
                 //_userContext.Coordinates.Add(dbModel);
@@ -51,7 +50,7 @@ namespace AliaksNad.Battleship.Logic.Services
             }
             catch (DbUpdateException ex)
             {
-                return Result.Failure<Coordinates>(ex.Message);
+                return Result.Failure<CoordinatesCheck>(ex.Message);
             }
         }
 
@@ -60,7 +59,7 @@ namespace AliaksNad.Battleship.Logic.Services
         /// </summary>
         /// <param name="fleetCoordinates">Enemy coordinates.</param>
         /// <returns></returns>
-        public bool CheckHit(Coordinates fleetCoordinates)
+        public bool CheckHit(CoordinatesCheck fleetCoordinates)
         {
             if (_enemyFleet == null)
                 throw new NullReferenceException();
