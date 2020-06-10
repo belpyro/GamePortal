@@ -1,4 +1,5 @@
 ﻿using AliaksNad.Battleship.Logic.Models;
+using CSharpFunctionalExtensions;
 using System;
 using System.Collections.Generic;
 using System.Threading;
@@ -7,30 +8,30 @@ namespace AliaksNad.Battleship.Logic.Services
 {
     public class GameService : IGameService 
     {
-        private static IEnumerable<Point> _enemyFleet;
+        private static IEnumerable<Coordinates> _enemyFleet;
 
         /// <summary>
-        /// Fleet transfer to logic.
+        /// Set your own fleet coordinates on logic layer.
         /// </summary>
-        /// <param name="points">Fleet.</param>
-        public void SetFleet(IEnumerable<Point> points)
+        /// <param name="fleetCoordinates">Own fleet coordinates.</param>
+        public void SetFleet(IEnumerable<Coordinates> fleetCoordinates)
         {
-            _enemyFleet = points;
+            _enemyFleet = fleetCoordinates;
         }
 
         /// <summary>
-        /// Checks location for hit.
+        /// Checking hit by enemy coordinates on logic layer.
         /// </summary>
-        /// <param name="point">Location.</param>
+        /// <param name="fleetCoordinates">Enemy coordinates.</param>
         /// <returns></returns>
-        public bool HitCheck(Point point)
+        public bool CheckHit(Coordinates fleetCoordinates)
         {
             if (_enemyFleet == null)
                 throw new NullReferenceException();
             
             foreach (var item in _enemyFleet)
             {
-                if (item.Equals(point))
+                if (item.Equals(fleetCoordinates))
                     return true;
             }
 

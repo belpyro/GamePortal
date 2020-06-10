@@ -20,7 +20,6 @@ namespace Kbalan.TouchType.Logic.Aspects
     public class TextSetValidationInterceptor : IInterceptor
     {
         private readonly IKernel _kernel;
-        private object validationResult;
 
         public TextSetValidationInterceptor(IKernel kernel)
         {
@@ -45,7 +44,7 @@ namespace Kbalan.TouchType.Logic.Aspects
                 var preValidationResult = validator.Validate(text as TextSetDto, ruleSet: "PreValidation");
                 if (!preValidationResult.IsValid)
                 {
-                    invocation.ReturnValue = Result.Failure(preValidationResult.Errors.Select(x => x.ErrorMessage).First());
+                    invocation.ReturnValue = Result.Failure<TextSetDto>(preValidationResult.Errors.Select(x => x.ErrorMessage).First());
                     return;
                 }
             }

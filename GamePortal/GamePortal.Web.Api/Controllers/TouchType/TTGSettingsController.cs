@@ -19,7 +19,8 @@ namespace GamePortal.Web.Api.Controllers.TouchType
     {
         private readonly ISettingService _settingService;
 
-        public TTGSettingsController([NotNull] ISettingService settingService)
+
+        public TTGSettingsController([NotNull] ISettingService settingService) 
         {
             this._settingService = settingService;
         }

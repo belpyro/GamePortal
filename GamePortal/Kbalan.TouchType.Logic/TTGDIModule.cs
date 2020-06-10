@@ -16,6 +16,7 @@ using Castle.DynamicProxy;
 using Ninject;
 using Kbalan.TouchType.Logic.Aspects;
 using Serilog;
+using System.Reflection;
 
 namespace Kbalan.TouchType.Logic
 {
@@ -23,10 +24,9 @@ namespace Kbalan.TouchType.Logic
     {
         public override void Load()
         {
-            Mapper.Initialize(cfg => cfg.AddProfiles(typeof(UserProfile)));
-
-            var mapper = Mapper.Configuration.CreateMapper();
-
+            var configuration = new MapperConfiguration(cfg => cfg.AddProfiles(Assembly.GetExecutingAssembly()));
+            
+            var mapper = configuration.CreateMapper();
             this.Bind<IMapper>().ToConstant(mapper);
 
             this.Bind<TouchTypeGameContext>().ToSelf();
@@ -37,10 +37,9 @@ namespace Kbalan.TouchType.Logic
             this.Bind<IValidator<TextSetDto>>().To<TextSetDtoValidator>();
             this.Bind<ITextSetService>().ToMethod(ctx =>
             {
-                var service = new TextSetService(ctx.Kernel.Get<TouchTypeGameContext>(), ctx.Kernel.Get<IMapper>(), ctx.Kernel.Get<ILogger>());
+                var service = new TextSetService(ctx.Kernel.Get<TouchTypeGameContext>(), ctx.Kernel.Get<IMapper>());
                 return new ProxyGenerator().CreateInterfaceProxyWithTarget<ITextSetService>(service, new LoggerInterceptor(ctx.Kernel)
-                    , new TextSetValidationInterceptor(ctx.Kernel)
-                    );
+                    , new TextSetValidationInterceptor(ctx.Kernel));
             });
             this.Bind<IUserService>().ToMethod(ctx =>
             {

@@ -18,27 +18,27 @@ namespace GamePortal.Web.Api.Controllers.Battleship
         }
 
         /// <summary>
-        /// Checks location for hit.
+        /// Checking hit by enemy coordinates on logic layer.
         /// </summary>
-        /// <param name="point">Location.</param>
+        /// <param name="fleetCoordinates">Enemy coordinates.</param>
         /// <returns></returns>
         [HttpPost]
-        [Route("point")]
-        public IHttpActionResult Fire([FromUri]Point point)
+        [Route("coordinates")]
+        public IHttpActionResult CheckHit([FromUri]Coordinates fleetCoordinates)
         {
-            return Ok(_gameService.HitCheck(point));
+            return Ok(_gameService.CheckHit(fleetCoordinates));
         }
 
         /// <summary>
-        /// Fleet Placement.
+        /// Set your own fleet coordinates on logic layer.
         /// </summary>
-        /// <param name="fleet">Fleet.</param>
+        /// <param name="fleetCoordinates">Own fleet coordinates.</param>
         /// <returns></returns>
         [HttpPost]
         [Route("")]
-        public IHttpActionResult PlaceFleet([FromBody]IEnumerable<Point> fleet)
+        public IHttpActionResult SetFleet([FromBody]IEnumerable<Coordinates> fleetCoordinates)
         {
-            _gameService.SetFleet(fleet);
+            _gameService.SetFleet(fleetCoordinates);
             return StatusCode(HttpStatusCode.NoContent);
         }
     }

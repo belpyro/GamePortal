@@ -24,13 +24,11 @@ namespace Kbalan.TouchType.Logic.Services
 
         private readonly TouchTypeGameContext _gameContext;
         private readonly IMapper _mapper;
-        private readonly ILogger _logger;
 
-        public TextSetService([NotNull] TouchTypeGameContext gameContext, [NotNull]IMapper mapper, [NotNull]ILogger logger )
+        public TextSetService([NotNull] TouchTypeGameContext gameContext, [NotNull]IMapper mapper)
         {
             this._gameContext = gameContext;
             this._mapper = mapper;
-            this._logger = logger;
         }
 
         /// <summary>
@@ -110,7 +108,6 @@ namespace Kbalan.TouchType.Logic.Services
             }
             catch (SqlException ex)
             {
-                _logger.Error("Connection to Db failed", ex);
                 return Result.Failure<TextSetDto>(ex.Message);
             }   
         }
@@ -164,7 +161,6 @@ namespace Kbalan.TouchType.Logic.Services
             }
             catch (DbUpdateException ex)
             {
-                _logger.Error("Connection to Db failed", ex);
                 return Result.Failure(ex.Message);
             }
         }

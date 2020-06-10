@@ -10,7 +10,6 @@ namespace GamePortal.Web.Api.App_Start
     using AliaksNad.Battleship.Logic;
     using Kbalan.TouchType.Logic;
     using Microsoft.Web.Infrastructure.DynamicModuleHelper;
-
     using Ninject;
     using Ninject.Web.Common;
     using Ninject.Web.Common.WebHost;
@@ -18,14 +17,15 @@ namespace GamePortal.Web.Api.App_Start
     using Serilog.Sinks.MSSqlServer.Sinks.MSSqlServer.Options;
     using Serilog.Sinks.MSSqlServer;
 
-    public static class NinjectWebCommon 
+
+    public static class NinjectWebCommon
     {
         private static readonly Bootstrapper bootstrapper = new Bootstrapper();
 
         /// <summary>
         /// Starts the application.
         /// </summary>
-        public static void Start() 
+        public static void Start()
         {
             DynamicModuleUtility.RegisterModule(typeof(OnePerRequestHttpModule));
             DynamicModuleUtility.RegisterModule(typeof(NinjectHttpModule));
@@ -52,6 +52,7 @@ namespace GamePortal.Web.Api.App_Start
                 kernel.Bind<Func<IKernel>>().ToMethod(ctx => () => new Bootstrapper().Kernel);
                 kernel.Bind<IHttpModule>().To<HttpApplicationInitializationHttpModule>();
                 RegisterServices(kernel);
+
                 return kernel;
             }
             catch
@@ -67,18 +68,18 @@ namespace GamePortal.Web.Api.App_Start
         /// <param name="kernel">The kernel.</param>
         private static void RegisterServices(IKernel kernel)
         {
-            var logDB = @"Data Source=(localdb)\MSSQLLocalDB;Initial Catalog=TouchTypeGameContext;Integrated Security=True;";
+            var TTGlogDB = @"Data Source=(localdb)\MSSQLLocalDB;Initial Catalog=TouchTypeGameContext;Integrated Security=True;";
             var sinkOpts = new SinkOptions();
             sinkOpts.TableName = "Log";
             sinkOpts.AutoCreateSqlTable = true;
             var columnOpts = new ColumnOptions();
             columnOpts.TimeStamp.NonClusteredIndex = true;
 
-            var logger = new LoggerConfiguration()
+            var TTGlogger = new LoggerConfiguration()
                 .WriteTo.Debug()
                 .WriteTo.Console()
                 .WriteTo.MSSqlServer(
-                        connectionString: logDB,
+                        connectionString: TTGlogDB,
                         sinkOptions: sinkOpts,
                         columnOptions: columnOpts)
                 .Enrich.WithHttpRequestType()
@@ -87,8 +88,8 @@ namespace GamePortal.Web.Api.App_Start
                 .MinimumLevel.Verbose()
                 .CreateLogger();
 
-            kernel.Bind<ILogger>().ToConstant(logger);
-            kernel.Load(/*new LogicDIModule(),*/ new TTGDIModule()/*, new BattleshipLogicDIModule()*/);
+            kernel.Bind<ILogger>().ToConstant(TTGlogger);
+            kernel.Load(new LogicDIModule(), new TTGDIModule(), new BattleshipLogicDIModule());
         }
     }
 }
