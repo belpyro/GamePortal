@@ -17,35 +17,35 @@ namespace AliaksNad.Battleship.Logic.Services
 {
     public class GameService : IGameService 
     {
-        private readonly FleetContext _fleetContext;
+        private readonly BattleAreaContext _battleAreaContext;
         private readonly IMapper _mapper;
 
-        public GameService([NotNull]FleetContext fleetContext,
+        public GameService([NotNull]BattleAreaContext _battleAreaContext,
             [NotNull]IMapper mapper)
         {
-            this._fleetContext = fleetContext;
+            this._battleAreaContext = _battleAreaContext;
             this._mapper = mapper;
         }
 
         /// <summary>
         /// Set your own fleet coordinates on logic layer.
         /// </summary>
-        /// <param name="fleetModel">Own fleet coordinates.</param>
-        public Result<FleetDto> SetFleet(FleetDto fleetModel)
+        /// <param name="BattleAreaModel">Own fleet coordinates.</param>
+        public Result<BattleAreaDto> SetFleet(BattleAreaDto BattleAreaModel)
         {
             try
             {
-                var dbFleetModel = _mapper.Map<FleetDb>(fleetModel);
+                var dbBattleAreaModel = _mapper.Map<BattleAreaDb>(BattleAreaModel);
 
-                _fleetContext.Fleets.Add(dbFleetModel);
-                _fleetContext.SaveChanges();
+                _battleAreaContext.BattleAreas.Add(dbBattleAreaModel);
+                _battleAreaContext.SaveChanges();
 
-                fleetModel.FleetId = dbFleetModel.FleetId;
-                return Result.Success(fleetModel);
+                BattleAreaModel.BattleAreaId = dbBattleAreaModel.BattleAreaId;
+                return Result.Success(BattleAreaModel);
             }
             catch (DbUpdateException ex)
             {
-                return Result.Failure<FleetDto>(ex.Message);
+                return Result.Failure<BattleAreaDto>(ex.Message);
             }
         }
 
@@ -58,18 +58,31 @@ namespace AliaksNad.Battleship.Logic.Services
         {
             try
             {
-                var dbmodel = _fleetContext.Coordinates.Where(x => x.FleetId == coordinatesOfHit.FleetId)
-                    .SingleOrDefault(c => c.CoordinateX == coordinatesOfHit.CoordinateX
-                    && c.CoordinateY == coordinatesOfHit.CoordinateY);
+                //var dbmodel = _fleetContext.Coordinates.Where(x => x.FleetId == coordinatesOfHit.FleetId)
+                //    .SingleOrDefault(c => c.CoordinateX == coordinatesOfHit.CoordinateX
+                //    && c.CoordinateY == coordinatesOfHit.CoordinateY);
 
-                if (dbmodel != null)
-                {
-                    dbmodel.IsDamaged = true;
-                    _fleetContext.SaveChanges();
+                //if (dbmodel != null)
+                //{
+                //    dbmodel.IsDamaged = true;
+                //    _fleetContext.SaveChanges();
 
-                    return Result.Success(); 
-                }
-                return Result.Failure("not valid model");
+                //    return Result.Success(); 
+                //}
+                //return Result.Failure("not valid model");
+
+                var dbBattleAreaModel = _battleAreaContext.BattleAreas.SingleOrDefault(x => x.BattleAreaId == coordinatesOfHit.BattleAreaId);
+
+                var CoordinatesDto = dbBattleAreaModel.Ships.Add(x => x.Ship.SingleOrDefault(c => c.CoordinateX == coordinatesOfHit.CoordinateX && c.CoordinateY == coordinatesOfHit.CoordinateY));
+
+                var dbFleetModel = _mapper.Map<CoordinatesDb>(coordinatesOfHit);
+                _battleAreaContext.Ships.Attach(dbFleetModel);
+                var entry = _battleAreaContext.Entry(dbFleetModel);
+                entry.State = EntityState.Modified;
+
+                _battleAreaContext.SaveChanges();
+
+                return Result.Success();
             }
             catch (DbUpdateException ex)
             {

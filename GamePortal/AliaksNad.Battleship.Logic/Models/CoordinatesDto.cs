@@ -2,9 +2,9 @@
 {
     public class CoordinatesDto
     {
-        public int FleetId { get; set; }
+        public int BattleAreaId { get; set; }
 
-        public bool IsDamaged { get; set; } = false;
+        public bool IsDamaged { get; set; }
 
         public int CoordinateX { get; set; }
 

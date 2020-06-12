@@ -9,6 +9,7 @@ namespace AliaksNad.Battleship.Logic.Profiles
         public CoordinatesProfile()
         {
             CreateMap<CoordinatesDb, CoordinatesDto>()
+                .ForMember(x => x.IsDamaged, opt => opt.Ignore())
                 .ReverseMap();
         }
     }

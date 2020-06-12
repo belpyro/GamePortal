@@ -54,8 +54,8 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Contexts\FleetContext.cs" />
-    <Compile Include="Contexts\FleetDbConfiguration.cs" />
+    <Compile Include="Contexts\BattleAreaContext.cs" />
+    <Compile Include="Contexts\BattleAreaDbConfiguration.cs" />
     <Compile Include="Contexts\UserDbConfiguration.cs" />
     <Compile Include="Contexts\UsersContext.cs" />
     <Compile Include="Migrations\202005261930481_InitialCreate.cs" />
@@ -64,8 +64,9 @@
     </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\CoordinatesDb.cs" />
-    <Compile Include="Models\FleetDb.cs" />
-    <Compile Include="Models\FleetEntity.cs" />
+    <Compile Include="Models\BattleAreaDb.cs" />
+    <Compile Include="Models\BattleAreaEntity.cs" />
+    <Compile Include="Models\ShipsDb.cs" />
     <Compile Include="Models\UserEntity.cs" />
     <Compile Include="Models\StatisticDb.cs" />
     <Compile Include="Models\UserDb.cs" />

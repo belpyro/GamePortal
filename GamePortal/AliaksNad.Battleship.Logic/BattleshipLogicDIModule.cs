@@ -28,12 +28,27 @@ namespace AliaksNad.Battleship.Logic
 
             this.Bind<IValidator<UserDto>>().To<UserDtoValidator>();
 
+            //this.Bind<IUserService>().ToMethod(ctx =>
+            //{
+            //    var service = new UserService(ctx.Kernel.Get<UsersContext>(), ctx.Kernel.Get<IMapper>());
+            //    return new ProxyGenerator().CreateInterfaceProxyWithTarget<IUserService>(service, new ValidationInterceptor(ctx.Kernel));
+            //});
+
+            //this.Bind<IUserService>().To<UserService>();
+            this.Bind<IGameService>().To<GameService>();
+
+
             this.Bind<IUserService>().ToMethod(ctx =>
             {
                 var service = new UserService(ctx.Kernel.Get<UsersContext>(), ctx.Kernel.Get<IMapper>());
                 return new ProxyGenerator().CreateInterfaceProxyWithTarget<IUserService>(service, new ValidationInterceptor(ctx.Kernel));
             });
-            this.Bind<IGameService>().To<GameService>();
+
+            //this.Bind<IGameService>().ToMethod(ctx =>
+            //{
+            //    var service = new GameService(ctx.Kernel.Get<FleetContext>(), ctx.Kernel.Get<IMapper>());
+            //    return new ProxyGenerator().CreateInterfaceProxyWithTarget<IGameService>(service, new ValidationInterceptor(ctx.Kernel));
+            //});
         }
     }
 }

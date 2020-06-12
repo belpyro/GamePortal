@@ -10,9 +10,9 @@ namespace GamePortal.Web.Api.Controllers.Battleship
     [RoutePrefix("api/battleship/game")]
     public class BattleshipGameController : ApiController
     {
-        private readonly GameService _gameService;
+        private readonly IGameService _gameService;
 
-        public BattleshipGameController(GameService gameService)
+        public BattleshipGameController(IGameService gameService)
         {
             this._gameService = gameService;
         }
@@ -20,19 +20,19 @@ namespace GamePortal.Web.Api.Controllers.Battleship
         /// <summary>
         /// Set your own fleet coordinates on logic layer.
         /// </summary>
-        /// <param name="fleetCoordinates">Own fleet coordinates.</param>
+        /// <param name="BattleAreaDtoCoordinates">Own fleet coordinates.</param>
         /// <returns></returns>
         [HttpPost]
         [Route("fleets")]
-        public IHttpActionResult SetFleet([FromBody]FleetDto fleetCoordinates)
+        public IHttpActionResult SetFleet([FromBody]BattleAreaDto BattleAreaDtoCoordinates)
         {
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
             }
 
-            var result = _gameService.SetFleet(fleetCoordinates);
-            return result.IsSuccess ? Created($"api/battleship/game/fleets{result.Value.FleetId}", result.Value) : (IHttpActionResult)BadRequest(result.Error);
+            var result = _gameService.SetFleet(BattleAreaDtoCoordinates);
+            return result.IsSuccess ? Created($"api/battleship/game/fleets{result.Value.BattleAreaId}", result.Value) : (IHttpActionResult)BadRequest(result.Error);
         }
 
         /// <summary>

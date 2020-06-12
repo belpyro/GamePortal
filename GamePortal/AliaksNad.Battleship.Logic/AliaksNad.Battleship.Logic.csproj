@@ -119,10 +119,12 @@
     <Compile Include="Aspects\ValidationInterceptor.cs" />
     <Compile Include="BattleshipLogicDIModule.cs" />
     <Compile Include="Models\CoordinatesDto.cs" />
-    <Compile Include="Models\FleetDto.cs" />
+    <Compile Include="Models\BattleAreaDto.cs" />
+    <Compile Include="Models\ShipDto.cs" />
     <Compile Include="Models\StatisticDto.cs" />
     <Compile Include="Profiles\CoordinatesProfile.cs" />
-    <Compile Include="Profiles\FleetProfile.cs" />
+    <Compile Include="Profiles\BattleAreaProfile.cs" />
+    <Compile Include="Profiles\ShipProfile.cs" />
     <Compile Include="Profiles\StatisticProfile.cs" />
     <Compile Include="Profiles\UserProfile.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -130,7 +132,6 @@
     <Compile Include="Services\GameService.cs" />
     <Compile Include="Services\IGameService.cs" />
     <Compile Include="Services\IUserService.cs" />
-    <Compile Include="Models\CoordinatesStruct.cs" />
     <Compile Include="Services\UserFaker.cs" />
     <Compile Include="Services\UserService.cs" />
     <Compile Include="Validators\UserDtoValidator.cs" />

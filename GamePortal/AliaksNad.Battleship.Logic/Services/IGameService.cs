@@ -4,13 +4,13 @@ using System.Collections.Generic;
 
 namespace AliaksNad.Battleship.Logic.Services
 {
-    interface IGameService
+    public interface IGameService
     {
         /// <summary>
         /// Set your own fleet coordinates.
         /// </summary>
         /// <param name="fleetCoordinates">Own fleet coordinates.</param>
-        Result<FleetDto> SetFleet(FleetDto fleetCoordinates);
+        Result<BattleAreaDto> SetFleet(BattleAreaDto fleetCoordinates);
 
         /// <summary>
         /// Checking hit by enemy coordinates.

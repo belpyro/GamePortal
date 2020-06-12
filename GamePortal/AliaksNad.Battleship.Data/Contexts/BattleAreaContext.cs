@@ -4,23 +4,25 @@ using System.Data.Entity;
 
 namespace AliaksNad.Battleship.Data.Contexts
 {
-    public sealed class FleetContext : DbContext
+    public sealed class BattleAreaContext : DbContext
     {
-        public FleetContext()
+        public BattleAreaContext()
         {
             //Database.SetInitializer<UsersContexts>(new MigrateDatabaseToLatestVersion<UsersContexts, Configuration>());
-            Database.SetInitializer<FleetContext>(new DropCreateDatabaseAlways<FleetContext>());
+            Database.SetInitializer<BattleAreaContext>(new DropCreateDatabaseAlways<BattleAreaContext>());
             //Database.Log = msg => logger.Warning(msg);
         }
 
-        public DbSet<FleetDb> Fleets { get; set; }
+        public DbSet<BattleAreaDb> BattleAreas { get; set; }
 
-        public DbSet<CoordinatesDb> Coordinates { get; set; }
+        public DbSet<ShipDb> Ships { get; set; }
+
+        public DbSet<CoordinatesDb> FailedLaunch { get; set; }
 
         protected override void OnModelCreating(DbModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
-            modelBuilder.Configurations.Add(new FleetDbConfiguration());
+            modelBuilder.Configurations.Add(new BattleAreaDbConfiguration());
         }
     }
 }

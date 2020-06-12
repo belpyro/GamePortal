@@ -10,8 +10,12 @@
 
         public int CoordinateY { get; set; }
 
-        public FleetDb Fleet { get; set; }
+        public BattleAreaDb BattleArea { get; set; }
 
-        public int? FleetId { get; set; }
+        public int? BattleAreaId { get; set; }
+
+        public ShipDb Ships { get; set; }
+
+        public int? ShipId { get; set; }
     }
 }

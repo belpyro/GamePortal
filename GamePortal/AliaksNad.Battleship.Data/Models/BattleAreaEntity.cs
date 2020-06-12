@@ -2,9 +2,9 @@
 
 namespace AliaksNad.Battleship.Data.Models
 {
-    public class FleetEntity
+    public class BattleAreaEntity
     {
-        public int FleetId { get; set; }
+        public int BattleAreaId { get; set; }
 
         public int CreatorId { get; set; }
 

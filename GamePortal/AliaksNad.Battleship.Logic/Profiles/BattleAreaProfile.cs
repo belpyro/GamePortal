@@ -4,11 +4,11 @@ using AutoMapper; // or Mapster
 
 namespace AliaksNad.Battleship.Logic.Profiles
 {
-    class FleetProfile : Profile
+    class BattleAreaProfile : Profile
     {
-        public FleetProfile()
+        public BattleAreaProfile()
         {
-            CreateMap<FleetDb, FleetDto>()
+            CreateMap<BattleAreaDb, BattleAreaDto>()
                 .ReverseMap();
         }
     }
