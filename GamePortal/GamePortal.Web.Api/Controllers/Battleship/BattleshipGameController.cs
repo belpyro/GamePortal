@@ -50,7 +50,11 @@ namespace GamePortal.Web.Api.Controllers.Battleship
             }
 
             var result =_gameService.CheckHit(coordinatesOfHit);
-            return result.IsSuccess ? Ok() : (IHttpActionResult)StatusCode(HttpStatusCode.NoContent);
+            if (result.IsFailure)
+            {
+                return StatusCode(HttpStatusCode.InternalServerError);
+            }
+            return result.Value.HasValue ? Ok(result.Value.Value) : (IHttpActionResult)NotFound();
         }
     }
 }

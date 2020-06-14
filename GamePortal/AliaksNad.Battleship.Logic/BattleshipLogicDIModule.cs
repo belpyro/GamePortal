@@ -24,7 +24,7 @@ namespace AliaksNad.Battleship.Logic
                 .When(r => r.ParentContext != null && r.ParentContext.Plan.Type.Namespace.StartsWith("AliaksNad.Battleship"));
 
             this.Bind<UsersContext>().ToSelf();
-            this.Bind<FleetContext>().ToSelf();
+            this.Bind<BattleAreaContext>().ToSelf();
 
             this.Bind<IValidator<UserDto>>().To<UserDtoValidator>();
 

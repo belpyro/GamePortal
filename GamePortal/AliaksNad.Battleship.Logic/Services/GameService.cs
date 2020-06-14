@@ -54,40 +54,48 @@ namespace AliaksNad.Battleship.Logic.Services
         /// </summary>
         /// <param name="coordinatesOfHit">Enemy coordinates.</param>
         /// <returns></returns>
-        public Result CheckHit(CoordinatesDto coordinatesOfHit)
+        public Result<Maybe<CoordinatesDto>> CheckHit(CoordinatesDto coordinatesOfHit)
         {
             try
             {
-                //var dbmodel = _fleetContext.Coordinates.Where(x => x.FleetId == coordinatesOfHit.FleetId)
-                //    .SingleOrDefault(c => c.CoordinateX == coordinatesOfHit.CoordinateX
-                //    && c.CoordinateY == coordinatesOfHit.CoordinateY);
+                var dbShipsModel = _battleAreaContext.Ships.Include(c => c.Ship).SingleOrDefault(x => x.BattleAreaId == coordinatesOfHit.BattleAreaId);
+                var dbCoordinatesOfHit = dbShipsModel.Ship.SingleOrDefault(x => x.CoordinateX == coordinatesOfHit.CoordinateX && x.CoordinateY == coordinatesOfHit.CoordinateY);
+                
+                if (dbCoordinatesOfHit != null)
+                {
+                    var dbCoordinatesModel = _battleAreaContext.Coordinates.Where(x => x.BattleAreaId == coordinatesOfHit.BattleAreaId);
 
-                //if (dbmodel != null)
-                //{
-                //    dbmodel.IsDamaged = true;
-                //    _fleetContext.SaveChanges();
+                    dbCoordinatesOfHit.IsDamaged = true;
+                    CheckShip(dbCoordinatesModel, dbCoordinatesOfHit.ShipsId);
+                    
+                    _battleAreaContext.SaveChanges();
+                }
 
-                //    return Result.Success(); 
-                //}
-                //return Result.Failure("not valid model");
+                _battleAreaContext.Coordinates.Add(_mapper.Map<CoordinatesDb>(coordinatesOfHit));
 
-                var dbBattleAreaModel = _battleAreaContext.BattleAreas.SingleOrDefault(x => x.BattleAreaId == coordinatesOfHit.BattleAreaId);
-
-                var CoordinatesDto = dbBattleAreaModel.Ships.Add(x => x.Ship.SingleOrDefault(c => c.CoordinateX == coordinatesOfHit.CoordinateX && c.CoordinateY == coordinatesOfHit.CoordinateY));
-
-                var dbFleetModel = _mapper.Map<CoordinatesDb>(coordinatesOfHit);
-                _battleAreaContext.Ships.Attach(dbFleetModel);
-                var entry = _battleAreaContext.Entry(dbFleetModel);
-                entry.State = EntityState.Modified;
-
-                _battleAreaContext.SaveChanges();
-
-                return Result.Success();
+                Maybe<CoordinatesDto> result = _mapper.Map<CoordinatesDto>(dbCoordinatesOfHit);
+                return Result.Success(result);
             }
             catch (DbUpdateException ex)
             {
-                return Result.Failure<CoordinatesDto>(ex.Message);
+                return Result.Failure<Maybe<CoordinatesDto>>(ex.Message);
             }
+        }
+
+        private void CheckShip(IEnumerable<CoordinatesDb> coordinates, int attackedShipId)
+        {
+            var attackedShip = coordinates.Where(x => x.ShipsId == attackedShipId); // TODO check implementation of variables
+            var alifeCells = attackedShip.FirstOrDefault(x => x.IsDamaged == false);
+
+            if (alifeCells != null)
+            {
+                SetEmptyCells(attackedShip);
+            }
+        }
+
+        private void SetEmptyCells(IEnumerable<CoordinatesDb> attackedShip) // TODO Logic for empty cells around downed ship
+        {
+            
         }
     }
 }

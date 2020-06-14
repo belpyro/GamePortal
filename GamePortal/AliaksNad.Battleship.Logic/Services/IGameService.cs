@@ -17,6 +17,6 @@ namespace AliaksNad.Battleship.Logic.Services
         /// </summary>
         /// <param name="coordinates">Enemy coordinates.</param>
         /// <returns></returns>
-        Result CheckHit(CoordinatesDto coordinates);
+        Result<Maybe<CoordinatesDto>> CheckHit(CoordinatesDto coordinates);
     }
 }

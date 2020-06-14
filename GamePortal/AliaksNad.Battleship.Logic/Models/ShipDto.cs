@@ -6,10 +6,12 @@ using System.Threading.Tasks;
 
 namespace AliaksNad.Battleship.Logic.Models
 {
-    class ShipDto
+    public class ShipDto
     {
+        public int Id { get; set; }
+
         public int BattleAreaId { get; set; }
 
-        public IEnumerable<CoordinatesDto> Coordinates { get; set; }
+        public IEnumerable<CoordinatesDto> Ship { get; set; }
     }
 }

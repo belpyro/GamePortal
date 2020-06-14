@@ -6,7 +6,7 @@ namespace AliaksNad.Battleship.Logic.Models
     {
         public int BattleAreaId { get; set; }
 
-        public IEnumerable<CoordinatesDto> Ships { get; set; }
+        public IEnumerable<ShipDto> Ships { get; set; }
 
         public IEnumerable<CoordinatesDto> FailedLaunch { get; set; }
     }

@@ -66,7 +66,7 @@
     <Compile Include="Models\CoordinatesDb.cs" />
     <Compile Include="Models\BattleAreaDb.cs" />
     <Compile Include="Models\BattleAreaEntity.cs" />
-    <Compile Include="Models\ShipsDb.cs" />
+    <Compile Include="Models\ShipDb.cs" />
     <Compile Include="Models\UserEntity.cs" />
     <Compile Include="Models\StatisticDb.cs" />
     <Compile Include="Models\UserDb.cs" />

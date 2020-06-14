@@ -17,7 +17,7 @@ namespace AliaksNad.Battleship.Data.Contexts
 
         public DbSet<ShipDb> Ships { get; set; }
 
-        public DbSet<CoordinatesDb> FailedLaunch { get; set; }
+        public DbSet<CoordinatesDb> Coordinates { get; set; }
 
         protected override void OnModelCreating(DbModelBuilder modelBuilder)
         {
