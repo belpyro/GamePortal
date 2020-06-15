@@ -1,4 +1,4 @@
-﻿using Castle.DynamicProxy;
+﻿
 using CSharpFunctionalExtensions;
 using FluentValidation;
 using Kbalan.TouchType.Logic.Dto;
@@ -9,6 +9,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Ninject.Extensions.Interception;
 
 namespace Kbalan.TouchType.Logic.Aspects
 {
@@ -26,8 +27,8 @@ namespace Kbalan.TouchType.Logic.Aspects
         public void Intercept(IInvocation invocation)
         {
             //model null checking. One of models must exist
-            var user = invocation.Arguments.OfType<UserDto>().SingleOrDefault();
-            var userSetting = invocation.Arguments.OfType<UserSettingDto>().SingleOrDefault();
+            var user = invocation.Request.Arguments.OfType<UserDto>().SingleOrDefault();
+            var userSetting = invocation.Request.Arguments.OfType<UserSettingDto>().SingleOrDefault();
             if (user == null && userSetting == null)
             {
                 invocation.Proceed();
@@ -40,7 +41,7 @@ namespace Kbalan.TouchType.Logic.Aspects
 
 
             //Prevalidation for Add method
-            if (invocation.Method.Name.Equals("Add"))
+            if (invocation.Request.Method.Name.Equals("Add"))
             {
                 var preValidationResult = userSettingValidator.Validate(userSetting as UserSettingDto, ruleSet: "PreValidation");
                 if (!preValidationResult.IsValid)
@@ -51,7 +52,7 @@ namespace Kbalan.TouchType.Logic.Aspects
             }
 
             //Prevalidation for Update method
-            if (invocation.Method.Name.Equals("Update"))
+            if (invocation.Request.Method.Name.Equals("Update"))
             {
                 var preValidationResult = userValidator.Validate(user as UserDto, ruleSet: "PreValidation");
                 if (!preValidationResult.IsValid)
@@ -62,7 +63,7 @@ namespace Kbalan.TouchType.Logic.Aspects
             }
 
             //Postvalidation for Add method 
-            if (invocation.Method.Name.Equals("Add"))
+            if (invocation.Request.Method.Name.Equals("Add"))
             {
                 var validator = _kernel.Get<IValidator<UserSettingDto>>();
                 var validationResult = validator.Validate(userSetting as UserSettingDto, ruleSet: "PostValidation");
@@ -75,7 +76,7 @@ namespace Kbalan.TouchType.Logic.Aspects
             }
 
             //Postvalidation for Update method 
-            if (invocation.Method.Name.Equals("Update"))
+            if (invocation.Request.Method.Name.Equals("Update"))
             {
                 var validator = _kernel.Get<IValidator<UserDto>>();
                 var validationResult = validator.Validate(user as UserDto, ruleSet: "PostValidation");

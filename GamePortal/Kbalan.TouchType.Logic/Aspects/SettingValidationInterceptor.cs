@@ -1,4 +1,4 @@
-﻿using Castle.DynamicProxy;
+﻿
 using CSharpFunctionalExtensions;
 using FluentValidation;
 using FluentValidation.Results;
@@ -10,6 +10,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Ninject.Extensions.Interception;
 
 namespace Kbalan.TouchType.Logic.Aspects
 {
@@ -28,7 +29,7 @@ namespace Kbalan.TouchType.Logic.Aspects
         public void Intercept(IInvocation invocation)
         {
             //id null checking
-            var userId = invocation.Arguments.OfType<Int32>().SingleOrDefault();
+            var userId = invocation.Request.Arguments.OfType<Int32>().SingleOrDefault();
             if (userId == 0)
             {
                 invocation.Proceed();
@@ -36,7 +37,7 @@ namespace Kbalan.TouchType.Logic.Aspects
             }
 
             //model null checking
-            var model = invocation.Arguments.OfType<SettingDto>().SingleOrDefault() as SettingDto;
+            var model = invocation.Request.Arguments.OfType<SettingDto>().SingleOrDefault() as SettingDto;
             if (model == null)
             {
                 invocation.Proceed();
@@ -46,7 +47,7 @@ namespace Kbalan.TouchType.Logic.Aspects
             var settingValidator = _kernel.Get<IValidator<SettingDto>>();
 
             //Prevalidation for Update method
-            if (invocation.Method.Name.Equals("Update"))
+            if (invocation.Request.Method.Name.Equals("Update"))
             {
                 var preValidationResult = settingValidator.Validate(model, ruleSet: "PreValidation");
                 if (!preValidationResult.IsValid)
@@ -57,7 +58,7 @@ namespace Kbalan.TouchType.Logic.Aspects
             }
  
             //Implementation of validation for update method
-            if ( invocation.Method.Name.Equals("Update"))
+            if ( invocation.Request.Method.Name.Equals("Update"))
              {
                 //Cheking if user with id exist
                 var userModel = _kernel.Get<TouchTypeGameContext>().Users.Include("Setting").SingleOrDefault(x => x.Id == (int)userId);

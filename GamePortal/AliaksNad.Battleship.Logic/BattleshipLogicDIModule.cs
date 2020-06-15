@@ -10,6 +10,7 @@ using Castle.DynamicProxy;
 using Ninject;
 using AliaksNad.Battleship.Logic.Aspects;
 using Serilog;
+using Ninject.Extensions.Interception.Infrastructure.Language;
 
 namespace AliaksNad.Battleship.Logic
 {
@@ -21,34 +22,26 @@ namespace AliaksNad.Battleship.Logic
             var mapper = configuration.CreateMapper();
 
             this.Bind<IMapper>().ToConstant(mapper)
-                .When(r => r.ParentContext != null && r.ParentContext.Plan.Type.Namespace.StartsWith("AliaksNad.Battleship"));
+                .When(r =>
+                {
+                    return r.ParentContext != null && r.ParentContext.Plan.Type.Namespace.StartsWith("AliaksNad.Battleship");
+                });
+
+            var logger = new LoggerConfiguration().CreateLogger();
+
+            this.Bind<ILogger>().ToConstant(logger)
+                .When(r =>
+                {
+                    return r.ParentContext != null && r.ParentContext.Plan.Type.Namespace.StartsWith("AliaksNad.Battleship");
+                });
 
             this.Bind<UsersContext>().ToSelf();
             this.Bind<BattleAreaContext>().ToSelf();
 
             this.Bind<IValidator<UserDto>>().To<UserDtoValidator>();
 
-            //this.Bind<IUserService>().ToMethod(ctx =>
-            //{
-            //    var service = new UserService(ctx.Kernel.Get<UsersContext>(), ctx.Kernel.Get<IMapper>());
-            //    return new ProxyGenerator().CreateInterfaceProxyWithTarget<IUserService>(service, new ValidationInterceptor(ctx.Kernel));
-            //});
-
-            //this.Bind<IUserService>().To<UserService>();
+            this.Bind<IUserService>().To<UserService>().Intercept().With<ValidationInterceptor>();
             this.Bind<IGameService>().To<GameService>();
-
-
-            this.Bind<IUserService>().ToMethod(ctx =>
-            {
-                var service = new UserService(ctx.Kernel.Get<UsersContext>(), ctx.Kernel.Get<IMapper>());
-                return new ProxyGenerator().CreateInterfaceProxyWithTarget<IUserService>(service, new ValidationInterceptor(ctx.Kernel));
-            });
-
-            //this.Bind<IGameService>().ToMethod(ctx =>
-            //{
-            //    var service = new GameService(ctx.Kernel.Get<FleetContext>(), ctx.Kernel.Get<IMapper>());
-            //    return new ProxyGenerator().CreateInterfaceProxyWithTarget<IGameService>(service, new ValidationInterceptor(ctx.Kernel));
-            //});
         }
     }
 }

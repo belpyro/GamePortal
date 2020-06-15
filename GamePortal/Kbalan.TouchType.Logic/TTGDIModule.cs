@@ -12,6 +12,8 @@ using Kbalan.TouchType.Logic.Aspects;
 using Serilog;
 using Serilog.Sinks.MSSqlServer.Sinks.MSSqlServer.Options;
 using Serilog.Sinks.MSSqlServer;
+using Ninject.Extensions.Interception.Infrastructure.Language;
+using Ninject.Planning;
 
 namespace Kbalan.TouchType.Logic
 {
@@ -23,8 +25,11 @@ namespace Kbalan.TouchType.Logic
             
             var mapper = configuration.CreateMapper();
             this.Bind<IMapper>().ToConstant(mapper)
-                /*.When(r =>  r.ParentContext.Plan.Type.Namespace.StartsWith("Kbalan.TouchType"))*/;
-  
+                .When(r =>
+                {
+                    return r.ParentContext != null && r.ParentContext.Plan.Type.Namespace.StartsWith("Kbalan.TouchType");
+                });
+
 
 
             var TTGlogDB = @"Data Source=(localdb)\MSSQLLocalDB;Initial Catalog=TouchTypeGameContext;Integrated Security=True;";
@@ -46,7 +51,6 @@ namespace Kbalan.TouchType.Logic
                 .MinimumLevel.Verbose()
                 .CreateLogger();
             this.Bind<ILogger>().ToConstant(TTGlogger);
-
             this.Bind<TouchTypeGameContext>().ToSelf();
             this.Bind<IValidator<UserSettingDto>>().To<UserSettingDtoValidator>();
             this.Bind<IValidator<UserDto>>().To<UserDtoValidator>();
@@ -54,30 +58,23 @@ namespace Kbalan.TouchType.Logic
             this.Bind<IValidator<StatisticDto>>().To<StatisticDtoValidator>();
             this.Bind<IValidator<TextSetDto>>().To<TextSetDtoValidator>();
             
-            this.Bind<ITextSetService>().ToMethod(ctx =>
-            {
-                var service = new TextSetService(ctx.Kernel.Get<TouchTypeGameContext>(), ctx.Kernel.Get<IMapper>());
-                return new ProxyGenerator().CreateInterfaceProxyWithTarget<ITextSetService>(service, new LoggerInterceptor(ctx.Kernel)
-                    , new TextSetValidationInterceptor(ctx.Kernel));
-            });
-            this.Bind<IUserService>().ToMethod(ctx =>
-            {
-                var service = new UserService(ctx.Kernel.Get<TouchTypeGameContext>(), ctx.Kernel.Get<IMapper>());
-                return new ProxyGenerator().CreateInterfaceProxyWithTarget<IUserService>(service, new LoggerInterceptor(ctx.Kernel)
-                    , new UserValidationInterceptor(ctx.Kernel));
-            });
-            this.Bind<ISettingService>().ToMethod(ctx =>
-            {
-                var service = new SettingService(ctx.Kernel.Get<TouchTypeGameContext>(), ctx.Kernel.Get<IMapper>());
-                return new ProxyGenerator().CreateInterfaceProxyWithTarget<ISettingService>(service, new LoggerInterceptor(ctx.Kernel)
-                    , new SettingValidationInterceptor(ctx.Kernel));
-            });
-            this.Bind<IStatisticService>().ToMethod(ctx =>
-            {
-                var service = new StatisticService(ctx.Kernel.Get<TouchTypeGameContext>(), ctx.Kernel.Get<IMapper>());
-                return new ProxyGenerator().CreateInterfaceProxyWithTarget<IStatisticService>(service, new LoggerInterceptor(ctx.Kernel)
-                    , new StatisticValidationInterceptor(ctx.Kernel));
-            });
+
+            var textSetBinding = Bind<ITextSetService>().To<TextSetService>();
+            textSetBinding.Intercept().With<TextSetValidationInterceptor>();
+            textSetBinding.Intercept().With<LoggerInterceptor>();
+
+            var userBinding = Bind<IUserService>().To<UserService>();
+            userBinding.Intercept().With<UserValidationInterceptor>();
+            userBinding.Intercept().With<LoggerInterceptor>();
+
+            var settingBinding = Bind<ISettingService>().To<SettingService>();
+            userBinding.Intercept().With<SettingValidationInterceptor>();
+            userBinding.Intercept().With<LoggerInterceptor>();
+
+            var statisticBinding = Bind<IStatisticService>().To<StatisticService>();
+            userBinding.Intercept().With<StatisticValidationInterceptor>();
+            userBinding.Intercept().With<LoggerInterceptor>();
+
         }
     }
 }

@@ -32,7 +32,7 @@ namespace GamePortal.Web.Api
                 defaults: new { id = RouteParameter.Optional }
             );
 
-            var kernel = new StandardKernel();
+            var kernel = new StandardKernel(new NinjectSettings { LoadExtensions = true });
 
             kernel.Load(new LogicDIModule(), new TTGDIModule(), new BattleshipLogicDIModule());
 

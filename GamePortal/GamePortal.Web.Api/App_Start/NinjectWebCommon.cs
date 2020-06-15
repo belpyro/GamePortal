@@ -14,6 +14,12 @@ namespace GamePortal.Web.Api.App_Start
     using Ninject.Web.Common;
     using Ninject.Web.Common.WebHost;
     using Serilog;
+    using System.Reflection;
+    using System.IO;
+    using Ninject.Extensions.Interception;
+    using System.Web.Http;
+    using Ninject.Web.WebApi;
+    using System.Web.Http.Dependencies;
     using Serilog.Sinks.MSSqlServer.Sinks.MSSqlServer.Options;
     using Serilog.Sinks.MSSqlServer;
 
@@ -46,7 +52,7 @@ namespace GamePortal.Web.Api.App_Start
         /// <returns>The created kernel.</returns>
         private static IKernel CreateKernel()
         {
-            var kernel = new StandardKernel();
+            var kernel = new StandardKernel(new NinjectSettings { LoadExtensions = true });
             try
             {
                 kernel.Bind<Func<IKernel>>().ToMethod(ctx => () => new Bootstrapper().Kernel);

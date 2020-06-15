@@ -1,6 +1,6 @@
 ﻿using FluentValidation;
 using FluentValidation.Results;
-using Castle.DynamicProxy;
+
 using CSharpFunctionalExtensions;
 using Kbalan.TouchType.Logic.Dto;
 using Ninject;
@@ -11,6 +11,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Kbalan.TouchType.Logic.Validators;
 using Serilog;
+using Ninject.Extensions.Interception;
 
 namespace Kbalan.TouchType.Logic.Aspects
 {
@@ -28,7 +29,8 @@ namespace Kbalan.TouchType.Logic.Aspects
         public void Intercept(IInvocation invocation)
         {
             //model null checking
-            var text = invocation.Arguments.OfType<TextSetDto>().FirstOrDefault();
+           
+            var text = invocation.Request.Arguments.OfType<TextSetDto>().FirstOrDefault();
             if(text == null)
             {
                 invocation.Proceed();
@@ -39,7 +41,7 @@ namespace Kbalan.TouchType.Logic.Aspects
             var validator = _kernel.Get<IValidator<TextSetDto>>();
 
             //Prevalidation
-            if(invocation.Method.Name.Equals("Add") || invocation.Method.Name.Equals("Update"))
+            if(invocation.Request.Method.Name.Equals("Add") || invocation.Request.Method.Name.Equals("Update"))
             {
                 var preValidationResult = validator.Validate(text as TextSetDto, ruleSet: "PreValidation");
                 if (!preValidationResult.IsValid)
@@ -50,7 +52,7 @@ namespace Kbalan.TouchType.Logic.Aspects
             }
 
             //PostValidation of validation for Add method 
-            if (invocation.Method.Name.Equals("Add"))
+            if (invocation.Request.Method.Name.Equals("Add"))
             {
                 var postValidationResult = validator.Validate(text as TextSetDto, ruleSet: "PostValidation");
                 if (!postValidationResult.IsValid)
@@ -61,7 +63,7 @@ namespace Kbalan.TouchType.Logic.Aspects
             }
 
             //PostValidation validation for Update method 
-            if (invocation.Method.Name.Equals("Update"))
+            if (invocation.Request.Method.Name.Equals("Update"))
             {
                 var postValidationResult = validator.Validate(text as TextSetDto, ruleSet: "PostValidationWithId");                 
                 if (!postValidationResult.IsValid)
