@@ -20,19 +20,17 @@ namespace AliaksNad.Battleship.Logic.Services
 {
     public class UserService : IUserService
     {
-        private readonly UsersContexts _context;
+        private readonly UsersContext _context;
         private readonly IMapper _mapper;
         private readonly ILogger _logger;
 
         private static IEnumerable<UserDto> _users = UserFaker.Generate();
 
-        public UserService([NotNull]UsersContexts context, 
-                           [NotNull]IMapper mapper, 
-                           [NotNull]ILogger logger)
+        public UserService([NotNull]UsersContext context, 
+                           [NotNull]IMapper mapper)
         {
             this._context = context;
             this._mapper = mapper;
-            this._logger = logger;
         }
 
         /// <summary>
