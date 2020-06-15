@@ -22,12 +22,12 @@ namespace GamePortal.Web.Api
 
         public IValidator<T> GetValidator<T>()
         {
-            return kernel.GetService(typeof(T)) as IValidator<T>;
+            return kernel.TryGet(typeof(T)) as IValidator<T>;
         }
 
         public IValidator GetValidator(Type type)
         {
-            return kernel.GetService(type) as IValidator;
+            return kernel.TryGet(type) as IValidator;
         }
     }
 }
