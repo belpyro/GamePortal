@@ -41,11 +41,6 @@ namespace AliaksNad.Battleship.Logic
             this.Bind<IValidator<UserDto>>().To<UserDtoValidator>();
 
             this.Bind<IUserService>().To<UserService>().Intercept().With<ValidationInterceptor>();
-            //    .ToMethod(ctx =>
-            //{
-            //    var service = new UserService(ctx.Kernel.Get<UsersContexts>(), ctx.Kernel.Get<IMapper>(), ctx.Kernel.Get<ILogger>());
-            //    return new ProxyGenerator().CreateInterfaceProxyWithTarget<IUserService>(service, new ValidationInterceptor(ctx.Kernel));
-            //});
             this.Bind<IGameService>().To<GameService>();
         }
     }
