@@ -1,13 +1,11 @@
-﻿using AliaksNad.Battleship.Logic.Models;
-using Castle.DynamicProxy;
+﻿
+
+using AliaksNad.Battleship.Logic.Models;
 using CSharpFunctionalExtensions;
 using FluentValidation;
 using Ninject;
-using System;
-using System.Collections.Generic;
+using Ninject.Extensions.Interception;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace AliaksNad.Battleship.Logic.Aspects
 {
@@ -22,7 +20,7 @@ namespace AliaksNad.Battleship.Logic.Aspects
 
         public void Intercept(IInvocation invocation)
         {
-            var arg = invocation.Arguments.OfType<UserDto>().FirstOrDefault();
+            var arg = invocation.Request.Arguments.OfType<UserDto>().FirstOrDefault();
             if (arg == null)
             {
                 invocation.Proceed();

@@ -10,6 +10,7 @@ using Castle.DynamicProxy;
 using Ninject;
 using AliaksNad.Battleship.Logic.Aspects;
 using Serilog;
+using Ninject.Extensions.Interception.Infrastructure.Language;
 
 namespace AliaksNad.Battleship.Logic
 {
@@ -21,16 +22,28 @@ namespace AliaksNad.Battleship.Logic
             var mapper = configuration.CreateMapper();
 
             this.Bind<IMapper>().ToConstant(mapper)
-                .When(r => r.ParentContext != null && r.ParentContext.Plan.Type.Namespace.StartsWith("AliaksNad.Battleship"));
+                .When(r =>
+                {
+                    return r.ParentContext != null && r.ParentContext.Plan.Type.Namespace.StartsWith("AliaksNad.Battleship");
+                });
+
+            var logger = new LoggerConfiguration().CreateLogger();
+
+            this.Bind<ILogger>().ToConstant(logger)
+                .When(r =>
+                {
+                    return r.ParentContext != null && r.ParentContext.Plan.Type.Namespace.StartsWith("AliaksNad.Battleship");
+                });
 
             this.Bind<UsersContexts>().ToSelf();
             this.Bind<IValidator<UserDto>>().To<UserDtoValidator>();
 
-            this.Bind<IUserService>().ToMethod(ctx =>
-            {
-                var service = new UserService(ctx.Kernel.Get<UsersContexts>(), ctx.Kernel.Get<IMapper>(), ctx.Kernel.Get<ILogger>());
-                return new ProxyGenerator().CreateInterfaceProxyWithTarget<IUserService>(service, new ValidationInterceptor(ctx.Kernel));
-            });
+            this.Bind<IUserService>().To<UserService>().Intercept().With<ValidationInterceptor>();
+            //    .ToMethod(ctx =>
+            //{
+            //    var service = new UserService(ctx.Kernel.Get<UsersContexts>(), ctx.Kernel.Get<IMapper>(), ctx.Kernel.Get<ILogger>());
+            //    return new ProxyGenerator().CreateInterfaceProxyWithTarget<IUserService>(service, new ValidationInterceptor(ctx.Kernel));
+            //});
             this.Bind<IGameService>().To<GameService>();
         }
     }

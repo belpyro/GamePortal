@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Web;
+using System.Web.Http;
 using System.Web.Routing;
 
 namespace GamePortal.Web.Api
@@ -10,8 +11,8 @@ namespace GamePortal.Web.Api
         {
             // Code that runs on application startup
             System.Web.Mvc.AreaRegistration.RegisterAllAreas();
-            System.Web.Http.GlobalConfiguration.Configure(WebApiConfig.Register);
-            RouteConfig.RegisterRoutes(RouteTable.Routes);            
+            GlobalConfiguration.Configure(WebApiConfig.Register);
+            RouteConfig.RegisterRoutes(RouteTable.Routes);
         }
     }
 }

@@ -17,6 +17,10 @@ namespace GamePortal.Web.Api.App_Start
     using Serilog;
     using System.Reflection;
     using System.IO;
+    using Ninject.Extensions.Interception;
+    using System.Web.Http;
+    using Ninject.Web.WebApi;
+    using System.Web.Http.Dependencies;
 
     public static class NinjectWebCommon
     {
@@ -46,7 +50,7 @@ namespace GamePortal.Web.Api.App_Start
         /// <returns>The created kernel.</returns>
         private static IKernel CreateKernel()
         {
-            var kernel = new StandardKernel();
+            var kernel = new StandardKernel(new NinjectSettings { LoadExtensions = true });
             try
             {
                 kernel.Bind<Func<IKernel>>().ToMethod(ctx => () => new Bootstrapper().Kernel);
