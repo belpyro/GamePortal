@@ -10,36 +10,51 @@ namespace GamePortal.Web.Api.Controllers.Battleship
     [RoutePrefix("api/battleship/game")]
     public class BattleshipGameController : ApiController
     {
-        private readonly GameService _gameService;
+        private readonly IGameService _gameService;
 
-        public BattleshipGameController(GameService gameService)
+        public BattleshipGameController(IGameService gameService)
         {
             this._gameService = gameService;
         }
 
         /// <summary>
-        /// Checking hit by enemy coordinates on logic layer.
+        /// Set your own fleet coordinates on logic layer.
         /// </summary>
-        /// <param name="fleetCoordinates">Enemy coordinates.</param>
+        /// <param name="BattleAreaDtoCoordinates">Own fleet coordinates.</param>
         /// <returns></returns>
         [HttpPost]
-        [Route("coordinates")]
-        public IHttpActionResult CheckHit([FromUri]Coordinates fleetCoordinates)
+        [Route("fleets")]
+        public IHttpActionResult SetFleet([FromBody]BattleAreaDto BattleAreaDtoCoordinates)
         {
-            return Ok(_gameService.CheckHit(fleetCoordinates));
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+
+            var result = _gameService.SetFleet(BattleAreaDtoCoordinates);
+            return result.IsSuccess ? Created($"api/battleship/game/fleets{result.Value.BattleAreaId}", result.Value) : (IHttpActionResult)BadRequest(result.Error);
         }
 
         /// <summary>
-        /// Set your own fleet coordinates on logic layer.
+        /// Checking hit by enemy coordinates on logic layer.
         /// </summary>
-        /// <param name="fleetCoordinates">Own fleet coordinates.</param>
+        /// <param name="coordinatesOfHit">Enemy coordinates.</param>
         /// <returns></returns>
         [HttpPost]
-        [Route("")]
-        public IHttpActionResult SetFleet([FromBody]IEnumerable<Coordinates> fleetCoordinates)
+        [Route("coordinates")]
+        public IHttpActionResult CheckHit([FromBody]CoordinatesDto coordinatesOfHit)
         {
-            _gameService.SetFleet(fleetCoordinates);
-            return StatusCode(HttpStatusCode.NoContent);
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+
+            var result =_gameService.CheckHit(coordinatesOfHit);
+            if (result.IsFailure)
+            {
+                return StatusCode(HttpStatusCode.InternalServerError);
+            }
+            return result.Value.HasValue ? Ok(result.Value.Value) : (IHttpActionResult)NotFound();
         }
     }
 }

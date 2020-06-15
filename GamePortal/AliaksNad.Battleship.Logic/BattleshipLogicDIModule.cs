@@ -17,21 +17,38 @@ namespace AliaksNad.Battleship.Logic
     {
         public override void Load()
         {
-            var configuration = new MapperConfiguration(cfg => cfg.AddProfile(typeof(UserProfile)));
+            var configuration = new MapperConfiguration(cfg => cfg.AddProfiles(typeof(UserProfile)));
             var mapper = configuration.CreateMapper();
 
             this.Bind<IMapper>().ToConstant(mapper)
                 .When(r => r.ParentContext != null && r.ParentContext.Plan.Type.Namespace.StartsWith("AliaksNad.Battleship"));
 
-            this.Bind<UsersContexts>().ToSelf();
+            this.Bind<UsersContext>().ToSelf();
+            this.Bind<BattleAreaContext>().ToSelf();
+
             this.Bind<IValidator<UserDto>>().To<UserDtoValidator>();
+
+            //this.Bind<IUserService>().ToMethod(ctx =>
+            //{
+            //    var service = new UserService(ctx.Kernel.Get<UsersContext>(), ctx.Kernel.Get<IMapper>());
+            //    return new ProxyGenerator().CreateInterfaceProxyWithTarget<IUserService>(service, new ValidationInterceptor(ctx.Kernel));
+            //});
+
+            //this.Bind<IUserService>().To<UserService>();
+            this.Bind<IGameService>().To<GameService>();
+
 
             this.Bind<IUserService>().ToMethod(ctx =>
             {
-                var service = new UserService(ctx.Kernel.Get<UsersContexts>(), ctx.Kernel.Get<IMapper>(), ctx.Kernel.Get<ILogger>());
+                var service = new UserService(ctx.Kernel.Get<UsersContext>(), ctx.Kernel.Get<IMapper>());
                 return new ProxyGenerator().CreateInterfaceProxyWithTarget<IUserService>(service, new ValidationInterceptor(ctx.Kernel));
             });
-            this.Bind<IGameService>().To<GameService>();
+
+            //this.Bind<IGameService>().ToMethod(ctx =>
+            //{
+            //    var service = new GameService(ctx.Kernel.Get<FleetContext>(), ctx.Kernel.Get<IMapper>());
+            //    return new ProxyGenerator().CreateInterfaceProxyWithTarget<IGameService>(service, new ValidationInterceptor(ctx.Kernel));
+            //});
         }
     }
 }
