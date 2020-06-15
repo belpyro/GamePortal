@@ -1,6 +1,6 @@
-[assembly: WebActivatorEx.PreApplicationStartMethod(typeof(GamePortal.Web.Api.App_Start.NinjectWebCommon), "Start")]
+/*[assembly: WebActivatorEx.PreApplicationStartMethod(typeof(GamePortal.Web.Api.App_Start.NinjectWebCommon), "Start")]
 [assembly: WebActivatorEx.ApplicationShutdownMethodAttribute(typeof(GamePortal.Web.Api.App_Start.NinjectWebCommon), "Stop")]
-
+*/
 namespace GamePortal.Web.Api.App_Start
 {
     using System;
