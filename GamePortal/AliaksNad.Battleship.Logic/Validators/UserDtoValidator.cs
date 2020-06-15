@@ -11,9 +11,9 @@ namespace AliaksNad.Battleship.Logic.Validators
 {
     class UserDtoValidator : AbstractValidator<UserDto>
     {
-        private readonly UsersContexts _contexts;
+        private readonly UsersContext _contexts;
 
-        public UserDtoValidator(UsersContexts contexts)
+        public UserDtoValidator(UsersContext contexts)
         {
             this._contexts = contexts;
 
@@ -26,7 +26,7 @@ namespace AliaksNad.Battleship.Logic.Validators
                 RuleFor(x => x.Password).NotNull().Length(6, 15)
                     .WithMessage("Field Password is invalid");
             });
-            
+
             RuleSet("PostValidation", () =>
             {
                 RuleFor(x => x.Name).Must(CheckDuplicate);

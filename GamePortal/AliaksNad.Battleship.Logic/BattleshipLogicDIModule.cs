@@ -18,7 +18,7 @@ namespace AliaksNad.Battleship.Logic
     {
         public override void Load()
         {
-            var configuration = new MapperConfiguration(cfg => cfg.AddProfile(typeof(UserProfile)));
+            var configuration = new MapperConfiguration(cfg => cfg.AddProfiles(typeof(UserProfile)));
             var mapper = configuration.CreateMapper();
 
             this.Bind<IMapper>().ToConstant(mapper)
@@ -35,7 +35,9 @@ namespace AliaksNad.Battleship.Logic
                     return r.ParentContext != null && r.ParentContext.Plan.Type.Namespace.StartsWith("AliaksNad.Battleship");
                 });
 
-            this.Bind<UsersContexts>().ToSelf();
+            this.Bind<UsersContext>().ToSelf();
+            this.Bind<BattleAreaContext>().ToSelf();
+
             this.Bind<IValidator<UserDto>>().To<UserDtoValidator>();
 
             this.Bind<IUserService>().To<UserService>().Intercept().With<ValidationInterceptor>();

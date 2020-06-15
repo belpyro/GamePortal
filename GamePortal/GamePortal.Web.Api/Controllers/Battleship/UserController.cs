@@ -56,18 +56,18 @@ namespace GamePortal.Web.Api.Controllers.Battleship
         /// <returns></returns>
         [HttpPost]
         [Route("")]
-        public IHttpActionResult Add(/*[CustomizeValidator(RuleSet = "PreValidation")]*/[FromBody]UserDto model) // TODO: Check Attribute for validation
+        public IHttpActionResult Add([CustomizeValidator(RuleSet = "PreValidation")][FromBody]UserDto model) // TODO: Check Attribute for validation
         {
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
             }
 
-            var preValidationResult = _userDtoValidator.Validate(model, ruleSet: "PreValidation");
-            if (!preValidationResult.IsValid)
-            {
-                return BadRequest(preValidationResult.Errors.Select(x => x.ErrorMessage).First());
-            }
+            //var preValidationResult = _userDtoValidator.Validate(model, ruleSet: "PreValidation");
+            //if (!preValidationResult.IsValid)
+            //{
+            //    return BadRequest(preValidationResult.Errors.Select(x => x.ErrorMessage).First());
+            //}
 
             var result = _userService.Add(model);
             return result.IsSuccess ? Created($"/api/battleship/users/{result.Value.Id}", result.Value) : (IHttpActionResult)BadRequest(result.Error) ;

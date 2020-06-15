@@ -1,22 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
+using System.Data.SqlTypes;
 
 namespace AliaksNad.Battleship.Data.Models
 {
-    public class Entity
-    {
-        public int Id { get; set; }
-
-        public int? CreatorId { get; set; }
-
-        public DateTime CreatedOn { get; set; } = DateTime.UtcNow;
-
-        public int? UpdatedBy { get; set; }
-
-        public DateTime? UpdatedOn { get; set; }
-    }
-
-    public class UserDb : Entity
+    public class UserDb : UserEntity
     {
         public string Name { get; set; }
 
@@ -25,14 +12,5 @@ namespace AliaksNad.Battleship.Data.Models
         public string Password { get; set; }
 
         public ICollection<StatisticDb> Statistics { get; set; }
-    }
-
-    public class StatisticDb
-    {
-        public int Id { get; set; }
-
-        public int Score { get; set; }
-
-        public DateTime Date { get; set; } = DateTime.UtcNow;
     }
 }

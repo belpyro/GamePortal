@@ -54,13 +54,21 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Contexts\BattleAreaContext.cs" />
+    <Compile Include="Contexts\BattleAreaDbConfiguration.cs" />
     <Compile Include="Contexts\UserDbConfiguration.cs" />
-    <Compile Include="Contexts\UsersContexts.cs" />
+    <Compile Include="Contexts\UsersContext.cs" />
     <Compile Include="Migrations\202005261930481_InitialCreate.cs" />
     <Compile Include="Migrations\202005261930481_InitialCreate.designer.cs">
       <DependentUpon>202005261930481_InitialCreate.cs</DependentUpon>
     </Compile>
     <Compile Include="Migrations\Configuration.cs" />
+    <Compile Include="Models\CoordinatesDb.cs" />
+    <Compile Include="Models\BattleAreaDb.cs" />
+    <Compile Include="Models\BattleAreaEntity.cs" />
+    <Compile Include="Models\ShipDb.cs" />
+    <Compile Include="Models\UserEntity.cs" />
+    <Compile Include="Models\StatisticDb.cs" />
     <Compile Include="Models\UserDb.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
