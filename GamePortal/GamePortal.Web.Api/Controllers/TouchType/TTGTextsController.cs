@@ -19,12 +19,10 @@ namespace GamePortal.Web.Api.Controllers.TouchType
     public class TTGTextsController : ApiController
     {
         private readonly ITextSetService _textSetService;
-        private readonly IValidator<TextSetDto> _textSetValidator;
 
-        public TTGTextsController([NotNull]ITextSetService textSetService, [NotNull]IValidator<TextSetDto> TextSetValidator)
+        public TTGTextsController([NotNull]ITextSetService textSetService)
         {
             this._textSetService = textSetService;
-            _textSetValidator = TextSetValidator;
         }
 
         //Get All TextSets
@@ -33,7 +31,7 @@ namespace GamePortal.Web.Api.Controllers.TouchType
         public IHttpActionResult GetAll()
         {
             var result = _textSetService.GetAll();
-            return result.IsSuccess ? Ok(result.Value) : (IHttpActionResult)BadRequest(result.Error);
+            return result.IsSuccess ? Ok(result.Value) : (IHttpActionResult)StatusCode(HttpStatusCode.InternalServerError);
         }
 
         //Get TextSet by Id
@@ -47,7 +45,9 @@ namespace GamePortal.Web.Api.Controllers.TouchType
             }
 
             var result = _textSetService.GetById(id);
-            return result.IsSuccess ? Ok(result.Value) : (IHttpActionResult)BadRequest(result.Error);
+            if (result.IsFailure)
+                return (IHttpActionResult)StatusCode(HttpStatusCode.InternalServerError);
+            return result.Value.HasNoValue ? (IHttpActionResult)NotFound() :  Ok(result.Value.Value);
         }
 
         ///Get Random TextSet by Level of the text
@@ -73,12 +73,6 @@ namespace GamePortal.Web.Api.Controllers.TouchType
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
 
-            var preValidResult = _textSetValidator.Validate(model, ruleSet: "PreValidation");
-            if (!preValidResult.IsValid)
-            {
-                return BadRequest(preValidResult.Errors.Select(x => x.ErrorMessage).First());
-            }
-
             var result = _textSetService.Add(model);
             return result.IsSuccess ? Created($"/textsets/{result.Value.Id}", result.Value) : (IHttpActionResult)BadRequest(result.Error); 
         }
@@ -90,12 +84,6 @@ namespace GamePortal.Web.Api.Controllers.TouchType
         {
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
-
-            var preValidResult = _textSetValidator.Validate(model, ruleSet: "PreValidation");
-            if (!preValidResult.IsValid)
-            {
-                return BadRequest(preValidResult.Errors.Select(x => x.ErrorMessage).First());
-            }
 
             var result = _textSetService.Update(model);
             return result.IsSuccess ? Ok($"Text set with id {model.Id} updated succesfully!") : (IHttpActionResult)BadRequest(result.Error);

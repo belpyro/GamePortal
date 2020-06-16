@@ -7,6 +7,8 @@ using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Kbalan.TouchType.Data.Migrations;
+using Serilog;
 
 namespace Kbalan.TouchType.Data.Contexts
 {
@@ -17,6 +19,7 @@ namespace Kbalan.TouchType.Data.Contexts
     {
         public TouchTypeGameContext() : base ("TouchTypeGameContext")
         {
+            Database.SetInitializer<TouchTypeGameContext>(new MigrateDatabaseToLatestVersion<TouchTypeGameContext, Configuration>());
             Database.Log = msg => Debug.WriteLine(msg);
         }
 

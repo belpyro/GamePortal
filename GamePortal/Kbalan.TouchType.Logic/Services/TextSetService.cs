@@ -6,9 +6,11 @@ using JetBrains.Annotations;
 using Kbalan.TouchType.Data.Contexts;
 using Kbalan.TouchType.Data.Models;
 using Kbalan.TouchType.Logic.Dto;
+using Serilog;
 using System;
 using System.Collections.Generic;
 using System.Data.Entity.Infrastructure;
+using System.Data.SqlClient;
 using System.Linq;
 using System.Security.Cryptography;
 using System.Security.Cryptography.X509Certificates;
@@ -22,13 +24,11 @@ namespace Kbalan.TouchType.Logic.Services
 
         private readonly TouchTypeGameContext _gameContext;
         private readonly IMapper _mapper;
-        private readonly IValidator<TextSetDto> _textSetValidator;
 
-        public TextSetService([NotNull] TouchTypeGameContext gameContext, [NotNull]IMapper mapper, [NotNull]IValidator<TextSetDto> TextSetValidator)
+        public TextSetService([NotNull] TouchTypeGameContext gameContext, [NotNull]IMapper mapper)
         {
             this._gameContext = gameContext;
             this._mapper = mapper;
-            _textSetValidator = TextSetValidator;
         }
 
         /// <summary>
@@ -42,7 +42,7 @@ namespace Kbalan.TouchType.Logic.Services
                 var getAllResult = _gameContext.TextSets.ProjectToArray<TextSetDto>(_mapper.ConfigurationProvider);
                 return Result.Success<IEnumerable<TextSetDto>>(getAllResult);
             }
-            catch (DbUpdateException ex)
+            catch (SqlException ex)
             {
                 return Result.Failure<IEnumerable<TextSetDto>>(ex.Message);
             }
@@ -74,22 +74,19 @@ namespace Kbalan.TouchType.Logic.Services
         /// <summary>
         /// GetTextSet by Id
         /// </summary>
-        public Result<TextSetDto> GetById(int id)
+        public Result<Maybe<TextSetDto>> GetById(int id)
         {
 
             try
             {
-                var getResultById = _gameContext.TextSets.Where(x => x.Id == id)
+                Maybe<TextSetDto> getResultById = _gameContext.TextSets.Where(x => x.Id == id)
                     .ProjectToSingleOrDefault<TextSetDto>(_mapper.ConfigurationProvider);
-
-                if(getResultById != null)
-                return Result.Success<TextSetDto>(getResultById);
-
-                return Result.Failure<TextSetDto>("No text set with such id exist");
+                return Result.Success(getResultById);
+               
             }
-            catch (DbUpdateException ex)
+            catch (SqlException ex)
             {
-                return Result.Failure<TextSetDto>(ex.Message);
+                return Result.Failure<Maybe<TextSetDto>>(ex.Message);
             }
         }
 
@@ -102,11 +99,14 @@ namespace Kbalan.TouchType.Logic.Services
             {
                 var texts = _gameContext.TextSets.Where(x => x.LevelOfText == (LevelOfText)level).ToArray();
                 if (texts.Length == 0)
+                {
                     return Result.Failure<TextSetDto>($"No text set with level {level} exists");
-                var text = texts.ElementAt(new Random().Next(0, texts.Length));
-                return Result.Success<TextSetDto>(_mapper.Map<TextSetDto>(text));
+                }
+
+                var text = _mapper.Map<TextSetDto>(texts.ElementAt(new Random().Next(0, texts.Length)));
+                return Result.Success(text);
             }
-            catch (DbUpdateException ex)
+            catch (SqlException ex)
             {
                 return Result.Failure<TextSetDto>(ex.Message);
             }   
@@ -130,8 +130,7 @@ namespace Kbalan.TouchType.Logic.Services
                 entry.Property(x => x.TextForTyping).IsModified = true;
 
                 _gameContext.SaveChanges();
-
-                return Result.Success();
+                return Result.Success($"Text set {dbModel.Name} with id {dbModel.Id} updated succsesfully");
             }
             catch (DbUpdateException ex)
             {
@@ -152,11 +151,13 @@ namespace Kbalan.TouchType.Logic.Services
                 var dbModel = _gameContext.TextSets.Find(id);
 
                 if (dbModel == null)
+                {
                     return Result.Failure($"No text set with id {id} exist");
-
+                }
+                    
                 _gameContext.TextSets.Remove(dbModel);
                 _gameContext.SaveChanges();
-                return Result.Success();
+                return Result.Success($"Text set {dbModel.Name} with id {dbModel.Id} deleted succsesfully");
             }
             catch (DbUpdateException ex)
             {

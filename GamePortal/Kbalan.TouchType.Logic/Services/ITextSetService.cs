@@ -24,7 +24,7 @@ namespace Kbalan.TouchType.Logic.Services
         /// </summary>
         /// <param name="Id">text set ID</param>
         /// <returns>Single text set from TextSetDto or null</returns>
-        Result<TextSetDto> GetById(int Id);
+        Result<Maybe<TextSetDto>> GetById(int Id);
 
         /// <summary>
         /// Returns text set from TextSetDto collection by it's id.

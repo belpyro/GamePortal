@@ -18,12 +18,11 @@ namespace GamePortal.Web.Api.Controllers.TouchType
     public class TTGSettingsController : ApiController
     {
         private readonly ISettingService _settingService;
-        private readonly IValidator<SettingDto> _settingValidator;
 
-        public TTGSettingsController([NotNull] ISettingService settingService, [NotNull]IValidator<SettingDto> SettingValidator)
+
+        public TTGSettingsController([NotNull] ISettingService settingService) 
         {
             this._settingService = settingService;
-            _settingValidator = SettingValidator;
         }
 
         //Get All Settings with user
@@ -32,7 +31,7 @@ namespace GamePortal.Web.Api.Controllers.TouchType
         public IHttpActionResult GetAll()
         {
             var result = _settingService.GetAll();
-            return result.IsSuccess ? Ok(result.Value) : (IHttpActionResult)BadRequest(result.Error);
+            return result.IsSuccess ? Ok(result.Value) : (IHttpActionResult)StatusCode(HttpStatusCode.InternalServerError);
         }
 
         //Get single Setting Info by User Id
@@ -45,7 +44,9 @@ namespace GamePortal.Web.Api.Controllers.TouchType
                 return BadRequest("ID must be greater than 0");
             }
             var result = _settingService.GetById(id);
-            return result.IsSuccess ? Ok(result.Value) : (IHttpActionResult)BadRequest(result.Error);
+            if (result.IsFailure)
+                return (IHttpActionResult)StatusCode(HttpStatusCode.InternalServerError);
+            return result.Value.HasNoValue ? (IHttpActionResult)NotFound() : Ok(result.Value.Value);
         }
 
         //Update single setting by User Id
@@ -53,12 +54,6 @@ namespace GamePortal.Web.Api.Controllers.TouchType
         [Route("")]
         public IHttpActionResult Update(int id ,[FromBody]SettingDto model)
         {
-            var preValidResult = _settingValidator.Validate(model, ruleSet: "PreValidation");
-            if (!preValidResult.IsValid)
-            {
-                return BadRequest(preValidResult.Errors.Select(x => x.ErrorMessage).First());
-            }
-
             var result = _settingService.Update(id, model);
             return result.IsSuccess ? Ok($"Settings of user with id {id} updated succesfully!") : (IHttpActionResult)BadRequest(result.Error);
         }

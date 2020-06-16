@@ -1,6 +1,6 @@
-[assembly: WebActivatorEx.PreApplicationStartMethod(typeof(GamePortal.Web.Api.App_Start.NinjectWebCommon), "Start")]
+/*[assembly: WebActivatorEx.PreApplicationStartMethod(typeof(GamePortal.Web.Api.App_Start.NinjectWebCommon), "Start")]
 [assembly: WebActivatorEx.ApplicationShutdownMethodAttribute(typeof(GamePortal.Web.Api.App_Start.NinjectWebCommon), "Stop")]
-
+*/
 namespace GamePortal.Web.Api.App_Start
 {
     using System;
@@ -10,7 +10,6 @@ namespace GamePortal.Web.Api.App_Start
     using AliaksNad.Battleship.Logic;
     using Kbalan.TouchType.Logic;
     using Microsoft.Web.Infrastructure.DynamicModuleHelper;
-
     using Ninject;
     using Ninject.Web.Common;
     using Ninject.Web.Common.WebHost;
@@ -21,6 +20,9 @@ namespace GamePortal.Web.Api.App_Start
     using System.Web.Http;
     using Ninject.Web.WebApi;
     using System.Web.Http.Dependencies;
+    using Serilog.Sinks.MSSqlServer.Sinks.MSSqlServer.Options;
+    using Serilog.Sinks.MSSqlServer;
+
 
     public static class NinjectWebCommon
     {
@@ -56,6 +58,7 @@ namespace GamePortal.Web.Api.App_Start
                 kernel.Bind<Func<IKernel>>().ToMethod(ctx => () => new Bootstrapper().Kernel);
                 kernel.Bind<IHttpModule>().To<HttpApplicationInitializationHttpModule>();
                 RegisterServices(kernel);
+
                 return kernel;
             }
             catch
@@ -71,6 +74,7 @@ namespace GamePortal.Web.Api.App_Start
         /// <param name="kernel">The kernel.</param>
         private static void RegisterServices(IKernel kernel)
         {
+
             kernel.Load(new LogicDIModule(), new TTGDIModule(), new BattleshipLogicDIModule());
         }
     }
