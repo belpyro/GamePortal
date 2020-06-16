@@ -9,7 +9,7 @@ namespace AliaksNad.Battleship.Data.Contexts
         public BattleAreaContext()
         {
             //Database.SetInitializer<UsersContexts>(new MigrateDatabaseToLatestVersion<UsersContexts, Configuration>());
-            Database.SetInitializer<BattleAreaContext>(new DropCreateDatabaseAlways<BattleAreaContext>());
+            Database.SetInitializer<BattleAreaContext>(new CreateDatabaseIfNotExists<BattleAreaContext>());
             //Database.Log = msg => logger.Warning(msg);
         }
 

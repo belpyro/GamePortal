@@ -58,22 +58,31 @@ namespace AliaksNad.Battleship.Logic.Services
         {
             try
             {
-                var dbShipsModel = _battleAreaContext.Ships.Include(c => c.Ship).SingleOrDefault(x => x.BattleAreaId == coordinatesOfHit.BattleAreaId);
-                var dbCoordinatesOfHit = dbShipsModel.Ship.SingleOrDefault(x => x.CoordinateX == coordinatesOfHit.CoordinateX && x.CoordinateY == coordinatesOfHit.CoordinateY);
-                
-                if (dbCoordinatesOfHit != null)
-                {
-                    var dbCoordinatesModel = _battleAreaContext.Coordinates.Where(x => x.BattleAreaId == coordinatesOfHit.BattleAreaId);
+                var fleetModel = _mapper.Map<IEnumerable<CoordinatesDto>>(_battleAreaContext.Coordinates
+                    .AsNoTracking().Where(x => x.BattleAreaId == coordinatesOfHit.BattleAreaId));
 
-                    dbCoordinatesOfHit.IsDamaged = true;
-                    CheckShip(dbCoordinatesModel, dbCoordinatesOfHit.ShipsId);
-                    
-                    _battleAreaContext.SaveChanges();
+                var attackedCell = fleetModel.SingleOrDefault(x => x.CoordinateX == coordinatesOfHit.CoordinateX 
+                    && x.CoordinateY == coordinatesOfHit.CoordinateY);
+
+                if (attackedCell != null)
+                {
+                    attackedCell.IsDamaged = true;
+
+                    CheckShip(fleetModel, attackedCell);
+
+                    var dbModel = _mapper.Map<CoordinatesDb>(attackedCell);
+                    _battleAreaContext.Coordinates.Attach(dbModel);
+                    var entry = _battleAreaContext.Entry(dbModel);
+                    entry.State = EntityState.Modified;
+                }
+                else
+                {
+                    _battleAreaContext.Coordinates.Add(_mapper.Map<CoordinatesDb>(coordinatesOfHit)); // TODO Check exeption
                 }
 
-                _battleAreaContext.Coordinates.Add(_mapper.Map<CoordinatesDb>(coordinatesOfHit));
+                _battleAreaContext.SaveChanges();
 
-                Maybe<CoordinatesDto> result = _mapper.Map<CoordinatesDto>(dbCoordinatesOfHit);
+                Maybe<CoordinatesDto> result = _mapper.Map<CoordinatesDto>(attackedCell);
                 return Result.Success(result);
             }
             catch (DbUpdateException ex)
@@ -82,14 +91,21 @@ namespace AliaksNad.Battleship.Logic.Services
             }
         }
 
-        private void CheckShip(IEnumerable<CoordinatesDb> coordinates, int attackedShipId)
+        private void CheckShip(IEnumerable<CoordinatesDto> fleetModel, CoordinatesDto attackedCell)
         {
-            var attackedShip = coordinates.Where(x => x.ShipsId == attackedShipId); // TODO check implementation of variables
-            var alifeCells = attackedShip.FirstOrDefault(x => x.IsDamaged == false);
+            //var dbCoordinatesModel = _battleAreaContext.Coordinates.Where(x => x.BattleAreaId == attackedShipId.BattleAreaId);
+
+            var alifeCells =
+                from ships in fleetModel
+                where ships.ShipsId == attackedCell.ShipsId
+                select ships into ship
+                where ship.IsDamaged == true
+                select ship into fileCells
+                select fileCells;
 
             if (alifeCells != null)
             {
-                SetEmptyCells(attackedShip);
+
             }
         }
 
