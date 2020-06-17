@@ -50,6 +50,41 @@ namespace AliaksNad.Battleship.Logic.Services
         }
 
         /// <summary>
+        /// Get all battle area from data.
+        /// </summary>
+        /// <returns></returns>
+        public Result<IEnumerable<BattleAreaDto>> GetAll()
+        {
+            try
+            {
+                var models = _battleAreaContext.BattleAreas.AsNoTracking().ToArray();
+                return Result.Success(_mapper.Map<IEnumerable<BattleAreaDto>>(models));
+            }
+            catch (SqlException ex)
+            {
+                return Result.Failure<IEnumerable<BattleAreaDto>>(ex.Message);
+            }
+        }
+
+        /// <summary>
+        /// Get battle area from data by id.
+        /// </summary>
+        /// <param name="id">battle area id.</param>
+        /// <returns></returns>
+        public Result<Maybe<BattleAreaDto>> GetById(int id)
+        {
+            try
+            {
+                Maybe<BattleAreaDto> battleArea = _battleAreaContext.BattleAreas.Where(x => x.BattleAreaId == id).ProjectToSingleOrDefault<BattleAreaDto>(_mapper.ConfigurationProvider);
+                return Result.Success(battleArea);
+            }
+            catch (SqlException ex)
+            {
+                return Result.Failure<Maybe<BattleAreaDto>>(ex.Message);
+            }
+        }
+
+        /// <summary>
         /// Checking hit by enemy coordinates on logic layer.
         /// </summary>
         /// <param name="coordinatesOfHit">Enemy coordinates.</param>
