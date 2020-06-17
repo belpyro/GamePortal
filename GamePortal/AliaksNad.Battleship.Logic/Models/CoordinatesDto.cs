@@ -12,6 +12,6 @@
 
         public int BattleAreaId { get; set; }
 
-        public int ShipsId { get; set; }
+        public int? ShipsId { get; set; }
     }
 }

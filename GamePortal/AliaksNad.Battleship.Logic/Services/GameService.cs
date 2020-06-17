@@ -77,7 +77,7 @@ namespace AliaksNad.Battleship.Logic.Services
                 }
                 else
                 {
-                    _battleAreaContext.Coordinates.Add(_mapper.Map<CoordinatesDb>(coordinatesOfHit)); // TODO Check exeption
+                    _battleAreaContext.Coordinates.Add(_mapper.Map<CoordinatesDb>(coordinatesOfHit));
                 }
 
                 _battleAreaContext.SaveChanges();
