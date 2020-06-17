@@ -93,23 +93,16 @@ namespace AliaksNad.Battleship.Logic.Services
 
         private void CheckShip(IEnumerable<CoordinatesDto> fleetModel, CoordinatesDto attackedCell)
         {
-            //var dbCoordinatesModel = _battleAreaContext.Coordinates.Where(x => x.BattleAreaId == attackedShipId.BattleAreaId);
+            var shipCells = fleetModel.Where(x => x.ShipsId == attackedCell.ShipsId).ToArray();
+            var alifeCells = shipCells.FirstOrDefault(x => x.IsDamaged == false);
 
-            var alifeCells =
-                from ships in fleetModel
-                where ships.ShipsId == attackedCell.ShipsId
-                select ships into ship
-                where ship.IsDamaged == true
-                select ship into fileCells
-                select fileCells;
-
-            if (alifeCells != null)
+            if (alifeCells == null)
             {
-
+                SetEmptyCells(shipCells);
             }
         }
 
-        private void SetEmptyCells(IEnumerable<CoordinatesDb> attackedShip) // TODO Logic for empty cells around downed ship
+        private void SetEmptyCells(IEnumerable<CoordinatesDto> attackedShip) // TODO Logic for empty cells around downed ship
         {
             
         }
