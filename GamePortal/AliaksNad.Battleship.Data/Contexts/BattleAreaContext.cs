@@ -1,6 +1,7 @@
 ﻿using AliaksNad.Battleship.Data.Models;
 using Serilog;
 using System.Data.Entity;
+using System.Reflection;
 
 namespace AliaksNad.Battleship.Data.Contexts
 {
@@ -22,7 +23,7 @@ namespace AliaksNad.Battleship.Data.Contexts
         protected override void OnModelCreating(DbModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
-            modelBuilder.Configurations.Add(new BattleAreaDbConfiguration());
+            modelBuilder.Configurations.AddFromAssembly(Assembly.GetExecutingAssembly());
         }
     }
 }
