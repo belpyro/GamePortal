@@ -1,4 +1,4 @@
-﻿using Castle.DynamicProxy;
+﻿
 using CSharpFunctionalExtensions;
 using FluentValidation;
 using FluentValidation.Results;
@@ -10,6 +10,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Ninject.Extensions.Interception;
 
 namespace Kbalan.TouchType.Logic.Aspects
 {
@@ -27,23 +28,34 @@ namespace Kbalan.TouchType.Logic.Aspects
         public void Intercept(IInvocation invocation)
         {
             //id null checking
-            var userId = invocation.Arguments.SingleOrDefault(x => x.GetType() == typeof(Int32));
-            if (userId == null)
+            var userId = invocation.Request.Arguments.OfType<Int32>().SingleOrDefault();
+            if (userId == 0)
             {
                 invocation.Proceed();
                 return;
             }
 
             //model null checking
-            var model = invocation.Arguments.SingleOrDefault(x => x.GetType() == typeof(StatisticDto)) as StatisticDto;
+            var model = invocation.Request.Arguments.OfType<StatisticDto>().SingleOrDefault() as StatisticDto;
             if (model == null)
             {
                 invocation.Proceed();
                 return;
             }
 
+            var statisticValidator = _kernel.Get<IValidator<StatisticDto>>();
+            //Prevalidation for Update method
+            if (invocation.Request.Method.Name.Equals("Update"))
+            {
+                var preValidationResult = statisticValidator.Validate(model, ruleSet: "PreValidation");
+                if (!preValidationResult.IsValid)
+                {
+                    invocation.ReturnValue = Result.Failure(preValidationResult.Errors.Select(x => x.ErrorMessage).First());
+                    return;
+                }
+            }
             //Implementation of validation for update method
-            if (invocation.Method.Name.Equals("Update"))
+            if (invocation.Request.Method.Name.Equals("Update"))
             {
                 //Cheking if user with id exist
                 var userModel = _kernel.Get<TouchTypeGameContext>().Users.Include("Statistic").SingleOrDefault(x => x.Id == (int)userId);
@@ -57,8 +69,7 @@ namespace Kbalan.TouchType.Logic.Aspects
                 model.StatisticId = userModel.Statistic.StatisticId;
 
                 //Validation
-                var validator = _kernel.Get<IValidator<StatisticDto>>();
-                ValidationResult validationResult = validator.Validate(model, ruleSet: "PostValidation");
+                ValidationResult validationResult = statisticValidator.Validate(model, ruleSet: "PostValidation");
                 if (!validationResult.IsValid)
                 {
                     invocation.ReturnValue = Result.Failure(validationResult.Errors.Select(x => x.ErrorMessage).First());

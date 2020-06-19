@@ -21,7 +21,7 @@ namespace Kbalan.TouchType.Logic.Services
         /// </summary>
         /// <param name="id">user id</param>
         /// <returns>user</returns>
-        Result<UserSettingStatisticDto> GetById(int id);
+        Result<Maybe<UserSettingStatisticDto>> GetById(int id);
 
         /// <summary>
         /// Add new user 
