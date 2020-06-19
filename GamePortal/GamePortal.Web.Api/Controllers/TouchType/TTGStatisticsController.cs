@@ -7,6 +7,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
+using System.Threading.Tasks;
 using System.Web.Http;
 
 namespace GamePortal.Web.Api.Controllers.TouchType
@@ -27,22 +28,22 @@ namespace GamePortal.Web.Api.Controllers.TouchType
         //Get All Statistic with user
         [HttpGet]
         [Route("")]
-        public IHttpActionResult GetAll()
+        public async Task<IHttpActionResult> GetAllAsync()
         {
-            var result = _statisticService.GetAll();
+            var result = await _statisticService.GetAllAsync();
             return result.IsSuccess ? Ok(result.Value) : (IHttpActionResult)BadRequest(result.Error);
         }
 
         //Get Statistic Info by user Id
         [HttpGet]
         [Route("{id}")]
-        public IHttpActionResult GetAllById([FromUri]int id)
+        public async Task<IHttpActionResult> GetAllByIdAsync([FromUri]int id)
         {
             if (id <= 0)
             {
                 return BadRequest("ID must be greater than 0");
             }
-            var result = _statisticService.GetById(id);
+            var result = await _statisticService.GetByIdAsync(id);
             if (result.IsFailure)
                 return (IHttpActionResult)StatusCode(HttpStatusCode.InternalServerError);
             return result.Value.HasNoValue ? (IHttpActionResult)NotFound() : Ok(result.Value.Value);
@@ -51,9 +52,9 @@ namespace GamePortal.Web.Api.Controllers.TouchType
         //Update User Statistic by User Id
         [HttpPut]
         [Route("")]
-        public IHttpActionResult Update(int id, [FromBody]StatisticDto model)
+        public async Task<IHttpActionResult> UpdateAsync(int id, [FromBody]StatisticDto model)
         {
-            var result = _statisticService.Update(id, model);
+            var result = await _statisticService.UpdateAsync(id, model);
             return result.IsSuccess ? Ok($"Statistic of user with id {id} updated succesfully!") : (IHttpActionResult)BadRequest(result.Error);
 
         }
