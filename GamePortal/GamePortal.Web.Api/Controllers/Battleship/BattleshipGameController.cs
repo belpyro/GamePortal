@@ -10,36 +10,80 @@ namespace GamePortal.Web.Api.Controllers.Battleship
     [RoutePrefix("api/battleship/game")]
     public class BattleshipGameController : ApiController
     {
-        private readonly GameService _gameService;
+        private readonly IGameService _gameService;
 
-        public BattleshipGameController(GameService gameService)
+        public BattleshipGameController(IGameService gameService)
         {
             this._gameService = gameService;
         }
 
         /// <summary>
-        /// Checks location for hit.
+        /// Set your own fleet coordinates on logic layer.
         /// </summary>
-        /// <param name="point">Location.</param>
+        /// <param name="BattleAreaDtoCoordinates">Own fleet coordinates.</param>
         /// <returns></returns>
         [HttpPost]
-        [Route("point")]
-        public IHttpActionResult Fire([FromUri]Point point)
+        [Route("fleets")]
+        public IHttpActionResult SetFleet([FromBody]BattleAreaDto BattleAreaDtoCoordinates)
         {
-            return Ok(_gameService.HitCheck(point));
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+
+            var result = _gameService.SetFleet(BattleAreaDtoCoordinates);
+            return result.IsSuccess ? Created($"api/battleship/game/fleets{result.Value.BattleAreaId}", result.Value) : (IHttpActionResult)BadRequest(result.Error);
         }
 
         /// <summary>
-        /// Fleet Placement.
+        /// Get all battle area from logic layer.
         /// </summary>
-        /// <param name="fleet">Fleet.</param>
+        /// <returns></returns>
+        [HttpGet]
+        [Route("")]
+        public IHttpActionResult GetAll()
+        {
+            var result = _gameService.GetAll();
+            return result.IsSuccess ? Ok(result.Value) : (IHttpActionResult)StatusCode(HttpStatusCode.InternalServerError);
+        }
+
+        /// <summary>
+        /// Get battle area from logic layer by id.
+        /// </summary>
+        /// <param name="id">battle area id.</param>
+        /// <returns></returns>
+        [HttpGet]
+        [Route("{id:int:min(1)}")]      // TODO: Check Route Constraints 
+        public IHttpActionResult GetById(int id)
+        {
+            var battleArea = _gameService.GetById(id);
+            if (battleArea.IsFailure)
+            {
+                return StatusCode(HttpStatusCode.InternalServerError);
+            }
+            return battleArea.Value.HasNoValue ? (IHttpActionResult)NotFound() : Ok(battleArea.Value.Value);
+        }
+
+        /// <summary>
+        /// Checking hit by enemy coordinates on logic layer.
+        /// </summary>
+        /// <param name="coordinatesOfHit">Enemy coordinates.</param>
         /// <returns></returns>
         [HttpPost]
-        [Route("")]
-        public IHttpActionResult PlaceFleet([FromBody]IEnumerable<Point> fleet)
+        [Route("coordinates")]
+        public IHttpActionResult CheckHit([FromBody]CoordinatesDto coordinatesOfHit)
         {
-            _gameService.SetFleet(fleet);
-            return StatusCode(HttpStatusCode.NoContent);
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+
+            var result =_gameService.CheckHit(coordinatesOfHit);
+            if (result.IsFailure)
+            {
+                return StatusCode(HttpStatusCode.InternalServerError);
+            }
+            return result.Value.HasValue ? Ok(result.Value.Value) : (IHttpActionResult)NotFound();
         }
     }
 }

@@ -3,7 +3,11 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
+using System.Threading.Tasks;
 using System.Web.Http;
+using CSharpFunctionalExtensions;
+using FluentValidation;
+using JetBrains.Annotations;
 using Kbalan.TouchType.Logic.Dto;
 using Kbalan.TouchType.Logic.Services;
 
@@ -17,7 +21,7 @@ namespace GamePortal.Web.Api.Controllers.TouchType
     {
         private readonly ITextSetService _textSetService;
 
-        public TTGTextsController(ITextSetService textSetService)
+        public TTGTextsController([NotNull]ITextSetService textSetService)
         {
             this._textSetService = textSetService;
         }
@@ -25,51 +29,80 @@ namespace GamePortal.Web.Api.Controllers.TouchType
         //Get All TextSets
         [HttpGet]
         [Route("")]
-        public IHttpActionResult GetAll()
+        public async Task<IHttpActionResult> GetAll()
         {
-            return Ok(_textSetService.GetAll());
+            var result = await _textSetService.GetAllAsync();
+            return result.IsSuccess ? Ok(result.Value) : (IHttpActionResult)StatusCode(HttpStatusCode.InternalServerError);
         }
 
         //Get TextSet by Id
         [HttpGet]
         [Route("{id}")]
-        public IHttpActionResult GetById(int id)
+        public async Task<IHttpActionResult> GetByIdAsync(int id)
         {
-            return _textSetService.GetById(id) == null ? (IHttpActionResult)NotFound() : Ok(_textSetService.GetById(id));
+            if (id <= 0)
+            {
+                return BadRequest("ID must be greater than 0");
+            }
+
+            var result = await _textSetService.GetByIdAsync(id);
+            if (result.IsFailure)
+                return (IHttpActionResult)StatusCode(HttpStatusCode.InternalServerError);
+            return result.Value.HasNoValue ? (IHttpActionResult)NotFound() :  Ok(result.Value.Value);
         }
 
         ///Get Random TextSet by Level of the text
         [HttpGet]
         [Route("searchbylevel/{level}")]
-        public IHttpActionResult GetRandomByLevel(int level)
+        public async Task<IHttpActionResult> GetRandomByLevelAsync(int level)
         {
-            return _textSetService.GetByLevel(level) == null ? (IHttpActionResult)NotFound() : Ok(_textSetService.GetByLevel(level));
+            if (level < 0 || level > 2)
+            {
+                return BadRequest("Level must be Easy, Middle or Hard");
+            }
+
+            var result = await _textSetService.GetByLevelAsync(level);
+            return result.IsSuccess ? Ok(result.Value) : (IHttpActionResult)BadRequest(result.Error);
+
         }
 
         //Add new text
         [HttpPost]
         [Route("")]
-        public IHttpActionResult Add([FromBody]TextSetDto model)
+        public async Task<IHttpActionResult> AddAsync([FromBody]TextSetDto model)
         {
-            return _textSetService.Add(model) == null ? (IHttpActionResult)Conflict() : Created($"/textsets/{model.Id}", model);
+            if (!ModelState.IsValid)
+                return BadRequest(ModelState);
+
+            var result = await _textSetService.AddAsync(model);
+            return result.IsSuccess ? Created($"/textsets/{result.Value.Id}", result.Value) : (IHttpActionResult)BadRequest(result.Error); 
         }
 
-        //Update Text by Id
+        //Update Text by Id 
         [HttpPut]
         [Route("")]
-        public IHttpActionResult Update([FromBody]TextSetDto model)
+        public async Task<IHttpActionResult> UpdateAsync([FromBody]TextSetDto model)
         {
-            _textSetService.Update(model);
-            return StatusCode(HttpStatusCode.NoContent);
+            if (!ModelState.IsValid)
+                return BadRequest(ModelState);
+
+            var result = await _textSetService.UpdateAsync(model);
+            return result.IsSuccess ? Ok($"Text set with id {model.Id} updated succesfully!") : (IHttpActionResult)BadRequest(result.Error);
+
         }
 
         //Delete Text by Id
         [HttpDelete]
         [Route("{id}")]
-        public IHttpActionResult Delete(int id)
+        public async Task<IHttpActionResult> DeleteAsync(int id)
         {
-            _textSetService.Delete(id);
-            return StatusCode(HttpStatusCode.NoContent);
+            if (id <= 0)
+            {
+                return BadRequest("ID must be greater than 0");
+            }
+
+            var result = await _textSetService.DeleteAsync(id);
+            return result.IsSuccess ? Ok($"Text set with id {id} deleted succesfully!") : (IHttpActionResult)BadRequest(result.Error);
         }
     }
 }

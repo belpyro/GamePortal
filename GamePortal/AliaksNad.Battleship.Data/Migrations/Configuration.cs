@@ -5,7 +5,7 @@
     using System.Data.Entity.Migrations;
     using System.Linq;
 
-    internal sealed class Configuration : DbMigrationsConfiguration<AliaksNad.Battleship.Data.Contexts.UsersContexts>
+    internal sealed class Configuration : DbMigrationsConfiguration<AliaksNad.Battleship.Data.Contexts.UsersContext>
     {
         public Configuration()
         {
@@ -13,7 +13,7 @@
             ContextKey = "AliaksNad.Battleship.Data.Contexts.UsersContexts";
         }
 
-        protected override void Seed(AliaksNad.Battleship.Data.Contexts.UsersContexts context)
+        protected override void Seed(AliaksNad.Battleship.Data.Contexts.UsersContext context)
         {
             //  This method will be called after migrating to the latest version.
 
