@@ -14,6 +14,8 @@ using Ninject.Web.Common.OwinHost;
 using Ninject.Web.WebApi.OwinHost;
 using Ninject.Web.Common;
 using System.Web;
+using System.Web.Http.ExceptionHandling;
+using Elmah.Contrib.WebApi;
 
 [assembly: OwinStartup(typeof(GamePortal.Web.Api.Startup))]
 
@@ -35,6 +37,8 @@ namespace GamePortal.Web.Api
             var kernel = new StandardKernel(new NinjectSettings { LoadExtensions = true });
 
             kernel.Load(new LogicDIModule(), new TTGDIModule(), new BattleshipLogicDIModule());
+
+            config.Services.Replace(typeof(IExceptionLogger), new ElmahExceptionLogger());   // Replace system logger for elmarh
 
             FluentValidationModelValidatorProvider.Configure(config, opt =>
             {

@@ -2,6 +2,7 @@
 using AliaksNad.Battleship.Logic.Services;
 using FluentValidation.WebApi;
 using JetBrains.Annotations;
+using System;
 using System.Collections.Generic;
 using System.Net;
 using System.Web.Http;
@@ -45,6 +46,7 @@ namespace GamePortal.Web.Api.Controllers.Battleship
         [Route("")]
         public IHttpActionResult GetAll()
         {
+            throw new NotImplementedException();
             var result = _gameService.GetAll();
             return result.IsSuccess ? Ok(result.Value) : (IHttpActionResult)StatusCode(HttpStatusCode.InternalServerError);
         }

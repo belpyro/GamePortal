@@ -13,7 +13,7 @@ namespace AliaksNad.Battleship.Logic.Aspects
     {
         private readonly ILogger _logger;
 
-        public BattleshipLoggerInterceptor(IKernel kernel, ILogger logger)
+        public BattleshipLoggerInterceptor(ILogger logger)
         {
             this._logger = logger;
         }

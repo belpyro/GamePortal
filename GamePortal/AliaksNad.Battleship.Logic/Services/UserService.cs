@@ -23,8 +23,6 @@ namespace AliaksNad.Battleship.Logic.Services
         private readonly UsersContext _context;
         private readonly IMapper _mapper;
 
-        private static IEnumerable<UserDto> _users = UserFaker.Generate();
-
         public UserService([NotNull]UsersContext context, 
                            [NotNull]IMapper mapper)
         {
