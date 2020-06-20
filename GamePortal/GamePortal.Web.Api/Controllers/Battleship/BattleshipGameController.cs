@@ -1,5 +1,6 @@
 ﻿using AliaksNad.Battleship.Logic.Models;
 using AliaksNad.Battleship.Logic.Services;
+using FluentValidation.WebApi;
 using System.Collections.Generic;
 using System.Net;
 using System.Web.Http;
@@ -24,7 +25,7 @@ namespace GamePortal.Web.Api.Controllers.Battleship
         /// <returns></returns>
         [HttpPost]
         [Route("fleets")]
-        public IHttpActionResult SetFleet([FromBody]BattleAreaDto BattleAreaDtoCoordinates)
+        public IHttpActionResult SetFleet([CustomizeValidator(RuleSet = "PreValidation")][FromBody]BattleAreaDto BattleAreaDtoCoordinates)
         {
             if (!ModelState.IsValid)
             {

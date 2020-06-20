@@ -39,9 +39,10 @@ namespace AliaksNad.Battleship.Logic
             this.Bind<BattleAreaContext>().ToSelf();
 
             this.Bind<IValidator<UserDto>>().To<UserDtoValidator>();
+            this.Bind<IValidator<BattleAreaDto>>().To<BattleAreaDtoValidator>();
 
             this.Bind<IUserService>().To<UserService>().Intercept().With<ValidationInterceptor>();
-            this.Bind<IGameService>().To<GameService>();
+            this.Bind<IGameService>().To<GameService>().Intercept().With<ValidationInterceptor>();
         }
     }
 }

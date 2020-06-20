@@ -140,6 +140,7 @@
     <Compile Include="Services\IUserService.cs" />
     <Compile Include="Services\UserFaker.cs" />
     <Compile Include="Services\UserService.cs" />
+    <Compile Include="Validators\BattleAreaDtoValidator.cs" />
     <Compile Include="Validators\UserDtoValidator.cs" />
   </ItemGroup>
   <ItemGroup>
