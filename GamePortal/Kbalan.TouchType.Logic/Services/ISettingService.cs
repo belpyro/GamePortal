@@ -18,6 +18,7 @@ namespace Kbalan.TouchType.Logic.Services
         /// </summary>
         /// <returns>All user with setting</returns>
         Result<IEnumerable<UserSettingDto>> GetAll();
+        Task<Result<IEnumerable<UserSettingDto>>> GetAllAsync();
 
         /// <summary>
         /// Returns information about setting's with it's user by user id
@@ -25,6 +26,7 @@ namespace Kbalan.TouchType.Logic.Services
         /// <param name="Id">User ID</param>
         /// <returns>Setting with user</returns>
         Result<Maybe<UserSettingDto>> GetById(int id);
+        Task<Result<Maybe<UserSettingDto>>> GetByIdAsync(int id);
 
         /// <summary>
         /// Updating existing user setting
@@ -32,5 +34,7 @@ namespace Kbalan.TouchType.Logic.Services
         /// <param name="id">User id</param>
         /// <returns></returns>
         Result Update(int id, SettingDto model);
+        Task<Result> UpdateAsync(int id, SettingDto model);
     }
 }
+

@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
+using System.Runtime.CompilerServices;
+using System.Threading.Tasks;
 using System.Web.Configuration;
 using System.Web.Http;
 using FluentValidation;
@@ -31,23 +33,23 @@ namespace GamePortal.Web.Api.Controllers.TouchType
         //Get All RegisterUsers
         [HttpGet]
         [Route("")]
-        public IHttpActionResult GetAll()
+        public async Task<IHttpActionResult> GetAllAsync()
         {
-            var result = _userService.GetAll();
+            var result = await _userService.GetAllAsync();
             return result.IsSuccess ? Ok(result.Value) : (IHttpActionResult)BadRequest(result.Error);
         }
 
         //Get Full User Info by Id
         [HttpGet]
         [Route("{id}")]
-        public IHttpActionResult GetById([FromUri]int id)
+        public async Task<IHttpActionResult> GetByIdAsync([FromUri]int id)
         {
             if (id <= 0)
             {
                 return BadRequest("ID must be greater than 0");
             }
 
-            var result = _userService.GetById(id);
+            var result = await _userService.GetByIdAsync(id);
             if (result.IsFailure)
                 return (IHttpActionResult)StatusCode(HttpStatusCode.InternalServerError);
             return result.Value.HasNoValue ? (IHttpActionResult)NotFound() : Ok(result.Value.Value);
@@ -57,38 +59,38 @@ namespace GamePortal.Web.Api.Controllers.TouchType
         //Add new user
         [HttpPost]
         [Route("")]
-        public IHttpActionResult Add([FromBody] UserSettingDto model)
+        public async Task<IHttpActionResult> AddAsync([FromBody] UserSettingDto model)
         {
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
 
-            var result = _userService.Add(model);
+            var result = await _userService.AddAsync(model);
             return result.IsSuccess ? Created($"/textsets/{result.Value.Id}", result.Value) : (IHttpActionResult)BadRequest(result.Error);
         }
 
         //Update User by Id
         [HttpPut]
         [Route("")]
-        public IHttpActionResult Update([FromBody]UserDto model)
+        public async Task<IHttpActionResult> UpdateAsync([FromBody]UserDto model)
         {
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
 
-            var result = _userService.Update(model);
+            var result = await _userService.UpdateAsync(model);
             return result.IsSuccess ? Ok($"User with id {model.Id} updated succesfully!") : (IHttpActionResult)BadRequest(result.Error);
         }
 
         //Delete User by Id
         [HttpDelete]
         [Route("{id}")]
-        public IHttpActionResult Delete(int id)
+        public async Task<IHttpActionResult> DeleteAsync(int id)
         {
             if (id <= 0)
             {
                 return BadRequest("ID must be greater than 0");
             }
 
-            var result = _userService.Delete(id);
+            var result =  await _userService.DeleteAsync(id);
             return result.IsSuccess ? Ok($"User with id {id} deleted with his setting and statistic succesfully!") : (IHttpActionResult)BadRequest(result.Error);
 
         }

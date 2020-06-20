@@ -45,6 +45,18 @@ namespace Kbalan.TouchType.Logic.Services
                 return Result.Failure<IEnumerable<UserSettingDto>>(ex.Message);
             }
         }
+        public async Task<Result<IEnumerable<UserSettingDto>>> GetAllAsync()
+        {
+            try
+            {
+                var models = await _gameContext.Users.Include("Setting").ToArrayAsync().ConfigureAwait(false);
+                return Result.Success<IEnumerable<UserSettingDto>>(_mapper.Map<IEnumerable<UserSettingDto>>(models));
+            }
+            catch (DbUpdateException ex)
+            {
+                return Result.Failure<IEnumerable<UserSettingDto>>(ex.Message);
+            }
+        }
 
         /// <summary>
         /// Return User with it's setting by user id
@@ -59,6 +71,21 @@ namespace Kbalan.TouchType.Logic.Services
                     .ProjectToSingleOrDefault<UserSettingDto>(_mapper.ConfigurationProvider);
 
                     return Result.Success(getResultById);
+            }
+            catch (SqlException ex)
+            {
+                return Result.Failure<Maybe<UserSettingDto>>(ex.Message);
+            }
+        }
+        public async Task<Result<Maybe<UserSettingDto>>> GetByIdAsync(int id)
+        {
+            try
+            {
+                Maybe<UserSettingDto> getResultById = await _gameContext.Users.Where(x => x.Id == id)
+                    .ProjectToSingleOrDefaultAsync<UserSettingDto>(_mapper.ConfigurationProvider)
+                    .ConfigureAwait(false);
+
+                return Result.Success(getResultById);
             }
             catch (SqlException ex)
             {
@@ -89,6 +116,33 @@ namespace Kbalan.TouchType.Logic.Services
 
                 _gameContext.Users.Attach(userModel);
                 _gameContext.SaveChanges();
+
+                return Result.Success();
+            }
+            catch (DbUpdateException ex)
+            {
+                return Result.Failure(ex.Message);
+            }
+        }
+        public async Task<Result> UpdateAsync(int id, SettingDto model)
+        {
+            //Cheking if user with id exist
+            var userModel = await _gameContext.Users.Include("Setting").SingleOrDefaultAsync(x => x.Id == id)
+                .ConfigureAwait(false);
+
+            //Replace model setting id from Dto to correct id from Db and Valiate
+            model.SettingId = userModel.Setting.SettingId;
+
+            try
+            {
+                var modelDb = _mapper.Map<SettingDb>(model);
+
+                modelDb.SettingId = userModel.Setting.SettingId;
+                modelDb.User = userModel.Setting.User;
+                userModel.Setting = modelDb;
+
+                _gameContext.Users.Attach(userModel);
+                await _gameContext.SaveChangesAsync();
 
                 return Result.Success();
             }
