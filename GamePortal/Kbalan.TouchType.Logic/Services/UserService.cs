@@ -45,6 +45,20 @@ namespace Kbalan.TouchType.Logic.Services
                 return Result.Failure<IEnumerable<UserSettingStatisticDto>>(ex.Message);
             }
         }
+        public async Task<Result<IEnumerable<UserSettingStatisticDto>>> GetAllAsync ()
+        {
+            try
+            {
+                var getAllResult = await _gameContext.Users
+                    .ProjectToArrayAsync<UserSettingStatisticDto>(_mapper.ConfigurationProvider)
+                    .ConfigureAwait(false);
+                return Result.Success<IEnumerable<UserSettingStatisticDto>>(getAllResult);
+            }
+            catch (DbUpdateException ex)
+            {
+                return Result.Failure<IEnumerable<UserSettingStatisticDto>>(ex.Message);
+            }
+        }
 
         /// <summary>
         /// Implementation of GetById()
@@ -59,6 +73,21 @@ namespace Kbalan.TouchType.Logic.Services
                     .ProjectToSingleOrDefault<UserSettingStatisticDto>(_mapper.ConfigurationProvider);
 
                     return Result.Success(getResultById);
+            }
+            catch (SqlException ex)
+            {
+                return Result.Failure<Maybe<UserSettingStatisticDto>>(ex.Message);
+            }
+        }
+        public async Task<Result<Maybe<UserSettingStatisticDto>>> GetByIdAsync(int id)
+        {
+            try
+            {
+                Maybe<UserSettingStatisticDto> getResultById = await _gameContext.Users.Where(x => x.Id == id)
+                    .ProjectToSingleOrDefaultAsync<UserSettingStatisticDto>(_mapper.ConfigurationProvider)
+                    .ConfigureAwait(false);
+
+                return Result.Success(getResultById);
             }
             catch (SqlException ex)
             {
@@ -80,6 +109,23 @@ namespace Kbalan.TouchType.Logic.Services
 
                 _gameContext.Users.Add(DbModel);
                 _gameContext.SaveChanges();
+
+                model.Id = DbModel.Id;
+                return Result.Success(model);
+            }
+            catch (DbUpdateException ex)
+            {
+                return Result.Failure<UserSettingDto>(ex.Message);
+            }
+        }
+        public async Task<Result<UserSettingDto>> AddAsync(UserSettingDto model)
+        {
+            try
+            {
+                var DbModel = _mapper.Map<UserDb>(model);
+
+                _gameContext.Users.Add(DbModel);
+                await _gameContext.SaveChangesAsync().ConfigureAwait(false);
 
                 model.Id = DbModel.Id;
                 return Result.Success(model);
@@ -115,6 +161,27 @@ namespace Kbalan.TouchType.Logic.Services
                 return Result.Failure(ex.Message);
             }
         }
+        public async Task<Result> UpdateAsync(UserDto model)
+        {
+
+            try
+            {
+                var dbModel = _mapper.Map<UserDb>(model);
+
+                _gameContext.Users.Attach(dbModel);
+
+                var entry = _gameContext.Entry(dbModel);
+                entry.Property(x => x.NickName).IsModified = true;
+                entry.Property(x => x.Password).IsModified = true;
+                await _gameContext.SaveChangesAsync().ConfigureAwait(false);
+
+                return Result.Success();
+            }
+            catch (DbUpdateException ex)
+            {
+                return Result.Failure(ex.Message);
+            }
+        }
 
         /// <summary>
         /// Implementation of Delete()
@@ -132,6 +199,24 @@ namespace Kbalan.TouchType.Logic.Services
 
                 _gameContext.Users.Remove(dbModel);
                 _gameContext.SaveChanges();
+                return Result.Success();
+            }
+            catch (DbUpdateException ex)
+            {
+                return Result.Failure(ex.Message);
+            }
+        }
+        public async Task<Result> DeleteAsync(int id)
+        {
+            try
+            {
+                var dbModel = await _gameContext.Users.FindAsync(id).ConfigureAwait(false);
+
+                if (dbModel == null)
+                    return Result.Failure($"No user with id {id} exist");
+
+                _gameContext.Users.Remove(dbModel);
+                await _gameContext.SaveChangesAsync().ConfigureAwait(false);
                 return Result.Success();
             }
             catch (DbUpdateException ex)
