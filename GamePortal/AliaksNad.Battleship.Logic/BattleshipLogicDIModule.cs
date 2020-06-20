@@ -11,6 +11,8 @@ using Ninject;
 using AliaksNad.Battleship.Logic.Aspects;
 using Serilog;
 using Ninject.Extensions.Interception.Infrastructure.Language;
+using System.IO;
+using System.Reflection;
 
 namespace AliaksNad.Battleship.Logic
 {
@@ -27,7 +29,17 @@ namespace AliaksNad.Battleship.Logic
                     return r.ParentContext != null && r.ParentContext.Plan.Type.Namespace.StartsWith("AliaksNad.Battleship");
                 });
 
-            var logger = new LoggerConfiguration().CreateLogger();
+            var path = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
+            var logger = new LoggerConfiguration()
+                .WriteTo.Debug()
+                .WriteTo.Console()
+                .WriteTo.File(Path.Combine(path, "Logs/Log.txt"), rollOnFileSizeLimit: true, fileSizeLimitBytes: 10_000_000, rollingInterval: RollingInterval.Day, restrictedToMinimumLevel: Serilog.Events.LogEventLevel.Information)
+                .WriteTo.File(Path.Combine(path, "Logs/DebugLog.txt"), rollOnFileSizeLimit: true, fileSizeLimitBytes: 10_000_000, rollingInterval: RollingInterval.Day)
+                .Enrich.WithHttpRequestType()
+                .Enrich.WithWebApiControllerName()
+                .Enrich.WithWebApiActionName()
+                .MinimumLevel.Debug()
+                .CreateLogger();
 
             this.Bind<ILogger>().ToConstant(logger)
                 .When(r =>
@@ -41,8 +53,12 @@ namespace AliaksNad.Battleship.Logic
             this.Bind<IValidator<UserDto>>().To<UserDtoValidator>();
             this.Bind<IValidator<BattleAreaDto>>().To<BattleAreaDtoValidator>();
 
-            this.Bind<IUserService>().To<UserService>().Intercept().With<ValidationInterceptor>();
-            this.Bind<IGameService>().To<GameService>().Intercept().With<ValidationInterceptor>();
+            var userServiceBinding = this.Bind<IUserService>().To<UserService>();
+            userServiceBinding.Intercept().With<ValidationInterceptor>();
+            userServiceBinding.Intercept().With<BattleshipLoggerInterceptor>();
+
+            var gameServiceBinding = this.Bind<IGameService>().To<GameService>();
+            gameServiceBinding.Intercept().With<BattleshipLoggerInterceptor>();
         }
     }
 }

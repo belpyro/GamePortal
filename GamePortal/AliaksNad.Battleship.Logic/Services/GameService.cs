@@ -7,6 +7,7 @@ using JetBrains.Annotations;
 using Serilog;
 using System;
 using System.Collections.Generic;
+using System.Data.Common;
 using System.Data.Entity;
 using System.Data.Entity.Infrastructure;
 using System.Data.SqlClient;
@@ -19,12 +20,15 @@ namespace AliaksNad.Battleship.Logic.Services
     {
         private readonly BattleAreaContext _battleAreaContext;
         private readonly IMapper _mapper;
+        private readonly ILogger _logger;
 
         public GameService([NotNull]BattleAreaContext _battleAreaContext,
-            [NotNull]IMapper mapper)
+            [NotNull]IMapper mapper,
+            [NotNull]ILogger logger)
         {
             this._battleAreaContext = _battleAreaContext;
             this._mapper = mapper;
+            this._logger = logger;
         }
 
         /// <summary>
@@ -45,6 +49,7 @@ namespace AliaksNad.Battleship.Logic.Services
             }
             catch (DbUpdateException ex)
             {
+                _logger.Warning(ex, "An error occurred while writing the model to the DB");
                 return Result.Failure<BattleAreaDto>(ex.Message);
             }
         }
@@ -62,6 +67,7 @@ namespace AliaksNad.Battleship.Logic.Services
             }
             catch (SqlException ex)
             {
+                _logger.Warning(ex, "An error occurred while reading models from the DB");
                 return Result.Failure<IEnumerable<BattleAreaDto>>(ex.Message);
             }
         }
@@ -80,6 +86,7 @@ namespace AliaksNad.Battleship.Logic.Services
             }
             catch (SqlException ex)
             {
+                _logger.Warning(ex, "An error occurred while reading model by id from the DB");
                 return Result.Failure<Maybe<BattleAreaDto>>(ex.Message);
             }
         }
@@ -122,6 +129,7 @@ namespace AliaksNad.Battleship.Logic.Services
             }
             catch (DbUpdateException ex)
             {
+                _logger.Warning(ex, "An error occurred while updating the model in the DB");
                 return Result.Failure<Maybe<CoordinatesDto>>(ex.Message);
             }
         }

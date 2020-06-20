@@ -34,6 +34,17 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'QA|AnyCPU'">
+    <DebugSymbols>true</DebugSymbols>
+    <OutputPath>bin\QA\</OutputPath>
+    <DefineConstants>
+    </DefineConstants>
+    <DebugType>full</DebugType>
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <LangVersion>7.3</LangVersion>
+    <ErrorReport>prompt</ErrorReport>
+    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
+  </PropertyGroup>
   <ItemGroup>
     <Reference Include="AutoMapper, Version=8.0.0.0, Culture=neutral, PublicKeyToken=be96cd2c38ef1005, processorArchitecture=MSIL">
       <HintPath>..\packages\AutoMapper.8.0.0\lib\net461\AutoMapper.dll</HintPath>
@@ -95,6 +106,21 @@
     <Reference Include="Serilog, Version=2.0.0.0, Culture=neutral, PublicKeyToken=24c2f752a8e58a10, processorArchitecture=MSIL">
       <HintPath>..\packages\Serilog.2.9.0\lib\net46\Serilog.dll</HintPath>
     </Reference>
+    <Reference Include="Serilog.Sinks.Console, Version=3.1.1.0, Culture=neutral, PublicKeyToken=24c2f752a8e58a10, processorArchitecture=MSIL">
+      <HintPath>..\packages\Serilog.Sinks.Console.3.1.1\lib\net45\Serilog.Sinks.Console.dll</HintPath>
+    </Reference>
+    <Reference Include="Serilog.Sinks.Debug, Version=1.0.1.0, Culture=neutral, PublicKeyToken=24c2f752a8e58a10, processorArchitecture=MSIL">
+      <HintPath>..\packages\Serilog.Sinks.Debug.1.0.1\lib\net46\Serilog.Sinks.Debug.dll</HintPath>
+    </Reference>
+    <Reference Include="Serilog.Sinks.File, Version=2.0.0.0, Culture=neutral, PublicKeyToken=24c2f752a8e58a10, processorArchitecture=MSIL">
+      <HintPath>..\packages\Serilog.Sinks.File.4.1.0\lib\net45\Serilog.Sinks.File.dll</HintPath>
+    </Reference>
+    <Reference Include="SerilogWeb.Classic, Version=5.0.0.0, Culture=neutral, PublicKeyToken=9462ddd55fbc0e7f, processorArchitecture=MSIL">
+      <HintPath>..\packages\SerilogWeb.Classic.5.0.48\lib\net45\SerilogWeb.Classic.dll</HintPath>
+    </Reference>
+    <Reference Include="SerilogWeb.Classic.WebApi, Version=4.0.0.0, Culture=neutral, PublicKeyToken=9462ddd55fbc0e7f, processorArchitecture=MSIL">
+      <HintPath>..\packages\SerilogWeb.Classic.WebApi.4.0.5\lib\net45\SerilogWeb.Classic.WebApi.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.ComponentModel.Annotations, Version=4.2.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
       <HintPath>..\packages\System.ComponentModel.Annotations.4.4.1\lib\net461\System.ComponentModel.Annotations.dll</HintPath>
@@ -122,6 +148,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Aspects\LoggerInterceptor.cs" />
     <Compile Include="Aspects\ValidationInterceptor.cs" />
     <Compile Include="BattleshipLogicDIModule.cs" />
     <Compile Include="Models\CoordinatesDto.cs" />
@@ -153,7 +180,6 @@
       <Name>AliaksNad.Battleship.Data</Name>
     </ProjectReference>
   </ItemGroup>
-  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
     <PropertyGroup>
