@@ -56,6 +56,8 @@
   <ItemGroup>
     <Compile Include="Contexts\BattleAreaContext.cs" />
     <Compile Include="Contexts\BattleAreaDbConfiguration.cs" />
+    <Compile Include="Contexts\CoordinatesDbConfiguration.cs" />
+    <Compile Include="Contexts\ShipsDbConfiguration.cs" />
     <Compile Include="Contexts\UserDbConfiguration.cs" />
     <Compile Include="Contexts\UsersContext.cs" />
     <Compile Include="Migrations\202005261930481_InitialCreate.cs" />

@@ -16,6 +16,6 @@
 
         public ShipDb Ships { get; set; }
 
-        public int ShipsId { get; set; }
+        public int? ShipsId { get; set; }
     }
 }

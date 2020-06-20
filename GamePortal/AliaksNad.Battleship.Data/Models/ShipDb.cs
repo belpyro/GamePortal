@@ -14,6 +14,6 @@ namespace AliaksNad.Battleship.Data.Models
 
         public int? BattleAreaId { get; set; }
 
-        public ICollection<CoordinatesDb> Ship { get; set; }
+        public ICollection<CoordinatesDb> ShipCoordinates { get; set; }
     }
 }

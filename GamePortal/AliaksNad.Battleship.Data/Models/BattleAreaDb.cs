@@ -6,6 +6,6 @@ namespace AliaksNad.Battleship.Data.Models
     {
         public ICollection<ShipDb> Ships { get; set; }
 
-        public ICollection<CoordinatesDb> FailedLaunch { get; set; }
+        public ICollection<CoordinatesDb> FailedLaunches { get; set; }
     }
 }
