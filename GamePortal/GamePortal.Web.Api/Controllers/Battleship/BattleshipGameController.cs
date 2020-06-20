@@ -1,6 +1,7 @@
 ﻿using AliaksNad.Battleship.Logic.Models;
 using AliaksNad.Battleship.Logic.Services;
 using FluentValidation.WebApi;
+using JetBrains.Annotations;
 using System.Collections.Generic;
 using System.Net;
 using System.Web.Http;
@@ -13,7 +14,7 @@ namespace GamePortal.Web.Api.Controllers.Battleship
     {
         private readonly IGameService _gameService;
 
-        public BattleshipGameController(IGameService gameService)
+        public BattleshipGameController([NotNull] IGameService gameService)
         {
             this._gameService = gameService;
         }
@@ -24,15 +25,15 @@ namespace GamePortal.Web.Api.Controllers.Battleship
         /// <param name="BattleAreaDtoCoordinates">Own fleet coordinates.</param>
         /// <returns></returns>
         [HttpPost]
-        [Route("fleets")]
-        public IHttpActionResult SetFleet([CustomizeValidator(RuleSet = "PreValidation")][FromBody]BattleAreaDto BattleAreaDtoCoordinates)
+        [Route("")]
+        public IHttpActionResult Add([CustomizeValidator(RuleSet = "PreValidation")][FromBody]BattleAreaDto BattleAreaDtoCoordinates)
         {
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
             }
 
-            var result = _gameService.SetFleet(BattleAreaDtoCoordinates);
+            var result = _gameService.Add(BattleAreaDtoCoordinates);
             return result.IsSuccess ? Created($"api/battleship/game/fleets{result.Value.BattleAreaId}", result.Value) : (IHttpActionResult)BadRequest(result.Error);
         }
 

@@ -31,7 +31,7 @@ namespace AliaksNad.Battleship.Logic.Services
         /// Set your own fleet coordinates on logic layer.
         /// </summary>
         /// <param name="BattleAreaModel">Own fleet coordinates.</param>
-        public Result<BattleAreaDto> SetFleet(BattleAreaDto BattleAreaModel)
+        public Result<BattleAreaDto> Add(BattleAreaDto BattleAreaModel)
         {
             try
             {

@@ -10,7 +10,7 @@ namespace AliaksNad.Battleship.Logic.Services
         /// Set your own fleet coordinates.
         /// </summary>
         /// <param name="fleetCoordinates">Own fleet coordinates.</param>
-        Result<BattleAreaDto> SetFleet(BattleAreaDto fleetCoordinates);
+        Result<BattleAreaDto> Add(BattleAreaDto fleetCoordinates);
 
         /// <summary>
         /// Get all battle area. 
