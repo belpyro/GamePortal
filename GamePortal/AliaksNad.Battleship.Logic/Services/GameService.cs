@@ -13,6 +13,7 @@ using System.Data.Entity.Infrastructure;
 using System.Data.SqlClient;
 using System.Linq;
 using System.Threading;
+using System.Threading.Tasks;
 
 namespace AliaksNad.Battleship.Logic.Services
 {
@@ -35,14 +36,14 @@ namespace AliaksNad.Battleship.Logic.Services
         /// Set your own fleet coordinates on logic layer.
         /// </summary>
         /// <param name="BattleAreaModel">Own fleet coordinates.</param>
-        public Result<BattleAreaDto> Add(BattleAreaDto BattleAreaModel)
+        public async Task<Result<BattleAreaDto>> AddAsync(BattleAreaDto BattleAreaModel)
         {
             try
             {
                 var dbBattleAreaModel = _mapper.Map<BattleAreaDb>(BattleAreaModel);
 
                 _battleAreaContext.BattleAreas.Add(dbBattleAreaModel);
-                _battleAreaContext.SaveChanges();
+                await _battleAreaContext.SaveChangesAsync().ConfigureAwait(false);
 
                 BattleAreaModel.BattleAreaId = dbBattleAreaModel.BattleAreaId;
                 return Result.Success(BattleAreaModel);
@@ -58,11 +59,12 @@ namespace AliaksNad.Battleship.Logic.Services
         /// Get all battle area from data.
         /// </summary>
         /// <returns></returns>
-        public Result<IEnumerable<BattleAreaDto>> GetAll()
+        public async Task<Result<IEnumerable<BattleAreaDto>>> GetAllAsync()
         {
             try
             {
-                var models = _battleAreaContext.BattleAreas.AsNoTracking().ToArray();
+                var models = await _battleAreaContext.BattleAreas.AsNoTracking()
+                    .ToArrayAsync().ConfigureAwait(false);
                 return Result.Success(_mapper.Map<IEnumerable<BattleAreaDto>>(models));
             }
             catch (SqlException ex)
@@ -77,11 +79,12 @@ namespace AliaksNad.Battleship.Logic.Services
         /// </summary>
         /// <param name="id">battle area id.</param>
         /// <returns></returns>
-        public Result<Maybe<BattleAreaDto>> GetById(int id)
+        public async Task<Result<Maybe<BattleAreaDto>>> GetByIdAsync(int id)
         {
             try
             {
-                Maybe<BattleAreaDto> battleArea = _battleAreaContext.BattleAreas.Where(x => x.BattleAreaId == id).ProjectToSingleOrDefault<BattleAreaDto>(_mapper.ConfigurationProvider);
+                Maybe<BattleAreaDto> battleArea = await _battleAreaContext.BattleAreas.Where(x => x.BattleAreaId == id)
+                    .ProjectToSingleOrDefaultAsync<BattleAreaDto>(_mapper.ConfigurationProvider).ConfigureAwait(false);
                 return Result.Success(battleArea);
             }
             catch (SqlException ex)
@@ -96,14 +99,14 @@ namespace AliaksNad.Battleship.Logic.Services
         /// </summary>
         /// <param name="coordinatesOfHit">Enemy coordinates.</param>
         /// <returns></returns>
-        public Result<Maybe<CoordinatesDto>> CheckHit(CoordinatesDto coordinatesOfHit)
+        public async Task<Result<Maybe<CoordinatesDto>>> CheckHitAsync(CoordinatesDto coordinatesOfHit)
         {
             try
             {
-                var fleetModel = _mapper.Map<IEnumerable<CoordinatesDto>>(_battleAreaContext.Coordinates
-                    .AsNoTracking().Where(x => x.BattleAreaId == coordinatesOfHit.BattleAreaId));
+                var fleetModel = _mapper.Map<IEnumerable<CoordinatesDto>>(await _battleAreaContext.Coordinates
+                    .AsNoTracking().Where(x => x.BattleAreaId == coordinatesOfHit.BattleAreaId).ToArrayAsync().ConfigureAwait(false));
 
-                var attackedCell = fleetModel.SingleOrDefault(x => x.CoordinateX == coordinatesOfHit.CoordinateX 
+                var attackedCell = fleetModel.SingleOrDefault(x => x.CoordinateX == coordinatesOfHit.CoordinateX
                     && x.CoordinateY == coordinatesOfHit.CoordinateY);
 
                 if (attackedCell != null)
@@ -122,7 +125,7 @@ namespace AliaksNad.Battleship.Logic.Services
                     _battleAreaContext.Coordinates.Add(_mapper.Map<CoordinatesDb>(coordinatesOfHit));
                 }
 
-                _battleAreaContext.SaveChanges();
+                await _battleAreaContext.SaveChangesAsync().ConfigureAwait(false);
 
                 Maybe<CoordinatesDto> result = _mapper.Map<CoordinatesDto>(attackedCell);
                 return Result.Success(result);

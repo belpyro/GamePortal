@@ -5,6 +5,8 @@ using JetBrains.Annotations;
 using System;
 using System.Collections.Generic;
 using System.Net;
+using System.Threading.Tasks;
+using System.Web;
 using System.Web.Http;
 using System.Web.Http.Description;
 
@@ -27,14 +29,14 @@ namespace GamePortal.Web.Api.Controllers.Battleship
         /// <returns></returns>
         [HttpPost]
         [Route("")]
-        public IHttpActionResult Add([CustomizeValidator(RuleSet = "PreValidation")][FromBody]BattleAreaDto BattleAreaDtoCoordinates)
+        public async Task<IHttpActionResult> AddAsync([CustomizeValidator(RuleSet = "PreValidation")][FromBody]BattleAreaDto BattleAreaDtoCoordinates)
         {
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
             }
 
-            var result = _gameService.Add(BattleAreaDtoCoordinates);
+            var result = await _gameService.AddAsync(BattleAreaDtoCoordinates);
             return result.IsSuccess ? Created($"api/battleship/game/fleets{result.Value.BattleAreaId}", result.Value) : (IHttpActionResult)BadRequest(result.Error);
         }
 
@@ -44,10 +46,9 @@ namespace GamePortal.Web.Api.Controllers.Battleship
         /// <returns></returns>
         [HttpGet]
         [Route("")]
-        public IHttpActionResult GetAll()
+        public async Task<IHttpActionResult> GetAllAsync()
         {
-            throw new NotImplementedException();
-            var result = _gameService.GetAll();
+            var result = await _gameService.GetAllAsync();
             return result.IsSuccess ? Ok(result.Value) : (IHttpActionResult)StatusCode(HttpStatusCode.InternalServerError);
         }
 
@@ -58,9 +59,9 @@ namespace GamePortal.Web.Api.Controllers.Battleship
         /// <returns></returns>
         [HttpGet]
         [Route("{id:int:min(1)}")]      // TODO: Check Route Constraints 
-        public IHttpActionResult GetById(int id)
+        public async Task<IHttpActionResult> GetByIdAsync(int id)
         {
-            var battleArea = _gameService.GetById(id);
+            var battleArea = await _gameService.GetByIdAsync(id);
             if (battleArea.IsFailure)
             {
                 return StatusCode(HttpStatusCode.InternalServerError);
@@ -75,14 +76,14 @@ namespace GamePortal.Web.Api.Controllers.Battleship
         /// <returns></returns>
         [HttpPost]
         [Route("coordinates")]
-        public IHttpActionResult CheckHit([FromBody]CoordinatesDto coordinatesOfHit)
+        public async Task<IHttpActionResult> CheckHitAsync([FromBody]CoordinatesDto coordinatesOfHit)
         {
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
             }
 
-            var result =_gameService.CheckHit(coordinatesOfHit);
+            var result = await _gameService.CheckHitAsync(coordinatesOfHit);
             if (result.IsFailure)
             {
                 return StatusCode(HttpStatusCode.InternalServerError);

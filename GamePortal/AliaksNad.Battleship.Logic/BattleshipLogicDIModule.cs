@@ -33,13 +33,14 @@ namespace AliaksNad.Battleship.Logic
             var logger = new LoggerConfiguration()
                 .WriteTo.Debug()
                 .WriteTo.Console()
-                .WriteTo.File(Path.Combine(path, "Logs/Log.txt"), rollOnFileSizeLimit: true, fileSizeLimitBytes: 10_000_000, rollingInterval: RollingInterval.Day, restrictedToMinimumLevel: Serilog.Events.LogEventLevel.Information)
+                .WriteTo.Async(x => x.File(Path.Combine(path, "Logs/Log.txt"), rollOnFileSizeLimit: true, fileSizeLimitBytes: 10_000_000, rollingInterval: RollingInterval.Day, restrictedToMinimumLevel: Serilog.Events.LogEventLevel.Information))
                 .WriteTo.File(Path.Combine(path, "Logs/DebugLog.txt"), rollOnFileSizeLimit: true, fileSizeLimitBytes: 10_000_000, rollingInterval: RollingInterval.Day)
                 .Enrich.WithHttpRequestType()
                 .Enrich.WithWebApiControllerName()
                 .Enrich.WithWebApiActionName()
                 .MinimumLevel.Debug()
                 .CreateLogger();
+
 
             this.Bind<ILogger>().ToConstant(logger)
                 .When(r =>
