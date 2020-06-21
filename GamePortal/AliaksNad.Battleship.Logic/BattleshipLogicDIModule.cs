@@ -13,6 +13,8 @@ using Serilog;
 using Ninject.Extensions.Interception.Infrastructure.Language;
 using System.IO;
 using System.Reflection;
+using Microsoft.AspNet.Identity;
+using Microsoft.AspNet.Identity.EntityFramework;
 
 namespace AliaksNad.Battleship.Logic
 {
@@ -57,6 +59,10 @@ namespace AliaksNad.Battleship.Logic
             var userServiceBinding = this.Bind<IUserService>().To<UserService>();
             userServiceBinding.Intercept().With<ValidationInterceptor>();
             userServiceBinding.Intercept().With<BattleshipLoggerInterceptor>();
+
+            this.Bind<IUserStore<IdentityUser>>().To<UserStore<IdentityUser>>();
+            var user = this.Bind<UserManager<IdentityUser>>().ToSelf();
+            this.Bind<IUserIdentityService>().To<UserIdentityService>();
 
             var gameServiceBinding = this.Bind<IGameService>().To<GameService>();
             gameServiceBinding.Intercept().With<BattleshipLoggerInterceptor>();

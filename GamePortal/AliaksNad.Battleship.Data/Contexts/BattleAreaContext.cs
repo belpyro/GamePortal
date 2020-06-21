@@ -1,12 +1,13 @@
 ﻿using AliaksNad.Battleship.Data.Models;
 using JetBrains.Annotations;
+using Microsoft.AspNet.Identity.EntityFramework;
 using Serilog;
 using System.Data.Entity;
 using System.Reflection;
 
 namespace AliaksNad.Battleship.Data.Contexts
 {
-    public sealed class BattleAreaContext : DbContext
+    public sealed class BattleAreaContext : IdentityDbContext
     {
         public BattleAreaContext()
         {
