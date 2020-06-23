@@ -2,6 +2,7 @@
 using CSharpFunctionalExtensions;
 using System;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace AliaksNad.Battleship.Logic.Services
 {
@@ -36,5 +37,9 @@ namespace AliaksNad.Battleship.Logic.Services
         /// <param name="id">user id.</param>
         /// <returns></returns>
         Result Delete(int id);
+
+        Task<Result> Register(NewUserDto model);
+
+        Task ValidateEmailToken(string userId, string token);
     }
 }

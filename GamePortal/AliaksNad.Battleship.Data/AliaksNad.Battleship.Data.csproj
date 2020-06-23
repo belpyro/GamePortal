@@ -79,9 +79,9 @@
     <Compile Include="Contexts\Configurations\ShipsDbConfiguration.cs" />
     <Compile Include="Contexts\Configurations\UserDbConfiguration.cs" />
     <Compile Include="Contexts\UsersContext.cs" />
-    <Compile Include="Migrations\202005261930481_InitialCreate.cs" />
-    <Compile Include="Migrations\202005261930481_InitialCreate.designer.cs">
-      <DependentUpon>202005261930481_InitialCreate.cs</DependentUpon>
+    <Compile Include="Migrations\202006211917049_InitialCreate.cs" />
+    <Compile Include="Migrations\202006211917049_InitialCreate.designer.cs">
+      <DependentUpon>202006211917049_InitialCreate.cs</DependentUpon>
     </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\CoordinatesDb.cs" />
@@ -98,8 +98,8 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="Migrations\202005261930481_InitialCreate.resx">
-      <DependentUpon>202005261930481_InitialCreate.cs</DependentUpon>
+    <EmbeddedResource Include="Migrations\202006211917049_InitialCreate.resx">
+      <DependentUpon>202006211917049_InitialCreate.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

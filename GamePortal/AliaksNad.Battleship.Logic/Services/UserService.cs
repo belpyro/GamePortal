@@ -5,6 +5,8 @@ using AutoMapper;
 using CSharpFunctionalExtensions;
 using FluentValidation;
 using JetBrains.Annotations;
+using Microsoft.AspNet.Identity;
+using Microsoft.AspNet.Identity.EntityFramework;
 using Serilog;
 using System;
 using System.Collections.Generic;
@@ -21,13 +23,19 @@ namespace AliaksNad.Battleship.Logic.Services
     public class UserService : IUserService
     {
         private readonly UsersContext _context;
+        private readonly BattleAreaContext _areaContext;
         private readonly IMapper _mapper;
+        private readonly UserManager<IdentityUser> _userManager;
 
-        public UserService([NotNull]UsersContext context, 
-                           [NotNull]IMapper mapper)
+        public UserService([NotNull]UsersContext context,
+            [NotNull]BattleAreaContext areaContext,
+            [NotNull]IMapper mapper,
+            [NotNull]UserManager<IdentityUser> userManager)
         {
             this._context = context;
+            this._areaContext = areaContext;
             this._mapper = mapper;
+            this._userManager = userManager;
         }
 
         /// <summary>
@@ -132,6 +140,34 @@ namespace AliaksNad.Battleship.Logic.Services
             {
                 return Result.Failure<UserDto>(ex.Message);
             }
+        }
+
+        public async Task<Result> Register(NewUserDto model)
+        {
+            // validation
+            var user = new IdentityUser
+            {
+                Email = model.Email,
+                UserName = model.UserName
+            };
+
+            var result = await _userManager.CreateAsync(user, model.Password).ConfigureAwait(false);
+            await _userManager.AddToRoleAsync(user.Id, "user");
+
+            var token = await _userManager.GenerateEmailConfirmationTokenAsync(user.Id);
+
+            await _userManager.SendEmailAsync(user.Id, "confirm your email", $"Click on https://localhost:55555/api/user/email/comfirm?userId={user.Id}&token={token}");
+
+            return result.Succeeded ? Result.Success() : Result.Failure(result.Errors.Aggregate((a, b) => $"{a},{b}"));
+        }
+
+        public async Task ValidateEmailToken(string userId, string token)
+        {
+            var result = await _userManager.ConfirmEmailAsync(userId, token).ConfigureAwait(false);
+
+            await _userManager.FindByEmailAsync("email").ConfigureAwait(false);
+            await _userManager.GeneratePasswordResetTokenAsync(userId).ConfigureAwait(false);
+            await _userManager.ResetPasswordAsync(userId, token, "newPass");
         }
 
         #region IDisposable Support

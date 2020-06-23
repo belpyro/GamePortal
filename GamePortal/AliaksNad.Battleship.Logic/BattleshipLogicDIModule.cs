@@ -56,13 +56,33 @@ namespace AliaksNad.Battleship.Logic
             this.Bind<IValidator<UserDto>>().To<UserDtoValidator>();
             this.Bind<IValidator<BattleAreaDto>>().To<BattleAreaDtoValidator>();
 
+            this.Bind<IUserStore<IdentityUser>>().To<UserStore<IdentityUser>>();
+            var user = this.Bind<UserManager<IdentityUser>>().ToMethod(ctx => 
+            {
+                var manager = new UserManager<IdentityUser>(ctx.Kernel.Get<IUserStore<IdentityUser>>());
+                manager.EmailService = new BattleshipEmailService();
+                manager.UserValidator = new UserValidator<IdentityUser>(manager)
+                {
+                    AllowOnlyAlphanumericUserNames = false,
+                    RequireUniqueEmail = true
+                };
+                manager.PasswordValidator = new PasswordValidator() 
+                {
+                    RequireDigit = false,
+                    RequiredLength = 3,
+                    RequireLowercase = false,
+                    RequireNonLetterOrDigit = false,
+                    RequireUppercase = false
+                };
+
+                manager.UserTokenProvider = new EmailTokenProvider<IdentityUser>();
+
+                return manager;
+            });
+
             var userServiceBinding = this.Bind<IUserService>().To<UserService>();
             userServiceBinding.Intercept().With<ValidationInterceptor>();
             userServiceBinding.Intercept().With<BattleshipLoggerInterceptor>();
-
-            this.Bind<IUserStore<IdentityUser>>().To<UserStore<IdentityUser>>();
-            var user = this.Bind<UserManager<IdentityUser>>().ToSelf();
-            this.Bind<IUserIdentityService>().To<UserIdentityService>();
 
             var gameServiceBinding = this.Bind<IGameService>().To<GameService>();
             gameServiceBinding.Intercept().With<BattleshipLoggerInterceptor>();

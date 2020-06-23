@@ -1,5 +1,6 @@
 ﻿using System.Linq;
 using System.Net;
+using System.Threading.Tasks;
 using System.Web.Http;
 using AliaksNad.Battleship.Logic.Models;
 using AliaksNad.Battleship.Logic.Services;
@@ -107,6 +108,17 @@ namespace GamePortal.Web.Api.Controllers.Battleship
         {
             _userService.Delete(id);
             return StatusCode(HttpStatusCode.NoContent);
+        }
+
+        [HttpPost]
+        [Route("register")]
+        public async Task<IHttpActionResult> Register([FromBody]NewUserDto model)
+        {
+            if (!ModelState.IsValid) return BadRequest("Invalid model");
+
+            var result = await _userService.Register(model);
+
+            return result.IsSuccess ? StatusCode(HttpStatusCode.NoContent) : StatusCode(HttpStatusCode.InternalServerError);
         }
 
         protected override void Dispose(bool disposing)
