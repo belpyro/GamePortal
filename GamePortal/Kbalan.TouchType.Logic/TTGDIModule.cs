@@ -14,6 +14,9 @@ using Serilog.Sinks.MSSqlServer.Sinks.MSSqlServer.Options;
 using Serilog.Sinks.MSSqlServer;
 using Ninject.Extensions.Interception.Infrastructure.Language;
 using Ninject.Planning;
+using Microsoft.AspNet.Identity;
+using Microsoft.AspNet.Identity.EntityFramework;
+using Kbalan.Logic;
 
 namespace Kbalan.TouchType.Logic
 {
@@ -63,6 +66,30 @@ namespace Kbalan.TouchType.Logic
             textSetBinding.Intercept().With<TextSetValidationInterceptor>();
             textSetBinding.Intercept().With<LoggerInterceptor>();
 
+            this.Bind<IUserStore<IdentityUser>>().To<UserStore<IdentityUser>>();
+            this.Bind<UserManager<IdentityUser>>().ToMethod(ctx =>
+            {
+                var manager = new UserManager<IdentityUser>(new UserStore<IdentityUser>(new TouchTypeGameContext()));
+                
+                manager.EmailService = new PizzaEmailService();
+                manager.UserValidator = new UserValidator<IdentityUser>(manager)
+                {
+                    AllowOnlyAlphanumericUserNames = false,
+                    RequireUniqueEmail = true
+                };
+                manager.PasswordValidator = new PasswordValidator()
+                {
+                    RequireDigit = false,
+                    RequiredLength = 3,
+                    RequireLowercase = false,
+                    RequireNonLetterOrDigit = false,
+                    RequireUppercase = false
+                };
+
+                manager.UserTokenProvider = new EmailTokenProvider<IdentityUser>();
+
+                return manager;
+            });
             var userBinding = Bind<IUserService>().To<UserService>();
             userBinding.Intercept().With<UserValidationInterceptor>();
             userBinding.Intercept().With<LoggerInterceptor>();

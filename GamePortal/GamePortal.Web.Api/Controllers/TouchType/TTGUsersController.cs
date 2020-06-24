@@ -22,12 +22,24 @@ namespace GamePortal.Web.Api.Controllers.TouchType
     [RoutePrefix("api/users")]
     public class TTGUsersController : ApiController
     {
+
+
         private readonly IUserService _userService;
 
 
         public TTGUsersController([NotNull]IUserService userService)
         {
             this._userService = userService;
+        }
+
+        [HttpPost, Route("register")]
+        public async Task<IHttpActionResult> Register([FromBody]NewUserDto model)
+        {
+            if (!ModelState.IsValid) return BadRequest("Invalid model");
+
+            var result = await _userService.Register(model);
+
+            return result.IsSuccess ? StatusCode(HttpStatusCode.NoContent) : StatusCode(HttpStatusCode.InternalServerError);
         }
 
         //Get All RegisterUsers
@@ -39,7 +51,7 @@ namespace GamePortal.Web.Api.Controllers.TouchType
             return result.IsSuccess ? Ok(result.Value) : (IHttpActionResult)BadRequest(result.Error);
         }
 
-        //Get Full User Info by Id
+/*        //Get Full User Info by Id
         [HttpGet]
         [Route("{id}")]
         public async Task<IHttpActionResult> GetByIdAsync([FromUri]int id)
@@ -93,7 +105,7 @@ namespace GamePortal.Web.Api.Controllers.TouchType
             var result =  await _userService.DeleteAsync(id);
             return result.IsSuccess ? Ok($"User with id {id} deleted with his setting and statistic succesfully!") : (IHttpActionResult)BadRequest(result.Error);
 
-        }
+        }*/
 
     }
 }
