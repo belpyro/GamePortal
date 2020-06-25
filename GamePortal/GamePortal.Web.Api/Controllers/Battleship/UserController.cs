@@ -1,11 +1,16 @@
 ﻿using System.Linq;
 using System.Net;
+using System.Net.Http;
+using System.Security.Claims;
 using System.Threading.Tasks;
 using System.Web.Http;
 using AliaksNad.Battleship.Logic.Models;
 using AliaksNad.Battleship.Logic.Services;
+using AliaksNad.Battleship.Logic.Services.Contracts;
 using FluentValidation;
 using FluentValidation.WebApi;
+using Microsoft.AspNet.Identity;
+using Microsoft.Owin.Security;
 
 namespace GamePortal.Web.Api.Controllers.Battleship
 {
@@ -119,6 +124,26 @@ namespace GamePortal.Web.Api.Controllers.Battleship
             var result = await _userService.Register(model);
 
             return result.IsSuccess ? StatusCode(HttpStatusCode.NoContent) : StatusCode(HttpStatusCode.InternalServerError);
+        }
+
+        [HttpPost, Route("login")]
+        public async Task<IHttpActionResult> Login([FromBody]LoginDto model)
+        {
+            if (!ModelState.IsValid) return BadRequest("Invalid model");
+
+            var result = await _userService.GetUser(model.UserName, model.Password);
+            if (result.HasNoValue) return Unauthorized();
+
+            var identity = new ClaimsIdentity(DefaultAuthenticationTypes.ApplicationCookie);
+            identity.AddClaim(new Claim(ClaimTypes.NameIdentifier, result.Value.Id));
+            identity.AddClaim(new Claim(ClaimTypes.Name, result.Value.UserName));
+
+            var provider = Request.GetOwinContext().Authentication;
+
+            provider.SignOut(DefaultAuthenticationTypes.ApplicationCookie);
+            provider.SignIn(new AuthenticationProperties { IsPersistent = true }, identity);
+
+            return Ok();
         }
 
         protected override void Dispose(bool disposing)

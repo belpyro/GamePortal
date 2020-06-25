@@ -15,6 +15,7 @@ using System.IO;
 using System.Reflection;
 using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.EntityFramework;
+using AliaksNad.Battleship.Logic.Services.Contracts;
 
 namespace AliaksNad.Battleship.Logic
 {

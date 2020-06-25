@@ -4,7 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
-namespace AliaksNad.Battleship.Logic.Services
+namespace AliaksNad.Battleship.Logic.Services.Contracts
 {
     public interface IUserService : IDisposable 
     {
@@ -40,6 +40,12 @@ namespace AliaksNad.Battleship.Logic.Services
 
         Task<Result> Register(NewUserDto model);
 
-        Task ValidateEmailToken(string userId, string token);
+        Task<Result> ConfirmEmail(string userId, string token);
+
+        Task<Result> ResetPassword(string email);
+
+        Task<Result> ChangePassword(string userId, string token, string newPassword);
+
+        Task<Maybe<UserDto>> GetUser(string username, string password);
     }
 }

@@ -16,6 +16,8 @@ using Ninject.Web.Common;
 using System.Web;
 using System.Web.Http.ExceptionHandling;
 using Elmah.Contrib.WebApi;
+using Microsoft.Owin.Security.Cookies;
+using Microsoft.AspNet.Identity;
 
 [assembly: OwinStartup(typeof(GamePortal.Web.Api.Startup))]
 
@@ -43,6 +45,11 @@ namespace GamePortal.Web.Api
             FluentValidationModelValidatorProvider.Configure(config, opt =>
             {
                 opt.ValidatorFactory = new CustomValidatorFactory(kernel);
+            });
+
+            app.UseCookieAuthentication(new CookieAuthenticationOptions
+            {
+                AuthenticationType = DefaultAuthenticationTypes.ApplicationCookie
             });
 
             app.UseSwagger(typeof(Startup).Assembly).UseSwaggerUi3()

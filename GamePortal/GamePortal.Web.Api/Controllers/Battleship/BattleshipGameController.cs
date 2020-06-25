@@ -1,5 +1,6 @@
 ﻿using AliaksNad.Battleship.Logic.Models;
 using AliaksNad.Battleship.Logic.Services;
+using AliaksNad.Battleship.Logic.Services.Contracts;
 using FluentValidation.WebApi;
 using JetBrains.Annotations;
 using System;

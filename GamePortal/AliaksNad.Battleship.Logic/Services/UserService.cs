@@ -1,9 +1,12 @@
 ﻿using AliaksNad.Battleship.Data.Contexts;
 using AliaksNad.Battleship.Data.Models;
+using AliaksNad.Battleship.Logic.Extensions;
 using AliaksNad.Battleship.Logic.Models;
+using AliaksNad.Battleship.Logic.Services.Contracts;
 using AutoMapper;
 using CSharpFunctionalExtensions;
 using FluentValidation;
+using Fody;
 using JetBrains.Annotations;
 using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.EntityFramework;
@@ -20,6 +23,8 @@ using System.Threading.Tasks;
 
 namespace AliaksNad.Battleship.Logic.Services
 {
+
+    [ConfigureAwait(false)]
     public class UserService : IUserService
     {
         private readonly UsersContext _context;
@@ -89,7 +94,7 @@ namespace AliaksNad.Battleship.Logic.Services
                 _context.Users.Add(dbModel);
                 _context.SaveChanges();
 
-                model.Id = dbModel.Id;
+                //model.Id = dbModel.Id;
                 return Result.Success(model);
             }
             catch (DbUpdateException ex)
@@ -151,23 +156,45 @@ namespace AliaksNad.Battleship.Logic.Services
                 UserName = model.UserName
             };
 
-            var result = await _userManager.CreateAsync(user, model.Password).ConfigureAwait(false);
-            await _userManager.AddToRoleAsync(user.Id, "user");
+            var result = await _userManager.CreateAsync(user, model.Password);
+            var result2 = await _userManager.AddToRoleAsync(user.Id, "user");
 
             var token = await _userManager.GenerateEmailConfirmationTokenAsync(user.Id);
 
             await _userManager.SendEmailAsync(user.Id, "confirm your email", $"Click on https://localhost:55555/api/user/email/comfirm?userId={user.Id}&token={token}");
 
-            return result.Succeeded ? Result.Success() : Result.Failure(result.Errors.Aggregate((a, b) => $"{a},{b}"));
+            return Result.Combine(result.ToFunctionalResult(), result2.ToFunctionalResult());
         }
 
-        public async Task ValidateEmailToken(string userId, string token)
+        public async Task<Result> ChangePassword(string userId, string token, string newPassword)
         {
-            var result = await _userManager.ConfirmEmailAsync(userId, token).ConfigureAwait(false);
+            var result = await _userManager.ResetPasswordAsync(userId, token, newPassword);
+            return result.ToFunctionalResult();
+        }
 
-            await _userManager.FindByEmailAsync("email").ConfigureAwait(false);
-            await _userManager.GeneratePasswordResetTokenAsync(userId).ConfigureAwait(false);
-            await _userManager.ResetPasswordAsync(userId, token, "newPass");
+        public async Task<Result> ConfirmEmail(string userId, string token)
+        {
+            var data = await _userManager.ConfirmEmailAsync(userId, token);
+            return data.ToFunctionalResult();
+        }
+
+        public async Task<Result> ResetPassword(string email)
+        {
+            var user = await _userManager.FindByEmailAsync(email);
+            if (user == null) throw new ValidationException("User doesn't exist");
+
+            var token = await _userManager.GeneratePasswordResetTokenAsync(user.Id);
+            await _userManager.SendEmailAsync(user.Id, "Reset your password", $"Click on yourhost/api/users/password/reset?userId={user.Id}&token={token}");
+            return Result.Success();
+        }
+
+        public async Task<Maybe<UserDto>> GetUser(string username, string password)
+        {
+            var user = await _userManager.FindByNameAsync(username);
+            if (user == null) return null;
+
+            var isValid = await _userManager.CheckPasswordAsync(user, password);
+            return isValid ? _mapper.Map<UserDto>(user) : null;
         }
 
         #region IDisposable Support

@@ -1,6 +1,7 @@
 ﻿using AliaksNad.Battleship.Data.Models;
 using AliaksNad.Battleship.Logic.Models;
 using AutoMapper; // or Mapster
+using Microsoft.AspNet.Identity.EntityFramework;
 using System.Security.Cryptography.X509Certificates;
 
 namespace AliaksNad.Battleship.Logic.Profiles
@@ -9,8 +10,7 @@ namespace AliaksNad.Battleship.Logic.Profiles
     {
         public UserProfile()
         {
-            CreateMap<UserDb, UserDto>()
-                .ForMember(x => x.Password, opt => opt.Ignore())
+            CreateMap<IdentityUser, UserDto>()
                 .ReverseMap();
         }
     }

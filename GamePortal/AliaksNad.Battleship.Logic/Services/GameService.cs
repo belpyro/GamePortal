@@ -1,6 +1,7 @@
 ﻿using AliaksNad.Battleship.Data.Contexts;
 using AliaksNad.Battleship.Data.Models;
 using AliaksNad.Battleship.Logic.Models;
+using AliaksNad.Battleship.Logic.Services.Contracts;
 using AutoMapper;
 using CSharpFunctionalExtensions;
 using JetBrains.Annotations;

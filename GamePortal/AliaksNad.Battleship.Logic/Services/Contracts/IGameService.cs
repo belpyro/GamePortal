@@ -3,7 +3,7 @@ using CSharpFunctionalExtensions;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
-namespace AliaksNad.Battleship.Logic.Services
+namespace AliaksNad.Battleship.Logic.Services.Contracts
 {
     public interface IGameService
     {

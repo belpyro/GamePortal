@@ -15,10 +15,7 @@ namespace AliaksNad.Battleship.Logic.Services
         static UserFaker()
         {
             _faker = new Faker<UserDto>();
-            _faker.RuleFor(x => x.Id, a => a.IndexFaker)
-                .RuleFor(x => x.Name, a => a.Person.FirstName)
-                .RuleFor(x => x.Email, a => a.Person.Email)
-                .RuleFor(x => x.Password, a => a.Random.String2(8, 8));
+            _faker.RuleFor(x => x.UserName, a => a.Person.FirstName);
         }
 
         internal static IEnumerable<UserDto> Generate(int count = 100)
