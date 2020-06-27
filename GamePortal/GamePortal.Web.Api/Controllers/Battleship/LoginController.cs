@@ -20,6 +20,11 @@ namespace GamePortal.Web.Api.Controllers.Battleship
             this._userService = userService;
         }
 
+        /// <summary>
+        /// Create and register new user in app by OAuth 2.0
+        /// </summary>
+        /// <param name="model">OAuth 2.0 New user model</param>
+        /// <returns></returns>
         [HttpGet, Route("external/google")]
         public async Task<IHttpActionResult> GoogleLogin()
         {
@@ -28,7 +33,7 @@ namespace GamePortal.Web.Api.Controllers.Battleship
 
             if (loginInfo == null) return BadRequest();
 
-            await _userService.RegisterExternalUser(loginInfo);
+            await _userService.RegisterExternalUserAsync(loginInfo);
             return Ok();
         }
     }

@@ -14,7 +14,7 @@ using Microsoft.Owin.Security;
 
 namespace GamePortal.Web.Api.Controllers.Battleship
 {
-    [RoutePrefix("api/battleship/users")]
+    [RoutePrefix("api/battleship/BSUsers")]
     public class UserController : ApiController
     {
         private readonly IUserService _userService;
@@ -27,111 +27,30 @@ namespace GamePortal.Web.Api.Controllers.Battleship
         }
 
         /// <summary>
-        /// Get all users from logic layer.
+        /// Create and register new user in app
         /// </summary>
+        /// <param name="model">New user model</param>
         /// <returns></returns>
-        [HttpGet]
-        [Route("")]
-        public IHttpActionResult GetAll()
-        {
-            var result = _userService.GetAll();
-            return result.IsSuccess ? Ok(result.Value) : (IHttpActionResult)StatusCode(HttpStatusCode.InternalServerError);
-        }
-
-        /// <summary>
-        /// Get user from logic layer by id.
-        /// </summary>
-        /// <param name="id">user id.</param>
-        /// <returns></returns>
-        [HttpGet]
-        [Route("{id:int:min(1)}")]      // TODO: Check Route Constraints 
-        public IHttpActionResult GetById(int id)
-        {
-            var user = _userService.GetById(id);
-            if (user.IsFailure)
-            {
-                return StatusCode(HttpStatusCode.InternalServerError);
-            }
-            return user.Value.HasNoValue ? (IHttpActionResult)NotFound() : Ok(user.Value.Value);
-        }
-
-        /// <summary>
-        /// Add user to data via logic layer.
-        /// </summary>
-        /// <param name="model">User model.</param>
-        /// <returns></returns>
-        [HttpPost]
-        [Route("")]
-        public IHttpActionResult Add([CustomizeValidator(RuleSet = "PreValidation")][FromBody]UserDto model) // TODO: Check Attribute for validation
-        {
-            if (!ModelState.IsValid)
-            {
-                return BadRequest(ModelState);
-            }
-
-            //var preValidationResult = _userDtoValidator.Validate(model, ruleSet: "PreValidation");
-            //if (!preValidationResult.IsValid)
-            //{
-            //    return BadRequest(preValidationResult.Errors.Select(x => x.ErrorMessage).First());
-            //}
-
-            var result = _userService.Add(model);
-            return result.IsSuccess ? Created($"/api/battleship/users/{result.Value.Id}", result.Value) : (IHttpActionResult)BadRequest(result.Error) ;
-            
-        }
-
-        /// <summary>
-        /// Update user model in data via logic layer.
-        /// </summary>
-        /// <param name="model">User model.</param>
-        [HttpPut]
-        [Route("")]
-        public IHttpActionResult Update(/*[CustomizeValidator(RuleSet = "PreValidation")]*/[FromBody]UserDto model) // TODO: Check Attribute for validation
-        {
-            if (!ModelState.IsValid)
-            {
-                return BadRequest(ModelState);
-            }
-
-            var preValidationResult = _userDtoValidator.Validate(model, ruleSet: "PreValidation");
-            if (!preValidationResult.IsValid)
-            {
-                return BadRequest(preValidationResult.Errors.Select(x => x.ErrorMessage).First());
-            }
-
-            var result = _userService.Update(model);
-            return result.IsSuccess ? Ok() : (IHttpActionResult)StatusCode(HttpStatusCode.NoContent);
-        }
-
-        /// <summary>
-        /// Delete user in data via logic layer by id.
-        /// </summary>
-        /// <param name="id">User id.</param>
-        [HttpDelete]
-        [Route("{id:int:min(1)}")]      // TODO: Check Route Constraints 
-        public IHttpActionResult Delete(int id)
-        {
-            _userService.Delete(id);
-            return StatusCode(HttpStatusCode.NoContent);
-        }
-
-        [HttpPost]
-        [Route("register")]
+        [HttpPost, Route("")]
         public async Task<IHttpActionResult> Register([FromBody]NewUserDto model)
         {
             if (!ModelState.IsValid) return BadRequest("Invalid model");
 
-            var result = await _userService.Register(model);
-
+            var result = await _userService.RegisterAsync(model);
             return result.IsSuccess ? StatusCode(HttpStatusCode.NoContent) : StatusCode(HttpStatusCode.InternalServerError);
         }
 
-        [HttpPost, Route("login")]
+        /// <summary>
+        /// Login and authentication user
+        /// </summary>
+        /// <param name="model">User name and password</param>
+        /// <returns></returns>
+        [HttpPost, Route("")]
         public async Task<IHttpActionResult> Login([FromBody]LoginDto model)
         {
             if (!ModelState.IsValid) return BadRequest("Invalid model");
 
-            var result = await _userService.GetUser(model.UserName, model.Password);
+            var result = await _userService.GetUserAsync(model.UserName, model.Password);
             if (result.HasNoValue) return Unauthorized();
 
             var identity = new ClaimsIdentity(DefaultAuthenticationTypes.ApplicationCookie);
@@ -144,6 +63,85 @@ namespace GamePortal.Web.Api.Controllers.Battleship
             provider.SignIn(new AuthenticationProperties { IsPersistent = true }, identity);
 
             return Ok();
+        }
+
+        /// <summary>
+        /// Update user model in app
+        /// </summary>
+        /// <param name="model">User model</param>
+        /// <returns></returns>
+        [HttpPut, Route("")]
+        public async Task<IHttpActionResult> Update(/*[CustomizeValidator(RuleSet = "PreValidation")]*/[FromBody]UserDto model) // TODO: Check Attribute for validation
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+
+            var preValidationResult = _userDtoValidator.Validate(model, ruleSet: "PreValidation");
+            if (!preValidationResult.IsValid)
+            {
+                return BadRequest(preValidationResult.Errors.Select(x => x.ErrorMessage).First());
+            }
+
+            var result = await _userService.UpdateAsync(model);
+            return result.IsSuccess ? Ok() : (IHttpActionResult)StatusCode(HttpStatusCode.NoContent);
+        }
+
+        /// <summary>
+        /// Reset user password in app
+        /// </summary>
+        /// <param name="email">User email</param>
+        /// <returns></returns>
+        [HttpPost, Route("{email}")]
+        public async Task<IHttpActionResult> ResetPassword([FromUri]string email)
+        {
+            if (!ModelState.IsValid) return BadRequest("Invalid email");
+
+            var result = await _userService.ResetPasswordAsync(email);
+            return result.IsSuccess ? Ok() : (IHttpActionResult)StatusCode(HttpStatusCode.InternalServerError);
+        }
+
+        /// <summary>
+        /// Change user password in app
+        /// </summary>
+        /// <param name="userId">User ID</param>
+        /// <param name="token">Validation token</param>
+        /// <param name="newPassword">New password</param>
+        /// <returns></returns>
+        [HttpPost, Route("ChangePass")]
+        public async Task<IHttpActionResult> ChangePassword([FromBody]string userId, [FromBody]string token, [FromBody]string newPassword)
+        {
+            if (!ModelState.IsValid) return BadRequest("Invalid model");
+
+            var result = await _userService.ChangePasswordAsync(userId, token, newPassword);
+            return result.IsSuccess ? StatusCode(HttpStatusCode.NoContent) : StatusCode(HttpStatusCode.InternalServerError);
+        }
+
+        /// <summary>
+        /// Confirm user email in app
+        /// </summary>
+        /// <param name="userId">User ID</param>
+        /// <param name="token">Validation token</param>
+        /// <returns></returns>
+        [HttpPost, Route("ConfirmEmail")]
+        public async Task<IHttpActionResult> ConfirmEmail([FromBody]string userId, string token)
+        {
+            if (!ModelState.IsValid) return BadRequest("Invalid model");
+
+            var result = await _userService.ConfirmEmailAsync(userId, token);
+            return result.IsSuccess ? StatusCode(HttpStatusCode.NoContent) : StatusCode(HttpStatusCode.InternalServerError);
+        }
+
+        /// <summary>
+        /// Delete user in app
+        /// </summary>
+        /// <param name="UserDto">User model</param>
+        [HttpDelete, Route("{id:int:min(1)}")]
+        public async Task<IHttpActionResult> Delete(UserDto model)
+        {
+            var result = await _userService.DeleteAsync(model);
+            return result.IsSuccess ? StatusCode(HttpStatusCode.NoContent) : StatusCode(HttpStatusCode.InternalServerError);
         }
 
         protected override void Dispose(bool disposing)

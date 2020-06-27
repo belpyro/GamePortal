@@ -2,7 +2,7 @@
 using System.Net.Http.Headers;
 using System.Threading.Tasks;
 
-namespace AliaksNad.Battleship.Logic
+namespace AliaksNad.Battleship.Logic.Services
 {
     internal class BattleshipEmailService : IIdentityMessageService
     {

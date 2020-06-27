@@ -61,7 +61,6 @@ namespace AliaksNad.Battleship.Logic
             var user = this.Bind<UserManager<IdentityUser>>().ToMethod(ctx => 
             {
                 var manager = new UserManager<IdentityUser>(ctx.Kernel.Get<IUserStore<IdentityUser>>());
-                manager.EmailService = new BattleshipEmailService();
                 manager.UserValidator = new UserValidator<IdentityUser>(manager)
                 {
                     AllowOnlyAlphanumericUserNames = false,
@@ -75,6 +74,7 @@ namespace AliaksNad.Battleship.Logic
                     RequireNonLetterOrDigit = false,
                     RequireUppercase = false
                 };
+                manager.EmailService = new BattleshipEmailService();
 
                 manager.UserTokenProvider = new EmailTokenProvider<IdentityUser>();
 
