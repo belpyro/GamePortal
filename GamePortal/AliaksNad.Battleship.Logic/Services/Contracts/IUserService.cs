@@ -1,5 +1,6 @@
 ﻿using AliaksNad.Battleship.Logic.Models;
 using CSharpFunctionalExtensions;
+using Microsoft.AspNet.Identity.Owin;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
@@ -40,6 +41,8 @@ namespace AliaksNad.Battleship.Logic.Services.Contracts
 
         Task<Result> Register(NewUserDto model);
 
+        Task<Result> RegisterExternalUser(ExternalLoginInfo info);
+
         Task<Result> ConfirmEmail(string userId, string token);
 
         Task<Result> ResetPassword(string email);
@@ -47,5 +50,6 @@ namespace AliaksNad.Battleship.Logic.Services.Contracts
         Task<Result> ChangePassword(string userId, string token, string newPassword);
 
         Task<Maybe<UserDto>> GetUser(string username, string password);
+
     }
 }

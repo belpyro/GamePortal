@@ -10,6 +10,7 @@ using Fody;
 using JetBrains.Annotations;
 using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.EntityFramework;
+using Microsoft.AspNet.Identity.Owin;
 using Serilog;
 using System;
 using System.Collections.Generic;
@@ -164,6 +165,18 @@ namespace AliaksNad.Battleship.Logic.Services
             await _userManager.SendEmailAsync(user.Id, "confirm your email", $"Click on https://localhost:55555/api/user/email/comfirm?userId={user.Id}&token={token}");
 
             return Result.Combine(result.ToFunctionalResult(), result2.ToFunctionalResult());
+        }
+
+        public async Task<Result> RegisterExternalUser(ExternalLoginInfo info)
+        {
+            var user = await _userManager.FindAsync(info.Login);
+            if (user != null) return Result.Success();
+
+            user = new IdentityUser(info.Email) { Email = info.Email };
+            await _userManager.CreateAsync(user);
+
+            await _userManager.AddLoginAsync(user.Id, info.Login);
+            return Result.Success();
         }
 
         public async Task<Result> ChangePassword(string userId, string token, string newPassword)

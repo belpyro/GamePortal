@@ -18,6 +18,8 @@ using System.Web.Http.ExceptionHandling;
 using Elmah.Contrib.WebApi;
 using Microsoft.Owin.Security.Cookies;
 using Microsoft.AspNet.Identity;
+using Microsoft.Owin.Security.Google;
+using GamePortal.Web.Api.Middleware;
 
 [assembly: OwinStartup(typeof(GamePortal.Web.Api.Startup))]
 
@@ -51,6 +53,16 @@ namespace GamePortal.Web.Api
             {
                 AuthenticationType = DefaultAuthenticationTypes.ApplicationCookie
             });
+
+            app.UseExternalSignInCookie(DefaultAuthenticationTypes.ExternalCookie);
+
+            app.UseGoogleAuthentication(new GoogleOAuth2AuthenticationOptions
+            {
+                ClientId = "241000708571-qhb5s5fqe1nin8s33isgvmpfosa0cgpt.apps.googleusercontent.com",
+                ClientSecret = "G3VZRIXRrewqBkFlRKQtLN3o"
+            });
+
+            app.Map("/login/google", x => x.Use<GoogleAuthMiddleware>());
 
             app.UseSwagger(typeof(Startup).Assembly).UseSwaggerUi3()
                 .UseNinjectMiddleware(() => kernel).UseNinjectWebApi(config);            // For more information on how to configure your application, visit https://go.microsoft.com/fwlink/?LinkID=316888
