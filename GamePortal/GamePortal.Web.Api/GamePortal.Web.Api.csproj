@@ -337,8 +337,6 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="App_Start\CustomValidatorFactory.cs" />
-    <Compile Include="App_Start\RouteConfig.cs" />
-    <Compile Include="App_Start\WebApiConfig.cs" />
     <Compile Include="Controllers\Battleship\BattleshipGameController.cs" />
     <Compile Include="Controllers\Battleship\LoginController.cs" />
     <Compile Include="Controllers\Battleship\UserController.cs" />
