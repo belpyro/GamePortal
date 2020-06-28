@@ -89,23 +89,6 @@ namespace AliaksNad.Battleship.Logic.Services
         }
 
         /// <summary>
-        /// Update user model in app
-        /// </summary>
-        /// <param name="model">User model</param>
-        public async Task<Result> UpdateAsync(UserDto model)
-        {
-            try
-            {
-                var result = await _userManager.UpdateAsync(_mapper.Map<IdentityUser>(model));
-                return result.ToFunctionalResult();
-            }
-            catch (DbUpdateException ex)
-            {
-                return Result.Failure<UserDto>(ex.Message);
-            }
-        }
-
-        /// <summary>
         /// Reset user password in app
         /// </summary>
         /// <param name="email">User email</param>
@@ -147,12 +130,15 @@ namespace AliaksNad.Battleship.Logic.Services
         /// <summary>
         /// Delete user in app
         /// </summary>
-        /// <param name="UserDto">User model</param>
-        public async Task<Result> DeleteAsync(UserDto model)
+        /// <param name="userId">User ID</param>
+        public async Task<Result> DeleteAsync(string userId)
         {
             try
             {
-                var result = await _userManager.DeleteAsync(_mapper.Map<IdentityUser>(model));
+                var user = await _userManager.FindByIdAsync(userId);
+                if (user == null) return Result.Failure("Didn't find user by this id");
+
+                var result = await _userManager.DeleteAsync(user);
                 return result.ToFunctionalResult();
             }
             catch (DbUpdateException ex)

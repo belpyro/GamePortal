@@ -32,12 +32,6 @@ namespace AliaksNad.Battleship.Logic.Services.Contracts
         Task<Maybe<UserDto>> GetUserAsync(string username, string password);
 
         /// <summary>
-        /// Update user model in app
-        /// </summary>
-        /// <param name="model">User model</param>
-        Task<Result> UpdateAsync(UserDto model);
-
-        /// <summary>
         /// Reset user password in app
         /// </summary>
         /// <param name="email">User email</param>
@@ -64,7 +58,7 @@ namespace AliaksNad.Battleship.Logic.Services.Contracts
         /// <summary>
         /// Delete user in app
         /// </summary>
-        /// <param name="UserDto">User model</param>
-        Task<Result> DeleteAsync(UserDto model);
+        /// <param name="userId">User ID</param>
+        Task<Result> DeleteAsync(string userId);
     }
 }

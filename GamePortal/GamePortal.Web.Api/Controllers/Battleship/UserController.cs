@@ -3,6 +3,7 @@ using System.Net;
 using System.Net.Http;
 using System.Security.Claims;
 using System.Threading.Tasks;
+using System.Web;
 using System.Web.Http;
 using AliaksNad.Battleship.Logic.Models;
 using AliaksNad.Battleship.Logic.Services;
@@ -14,7 +15,7 @@ using Microsoft.Owin.Security;
 
 namespace GamePortal.Web.Api.Controllers.Battleship
 {
-    [RoutePrefix("api/battleship/BSUsers")]
+    [RoutePrefix("api/battleship/Users")]
     public class UserController : ApiController
     {
         private readonly IUserService _userService;
@@ -31,7 +32,7 @@ namespace GamePortal.Web.Api.Controllers.Battleship
         /// </summary>
         /// <param name="model">New user model</param>
         /// <returns></returns>
-        [HttpPost, Route("")]
+        [HttpPost, Route("register")]
         public async Task<IHttpActionResult> Register([FromBody]NewUserDto model)
         {
             if (!ModelState.IsValid) return BadRequest("Invalid model");
@@ -45,7 +46,7 @@ namespace GamePortal.Web.Api.Controllers.Battleship
         /// </summary>
         /// <param name="model">User name and password</param>
         /// <returns></returns>
-        [HttpPost, Route("")]
+        [HttpPost, Route("login")]
         public async Task<IHttpActionResult> Login([FromBody]LoginDto model)
         {
             if (!ModelState.IsValid) return BadRequest("Invalid model");
@@ -66,35 +67,12 @@ namespace GamePortal.Web.Api.Controllers.Battleship
         }
 
         /// <summary>
-        /// Update user model in app
-        /// </summary>
-        /// <param name="model">User model</param>
-        /// <returns></returns>
-        [HttpPut, Route("")]
-        public async Task<IHttpActionResult> Update(/*[CustomizeValidator(RuleSet = "PreValidation")]*/[FromBody]UserDto model) // TODO: Check Attribute for validation
-        {
-            if (!ModelState.IsValid)
-            {
-                return BadRequest(ModelState);
-            }
-
-            var preValidationResult = _userDtoValidator.Validate(model, ruleSet: "PreValidation");
-            if (!preValidationResult.IsValid)
-            {
-                return BadRequest(preValidationResult.Errors.Select(x => x.ErrorMessage).First());
-            }
-
-            var result = await _userService.UpdateAsync(model);
-            return result.IsSuccess ? Ok() : (IHttpActionResult)StatusCode(HttpStatusCode.NoContent);
-        }
-
-        /// <summary>
         /// Reset user password in app
         /// </summary>
         /// <param name="email">User email</param>
         /// <returns></returns>
-        [HttpPost, Route("{email}")]
-        public async Task<IHttpActionResult> ResetPassword([FromUri]string email)
+        [HttpPut, Route("resetpass")]
+        public async Task<IHttpActionResult> ResetPassword([FromBody]string email)
         {
             if (!ModelState.IsValid) return BadRequest("Invalid email");
 
@@ -109,8 +87,8 @@ namespace GamePortal.Web.Api.Controllers.Battleship
         /// <param name="token">Validation token</param>
         /// <param name="newPassword">New password</param>
         /// <returns></returns>
-        [HttpPost, Route("ChangePass")]
-        public async Task<IHttpActionResult> ChangePassword([FromBody]string userId, [FromBody]string token, [FromBody]string newPassword)
+        [HttpPut, Route("changepass")]
+        public async Task<IHttpActionResult> ChangePassword(string userId, string token, string newPassword)
         {
             if (!ModelState.IsValid) return BadRequest("Invalid model");
 
@@ -124,8 +102,8 @@ namespace GamePortal.Web.Api.Controllers.Battleship
         /// <param name="userId">User ID</param>
         /// <param name="token">Validation token</param>
         /// <returns></returns>
-        [HttpPost, Route("ConfirmEmail")]
-        public async Task<IHttpActionResult> ConfirmEmail([FromBody]string userId, string token)
+        [HttpPut, Route("confirmemail")]
+        public async Task<IHttpActionResult> ConfirmEmail(string userId, string token)
         {
             if (!ModelState.IsValid) return BadRequest("Invalid model");
 
@@ -136,11 +114,13 @@ namespace GamePortal.Web.Api.Controllers.Battleship
         /// <summary>
         /// Delete user in app
         /// </summary>
-        /// <param name="UserDto">User model</param>
-        [HttpDelete, Route("{id:int:min(1)}")]
-        public async Task<IHttpActionResult> Delete(UserDto model)
+        /// <param name="userId">User ID</param>
+        [HttpDelete, Route(""), Authorize]
+        public async Task<IHttpActionResult> Delete()
         {
-            var result = await _userService.DeleteAsync(model);
+            var userId = User.Identity.GetUserId();
+
+            var result = await _userService.DeleteAsync(userId);
             return result.IsSuccess ? StatusCode(HttpStatusCode.NoContent) : StatusCode(HttpStatusCode.InternalServerError);
         }
 
