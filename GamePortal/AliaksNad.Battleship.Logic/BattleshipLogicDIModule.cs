@@ -11,8 +11,6 @@ using Ninject;
 using AliaksNad.Battleship.Logic.Aspects;
 using Serilog;
 using Ninject.Extensions.Interception.Infrastructure.Language;
-using System.IO;
-using System.Reflection;
 using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.EntityFramework;
 using AliaksNad.Battleship.Logic.Services.Contracts;
@@ -32,26 +30,13 @@ namespace AliaksNad.Battleship.Logic
                     return r.ParentContext != null && r.ParentContext.Plan.Type.Namespace.StartsWith("AliaksNad.Battleship");
                 });
 
-            var path = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
-            var logger = new LoggerConfiguration()
-                .WriteTo.Debug()
-                .WriteTo.Console()
-                .WriteTo.Async(x => x.File(Path.Combine(path, "Logs/Log.txt"), rollOnFileSizeLimit: true, fileSizeLimitBytes: 10_000_000, rollingInterval: RollingInterval.Day, restrictedToMinimumLevel: Serilog.Events.LogEventLevel.Information))
-                .WriteTo.File(Path.Combine(path, "Logs/DebugLog.txt"), rollOnFileSizeLimit: true, fileSizeLimitBytes: 10_000_000, rollingInterval: RollingInterval.Day)
-                .Enrich.WithHttpRequestType()
-                .Enrich.WithWebApiControllerName()
-                .Enrich.WithWebApiActionName()
-                .MinimumLevel.Debug()
-                .CreateLogger();
-
-
+            var logger = new LoggerProfile().CreateLogger();
             this.Bind<ILogger>().ToConstant(logger)
                 .When(r =>
                 {
                     return r.ParentContext != null && r.ParentContext.Plan.Type.Namespace.StartsWith("AliaksNad.Battleship");
                 });
 
-            this.Bind<UsersContext>().ToSelf();
             this.Bind<BattleAreaContext>().ToSelf();
 
             this.Bind<IValidator<UserDto>>().To<UserDtoValidator>();
