@@ -18,19 +18,22 @@ namespace Kbalan.TouchType.Logic.Services
         /// </summary>
         /// <returns>All user with statistic</returns>
         Result<IEnumerable<UserStatisticDto>> GetAll();
+        Task<Result<IEnumerable<UserStatisticDto>>> GetAllAsync();
 
         /// <summary>
         /// Returns information about statistic's with it's user by user id
         /// </summary>
         /// <param name="Id">User ID</param>
         /// <returns>Statistic with user</returns>
-        Result<UserStatisticDto> GetById(int id);
+        Task<Result<Maybe<UserStatisticDto>>> GetByIdAsync(int id);
+        Result<Maybe<UserStatisticDto>> GetById(int id);
 
         /// <summary>
         /// Updating existing user statistic
         /// </summary>
         /// <param name="id">User id</param>
         /// <returns></returns>
+        Task<Result> UpdateAsync(int id, StatisticDto model);
         Result Update(int id, StatisticDto model);
     }
 }

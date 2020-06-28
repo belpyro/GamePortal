@@ -3,7 +3,7 @@ using WebActivatorEx;
 using GamePortal.Web.Api;
 using Swashbuckle.Application;
 
-[assembly: PreApplicationStartMethod(typeof(SwaggerConfig), "Register")]
+/*[assembly: PreApplicationStartMethod(typeof(SwaggerConfig), "Register")]*/
 
 namespace GamePortal.Web.Api
 {

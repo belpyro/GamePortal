@@ -1,6 +1,7 @@
 ﻿using AliaksNad.Battleship.Data.Models;
 using AliaksNad.Battleship.Logic.Models;
 using AutoMapper; // or Mapster
+using System.Security.Cryptography.X509Certificates;
 
 namespace AliaksNad.Battleship.Logic.Profiles
 {

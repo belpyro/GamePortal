@@ -1,6 +1,6 @@
 ﻿using FluentValidation;
 using FluentValidation.Results;
-using Castle.DynamicProxy;
+
 using CSharpFunctionalExtensions;
 using Kbalan.TouchType.Logic.Dto;
 using Ninject;
@@ -10,6 +10,8 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Kbalan.TouchType.Logic.Validators;
+using Serilog;
+using Ninject.Extensions.Interception;
 
 namespace Kbalan.TouchType.Logic.Aspects
 {
@@ -27,35 +29,46 @@ namespace Kbalan.TouchType.Logic.Aspects
         public void Intercept(IInvocation invocation)
         {
             //model null checking
-            var text = invocation.Arguments.SingleOrDefault(x => x.GetType() == typeof(TextSetDto));
+           
+            var text = invocation.Request.Arguments.OfType<TextSetDto>().FirstOrDefault();
             if(text == null)
             {
                 invocation.Proceed();
                 return;
             }
-            
-            //Implementation of validation for Add method 
-            if (invocation.Method.Name.Equals("Add"))
-            {
-                var validator = _kernel.Get<IValidator<TextSetDto>>();
-                var validationResult = validator.Validate(text as TextSetDto, ruleSet: "PostValidation");
+            //New logger and validator
+            var logger = _kernel.Get<ILogger>();
+            var validator = _kernel.Get<IValidator<TextSetDto>>();
 
-                if (!validationResult.IsValid)
+            //Prevalidation
+            if(invocation.Request.Method.Name.Equals("Add") || invocation.Request.Method.Name.Equals("Update"))
+            {
+                var preValidationResult = validator.Validate(text as TextSetDto, ruleSet: "PreValidation");
+                if (!preValidationResult.IsValid)
                 {
-                    invocation.ReturnValue = Result.Failure<TextSetDto>(validationResult.Errors.Select(x => x.ErrorMessage).First());
+                    invocation.ReturnValue = Result.Failure<TextSetDto>(preValidationResult.Errors.Select(x => x.ErrorMessage).First());
                     return;
                 }
             }
 
-            //Implementation of validation for Update method 
-            if (invocation.Method.Name.Equals("Update"))
+            //PostValidation of validation for Add method 
+            if (invocation.Request.Method.Name.Equals("Add"))
             {
-                var validator = _kernel.Get<IValidator<TextSetDto>>();
-                var validationResult = validator.Validate(text as TextSetDto, ruleSet: "PostValidationWithId"); 
-                
-                if (!validationResult.IsValid)
+                var postValidationResult = validator.Validate(text as TextSetDto, ruleSet: "PostValidation");
+                if (!postValidationResult.IsValid)
                 {
-                    invocation.ReturnValue = Result.Failure(validationResult.Errors.Select(x => x.ErrorMessage).First());
+                    invocation.ReturnValue = Result.Failure<TextSetDto>(postValidationResult.Errors.Select(x => x.ErrorMessage).First());
+                    return;
+                }
+            }
+
+            //PostValidation validation for Update method 
+            if (invocation.Request.Method.Name.Equals("Update"))
+            {
+                var postValidationResult = validator.Validate(text as TextSetDto, ruleSet: "PostValidationWithId");                 
+                if (!postValidationResult.IsValid)
+                {
+                    invocation.ReturnValue = Result.Failure(postValidationResult.Errors.Select(x => x.ErrorMessage).First());
                     return;
                 }
             }

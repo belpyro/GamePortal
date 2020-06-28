@@ -11,6 +11,7 @@ using System;
 using System.Collections.Generic;
 using System.Data.Entity;
 using System.Data.Entity.Infrastructure;
+using System.Data.SqlClient;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -21,13 +22,11 @@ namespace Kbalan.TouchType.Logic.Services
     {
         private readonly TouchTypeGameContext _gameContext;
         private readonly IMapper _mapper;
-        private readonly IValidator<SettingDto> _settingValidator;
 
-        public SettingService([NotNull]TouchTypeGameContext gameContext, [NotNull]IMapper mapper, [NotNull]IValidator<SettingDto> SettingValidator)
+        public SettingService([NotNull]TouchTypeGameContext gameContext, [NotNull]IMapper mapper)
         {
             this._gameContext = gameContext;
             this._mapper = mapper;
-            _settingValidator = SettingValidator;
         }
 
         /// <summary>
@@ -46,27 +45,51 @@ namespace Kbalan.TouchType.Logic.Services
                 return Result.Failure<IEnumerable<UserSettingDto>>(ex.Message);
             }
         }
+        public async Task<Result<IEnumerable<UserSettingDto>>> GetAllAsync()
+        {
+            try
+            {
+                var models = await _gameContext.Users.Include("Setting").ToArrayAsync().ConfigureAwait(false);
+                return Result.Success<IEnumerable<UserSettingDto>>(_mapper.Map<IEnumerable<UserSettingDto>>(models));
+            }
+            catch (DbUpdateException ex)
+            {
+                return Result.Failure<IEnumerable<UserSettingDto>>(ex.Message);
+            }
+        }
 
         /// <summary>
         /// Return User with it's setting by user id
         /// </summary>
         /// <param name="id">user id</param>
         /// <returns>user with setting</returns>
-        public Result<UserSettingDto> GetById(int id)
+        public Result<Maybe<UserSettingDto>> GetById(int id)
         {
             try
             {
-                var getResultById = _gameContext.Users.Where(x => x.Id == id)
+                Maybe<UserSettingDto> getResultById = _gameContext.Users.Where(x => x.Id == id)
                     .ProjectToSingleOrDefault<UserSettingDto>(_mapper.ConfigurationProvider);
 
-                if (getResultById != null)
-                    return Result.Success<UserSettingDto>(getResultById);
-
-                return Result.Failure<UserSettingDto>("No user with such id exist");
+                    return Result.Success(getResultById);
             }
-            catch (DbUpdateException ex)
+            catch (SqlException ex)
             {
-                return Result.Failure<UserSettingDto>(ex.Message);
+                return Result.Failure<Maybe<UserSettingDto>>(ex.Message);
+            }
+        }
+        public async Task<Result<Maybe<UserSettingDto>>> GetByIdAsync(int id)
+        {
+            try
+            {
+                Maybe<UserSettingDto> getResultById = await _gameContext.Users.Where(x => x.Id == id)
+                    .ProjectToSingleOrDefaultAsync<UserSettingDto>(_mapper.ConfigurationProvider)
+                    .ConfigureAwait(false);
+
+                return Result.Success(getResultById);
+            }
+            catch (SqlException ex)
+            {
+                return Result.Failure<Maybe<UserSettingDto>>(ex.Message);
             }
         }
 
@@ -93,6 +116,33 @@ namespace Kbalan.TouchType.Logic.Services
 
                 _gameContext.Users.Attach(userModel);
                 _gameContext.SaveChanges();
+
+                return Result.Success();
+            }
+            catch (DbUpdateException ex)
+            {
+                return Result.Failure(ex.Message);
+            }
+        }
+        public async Task<Result> UpdateAsync(int id, SettingDto model)
+        {
+            //Cheking if user with id exist
+            var userModel = await _gameContext.Users.Include("Setting").SingleOrDefaultAsync(x => x.Id == id)
+                .ConfigureAwait(false);
+
+            //Replace model setting id from Dto to correct id from Db and Valiate
+            model.SettingId = userModel.Setting.SettingId;
+
+            try
+            {
+                var modelDb = _mapper.Map<SettingDb>(model);
+
+                modelDb.SettingId = userModel.Setting.SettingId;
+                modelDb.User = userModel.Setting.User;
+                userModel.Setting = modelDb;
+
+                _gameContext.Users.Attach(userModel);
+                await _gameContext.SaveChangesAsync();
 
                 return Result.Success();
             }
