@@ -36,6 +36,35 @@ namespace GamePortal.Web.Api.Controllers.Battleship
         }
 
         /// <summary>
+        /// Get all battle area from logic layer.
+        /// </summary>
+        /// <returns></returns>
+        [HttpGet]
+        [Route("")]
+        public IHttpActionResult GetAll()
+        {
+            var result = _gameService.GetAll();
+            return result.IsSuccess ? Ok(result.Value) : (IHttpActionResult)StatusCode(HttpStatusCode.InternalServerError);
+        }
+
+        /// <summary>
+        /// Get battle area from logic layer by id.
+        /// </summary>
+        /// <param name="id">battle area id.</param>
+        /// <returns></returns>
+        [HttpGet]
+        [Route("{id:int:min(1)}")]      // TODO: Check Route Constraints 
+        public IHttpActionResult GetById(int id)
+        {
+            var battleArea = _gameService.GetById(id);
+            if (battleArea.IsFailure)
+            {
+                return StatusCode(HttpStatusCode.InternalServerError);
+            }
+            return battleArea.Value.HasNoValue ? (IHttpActionResult)NotFound() : Ok(battleArea.Value.Value);
+        }
+
+        /// <summary>
         /// Checking hit by enemy coordinates on logic layer.
         /// </summary>
         /// <param name="coordinatesOfHit">Enemy coordinates.</param>

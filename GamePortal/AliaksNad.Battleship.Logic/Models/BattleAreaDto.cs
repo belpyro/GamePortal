@@ -8,6 +8,6 @@ namespace AliaksNad.Battleship.Logic.Models
 
         public IEnumerable<ShipDto> Ships { get; set; }
 
-        public IEnumerable<CoordinatesDto> FailedLaunch { get; set; }
+        public IEnumerable<CoordinatesDto> FailedLaunches { get; set; }
     }
 }

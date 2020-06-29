@@ -9,7 +9,7 @@ namespace AliaksNad.Battleship.Data.Contexts
         {
             HasKey(x => x.BattleAreaId).ToTable("BattleAreas");
             HasMany(x => x.Ships).WithOptional(x => x.BattleArea).HasForeignKey(c => c.BattleAreaId);
-            HasMany(x => x.FailedLaunch).WithOptional(x => x.BattleArea).HasForeignKey(c => c.BattleAreaId);
+            HasMany(x => x.FailedLaunches).WithOptional(x => x.BattleArea).HasForeignKey(c => c.BattleAreaId);
         }
     }
 }
