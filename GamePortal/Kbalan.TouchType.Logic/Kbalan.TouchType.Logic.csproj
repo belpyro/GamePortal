@@ -230,6 +230,7 @@
     <Compile Include="Aspects\LoggerInterceptor.cs" />
     <Compile Include="Aspects\TextSetValidationInterceptor.cs" />
     <Compile Include="Aspects\UserValidationInterceptor.cs" />
+    <Compile Include="Dto\LoginDto.cs" />
     <Compile Include="Dto\NewUserDto.cs" />
     <Compile Include="Dto\TextSetDto.cs" />
     <Compile Include="Dto\UserDto%27s\UserStatisticDto.cs" />
@@ -257,7 +258,6 @@
     <Compile Include="Validators\SettingDtoValidator.cs" />
     <Compile Include="Validators\StatisticDtoValidator.cs" />
     <Compile Include="Validators\TextSetDtoValidator.cs" />
-    <Compile Include="Validators\UserDtoValidator.cs" />
     <Compile Include="Validators\UserSettingDtoValidator.cs" />
   </ItemGroup>
   <ItemGroup>

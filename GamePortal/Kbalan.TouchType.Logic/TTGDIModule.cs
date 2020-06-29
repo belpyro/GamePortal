@@ -56,7 +56,6 @@ namespace Kbalan.TouchType.Logic
             this.Bind<ILogger>().ToConstant(TTGlogger);
             this.Bind<TouchTypeGameContext>().ToSelf();
             this.Bind<IValidator<UserSettingDto>>().To<UserSettingDtoValidator>();
-            this.Bind<IValidator<UserDto>>().To<UserDtoValidator>();
             this.Bind<IValidator<SettingDto>>().To<SettingDtoValidator>();
             this.Bind<IValidator<StatisticDto>>().To<StatisticDtoValidator>();
             this.Bind<IValidator<TextSetDto>>().To<TextSetDtoValidator>();
