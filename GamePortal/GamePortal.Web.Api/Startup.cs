@@ -14,6 +14,9 @@ using Ninject.Web.Common.OwinHost;
 using Ninject.Web.WebApi.OwinHost;
 using Ninject.Web.Common;
 using System.Web;
+using Microsoft.AspNet.Identity;
+using Microsoft.Owin.Security.Google;
+using GamePortal.Web.Api.Middleware;
 
 [assembly: OwinStartup(typeof(GamePortal.Web.Api.Startup))]
 
@@ -41,6 +44,15 @@ namespace GamePortal.Web.Api
                 opt.ValidatorFactory = new CustomValidatorFactory(kernel);
             });
 
+            app.UseExternalSignInCookie(DefaultAuthenticationTypes.ExternalCookie);
+            app.UseGoogleAuthentication(new GoogleOAuth2AuthenticationOptions
+            {
+                ClientId = "719719063561-v05dg5416mu8km1u2filstn03oqj98s4.apps.googleusercontent.com",
+                ClientSecret = "n8sW2lGlSM7QsayPw97knojT",
+                AuthenticationType = "MyGoogle"
+            });
+
+            app.Map("/login/google", b => b.Use<GoogleAuthMiddleWare>());
             app.UseSwagger(typeof(Startup).Assembly).UseSwaggerUi3()
                 .UseNinjectMiddleware(() => kernel).UseNinjectWebApi(config);            // For more information on how to configure your application, visit https://go.microsoft.com/fwlink/?LinkID=316888
         }

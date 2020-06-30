@@ -1,5 +1,6 @@
 ﻿using CSharpFunctionalExtensions;
 using Kbalan.TouchType.Logic.Dto;
+using Microsoft.AspNet.Identity.Owin;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
@@ -22,5 +23,7 @@ namespace Kbalan.TouchType.Logic.Services
         Task<Result<IReadOnlyCollection<UserDto>>> GetAllAsync();
 
         Task<Maybe<UserDto>> GetUser(string username, string password);
+
+        Task<Result> RegisterExternalUser(ExternalLoginInfo info);
     }
 }

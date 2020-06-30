@@ -65,7 +65,7 @@ namespace Kbalan.TouchType.Logic
             textSetBinding.Intercept().With<TextSetValidationInterceptor>();
             textSetBinding.Intercept().With<LoggerInterceptor>();
 
-            this.Bind<IUserStore<IdentityUser>>().To<UserStore<IdentityUser>>();
+            this.Bind<IUserStore<IdentityUser>>().ToMethod(ctx => new UserStore<IdentityUser>(ctx.Kernel.Get<TouchTypeGameContext>()));
             this.Bind<UserManager<IdentityUser>>().ToMethod(ctx =>
             {
                 var manager = new UserManager<IdentityUser>(new UserStore<IdentityUser>(new TouchTypeGameContext()));

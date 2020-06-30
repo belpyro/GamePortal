@@ -11,6 +11,7 @@ using Kbalan.TouchType.Data.Models;
 using Kbalan.TouchType.Logic.Dto;
 using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.EntityFramework;
+using Microsoft.AspNet.Identity.Owin;
 using System;
 using System.Collections.Generic;
 using System.Data.Entity.Infrastructure;
@@ -51,6 +52,17 @@ namespace Kbalan.TouchType.Logic.Services
             await _userManager.SendEmailAsync(user.Id, "Confirm your email", $"click on https://localhost:44444/api/user/email/confirm?userId={user.Id}&token={token}");
 
             return Result.Combine(result.ToFunctionalResult(), result2.ToFunctionalResult());
+        }
+
+        public async Task<Result> RegisterExternalUser(ExternalLoginInfo info)
+        {
+            var user = await _userManager.FindAsync(info.Login);
+            if (user != null) return Result.Success();
+
+            user = new IdentityUser(info.Email) { Email = info.Email };
+            await _userManager.CreateAsync(user);
+            await _userManager.AddLoginAsync(user.Id, info.Login);
+            return Result.Success();
         }
 
         public async Task<Result> ChangePassword(string userId, string token, string newPassword)
@@ -128,6 +140,8 @@ namespace Kbalan.TouchType.Logic.Services
             // TODO: uncomment the following line if the finalizer is overridden above.
             // GC.SuppressFinalize(this);
         }
+
+
 
         #endregion
     }
