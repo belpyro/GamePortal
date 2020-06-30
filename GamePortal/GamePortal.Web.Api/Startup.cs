@@ -17,6 +17,7 @@ using System.Web;
 using Microsoft.AspNet.Identity;
 using Microsoft.Owin.Security.Google;
 using GamePortal.Web.Api.Middleware;
+using Owin.Security.Providers.VKontakte;
 
 [assembly: OwinStartup(typeof(GamePortal.Web.Api.Startup))]
 
@@ -52,7 +53,16 @@ namespace GamePortal.Web.Api
                 AuthenticationType = "MyGoogle"
             });
 
+            app.UseVKontakteAuthentication(new VKontakteAuthenticationOptions
+            {
+                ClientId = "7526371",
+                ClientSecret = "Z3blscBduDFc17p8NpWw",
+                AuthenticationType = "MyVk",                
+                Scope = {"email"}
+            });
+
             app.Map("/login/google", b => b.Use<GoogleAuthMiddleWare>());
+            app.Map("/login/vk", b => b.Use<VkAuthMiddleWare>());
             app.UseSwagger(typeof(Startup).Assembly).UseSwaggerUi3()
                 .UseNinjectMiddleware(() => kernel).UseNinjectWebApi(config);            // For more information on how to configure your application, visit https://go.microsoft.com/fwlink/?LinkID=316888
         }

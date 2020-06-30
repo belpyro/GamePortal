@@ -59,7 +59,7 @@ namespace Kbalan.TouchType.Logic.Services
             var user = await _userManager.FindAsync(info.Login);
             if (user != null) return Result.Success();
 
-            user = new IdentityUser(info.Email) { Email = info.Email };
+            user = new IdentityUser(info.DefaultUserName) { Email = info.Email };
             await _userManager.CreateAsync(user);
             await _userManager.AddLoginAsync(user.Id, info.Login);
             return Result.Success();
