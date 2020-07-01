@@ -1,4 +1,5 @@
-﻿using System.IO;
+﻿using System;
+using System.IO;
 using System.Security.Cryptography.X509Certificates;
 
 namespace SelfHost.Config
@@ -7,6 +8,8 @@ namespace SelfHost.Config
     {
         public static X509Certificate2 Get()
         {
+            //return new X509Certificate2(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, @"Config\idsrv3test.pfx"), "idsrv3test");
+
             var assembly = typeof(Certificate).Assembly;
             using (var stream = assembly.GetManifestResourceStream("SelfHost.Config.idsrv3test.pfx"))
             {
