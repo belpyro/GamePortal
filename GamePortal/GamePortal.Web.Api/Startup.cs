@@ -76,7 +76,7 @@ namespace GamePortal.Web.Api
             app.Map("/login/google", b => b.Use<GoogleAuthMiddleWare>());
             app.Map("/login/vk", b => b.Use<VkAuthMiddleWare>());
 
-            IdentityServer3.Core.Configuration.IdentityServerServiceFactory factory = new IdentityServerServiceFactory();
+            IdentityServerServiceFactory factory = new IdentityServerServiceFactory();
             var client = new Client()
             {
                 ClientId = "TTGWebClient",
@@ -120,7 +120,7 @@ namespace GamePortal.Web.Api
                 SiteName = "TouchTypeGame",
                 Factory = factory,
                 SigningCertificate = LoadCertificate()
-            }).UseIdentityServerBearerTokenAuthentication(new IdentityServer3.AccessTokenValidation.IdentityServerBearerTokenAuthenticationOptions
+            }).UseIdentityServerBearerTokenAuthentication(new IdentityServerBearerTokenAuthenticationOptions
             {
                 Authority = "https://localhost:44313/",
                 ClientId = "TTGWebClient",
