@@ -76,64 +76,21 @@ namespace GamePortal.Web.Api
             app.Map("/login/google", b => b.Use<GoogleAuthMiddleWare>());
             app.Map("/login/vk", b => b.Use<VkAuthMiddleWare>());
 
-            IdentityServerServiceFactory factory = new IdentityServerServiceFactory();
-            var client = new Client()
-            {
-                ClientId = "TTGWebClient",
-                ClientSecrets = new List<Secret>() { new Secret("secret".Sha256()) },
-                AllowAccessToAllScopes = true,
-                ClientName = "TTG Web Client",
-                Flow = Flows.AuthorizationCode,
-                RedirectUris = new List<string>() { "https://localhost:5555" }
-            };
-            var user = new InMemoryUser()
-            {
-                Username = "user",
-                Password = "123",
-                Subject = "123-123-123",
-                Claims = new[] { new Claim("api-version", "1") }
-            };
 
-            factory.UseInMemoryScopes(StandardScopes.All.Append(
-                new Scope()
-                {
-                    Name = "api",
-                    Type = ScopeType.Identity,
-                    Claims = new List<ScopeClaim> { new ScopeClaim("api-version", true) }
-                }))
-                .UseInMemoryClients(new[] { client });
-                 factory.UserService = new Registration<IdentityServer3.Core.Services.IUserService>(new AspNetIdentityUserService<IdentityUser, string>(kernel.Get<UserManager<IdentityUser>>()));
 
-            app.UseIdentityServer(new IdentityServerOptions
-            {
-                EnableWelcomePage = true,
-#if DEBUG
-                RequireSsl = false,
-#endif
-                LoggingOptions = new LoggingOptions
+            app.UseIdentityServerBearerTokenAuthentication(new IdentityServerBearerTokenAuthenticationOptions
                 {
-                    EnableHttpLogging = true,
-                    EnableKatanaLogging = true,
-                    EnableWebApiDiagnostics = true,
-                    WebApiDiagnosticsIsVerbose = true
-                },
-                SiteName = "TouchTypeGame",
-                Factory = factory,
-                SigningCertificate = LoadCertificate()
-            }).UseIdentityServerBearerTokenAuthentication(new IdentityServerBearerTokenAuthenticationOptions
-            {
-                Authority = "https://localhost:44313/",
-                ClientId = "TTGWebClient",
-                ClientSecret = "secret",
-                RequireHttps = false,
-                ValidationMode = ValidationMode.Local,
-                IssuerName = "https://localhost:44313/",
-                SigningCertificate = LoadCertificate(),
-                ValidAudiences = new[] { "https://localhost:44313/resourses" }
-            }) ;
+                    Authority = "http://localhost:10000/",
+                    ClientId = "TTGWebClient",
+                    ClientSecret = "secret",
+                    RequireHttps = false,
+                    ValidationMode = ValidationMode.Local,
+                    IssuerName = "http://localhost:10000/",
+                    ValidAudiences = new[] { "http://localhost:10000/resources" }
+                }) ;
 
             app.UseSwagger(typeof(Startup).Assembly).UseSwaggerUi3()
-                .UseNinjectMiddleware(() => kernel).UseNinjectWebApi(config);            // For more information on how to configure your application, visit https://go.microsoft.com/fwlink/?LinkID=316888
+                .UseNinjectMiddleware(() => kernel).UseNinjectWebApi(config);          
         }
 
         private static X509Certificate2 LoadCertificate()
