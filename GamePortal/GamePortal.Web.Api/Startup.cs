@@ -14,6 +14,7 @@ using Ninject.Web.Common.OwinHost;
 using Ninject.Web.WebApi.OwinHost;
 using Ninject.Web.Common;
 using System.Web;
+using Vitaly.Sapper.Logic;
 
 [assembly: OwinStartup(typeof(GamePortal.Web.Api.Startup))]
 
@@ -34,7 +35,7 @@ namespace GamePortal.Web.Api
 
             var kernel = new StandardKernel(new NinjectSettings { LoadExtensions = true });
 
-            kernel.Load(new LogicDIModule(), new TTGDIModule(), new BattleshipLogicDIModule());
+            kernel.Load(new LogicDIModule(), new TTGDIModule(), new BattleshipLogicDIModule(), new VitalySapperLogicDIModule());
 
             FluentValidationModelValidatorProvider.Configure(config, opt =>
             {
