@@ -1,4 +1,5 @@
 ﻿using System;
+using System.IO;
 using System.Threading.Tasks;
 using Igro.Quoridor.Logic;
 using Igro.Quoridor.Logic.Services;
@@ -20,6 +21,9 @@ using Microsoft.Owin.Security.Cookies;
 using Microsoft.AspNet.Identity;
 using Microsoft.Owin.Security.Google;
 using GamePortal.Web.Api.Middleware;
+using IdentityServer3.AccessTokenValidation;
+using System.Security.Cryptography.X509Certificates;
+using GamePortal.Web.Api.Config;
 
 [assembly: OwinStartup(typeof(GamePortal.Web.Api.Startup))]
 
@@ -63,6 +67,18 @@ namespace GamePortal.Web.Api
             });
 
             app.Map("/login/google", x => x.Use<GoogleAuthMiddleware>());
+
+            app.UseIdentityServerBearerTokenAuthentication(new IdentityServerBearerTokenAuthenticationOptions
+            {
+                Authority = "https://localhost:44333/core",
+                ClientId = "BattleshipWebClient",
+                ClientSecret = "secret",
+                RequireHttps = false,
+                ValidationMode = ValidationMode.Local,
+                IssuerName = "https://localhost:44333/core",
+                SigningCertificate = Certificate.Get(),
+                ValidAudiences = new[] { "https://localhost:44333/core/resources" }
+            });
 
             app.UseSwagger(typeof(Startup).Assembly).UseSwaggerUi3()
                 .UseNinjectMiddleware(() => kernel).UseNinjectWebApi(config);            // For more information on how to configure your application, visit https://go.microsoft.com/fwlink/?LinkID=316888

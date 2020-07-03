@@ -8,7 +8,7 @@ using System.Collections.Generic;
 
 namespace SelfHost
 {
-    internal class Startup
+    public class Startup
     {
         public void Configuration(IAppBuilder app)
         {
@@ -21,7 +21,7 @@ namespace SelfHost
                 AllowAccessToAllScopes = true,
                 ClientName = "Battleship Web Client",
                 Flow = Flows.AuthorizationCode,
-                RedirectUris = new List<string>() { "https://localhost:44333/" }
+                RedirectUris = new List<string>() { "https://localhost:44333" }
             };
 
             var user = new InMemoryUser()
