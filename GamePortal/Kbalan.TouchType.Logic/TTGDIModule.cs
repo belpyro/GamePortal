@@ -70,7 +70,7 @@ namespace Kbalan.TouchType.Logic
             {
                 var manager = new UserManager<IdentityUser>(new UserStore<IdentityUser>(new TouchTypeGameContext()));
                 
-                manager.EmailService = new PizzaEmailService();
+                manager.EmailService = new EmailService();
                 manager.UserValidator = new UserValidator<IdentityUser>(manager)
                 {
                     AllowOnlyAlphanumericUserNames = false,

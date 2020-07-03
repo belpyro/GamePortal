@@ -4,7 +4,7 @@ using System.Threading.Tasks;
 
 namespace Kbalan.Logic
 {
-    internal class PizzaEmailService : IIdentityMessageService
+    internal class EmailService : IIdentityMessageService
     {
         public Task SendAsync(IdentityMessage message)
         {

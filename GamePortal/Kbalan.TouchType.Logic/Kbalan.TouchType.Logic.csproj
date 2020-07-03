@@ -258,7 +258,7 @@
     <Compile Include="Dto\StatisticDto.cs" />
     <Compile Include="Dto\UserDto%27s\UserDto.cs" />
     <Compile Include="Extensions\IdentityExtension.cs" />
-    <Compile Include="Services\PizzaEmailService.cs" />
+    <Compile Include="Services\EmailService.cs" />
     <Compile Include="TTGDIModule.cs" />
     <Compile Include="Profiles\TextSetProfile.cs" />
     <Compile Include="Profiles\UserProfile.cs" />
