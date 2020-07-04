@@ -2,11 +2,13 @@
 using IdentityServer3.Core.Configuration;
 using IdentityServer3.Core.Models;
 using IdentityServer3.Core.Services.InMemory;
+using Microsoft.AspNet.Identity;
+using Microsoft.Owin.Security.Google;
 using Owin;
-using SelfHost.Config;
 using System.Collections.Generic;
+using AliaksNad.Battleship.IdentityServer3.SelfHost.Config;
 
-namespace SelfHost
+namespace AliaksNad.Battleship.IdentityServer3.SelfHost
 {
     public class Startup
     {
@@ -31,7 +33,8 @@ namespace SelfHost
                 Subject = "132-456-789"
             };
 
-            factory.UseInMemoryScopes(StandardScopes.All)
+            factory
+                .UseInMemoryScopes(StandardScopes.All)
                 .UseInMemoryClients(new[] { client })
                 .UseInMemoryUsers(new List<InMemoryUser>() { user });
 
@@ -51,10 +54,32 @@ namespace SelfHost
                 SiteName = "Battleship",
 
                 SigningCertificate = Certificate.Get(),
+
+                AuthenticationOptions = new AuthenticationOptions
+                {
+                    EnablePostSignOutAutoRedirect = true,
+                    IdentityProviders = ConfigureIdentityProviders
+                },
+
                 Factory = factory,
             };
+            
+            app.UseExternalSignInCookie(DefaultAuthenticationTypes.ExternalCookie);
 
             app.UseIdentityServer(options);
+        }
+
+        private void ConfigureIdentityProviders(IAppBuilder app, string signInAsType)
+        {
+            app.UseGoogleAuthentication(new GoogleOAuth2AuthenticationOptions
+            {
+                AuthenticationType = "Google",
+                Caption = "Sign-in with Google",
+                SignInAsAuthenticationType = signInAsType,
+
+                ClientId = "241000708571-qhb5s5fqe1nin8s33isgvmpfosa0cgpt.apps.googleusercontent.com",
+                ClientSecret = "G3VZRIXRrewqBkFlRKQtLN3o",
+            });
         }
     }
 }

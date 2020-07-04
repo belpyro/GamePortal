@@ -2,7 +2,7 @@
 using Serilog;
 using System;
 
-namespace SelfHost
+namespace AliaksNad.Battleship.IdentityServer3.SelfHost
 {
     internal class Program
     {
