@@ -13,7 +13,7 @@ namespace AliaksNad.Battleship.Data.Migrations
         
         string IMigrationMetadata.Id
         {
-            get { return "202005261930481_InitialCreate"; }
+            get { return "202006211917049_InitialCreate"; }
         }
         
         string IMigrationMetadata.Source

@@ -14,6 +14,12 @@ using Ninject.Web.Common.OwinHost;
 using Ninject.Web.WebApi.OwinHost;
 using Ninject.Web.Common;
 using System.Web;
+using System.Web.Http.ExceptionHandling;
+using Elmah.Contrib.WebApi;
+using Microsoft.Owin.Security.Cookies;
+using Microsoft.AspNet.Identity;
+using Microsoft.Owin.Security.Google;
+using GamePortal.Web.Api.Middleware;
 
 [assembly: OwinStartup(typeof(GamePortal.Web.Api.Startup))]
 
@@ -36,10 +42,27 @@ namespace GamePortal.Web.Api
 
             kernel.Load(new LogicDIModule(), new TTGDIModule(), new BattleshipLogicDIModule());
 
+            config.Services.Replace(typeof(IExceptionLogger), new ElmahExceptionLogger());   // Replace system logger for elmarh
+
             FluentValidationModelValidatorProvider.Configure(config, opt =>
             {
                 opt.ValidatorFactory = new CustomValidatorFactory(kernel);
             });
+
+            app.UseCookieAuthentication(new CookieAuthenticationOptions
+            {
+                AuthenticationType = DefaultAuthenticationTypes.ApplicationCookie
+            });
+
+            app.UseExternalSignInCookie(DefaultAuthenticationTypes.ExternalCookie);
+
+            app.UseGoogleAuthentication(new GoogleOAuth2AuthenticationOptions
+            {
+                ClientId = "241000708571-qhb5s5fqe1nin8s33isgvmpfosa0cgpt.apps.googleusercontent.com",
+                ClientSecret = "G3VZRIXRrewqBkFlRKQtLN3o"
+            });
+
+            app.Map("/login/google", x => x.Use<GoogleAuthMiddleware>());
 
             app.UseSwagger(typeof(Startup).Assembly).UseSwaggerUi3()
                 .UseNinjectMiddleware(() => kernel).UseNinjectWebApi(config);            // For more information on how to configure your application, visit https://go.microsoft.com/fwlink/?LinkID=316888
