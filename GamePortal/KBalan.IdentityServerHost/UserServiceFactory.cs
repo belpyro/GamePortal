@@ -10,6 +10,9 @@ using System.Threading.Tasks;
 
 namespace KBalan.IdentityServerHost
 {
+    /// <summary>
+    /// Factory for loading Identity User from TouchTypeGame context
+    /// </summary>
     public static class UserServiceFactory
     {
         public static AspNetIdentityUserService<IdentityUser, string> Create()

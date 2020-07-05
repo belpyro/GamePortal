@@ -62,7 +62,6 @@ namespace GamePortal.Web.Api.Controllers.TouchType
             var result = await _userService.GetUser(model.UserName, model.Password);
             if (result.HasNoValue) return Unauthorized();
 
-            //ClaimsPrincipal
             //ClaimsIdentity
             var identity = new ClaimsIdentity(DefaultAuthenticationTypes.ApplicationCookie);
             identity.AddClaim(new Claim(ClaimTypes.NameIdentifier, result.Value.Id));
@@ -70,70 +69,22 @@ namespace GamePortal.Web.Api.Controllers.TouchType
 
             var provider = Request.GetOwinContext().Authentication;
 
-            // use for AspNet.Identity integration with OWIN pipeline
-            //var manager = Request.GetOwinContext().Get<UserManager<IdentityUser>>();
-            //var idn = await manager.CreateIdentityAsync(new IdentityUser { }, DefaultAuthenticationTypes.ApplicationCookie);
-
             provider.SignOut(DefaultAuthenticationTypes.ApplicationCookie);
             provider.SignIn(new AuthenticationProperties { IsPersistent = true }, identity);
 
             return Ok();
         }
-        /*        //Get Full User Info by Id
-                [HttpGet]
-                [Route("{id}")]
-                public async Task<IHttpActionResult> GetByIdAsync([FromUri]int id)
-                {
-                    if (id <= 0)
-                    {
-                        return BadRequest("ID must be greater than 0");
-                    }
 
-                    var result = await _userService.GetByIdAsync(id);
-                    if (result.IsFailure)
-                        return (IHttpActionResult)StatusCode(HttpStatusCode.InternalServerError);
-                    return result.Value.HasNoValue ? (IHttpActionResult)NotFound() : Ok(result.Value.Value);
+        //Delete User by Id
+        [HttpDelete]
+        [Route("{username}")]
+        public async Task<IHttpActionResult> DeleteAsync(string username)
+        {
 
-                }
+            var result =  await _userService.DeleteAsync(username);
+            return result.IsSuccess ? Ok($"User {username} deleted with his setting and statistic succesfully!") : (IHttpActionResult)BadRequest(result.Error);
 
-                //Add new user
-                [HttpPost]
-                [Route("")]
-                public async Task<IHttpActionResult> AddAsync([FromBody] UserSettingDto model)
-                {
-                    if (!ModelState.IsValid)
-                        return BadRequest(ModelState);
-
-                    var result = await _userService.AddAsync(model);
-                    return result.IsSuccess ? Created($"/textsets/{result.Value.Id}", result.Value) : (IHttpActionResult)BadRequest(result.Error);
-                }
-
-                //Update User by Id
-                [HttpPut]
-                [Route("")]
-                public async Task<IHttpActionResult> UpdateAsync([FromBody]UserDto model)
-                {
-                    if (!ModelState.IsValid)
-                        return BadRequest(ModelState);
-
-                    var result = await _userService.UpdateAsync(model);
-                    return result.IsSuccess ? Ok($"User with id {model.Id} updated succesfully!") : (IHttpActionResult)BadRequest(result.Error);
-                }
-
-                //Delete User by Id
-                [HttpDelete]
-                [Route("{id}")]
-                public async Task<IHttpActionResult> DeleteAsync(int id)
-                {
-                    if (id <= 0)
-                    {
-                        return BadRequest("ID must be greater than 0");
-                    }
-
-                    var result =  await _userService.DeleteAsync(id);
-                    return result.IsSuccess ? Ok($"User with id {id} deleted with his setting and statistic succesfully!") : (IHttpActionResult)BadRequest(result.Error);
-
-                }*/
+        }
 
     }
 }

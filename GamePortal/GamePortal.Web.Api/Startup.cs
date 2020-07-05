@@ -30,6 +30,10 @@ using System.Linq;
 using IdentityServer3.AccessTokenValidation;
 using IdentityServer3.AspNetIdentity;
 using Microsoft.AspNet.Identity.EntityFramework;
+using System.Web.Http.ExceptionHandling;
+using Elmah.Contrib.WebApi;
+using Microsoft.Owin.Security.Cookies;
+
 
 [assembly: OwinStartup(typeof(GamePortal.Web.Api.Startup))]
 
@@ -51,6 +55,8 @@ namespace GamePortal.Web.Api
             var kernel = new StandardKernel(new NinjectSettings { LoadExtensions = true });
 
             kernel.Load(new LogicDIModule(), new TTGDIModule(), new BattleshipLogicDIModule());
+
+            config.Services.Replace(typeof(IExceptionLogger), new ElmahExceptionLogger());   // Replace system logger for elmarh
 
             FluentValidationModelValidatorProvider.Configure(config, opt =>
             {
@@ -76,8 +82,6 @@ namespace GamePortal.Web.Api
             app.Map("/ttg/login/google", b => b.Use<TTGGoogleAuthMiddleWare>());
             app.Map("/ttg/login/vk", b => b.Use<TTGVkAuthMiddleWare>());
 
-
-
             app.UseIdentityServerBearerTokenAuthentication(new IdentityServerBearerTokenAuthenticationOptions
                 {
                     Authority = "http://localhost:10000/",
@@ -88,6 +92,20 @@ namespace GamePortal.Web.Api
                     IssuerName = "http://localhost:10000/",
                     ValidAudiences = new[] { "http://localhost:10000/resources" }
                 }) ;
+
+            app.UseCookieAuthentication(new CookieAuthenticationOptions
+            {
+                AuthenticationType = DefaultAuthenticationTypes.ApplicationCookie
+            });
+
+
+            app.UseGoogleAuthentication(new GoogleOAuth2AuthenticationOptions
+            {
+                ClientId = "241000708571-qhb5s5fqe1nin8s33isgvmpfosa0cgpt.apps.googleusercontent.com",
+                ClientSecret = "G3VZRIXRrewqBkFlRKQtLN3o"
+            });
+
+            app.Map("/login/google", x => x.Use<GoogleAuthMiddleware>());
 
             app.UseSwagger(typeof(Startup).Assembly).UseSwaggerUi3()
                 .UseNinjectMiddleware(() => kernel).UseNinjectWebApi(config);          

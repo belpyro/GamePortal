@@ -1,7 +1,7 @@
 ﻿using AliaksNad.Battleship.Data.Models;
 using System.Data.Entity.ModelConfiguration;
 
-namespace AliaksNad.Battleship.Data.Contexts
+namespace AliaksNad.Battleship.Data.Contexts.Configurations
 {
     internal class BattleAreaDbConfiguration : EntityTypeConfiguration<BattleAreaDb>
     {

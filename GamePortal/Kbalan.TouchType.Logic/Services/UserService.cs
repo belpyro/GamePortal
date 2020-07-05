@@ -20,6 +20,7 @@ using System.Data.SqlClient;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Web.Http.Results;
 
 namespace Kbalan.TouchType.Logic.Services
 {
@@ -89,7 +90,6 @@ namespace Kbalan.TouchType.Logic.Services
 
         public async Task<Result<IReadOnlyCollection<UserDto>>> GetAllAsync()
         {
-            //bad practice! don't use it in production. only as sample
             var users = await _userManager.Users.ProjectToListAsync<UserDto>(_mapper.ConfigurationProvider);
             return Result.Success((IReadOnlyCollection<UserDto>)users.AsReadOnly());
         }
@@ -101,6 +101,17 @@ namespace Kbalan.TouchType.Logic.Services
 
             var isValid = await _userManager.CheckPasswordAsync(user, password);
             return isValid ? _mapper.Map<UserDto>(user) : null;
+        }
+
+        public async Task<Result> DeleteAsync(string username)
+        {
+            var user = await _userManager.FindByNameAsync(username);
+            if (user == null) return Result.Failure("User doesn't exist");
+
+            var result = await _userManager.DeleteAsync(user);
+            return Result.Combine(result.ToFunctionalResult());
+
+
         }
 
         #region IDisposable Support
@@ -140,8 +151,6 @@ namespace Kbalan.TouchType.Logic.Services
             // TODO: uncomment the following line if the finalizer is overridden above.
             // GC.SuppressFinalize(this);
         }
-
-
 
         #endregion
     }

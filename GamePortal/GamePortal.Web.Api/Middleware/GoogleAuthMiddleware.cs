@@ -7,10 +7,9 @@ using System.Web;
 
 namespace GamePortal.Web.Api.Middleware
 {
-    //Vk authorization class for TouchTypeGame
-    public class TTGVkAuthMiddleWare : OwinMiddleware
+    public class GoogleAuthMiddleware : OwinMiddleware
     {
-        public TTGVkAuthMiddleWare(OwinMiddleware next) : base(next)
+        public GoogleAuthMiddleware(OwinMiddleware next) : base(next)
         {
         }
 
@@ -18,8 +17,8 @@ namespace GamePortal.Web.Api.Middleware
         {
             context.Authentication.Challenge(new Microsoft.Owin.Security.AuthenticationProperties
             {
-                RedirectUri = "/ttg/external/vk"
-            }, "TTGVk");
+               RedirectUri = "/external/google" 
+            }, "Google");
             return Task.CompletedTask;
         }
     }

@@ -8,7 +8,7 @@ using System.Web;
 namespace GamePortal.Web.Api.Middleware
 {
     /// <summary>
-    /// Google Authenthication class
+    /// Google Authenthication class for TouchTypeGame
     /// </summary>
     public class TTGGoogleAuthMiddleWare : OwinMiddleware
     {

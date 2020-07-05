@@ -7,6 +7,9 @@ using System.Threading.Tasks;
 
 namespace KBalan.IdentityServerHost
 {
+    /// <summary>
+    /// Selfhosted app for TouchTypeGame Identity Server
+    /// </summary>
     class Program
     {
         static void Main(string[] args)

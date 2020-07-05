@@ -33,8 +33,6 @@ namespace Kbalan.TouchType.Logic
                     return r.ParentContext != null && r.ParentContext.Plan.Type.Namespace.StartsWith("Kbalan.TouchType");
                 });
 
-
-
             var TTGlogDB = @"Data Source=(localdb)\MSSQLLocalDB;Initial Catalog=TouchTypeGameContext;Integrated Security=True;";
             var sinkOpts = new SinkOptions();
             sinkOpts.TableName = "Log";
@@ -88,8 +86,11 @@ namespace Kbalan.TouchType.Logic
                 manager.UserTokenProvider = new EmailTokenProvider<IdentityUser>();
 
                 return manager;
+            }).When(r =>
+            {
+                return r.ParentContext != null && r.ParentContext.Plan.Type.Namespace.StartsWith("Kbalan.TouchType");
             });
-            var userBinding = Bind<IUserService>().To<UserService>();
+            var userBinding = Bind<IUserService>().To<UserService>() ;
             userBinding.Intercept().With<UserValidationInterceptor>();
             userBinding.Intercept().With<LoggerInterceptor>();
 
