@@ -64,6 +64,9 @@ namespace AliaksNad.Battleship.Logic
                 manager.UserTokenProvider = new EmailTokenProvider<IdentityUser>();
 
                 return manager;
+            }).When(r =>
+            {
+                return r.ParentContext != null && r.ParentContext.Plan.Type.Namespace.StartsWith("AliaksNad.Battleship");
             });
 
             var userServiceBinding = this.Bind<IUserService>().To<UserService>();

@@ -14,6 +14,9 @@ using Serilog.Sinks.MSSqlServer.Sinks.MSSqlServer.Options;
 using Serilog.Sinks.MSSqlServer;
 using Ninject.Extensions.Interception.Infrastructure.Language;
 using Ninject.Planning;
+using Microsoft.AspNet.Identity;
+using Microsoft.AspNet.Identity.EntityFramework;
+using Kbalan.Logic;
 
 namespace Kbalan.TouchType.Logic
 {
@@ -29,8 +32,6 @@ namespace Kbalan.TouchType.Logic
                 {
                     return r.ParentContext != null && r.ParentContext.Plan.Type.Namespace.StartsWith("Kbalan.TouchType");
                 });
-
-
 
             var TTGlogDB = @"Data Source=(localdb)\MSSQLLocalDB;Initial Catalog=TouchTypeGameContext;Integrated Security=True;";
             var sinkOpts = new SinkOptions();
@@ -53,7 +54,6 @@ namespace Kbalan.TouchType.Logic
             this.Bind<ILogger>().ToConstant(TTGlogger);
             this.Bind<TouchTypeGameContext>().ToSelf();
             this.Bind<IValidator<UserSettingDto>>().To<UserSettingDtoValidator>();
-            this.Bind<IValidator<UserDto>>().To<UserDtoValidator>();
             this.Bind<IValidator<SettingDto>>().To<SettingDtoValidator>();
             this.Bind<IValidator<StatisticDto>>().To<StatisticDtoValidator>();
             this.Bind<IValidator<TextSetDto>>().To<TextSetDtoValidator>();
@@ -63,7 +63,34 @@ namespace Kbalan.TouchType.Logic
             textSetBinding.Intercept().With<TextSetValidationInterceptor>();
             textSetBinding.Intercept().With<LoggerInterceptor>();
 
-            var userBinding = Bind<IUserService>().To<UserService>();
+            this.Bind<IUserStore<IdentityUser>>().ToMethod(ctx => new UserStore<IdentityUser>(ctx.Kernel.Get<TouchTypeGameContext>()));
+            this.Bind<UserManager<IdentityUser>>().ToMethod(ctx =>
+            {
+                var manager = new UserManager<IdentityUser>(new UserStore<IdentityUser>(new TouchTypeGameContext()));
+                
+                manager.EmailService = new EmailService();
+                manager.UserValidator = new UserValidator<IdentityUser>(manager)
+                {
+                    AllowOnlyAlphanumericUserNames = false,
+                    RequireUniqueEmail = true
+                };
+                manager.PasswordValidator = new PasswordValidator()
+                {
+                    RequireDigit = false,
+                    RequiredLength = 3,
+                    RequireLowercase = false,
+                    RequireNonLetterOrDigit = false,
+                    RequireUppercase = false
+                };
+
+                manager.UserTokenProvider = new EmailTokenProvider<IdentityUser>();
+
+                return manager;
+            }).When(r =>
+            {
+                return r.ParentContext != null && r.ParentContext.Plan.Type.Namespace.StartsWith("Kbalan.TouchType");
+            });
+            var userBinding = Bind<IUserService>().To<UserService>() ;
             userBinding.Intercept().With<UserValidationInterceptor>();
             userBinding.Intercept().With<LoggerInterceptor>();
 
