@@ -7,9 +7,12 @@ using System.Web;
 
 namespace GamePortal.Web.Api.Middleware
 {
-    public class VkAuthMiddleWare : OwinMiddleware
+    /// <summary>
+    /// Google Authenthication class
+    /// </summary>
+    public class TTGGoogleAuthMiddleWare : OwinMiddleware
     {
-        public VkAuthMiddleWare(OwinMiddleware next) : base(next)
+        public TTGGoogleAuthMiddleWare(OwinMiddleware next) : base(next)
         {
         }
 
@@ -17,8 +20,8 @@ namespace GamePortal.Web.Api.Middleware
         {
             context.Authentication.Challenge(new Microsoft.Owin.Security.AuthenticationProperties
             {
-                RedirectUri = "/external/vk"
-            }, "MyVk");
+                RedirectUri = "/ttg/external/google"
+            }, "TTGGoogle" );
             return Task.CompletedTask;
         }
     }

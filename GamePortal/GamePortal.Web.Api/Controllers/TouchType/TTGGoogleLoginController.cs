@@ -21,7 +21,7 @@ namespace GamePortal.Web.Api.Controllers.TouchType
             this._userService = userService;
         }
 
-        [HttpGet, Route("external/google")]
+        [HttpGet, Route("ttg/external/google")]
         public async Task<IHttpActionResult> GoogleLoginAsync()
         {
             var provider = Request.GetOwinContext().Authentication;
@@ -33,7 +33,7 @@ namespace GamePortal.Web.Api.Controllers.TouchType
             return Ok();
         }
 
-        [HttpGet, Route("external/vk")]
+        [HttpGet, Route("ttg/external/vk")]
         public async Task<IHttpActionResult> VkLoginAsync()
         {
             var provider = Request.GetOwinContext().Authentication;

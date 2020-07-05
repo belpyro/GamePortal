@@ -62,19 +62,19 @@ namespace GamePortal.Web.Api
             {
                 ClientId = "719719063561-v05dg5416mu8km1u2filstn03oqj98s4.apps.googleusercontent.com",
                 ClientSecret = "n8sW2lGlSM7QsayPw97knojT",
-                AuthenticationType = "MyGoogle"
+                AuthenticationType = "TTGGoogle"
             });
 
             app.UseVKontakteAuthentication(new VKontakteAuthenticationOptions
             {
                 ClientId = "7526371",
                 ClientSecret = "Z3blscBduDFc17p8NpWw",
-                AuthenticationType = "MyVk",
+                AuthenticationType = "TTGVk",
                 Scope = { "email" }
             });
 
-            app.Map("/login/google", b => b.Use<GoogleAuthMiddleWare>());
-            app.Map("/login/vk", b => b.Use<VkAuthMiddleWare>());
+            app.Map("/ttg/login/google", b => b.Use<TTGGoogleAuthMiddleWare>());
+            app.Map("/ttg/login/vk", b => b.Use<TTGVkAuthMiddleWare>());
 
 
 

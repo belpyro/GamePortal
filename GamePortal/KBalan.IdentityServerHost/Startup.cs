@@ -29,7 +29,6 @@ namespace KBalan.IdentityServerHost
     {
         public void Configuration(IAppBuilder app)
         {
-            //app.UseWelcomePage();
             IdentityServerServiceFactory factory = new IdentityServerServiceFactory();
             var client = new Client()
             {
@@ -40,15 +39,6 @@ namespace KBalan.IdentityServerHost
                 Flow = Flows.AuthorizationCode,
                 RedirectUris = new List<string>() { "https://localhost:5555" }
             };
-            var user = new InMemoryUser()
-            {
-                Username = "user",
-                Password = "123",
-                Subject = "123-123-123",
-                Claims = new[] { new Claim("api-version", "1") }
-            };
-
-
 
             factory.UseInMemoryScopes(StandardScopes.All.Append(
                 new Scope()
@@ -57,13 +47,9 @@ namespace KBalan.IdentityServerHost
                     Type = ScopeType.Identity,
                     Claims = new List<ScopeClaim> { new ScopeClaim("api-version", true) }
                 }))
-                .UseInMemoryUsers(new List<InMemoryUser>() { user })
             .UseInMemoryClients(new[] { client });
 
-            //factory.UserService = new Registration<IUserService>(UserServiceFactory.Create());
-
-
-            //factory.UserService = new Registration<IUserService>(new AspNetIdentityUserService<IdentityUser, string>(kernel.Get<UserManager<IdentityUser>>()));
+            factory.UserService = new Registration<IUserService>(UserServiceFactory.Create());
 
             app.UseExternalSignInCookie(DefaultAuthenticationTypes.ExternalCookie);
             app.UseIdentityServer(new IdentityServerOptions
@@ -84,7 +70,6 @@ namespace KBalan.IdentityServerHost
                 Factory = factory,
                 SigningCertificate = LoadCertificate()
             });
-
             
         }
 
