@@ -1,8 +1,9 @@
 ﻿using AliaksNad.Battleship.Logic.Models;
 using CSharpFunctionalExtensions;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 
-namespace AliaksNad.Battleship.Logic.Services
+namespace AliaksNad.Battleship.Logic.Services.Contracts
 {
     public interface IGameService
     {
@@ -10,24 +11,24 @@ namespace AliaksNad.Battleship.Logic.Services
         /// Set your own fleet coordinates.
         /// </summary>
         /// <param name="fleetCoordinates">Own fleet coordinates.</param>
-        Result<BattleAreaDto> SetFleet(BattleAreaDto fleetCoordinates);
+        Task<Result<BattleAreaDto>> AddAsync(BattleAreaDto fleetCoordinates);
 
         /// <summary>
         /// Get all battle area. 
         /// </summary>
-        Result<IEnumerable<BattleAreaDto>> GetAll();
+        Task<Result<IEnumerable<BattleAreaDto>>> GetAllAsync();
 
         /// <summary>
         /// Get battle area by id.
         /// </summary>
         /// <param name="id">user id.</param>
-        Result<Maybe<BattleAreaDto>> GetById(int id);
+        Task<Result<Maybe<BattleAreaDto>>> GetByIdAsync(int id);
 
         /// <summary>
         /// Checking hit by enemy coordinates.
         /// </summary>
         /// <param name="coordinates">Enemy coordinates.</param>
         /// <returns></returns>
-        Result<Maybe<CoordinatesDto>> CheckHit(CoordinatesDto coordinates);
+        Task<Result<Maybe<CoordinatesDto>>> CheckHitAsync(CoordinatesDto coordinates);
     }
 }
