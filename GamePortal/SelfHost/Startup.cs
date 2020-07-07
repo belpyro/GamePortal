@@ -7,6 +7,7 @@ using Microsoft.Owin.Security.Google;
 using Owin;
 using System.Collections.Generic;
 using AliaksNad.Battleship.IdentityServer3.SelfHost.Config;
+using IdentityServer3.Core.Services;
 
 namespace AliaksNad.Battleship.IdentityServer3.SelfHost
 {
@@ -36,7 +37,8 @@ namespace AliaksNad.Battleship.IdentityServer3.SelfHost
             factory
                 .UseInMemoryScopes(StandardScopes.All)
                 .UseInMemoryClients(new[] { client })
-                .UseInMemoryUsers(new List<InMemoryUser>() { user });
+                .UserService = new Registration<IUserService>(UserServiceFactory.Create());
+                //.UseInMemoryUsers(new List<InMemoryUser>() { user });
 
             var options = new IdentityServerOptions
             {
