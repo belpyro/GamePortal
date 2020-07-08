@@ -71,3 +71,30 @@
   width: 200px;
   height: 200px;
 }
+
+.btn-block{
+  width: 55%;
+  margin-bottom: 20px;
+}
+
+.google-reg{
+  margin-bottom: 10px;
+  display:block;
+  width: 187px;
+  height:40px;
+  background: url('./../../../../assets/btn_google_signin_light_normal_web.png') center top no-repeat;
+  &:hover{
+    background: url('./../../../../assets/btn_google_signin_dark_normal_web.png') center top no-repeat;
+  }
+}
+
+.vk-reg{
+  margin-bottom: 10px;
+  display:block;
+  width: 187px;
+  height:48px;
+  background: url('./../../../../assets/vk.png') center top no-repeat;
+  &:hover{
+    background: url('./../../../../assets/vk_hover.png') center top no-repeat;
+  }
+}
