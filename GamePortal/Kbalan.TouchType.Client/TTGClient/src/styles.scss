@@ -1,2 +1,9 @@
 /* You can add global styles to this file, and also import other style files */
-@import "./node_modules/bootstrap/scss/bootstrap.scss"
+@import "./node_modules/bootstrap/scss/bootstrap.scss";
+
+
+// bootstrap style toast
+// or import a bootstrap 4 alert styled design (SASS ONLY)
+// should be after your bootstrap imports, it uses bs4 variables, mixins, functions
+@import '~ngx-toastr/toastr-bs4-alert';
+
