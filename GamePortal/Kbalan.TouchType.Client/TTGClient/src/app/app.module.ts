@@ -10,7 +10,8 @@ import { ToastrModule } from 'ngx-toastr';
 import { RegistrationComponent } from './components/user/registration/registration.component';
 import { AppRoutingModule } from './app-routing.module';
 import { UserComponent } from './components/user/user.component';
-import { RouterModule, Routes } from '@angular/router';
+
+
 @NgModule({
   declarations: [
     AppComponent,
