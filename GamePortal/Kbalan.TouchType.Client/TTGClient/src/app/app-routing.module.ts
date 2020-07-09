@@ -3,6 +3,8 @@ import { RouterModule, Routes } from '@angular/router';
 import { RegistrationComponent } from './components/user/registration/registration.component';
 import { UserComponent } from './components/user/user.component';
 import { LoginComponent } from './components/user/login/login.component';
+import { TextblockComponent } from './components/text/textblock/textblock.component';
+
 
 const routes: Routes = [
   {path: '', redirectTo: '/user/login', pathMatch: 'full'},
@@ -11,6 +13,7 @@ const routes: Routes = [
     {path: 'login', component: LoginComponent}
   ]
 },
+{path: 'text', component: TextblockComponent}
 ];
 
 @NgModule({

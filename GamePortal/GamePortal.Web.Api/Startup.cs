@@ -33,7 +33,8 @@ using Microsoft.AspNet.Identity.EntityFramework;
 using System.Web.Http.ExceptionHandling;
 using Elmah.Contrib.WebApi;
 using Microsoft.Owin.Security.Cookies;
-
+using Microsoft.Owin.Cors;
+using System.Web.Cors;
 
 [assembly: OwinStartup(typeof(GamePortal.Web.Api.Startup))]
 
@@ -104,6 +105,14 @@ namespace GamePortal.Web.Api
                 ClientId = "241000708571-qhb5s5fqe1nin8s33isgvmpfosa0cgpt.apps.googleusercontent.com",
                 ClientSecret = "G3VZRIXRrewqBkFlRKQtLN3o"
             });
+            var provide = new CorsPolicyProvider();
+            provide.PolicyResolver = ctx => Task.FromResult(new CorsPolicy
+            {
+                AllowAnyHeader = true,
+                AllowAnyMethod = true,
+                AllowAnyOrigin = true
+            }); 
+            app.UseCors(new CorsOptions { PolicyProvider = provide});
 
             app.Map("/login/google", x => x.Use<GoogleAuthMiddleware>());
 
