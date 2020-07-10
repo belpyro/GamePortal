@@ -27,7 +27,7 @@ namespace GamePortal.Web.Api.Controllers.TouchType
         }
 
         //Get All TextSets
-        [HttpGet, Authorize]
+        [HttpGet]
         [Route("")]
         public async Task<IHttpActionResult> GetAllAsync()
         {
