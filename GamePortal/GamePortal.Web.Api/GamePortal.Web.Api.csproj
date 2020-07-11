@@ -384,7 +384,6 @@
     <Compile Include="Controllers\TouchType\TTGUsersController.cs" />
     <Compile Include="Controllers\TouchType\TTGTextsController.cs" />
     <Compile Include="HttpApplicationInitializationHttpModule.cs" />
-    <Compile Include="Middleware\GoogleAuthMiddleware.cs" />
     <Compile Include="Middleware\BattleshipIdentityServerExtension.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Startup.cs" />

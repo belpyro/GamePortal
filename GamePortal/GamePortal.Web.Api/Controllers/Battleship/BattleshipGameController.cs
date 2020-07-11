@@ -45,8 +45,7 @@ namespace GamePortal.Web.Api.Controllers.Battleship
         /// Get all battle area from logic layer.
         /// </summary>
         /// <returns></returns>
-        [HttpGet]
-        [Route("")]
+        [HttpGet, Route(""), Authorize]
         public async Task<IHttpActionResult> GetAllAsync()
         {
             var result = await _gameService.GetAllAsync();

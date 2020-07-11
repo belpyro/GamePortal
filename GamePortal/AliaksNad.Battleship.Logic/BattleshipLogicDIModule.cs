@@ -75,6 +75,7 @@ namespace AliaksNad.Battleship.Logic
             gameServiceBinding.Intercept().With<BattleshipLoggerInterceptor>();
 
             this.Bind<BattleshipIdentityServerConfiguration>().ToSelf();
+            this.Bind<BattleshipIdentityServerTokenAuthenticationConfiguration>().ToSelf();
         }
     }
 }

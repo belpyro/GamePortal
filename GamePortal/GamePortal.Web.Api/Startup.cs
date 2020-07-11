@@ -61,19 +61,8 @@ namespace GamePortal.Web.Api
             });
 
             var identityServerConfig = kernel.Get<BattleshipIdentityServerConfiguration>();
-            app.UseBattleshipIdentityServer(identityServerConfig);
-
-            app.UseIdentityServerBearerTokenAuthentication(new IdentityServerBearerTokenAuthenticationOptions
-            {
-                Authority = "https://localhost:44333/core",
-                ClientId = "BattleshipWebClient",
-                ClientSecret = "secret",
-                RequireHttps = false,
-                ValidationMode = ValidationMode.Local,
-                IssuerName = "https://localhost:44333/core",
-                SigningCertificate = Certificate.Get(),
-                ValidAudiences = new[] { "https://localhost:44333/core/resources" }
-            });
+            var serverTokenConfig = kernel.Get<BattleshipIdentityServerTokenAuthenticationConfiguration>();
+            app.UseBattleshipIdentityServer(identityServerConfig, serverTokenConfig);
 
             app.UseSwagger(typeof(Startup).Assembly).UseSwaggerUi3()
                 .UseNinjectMiddleware(() => kernel).UseNinjectWebApi(config);            // For more information on how to configure your application, visit https://go.microsoft.com/fwlink/?LinkID=316888

@@ -8,6 +8,7 @@ using IdentityServer3.AspNetIdentity;
 using Owin;
 using Microsoft.Owin.Security.Google;
 
+
 namespace AliaksNad.Battleship.Logic.Configuration
 {
     public sealed class BattleshipIdentityServerConfiguration
@@ -60,7 +61,7 @@ namespace AliaksNad.Battleship.Logic.Configuration
                 AllowAccessToAllScopes = true,
                 ClientName = "Battleship Web Client",
                 Flow = Flows.AuthorizationCode,
-                RedirectUris = new List<string>() { "https://localhost:44333" }
+                RedirectUris = new List<string>() { "https://localhost:44555" }
             };
 
             factory
