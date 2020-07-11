@@ -25,6 +25,7 @@ using IdentityServer3.AccessTokenValidation;
 using System.Security.Cryptography.X509Certificates;
 using GamePortal.Web.Api.Config;
 using IdentityServer3.Core.Configuration;
+using AliaksNad.Battleship.Logic.Configuration;
 
 [assembly: OwinStartup(typeof(GamePortal.Web.Api.Startup))]
 
@@ -59,17 +60,8 @@ namespace GamePortal.Web.Api
                 AuthenticationType = DefaultAuthenticationTypes.ApplicationCookie
             });
 
-            //app.UseExternalSignInCookie(DefaultAuthenticationTypes.ExternalCookie);
-
-            //app.UseGoogleAuthentication(new GoogleOAuth2AuthenticationOptions
-            //{
-            //    ClientId = "241000708571-qhb5s5fqe1nin8s33isgvmpfosa0cgpt.apps.googleusercontent.com",
-            //    ClientSecret = "G3VZRIXRrewqBkFlRKQtLN3o"
-            //});
-
-            //app.Map("/login/google", x => x.Use<GoogleAuthMiddleware>());
-
-            app.UseIdentityServer(option(kernel));
+            var identityServerConfig = kernel.Get<BattleshipIdentityServerConfiguration>();
+            app.UseBattleshipIdentityServer(identityServerConfig);
 
             app.UseIdentityServerBearerTokenAuthentication(new IdentityServerBearerTokenAuthenticationOptions
             {
@@ -86,53 +78,5 @@ namespace GamePortal.Web.Api
             app.UseSwagger(typeof(Startup).Assembly).UseSwaggerUi3()
                 .UseNinjectMiddleware(() => kernel).UseNinjectWebApi(config);            // For more information on how to configure your application, visit https://go.microsoft.com/fwlink/?LinkID=316888
         }
-
-        private void ConfigureIdentityProviders(IAppBuilder app, string signInAsType)
-        {
-            app.UseGoogleAuthentication(new GoogleOAuth2AuthenticationOptions
-            {
-                AuthenticationType = "Google",
-                Caption = "Sign-in with Google",
-                SignInAsAuthenticationType = signInAsType,
-
-                ClientId = "241000708571-qhb5s5fqe1nin8s33isgvmpfosa0cgpt.apps.googleusercontent.com",
-                ClientSecret = "G3VZRIXRrewqBkFlRKQtLN3o",
-            });
-        }
-
-        private IdentityServerOptions option(StandardKernel kernel)
-        {
-            var opt = kernel.Get<ServerOption>();
-
-            var options = new IdentityServerOptions
-            {
-                EnableWelcomePage = true,
-#if DEBUG
-                RequireSsl = false,
-#endif
-                LoggingOptions = new LoggingOptions
-                {
-                    EnableHttpLogging = true,
-                    EnableKatanaLogging = true,
-                    EnableWebApiDiagnostics = true,
-                    WebApiDiagnosticsIsVerbose = true
-                },
-                SiteName = "Battleship",
-
-                SigningCertificate = Certificate.Get(),
-
-                AuthenticationOptions = new AuthenticationOptions
-                {
-                    EnablePostSignOutAutoRedirect = true,
-                    IdentityProviders = ConfigureIdentityProviders
-                },
-
-
-                Factory = opt.option()
-            };
-
-            return options;
-        }
-
     }
 }

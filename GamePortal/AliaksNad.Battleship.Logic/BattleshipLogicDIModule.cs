@@ -14,11 +14,7 @@ using Ninject.Extensions.Interception.Infrastructure.Language;
 using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.EntityFramework;
 using AliaksNad.Battleship.Logic.Services.Contracts;
-using IdentityServer3.Core.Configuration;
-using IdentityServer3.Core.Models;
-using System.Collections.Generic;
-using IdentityServer3.Core.Services.InMemory;
-using IdentityServer3.AspNetIdentity;
+using AliaksNad.Battleship.Logic.Configuration;
 
 namespace AliaksNad.Battleship.Logic
 {
@@ -78,47 +74,7 @@ namespace AliaksNad.Battleship.Logic
             var gameServiceBinding = this.Bind<IGameService>().To<GameService>();
             gameServiceBinding.Intercept().With<BattleshipLoggerInterceptor>();
 
-            this.Bind<ServerOption>().ToSelf();
-        }
-    }
-
-    public class ServerOption : IdentityServerServiceFactory
-    {
-        private readonly UserManager<IdentityUser> _userManager;
-
-        public ServerOption(UserManager<IdentityUser> userManager)
-        {
-            this._userManager = userManager;
-        }
-
-        public IdentityServerServiceFactory option()
-        {
-            var factory = new IdentityServerServiceFactory();
-
-            var client = new Client
-            {
-                ClientId = "BattleshipWebClient",
-                ClientSecrets = new List<Secret> { new Secret("secret".Sha256()) },
-                AllowAccessToAllScopes = true,
-                ClientName = "Battleship Web Client",
-                Flow = Flows.AuthorizationCode,
-                RedirectUris = new List<string>() { "https://localhost:44333" }
-            };
-
-            var user = new InMemoryUser()
-            {
-                Username = "user",
-                Password = "666",
-                Subject = "132-456-789"
-            };
-
-            factory
-                .UseInMemoryScopes(StandardScopes.All)
-                .UseInMemoryClients(new[] { client });
-            //.UserService = new Registration<IUserService>(UserServiceFactory.Create());
-            //.UseInMemoryUsers(new List<InMemoryUser>() { user });
-            factory.UserService = new Registration<IdentityServer3.Core.Services.IUserService>(new AspNetIdentityUserService<IdentityUser, string>(_userManager));
-            return factory;
+            this.Bind<BattleshipIdentityServerConfiguration>().ToSelf();
         }
     }
 }

@@ -385,6 +385,7 @@
     <Compile Include="Controllers\TouchType\TTGTextsController.cs" />
     <Compile Include="HttpApplicationInitializationHttpModule.cs" />
     <Compile Include="Middleware\GoogleAuthMiddleware.cs" />
+    <Compile Include="Middleware\BattleshipIdentityServerExtension.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Startup.cs" />
   </ItemGroup>
@@ -411,10 +412,6 @@
     <ProjectReference Include="..\Kbalan.TouchType.Logic\Kbalan.TouchType.Logic.csproj">
       <Project>{4118173a-5fa8-4258-85ef-b7dc939042c3}</Project>
       <Name>Kbalan.TouchType.Logic</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\SelfHost\AliaksNad.Battleship.IdentityServer3.SelfHost.csproj">
-      <Project>{f0b58cb4-548b-4934-84d3-8003160ff046}</Project>
-      <Name>AliaksNad.Battleship.IdentityServer3.SelfHost</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
