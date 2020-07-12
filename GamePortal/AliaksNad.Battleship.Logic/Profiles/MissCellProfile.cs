@@ -4,11 +4,11 @@ using AutoMapper;
 
 namespace AliaksNad.Battleship.Logic.Profiles
 {
-    class ShipProfile : Profile
+    class MissCellProfile : Profile
     {
-        public ShipProfile()
+        public MissCellProfile()
         {
-            CreateMap<ShipDb, NewShipDto>()
+            CreateMap<MissCellDb, NewMissCellDto>()
                 .ReverseMap();
         }
     }

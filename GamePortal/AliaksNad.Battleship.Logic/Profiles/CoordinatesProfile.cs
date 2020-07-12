@@ -1,5 +1,6 @@
 ﻿using AliaksNad.Battleship.Data.Models;
 using AliaksNad.Battleship.Logic.Models;
+using AliaksNad.Battleship.Logic.Models.Game;
 using AutoMapper; // or Mapster
 
 namespace AliaksNad.Battleship.Logic.Profiles
@@ -8,9 +9,8 @@ namespace AliaksNad.Battleship.Logic.Profiles
     {
         public CoordinatesProfile()
         {
-            CreateMap<CoordinatesDb, CoordinatesDto>()
+            CreateMap<CoordinatesDb, NewCoordinatesDto>()
                 .ReverseMap();
-                //.ForMember(x => x.IsDamaged, opt => opt.Ignore());
         }
     }
 }

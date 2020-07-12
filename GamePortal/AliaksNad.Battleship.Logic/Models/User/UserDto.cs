@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
 
-namespace AliaksNad.Battleship.Logic.Models
+namespace AliaksNad.Battleship.Logic.Models.User
 {
     [Validator(typeof(UserDtoValidator))]
     public class UserDto

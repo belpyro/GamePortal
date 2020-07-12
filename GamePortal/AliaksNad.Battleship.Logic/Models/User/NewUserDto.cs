@@ -1,4 +1,4 @@
-﻿namespace AliaksNad.Battleship.Logic.Models
+﻿namespace AliaksNad.Battleship.Logic.Models.User
 {
     public class NewUserDto
     {

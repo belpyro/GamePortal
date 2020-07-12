@@ -30,7 +30,7 @@ namespace GamePortal.Web.Api.Controllers.Battleship
         /// <returns></returns>
         [HttpPost]
         [Route("")]
-        public async Task<IHttpActionResult> AddAsync([CustomizeValidator(RuleSet = "PreValidation")][FromBody]BattleAreaDto BattleAreaDtoCoordinates)
+        public async Task<IHttpActionResult> AddAsync([CustomizeValidator(RuleSet = "PreValidation")][FromBody]NewBattleAreaDto BattleAreaDtoCoordinates)
         {
             if (!ModelState.IsValid)
             {
@@ -76,7 +76,7 @@ namespace GamePortal.Web.Api.Controllers.Battleship
         /// <returns></returns>
         [HttpPost]
         [Route("coordinates")]
-        public async Task<IHttpActionResult> CheckHitAsync([FromBody]CoordinatesDto coordinatesOfHit)
+        public async Task<IHttpActionResult> CheckHitAsync([FromBody]NewCoordinatesDto coordinatesOfHit)
         {
             if (!ModelState.IsValid)
             {

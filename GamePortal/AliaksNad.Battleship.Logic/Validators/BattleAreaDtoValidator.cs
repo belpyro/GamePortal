@@ -3,7 +3,7 @@ using FluentValidation;
 
 namespace AliaksNad.Battleship.Logic.Validators
 {
-    class BattleAreaDtoValidator : AbstractValidator<BattleAreaDto>
+    class BattleAreaDtoValidator : AbstractValidator<NewBattleAreaDto>
     {
         public BattleAreaDtoValidator()
         {

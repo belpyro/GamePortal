@@ -1,5 +1,6 @@
 ﻿using AliaksNad.Battleship.Data.Models;
 using AliaksNad.Battleship.Logic.Models;
+using AliaksNad.Battleship.Logic.Models.Game;
 using AutoMapper; // or Mapster
 using Castle.Core.Internal;
 
@@ -9,7 +10,7 @@ namespace AliaksNad.Battleship.Logic.Profiles
     {
         public BattleAreaProfile()
         {
-            CreateMap<BattleAreaDb, BattleAreaDto>()
+            CreateMap<BattleAreaDb, NewBattleAreaDto>()
                 .ReverseMap();
         }
     }

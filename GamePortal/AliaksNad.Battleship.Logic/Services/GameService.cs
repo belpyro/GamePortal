@@ -37,7 +37,7 @@ namespace AliaksNad.Battleship.Logic.Services
         /// Set your own fleet coordinates on logic layer.
         /// </summary>
         /// <param name="BattleAreaModel">Own fleet coordinates.</param>
-        public async Task<Result<BattleAreaDto>> AddAsync(BattleAreaDto BattleAreaModel)
+        public async Task<Result<NewBattleAreaDto>> AddAsync(NewBattleAreaDto BattleAreaModel)
         {
             try
             {
@@ -52,7 +52,7 @@ namespace AliaksNad.Battleship.Logic.Services
             catch (DbUpdateException ex)
             {
                 _logger.Warning(ex, "An error occurred while writing the model to the DB");
-                return Result.Failure<BattleAreaDto>(ex.Message);
+                return Result.Failure<NewBattleAreaDto>(ex.Message);
             }
         }
 
@@ -60,18 +60,18 @@ namespace AliaksNad.Battleship.Logic.Services
         /// Get all battle area from data.
         /// </summary>
         /// <returns></returns>
-        public async Task<Result<IEnumerable<BattleAreaDto>>> GetAllAsync()
+        public async Task<Result<IEnumerable<NewBattleAreaDto>>> GetAllAsync()
         {
             try
             {
                 var models = await _battleAreaContext.BattleAreas.AsNoTracking()
                     .ToArrayAsync().ConfigureAwait(false);
-                return Result.Success(_mapper.Map<IEnumerable<BattleAreaDto>>(models));
+                return Result.Success(_mapper.Map<IEnumerable<NewBattleAreaDto>>(models));
             }
             catch (SqlException ex)
             {
                 _logger.Warning(ex, "An error occurred while reading models from the DB");
-                return Result.Failure<IEnumerable<BattleAreaDto>>(ex.Message);
+                return Result.Failure<IEnumerable<NewBattleAreaDto>>(ex.Message);
             }
         }
 
@@ -80,18 +80,18 @@ namespace AliaksNad.Battleship.Logic.Services
         /// </summary>
         /// <param name="id">battle area id.</param>
         /// <returns></returns>
-        public async Task<Result<Maybe<BattleAreaDto>>> GetByIdAsync(int id)
+        public async Task<Result<Maybe<NewBattleAreaDto>>> GetByIdAsync(int id)
         {
             try
             {
-                Maybe<BattleAreaDto> battleArea = await _battleAreaContext.BattleAreas.Where(x => x.BattleAreaId == id)
-                    .ProjectToSingleOrDefaultAsync<BattleAreaDto>(_mapper.ConfigurationProvider).ConfigureAwait(false);
+                Maybe<NewBattleAreaDto> battleArea = await _battleAreaContext.BattleAreas.Where(x => x.BattleAreaId == id)
+                    .ProjectToSingleOrDefaultAsync<NewBattleAreaDto>(_mapper.ConfigurationProvider).ConfigureAwait(false);
                 return Result.Success(battleArea);
             }
             catch (SqlException ex)
             {
                 _logger.Warning(ex, "An error occurred while reading model by id from the DB");
-                return Result.Failure<Maybe<BattleAreaDto>>(ex.Message);
+                return Result.Failure<Maybe<NewBattleAreaDto>>(ex.Message);
             }
         }
 
@@ -100,11 +100,11 @@ namespace AliaksNad.Battleship.Logic.Services
         /// </summary>
         /// <param name="coordinatesOfHit">Enemy coordinates.</param>
         /// <returns></returns>
-        public async Task<Result<Maybe<CoordinatesDto>>> CheckHitAsync(CoordinatesDto coordinatesOfHit)
+        public async Task<Result<Maybe<NewCoordinatesDto>>> CheckHitAsync(NewCoordinatesDto coordinatesOfHit)
         {
             try
             {
-                var fleetModel = _mapper.Map<IEnumerable<CoordinatesDto>>(await _battleAreaContext.Coordinates
+                var fleetModel = _mapper.Map<IEnumerable<NewCoordinatesDto>>(await _battleAreaContext.Coordinates
                     .AsNoTracking().Where(x => x.BattleAreaId == coordinatesOfHit.BattleAreaId).ToArrayAsync().ConfigureAwait(false));
 
                 var attackedCell = fleetModel.SingleOrDefault(x => x.CoordinateX == coordinatesOfHit.CoordinateX
@@ -128,17 +128,17 @@ namespace AliaksNad.Battleship.Logic.Services
 
                 await _battleAreaContext.SaveChangesAsync().ConfigureAwait(false);
 
-                Maybe<CoordinatesDto> result = _mapper.Map<CoordinatesDto>(attackedCell);
+                Maybe<NewCoordinatesDto> result = _mapper.Map<NewCoordinatesDto>(attackedCell);
                 return Result.Success(result);
             }
             catch (DbUpdateException ex)
             {
                 _logger.Warning(ex, "An error occurred while updating the model in the DB");
-                return Result.Failure<Maybe<CoordinatesDto>>(ex.Message);
+                return Result.Failure<Maybe<NewCoordinatesDto>>(ex.Message);
             }
         }
 
-        private void CheckShip(IEnumerable<CoordinatesDto> fleetModel, CoordinatesDto attackedCell)
+        private void CheckShip(IEnumerable<NewCoordinatesDto> fleetModel, NewCoordinatesDto attackedCell)
         {
             var shipCells = fleetModel.Where(x => x.ShipsId == attackedCell.ShipsId).ToArray();
             var alifeCells = shipCells.FirstOrDefault(x => x.IsDamaged == false);
@@ -149,7 +149,7 @@ namespace AliaksNad.Battleship.Logic.Services
             }
         }
 
-        private void SetEmptyCells(IEnumerable<CoordinatesDto> attackedShip) // TODO Logic for empty cells around downed ship
+        private void SetEmptyCells(IEnumerable<NewCoordinatesDto> attackedShip) // TODO Logic for empty cells around downed ship
         {
             
         }

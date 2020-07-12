@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace AliaksNad.Battleship.Logic.Models
+namespace AliaksNad.Battleship.Logic.Models.User
 {
     public class LoginDto
     {
