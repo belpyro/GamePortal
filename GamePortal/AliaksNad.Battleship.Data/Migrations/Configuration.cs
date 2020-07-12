@@ -18,7 +18,7 @@
         {
             //  This method will be called after migrating to the latest version.
 
-            context.Users.Add(new IdentityUser { UserName = "Evil", PasswordHash = new PasswordHasher().HashPassword("999"), Email = "Evil@example.com"});
+            context.Users.Add(new IdentityUser { UserName = "Evil", PasswordHash = new PasswordHasher().HashPassword("999"), Email = "Evil@example.com" });
 
             //  You can use the DbSet<T>.AddOrUpdate() helper extension method
             //  to avoid creating duplicate seed data.

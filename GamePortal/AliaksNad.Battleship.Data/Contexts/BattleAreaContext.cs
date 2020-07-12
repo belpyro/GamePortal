@@ -1,4 +1,5 @@
-﻿using AliaksNad.Battleship.Data.Models;
+﻿using AliaksNad.Battleship.Data.Migrations;
+using AliaksNad.Battleship.Data.Models;
 using JetBrains.Annotations;
 using Microsoft.AspNet.Identity.EntityFramework;
 using Serilog;
@@ -15,8 +16,8 @@ namespace AliaksNad.Battleship.Data.Contexts
 
         public BattleAreaContext([NotNull]ILogger logger)
         {
-            //Database.SetInitializer<BattleAreaContext>(new MigrateDatabaseToLatestVersion<BattleAreaContext, Configuration>());
-            Database.SetInitializer<BattleAreaContext>(new CreateDatabaseIfNotExists<BattleAreaContext>());
+            Database.SetInitializer<BattleAreaContext>(new MigrateDatabaseToLatestVersion<BattleAreaContext, Configuration>());
+            //Database.SetInitializer<BattleAreaContext>(new CreateDatabaseIfNotExists<BattleAreaContext>());
             Database.Log = msg => logger.Debug(msg);
         }
 

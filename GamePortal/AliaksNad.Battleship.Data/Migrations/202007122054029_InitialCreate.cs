@@ -35,6 +35,7 @@
                         CoordinatesId = c.Int(nullable: false, identity: true),
                         CoordinateX = c.Int(nullable: false),
                         CoordinateY = c.Int(nullable: false),
+                        IsDamage = c.Boolean(nullable: false),
                         ShipId = c.Int(),
                         MissCellId = c.Int(),
                     })
@@ -49,7 +50,7 @@
                 c => new
                     {
                         ShipId = c.Int(nullable: false, identity: true),
-                        IsDamage = c.Boolean(nullable: false),
+                        isAlife = c.Boolean(nullable: false),
                         BattleAreaId = c.Int(),
                     })
                 .PrimaryKey(t => t.ShipId)

@@ -8,6 +8,8 @@
 
         public int CoordinateY { get; set; }
 
+        public bool IsDamage { get; set; }
+
         public int? ShipId { get; set; }
 
         public ShipDb ShipDb { get; set; }
