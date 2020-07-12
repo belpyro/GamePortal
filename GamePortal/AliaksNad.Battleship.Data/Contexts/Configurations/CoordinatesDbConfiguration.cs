@@ -7,7 +7,7 @@ namespace AliaksNad.Battleship.Data.Contexts.Configurations
     {
         public CoordinatesDbConfiguration()
         {
-            HasKey(x => x.Id).ToTable("Coordinates");
+            HasKey(x => x.CoordinatesId).ToTable("Coordinates");
         }
     }
 }

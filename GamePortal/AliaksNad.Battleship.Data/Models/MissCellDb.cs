@@ -1,16 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Collections.Generic;
 
 namespace AliaksNad.Battleship.Data.Models
 {
-    public class ShipDb
+    public class MissCellDb
     {
-        public int ShipId { get; set; }
-
-        public bool IsDamage { get; set; }
+        public int MissCellId { get; set; }
 
         public int? BattleAreaId { get; set; }
 
