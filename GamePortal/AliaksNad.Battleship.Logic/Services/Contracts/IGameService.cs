@@ -1,4 +1,5 @@
 ﻿using AliaksNad.Battleship.Logic.Models;
+using AliaksNad.Battleship.Logic.Models.Game;
 using CSharpFunctionalExtensions;
 using System.Collections.Generic;
 using System.Threading.Tasks;
@@ -29,6 +30,6 @@ namespace AliaksNad.Battleship.Logic.Services.Contracts
         /// </summary>
         /// <param name="coordinates">Enemy coordinates.</param>
         /// <returns></returns>
-        Task<Result<Maybe<NewCoordinatesDto>>> CheckHitAsync(NewCoordinatesDto coordinates);
+        //Task<Result<Maybe<NewCoordinatesDto>>> CheckHitAsync(NewCoordinatesDto coordinates);
     }
 }

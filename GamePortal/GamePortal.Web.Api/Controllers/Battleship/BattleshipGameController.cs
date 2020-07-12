@@ -1,4 +1,5 @@
 ﻿using AliaksNad.Battleship.Logic.Models;
+using AliaksNad.Battleship.Logic.Models.Game;
 using AliaksNad.Battleship.Logic.Services;
 using AliaksNad.Battleship.Logic.Services.Contracts;
 using FluentValidation.WebApi;
@@ -38,14 +39,14 @@ namespace GamePortal.Web.Api.Controllers.Battleship
             }
 
             var result = await _gameService.AddAsync(BattleAreaDtoCoordinates);
-            return result.IsSuccess ? Created($"api/battleship/game/fleets{result.Value.BattleAreaId}", result.Value) : (IHttpActionResult)BadRequest(result.Error);
+            return result.IsSuccess ? Created($"api/battleship/game/fleets{result.Value}", result.Value) : (IHttpActionResult)BadRequest(result.Error);
         }
 
         /// <summary>
         /// Get all battle area from logic layer.
         /// </summary>
         /// <returns></returns>
-        [HttpGet, Route(""), Authorize]
+        [HttpGet, Route("")]
         public async Task<IHttpActionResult> GetAllAsync()
         {
             var result = await _gameService.GetAllAsync();
@@ -78,17 +79,19 @@ namespace GamePortal.Web.Api.Controllers.Battleship
         [Route("coordinates")]
         public async Task<IHttpActionResult> CheckHitAsync([FromBody]NewCoordinatesDto coordinatesOfHit)
         {
-            if (!ModelState.IsValid)
-            {
-                return BadRequest(ModelState);
-            }
+            //if (!ModelState.IsValid)
+            //{
+            //    return BadRequest(ModelState);
+            //}
 
-            var result = await _gameService.CheckHitAsync(coordinatesOfHit);
-            if (result.IsFailure)
-            {
-                return StatusCode(HttpStatusCode.InternalServerError);
-            }
-            return result.Value.HasValue ? Ok(result.Value.Value) : (IHttpActionResult)NotFound();
+            //var result = await _gameService.CheckHitAsync(coordinatesOfHit);
+            //if (result.IsFailure)
+            //{
+            //    return StatusCode(HttpStatusCode.InternalServerError);
+            //}
+            //return result.Value.HasValue ? Ok(result.Value.Value) : (IHttpActionResult)NotFound();
+
+            return StatusCode(HttpStatusCode.NoContent);
         }
     }
 }

@@ -1,6 +1,7 @@
 ﻿
 
 using AliaksNad.Battleship.Logic.Models;
+using AliaksNad.Battleship.Logic.Models.User;
 using CSharpFunctionalExtensions;
 using FluentValidation;
 using Ninject;

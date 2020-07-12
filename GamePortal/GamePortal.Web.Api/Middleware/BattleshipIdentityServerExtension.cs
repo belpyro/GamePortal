@@ -18,7 +18,7 @@ namespace GamePortal.Web.Api.Middleware
 
             var config = identTokenConf.Get();
             config.SigningCertificate = Certificate.Get();
-            app.UseIdentityServerBearerTokenAuthentication(config);
+            //app.UseIdentityServerBearerTokenAuthentication(config);
 
             return app;
         }

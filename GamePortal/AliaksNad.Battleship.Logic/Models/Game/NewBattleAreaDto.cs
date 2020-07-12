@@ -10,6 +10,6 @@ namespace AliaksNad.Battleship.Logic.Models.Game
     {
         public IEnumerable<NewShipDto> Ships { get; set; }
 
-        public IEnumerable<NewCoordinatesDto> MissCells { get; set; }
+        public IEnumerable<NewMissCellDto> MissCells { get; set; }
     }
 }

@@ -1,9 +1,11 @@
 ﻿using AliaksNad.Battleship.Data.Contexts;
 using AliaksNad.Battleship.Data.Models;
 using AliaksNad.Battleship.Logic.Models;
+using AliaksNad.Battleship.Logic.Models.Game;
 using AliaksNad.Battleship.Logic.Services.Contracts;
 using AutoMapper;
 using CSharpFunctionalExtensions;
+using Fody;
 using JetBrains.Annotations;
 using Serilog;
 using System;
@@ -18,6 +20,7 @@ using System.Threading.Tasks;
 
 namespace AliaksNad.Battleship.Logic.Services
 {
+    [ConfigureAwait(false)]
     public class GameService : IGameService 
     {
         private readonly BattleAreaContext _battleAreaContext;
@@ -44,9 +47,8 @@ namespace AliaksNad.Battleship.Logic.Services
                 var dbBattleAreaModel = _mapper.Map<BattleAreaDb>(BattleAreaModel);
 
                 _battleAreaContext.BattleAreas.Add(dbBattleAreaModel);
-                await _battleAreaContext.SaveChangesAsync().ConfigureAwait(false);
+                await _battleAreaContext.SaveChangesAsync();
 
-                BattleAreaModel.BattleAreaId = dbBattleAreaModel.BattleAreaId;
                 return Result.Success(BattleAreaModel);
             }
             catch (DbUpdateException ex)
@@ -64,8 +66,7 @@ namespace AliaksNad.Battleship.Logic.Services
         {
             try
             {
-                var models = await _battleAreaContext.BattleAreas.AsNoTracking()
-                    .ToArrayAsync().ConfigureAwait(false);
+                var models = await _battleAreaContext.BattleAreas.AsNoTracking().ProjectToArrayAsync<NewBattleAreaDto>(_mapper.ConfigurationProvider);
                 return Result.Success(_mapper.Map<IEnumerable<NewBattleAreaDto>>(models));
             }
             catch (SqlException ex)
@@ -85,7 +86,7 @@ namespace AliaksNad.Battleship.Logic.Services
             try
             {
                 Maybe<NewBattleAreaDto> battleArea = await _battleAreaContext.BattleAreas.Where(x => x.BattleAreaId == id)
-                    .ProjectToSingleOrDefaultAsync<NewBattleAreaDto>(_mapper.ConfigurationProvider).ConfigureAwait(false);
+                    .ProjectToSingleOrDefaultAsync<NewBattleAreaDto>(_mapper.ConfigurationProvider);
                 return Result.Success(battleArea);
             }
             catch (SqlException ex)
@@ -100,58 +101,58 @@ namespace AliaksNad.Battleship.Logic.Services
         /// </summary>
         /// <param name="coordinatesOfHit">Enemy coordinates.</param>
         /// <returns></returns>
-        public async Task<Result<Maybe<NewCoordinatesDto>>> CheckHitAsync(NewCoordinatesDto coordinatesOfHit)
-        {
-            try
-            {
-                var fleetModel = _mapper.Map<IEnumerable<NewCoordinatesDto>>(await _battleAreaContext.Coordinates
-                    .AsNoTracking().Where(x => x.BattleAreaId == coordinatesOfHit.BattleAreaId).ToArrayAsync().ConfigureAwait(false));
+        //public async Task<Result<Maybe<NewCoordinatesDto>>> CheckHitAsync(NewCoordinatesDto coordinatesOfHit)
+        //{
+        //    try
+        //    {
+        //        var fleetModel = _mapper.Map<IEnumerable<NewCoordinatesDto>>(await _battleAreaContext.Coordinates
+        //            .AsNoTracking().Where(x => x.BattleAreaId == coordinatesOfHit.BattleAreaId).ToArrayAsync());
 
-                var attackedCell = fleetModel.SingleOrDefault(x => x.CoordinateX == coordinatesOfHit.CoordinateX
-                    && x.CoordinateY == coordinatesOfHit.CoordinateY);
+        //        var attackedCell = fleetModel.SingleOrDefault(x => x.CoordinateX == coordinatesOfHit.CoordinateX
+        //            && x.CoordinateY == coordinatesOfHit.CoordinateY);
 
-                if (attackedCell != null)
-                {
-                    attackedCell.IsDamaged = true;
+        //        if (attackedCell != null)
+        //        {
+        //            attackedCell.IsDamaged = true;
 
-                    CheckShip(fleetModel, attackedCell);
+        //            CheckShip(fleetModel, attackedCell);
 
-                    var dbModel = _mapper.Map<CoordinatesDb>(attackedCell);
-                    _battleAreaContext.Coordinates.Attach(dbModel);
-                    var entry = _battleAreaContext.Entry(dbModel);
-                    entry.State = EntityState.Modified;
-                }
-                else
-                {
-                    _battleAreaContext.Coordinates.Add(_mapper.Map<CoordinatesDb>(coordinatesOfHit));
-                }
+        //            var dbModel = _mapper.Map<CoordinatesDb>(attackedCell);
+        //            _battleAreaContext.Coordinates.Attach(dbModel);
+        //            var entry = _battleAreaContext.Entry(dbModel);
+        //            entry.State = EntityState.Modified;
+        //        }
+        //        else
+        //        {
+        //            _battleAreaContext.Coordinates.Add(_mapper.Map<CoordinatesDb>(coordinatesOfHit));
+        //        }
 
-                await _battleAreaContext.SaveChangesAsync().ConfigureAwait(false);
+        //        await _battleAreaContext.SaveChangesAsync();
 
-                Maybe<NewCoordinatesDto> result = _mapper.Map<NewCoordinatesDto>(attackedCell);
-                return Result.Success(result);
-            }
-            catch (DbUpdateException ex)
-            {
-                _logger.Warning(ex, "An error occurred while updating the model in the DB");
-                return Result.Failure<Maybe<NewCoordinatesDto>>(ex.Message);
-            }
-        }
+        //        Maybe<NewCoordinatesDto> result = _mapper.Map<NewCoordinatesDto>(attackedCell);
+        //        return Result.Success(result);
+        //    }
+        //    catch (DbUpdateException ex)
+        //    {
+        //        _logger.Warning(ex, "An error occurred while updating the model in the DB");
+        //        return Result.Failure<Maybe<NewCoordinatesDto>>(ex.Message);
+        //    }
+        //}
 
-        private void CheckShip(IEnumerable<NewCoordinatesDto> fleetModel, NewCoordinatesDto attackedCell)
-        {
-            var shipCells = fleetModel.Where(x => x.ShipsId == attackedCell.ShipsId).ToArray();
-            var alifeCells = shipCells.FirstOrDefault(x => x.IsDamaged == false);
+        //private void CheckShip(IEnumerable<NewCoordinatesDto> fleetModel, NewCoordinatesDto attackedCell)
+        //{
+        //    var shipCells = fleetModel.Where(x => x.ShipsId == attackedCell.ShipsId).ToArray();
+        //    var alifeCells = shipCells.FirstOrDefault(x => x.IsDamaged == false);
 
-            if (alifeCells == null)
-            {
-                SetEmptyCells(shipCells);
-            }
-        }
+        //    if (alifeCells == null)
+        //    {
+        //        SetEmptyCells(shipCells);
+        //    }
+        //}
 
-        private void SetEmptyCells(IEnumerable<NewCoordinatesDto> attackedShip) // TODO Logic for empty cells around downed ship
-        {
+        //private void SetEmptyCells(IEnumerable<NewCoordinatesDto> attackedShip) // TODO Logic for empty cells around downed ship
+        //{
             
-        }
+        //}
     }
 }

@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using System.Web;
 using System.Web.Http;
 using AliaksNad.Battleship.Logic.Models;
+using AliaksNad.Battleship.Logic.Models.User;
 using AliaksNad.Battleship.Logic.Services;
 using AliaksNad.Battleship.Logic.Services.Contracts;
 using FluentValidation;

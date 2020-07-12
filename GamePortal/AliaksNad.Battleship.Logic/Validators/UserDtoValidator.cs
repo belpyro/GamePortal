@@ -1,5 +1,6 @@
 ﻿using AliaksNad.Battleship.Data.Contexts;
 using AliaksNad.Battleship.Logic.Models;
+using AliaksNad.Battleship.Logic.Models.User;
 using FluentValidation;
 using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.EntityFramework;
