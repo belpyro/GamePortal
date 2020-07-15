@@ -10,7 +10,7 @@ namespace AliaksNad.Battleship.Logic.Profiles
     {
         public BattleAreaProfile()
         {
-            CreateMap<BattleAreaDb, NewBattleAreaDto>()
+            CreateMap<BattleAreaDb, BattleAreaDto>()
                 .ReverseMap();
         }
     }

@@ -78,11 +78,12 @@
     <Compile Include="Contexts\Configurations\CoordinatesDbConfiguration.cs" />
     <Compile Include="Contexts\Configurations\MissCellsConfiguration.cs" />
     <Compile Include="Contexts\Configurations\ShipsDbConfiguration.cs" />
-    <Compile Include="Migrations\202007122054029_InitialCreate.cs" />
-    <Compile Include="Migrations\202007122054029_InitialCreate.designer.cs">
-      <DependentUpon>202007122054029_InitialCreate.cs</DependentUpon>
+    <Compile Include="Migrations\202007131955361_InitialCreate.cs" />
+    <Compile Include="Migrations\202007131955361_InitialCreate.designer.cs">
+      <DependentUpon>202007131955361_InitialCreate.cs</DependentUpon>
     </Compile>
     <Compile Include="Migrations\Configuration.cs" />
+    <Compile Include="Migrations\SeedConfig.cs" />
     <Compile Include="Models\CoordinatesDb.cs" />
     <Compile Include="Models\BattleAreaDb.cs" />
     <Compile Include="Models\BattleAreaEntity.cs" />
@@ -95,8 +96,8 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="Migrations\202007122054029_InitialCreate.resx">
-      <DependentUpon>202007122054029_InitialCreate.cs</DependentUpon>
+    <EmbeddedResource Include="Migrations\202007131955361_InitialCreate.resx">
+      <DependentUpon>202007131955361_InitialCreate.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

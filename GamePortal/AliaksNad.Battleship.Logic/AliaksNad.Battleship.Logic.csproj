@@ -230,7 +230,8 @@
     <Compile Include="Aspects\ValidationInterceptor.cs" />
     <Compile Include="Configuration\BattleshipIdentityServerConfiguration.cs" />
     <Compile Include="Configuration\BattleshipIdentityServerTokenAuthenticationConfiguration.cs" />
-    <Compile Include="Models\Game\NewMissCellDto.cs" />
+    <Compile Include="Models\Game\EmptyCellsDto.cs" />
+    <Compile Include="Models\Game\TargetDto.cs" />
     <Compile Include="Models\User\LoginDto.cs" />
     <Compile Include="Models\User\NewUserDto.cs" />
     <Compile Include="Models\User\UserDto.cs" />
@@ -239,10 +240,9 @@
     <Compile Include="Services\BattleShipEmailService.cs" />
     <Compile Include="BattleshipLogicDIModule.cs" />
     <Compile Include="Extensions\IdentityExtensions.cs" />
-    <Compile Include="Models\Game\NewCoordinatesDto.cs" />
-    <Compile Include="Models\Game\NewBattleAreaDto.cs" />
-    <Compile Include="Models\Game\NewShipDto.cs" />
-    <Compile Include="Models\StatisticDto.cs" />
+    <Compile Include="Models\Game\CoordinatesDto.cs" />
+    <Compile Include="Models\Game\BattleAreaDto.cs" />
+    <Compile Include="Models\Game\ShipDto.cs" />
     <Compile Include="Profiles\CoordinatesProfile.cs" />
     <Compile Include="Profiles\BattleAreaProfile.cs" />
     <Compile Include="Profiles\ShipProfile.cs" />
@@ -253,7 +253,8 @@
     <Compile Include="Services\Contracts\IUserService.cs" />
     <Compile Include="Services\UserFaker.cs" />
     <Compile Include="Services\UserService.cs" />
-    <Compile Include="Validators\BattleAreaDtoValidator.cs" />
+    <Compile Include="Validators\CoordinatesDtoValidator.cs" />
+    <Compile Include="Validators\TargetDtoValidator.cs" />
     <Compile Include="Validators\UserDtoValidator.cs" />
   </ItemGroup>
   <ItemGroup>

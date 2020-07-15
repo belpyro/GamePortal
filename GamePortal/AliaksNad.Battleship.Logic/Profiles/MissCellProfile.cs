@@ -8,7 +8,7 @@ namespace AliaksNad.Battleship.Logic.Profiles
     {
         public MissCellProfile()
         {
-            CreateMap<MissCellDb, NewMissCellDto>()
+            CreateMap<MissCellDb, EmptyCellsDto>()
                 .ReverseMap();
         }
     }

@@ -2,6 +2,7 @@
 using AliaksNad.Battleship.Logic.Models.Game;
 using AliaksNad.Battleship.Logic.Services;
 using AliaksNad.Battleship.Logic.Services.Contracts;
+using FluentValidation;
 using FluentValidation.WebApi;
 using JetBrains.Annotations;
 using System;
@@ -31,7 +32,7 @@ namespace GamePortal.Web.Api.Controllers.Battleship
         /// <returns></returns>
         [HttpPost]
         [Route("")]
-        public async Task<IHttpActionResult> AddAsync([CustomizeValidator(RuleSet = "PreValidation")][FromBody]NewBattleAreaDto BattleAreaDtoCoordinates)
+        public async Task<IHttpActionResult> AddAsync([CustomizeValidator(RuleSet = "PreValidation")][FromBody]BattleAreaDto BattleAreaDtoCoordinates)
         {
             if (!ModelState.IsValid)
             {
@@ -73,25 +74,20 @@ namespace GamePortal.Web.Api.Controllers.Battleship
         /// <summary>
         /// Checking hit by enemy coordinates on logic layer.
         /// </summary>
-        /// <param name="coordinatesOfHit">Enemy coordinates.</param>
+        /// <param name="target">Enemy coordinates.</param>
         /// <returns></returns>
         [HttpPost]
         [Route("coordinates")]
-        public async Task<IHttpActionResult> CheckHitAsync([FromBody]NewCoordinatesDto coordinatesOfHit)
+        public async Task<IHttpActionResult> CheckHitAsync([FromBody]TargetDto target)
         {
-            //if (!ModelState.IsValid)
-            //{
-            //    return BadRequest(ModelState);
-            //}
+            if (!ModelState.IsValid)
+                return BadRequest(ModelState);
 
-            //var result = await _gameService.CheckHitAsync(coordinatesOfHit);
-            //if (result.IsFailure)
-            //{
-            //    return StatusCode(HttpStatusCode.InternalServerError);
-            //}
-            //return result.Value.HasValue ? Ok(result.Value.Value) : (IHttpActionResult)NotFound();
+            var result = await _gameService.CheckTargetAsync(target);
+            if (result.IsFailure)
+                return StatusCode(HttpStatusCode.InternalServerError);
 
-            return StatusCode(HttpStatusCode.NoContent);
+            return result.Value.HasValue ? Ok(result) : (IHttpActionResult)NotFound();
         }
     }
 }

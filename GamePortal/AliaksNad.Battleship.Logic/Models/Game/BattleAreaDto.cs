@@ -5,11 +5,11 @@ using System.ComponentModel.DataAnnotations;
 
 namespace AliaksNad.Battleship.Logic.Models.Game
 {
-    [Validator(typeof(BattleAreaDtoValidator))]
-    public class NewBattleAreaDto
+    [Validator(typeof(CoordinatesDtoValidator))]
+    public class BattleAreaDto
     {
-        public IEnumerable<NewShipDto> Ships { get; set; }
+        public IEnumerable<ShipDto> Ships { get; set; }
 
-        public IEnumerable<NewMissCellDto> MissCells { get; set; }
+        public IEnumerable<EmptyCellsDto> MissCells { get; set; }
     }
 }

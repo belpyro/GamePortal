@@ -43,7 +43,8 @@ namespace AliaksNad.Battleship.Logic
             this.Bind<BattleAreaContext>().ToSelf();
 
             this.Bind<IValidator<UserDto>>().To<UserDtoValidator>();
-            this.Bind<IValidator<NewBattleAreaDto>>().To<BattleAreaDtoValidator>();
+            this.Bind<IValidator<CoordinatesDto>>().To<CoordinatesDtoValidator>();
+            this.Bind<IValidator<TargetDto>>().To<TargetDtoValidator>();
 
             this.Bind<IUserStore<IdentityUser>>().To<UserStore<IdentityUser>>();
             var user = this.Bind<UserManager<IdentityUser>>().ToMethod(ctx => 

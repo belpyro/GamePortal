@@ -12,24 +12,24 @@ namespace AliaksNad.Battleship.Logic.Services.Contracts
         /// Set your own fleet coordinates.
         /// </summary>
         /// <param name="fleetCoordinates">Own fleet coordinates.</param>
-        Task<Result<NewBattleAreaDto>> AddAsync(NewBattleAreaDto fleetCoordinates);
+        Task<Result<BattleAreaDto>> AddAsync(BattleAreaDto fleetCoordinates);
 
         /// <summary>
         /// Get all battle area. 
         /// </summary>
-        Task<Result<IEnumerable<NewBattleAreaDto>>> GetAllAsync();
+        Task<Result<IEnumerable<BattleAreaDto>>> GetAllAsync();
 
         /// <summary>
         /// Get battle area by id.
         /// </summary>
         /// <param name="id">user id.</param>
-        Task<Result<Maybe<NewBattleAreaDto>>> GetByIdAsync(int id);
+        Task<Result<Maybe<BattleAreaDto>>> GetByIdAsync(int id);
 
         /// <summary>
-        /// Checking hit by enemy coordinates.
+        /// Check enemy ship with target coordinates.
         /// </summary>
-        /// <param name="coordinates">Enemy coordinates.</param>
+        /// <param name="target">Enemy coordinates.</param>
         /// <returns></returns>
-        //Task<Result<Maybe<NewCoordinatesDto>>> CheckHitAsync(NewCoordinatesDto coordinates);
+        Task<Result<Maybe<TargetDto>>> CheckTargetAsync(TargetDto target);
     }
 }

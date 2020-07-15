@@ -2,8 +2,8 @@
 
 namespace AliaksNad.Battleship.Logic.Models.Game
 {
-    public class NewShipDto
+    public class ShipDto
     {
-        public IEnumerable<NewCoordinatesDto> Coordinates { get; set; }
+        public IEnumerable<CoordinatesDto> Coordinates { get; set; }
     }
 }

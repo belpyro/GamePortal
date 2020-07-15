@@ -8,7 +8,7 @@ namespace AliaksNad.Battleship.Logic.Profiles
     {
         public ShipProfile()
         {
-            CreateMap<ShipDb, NewShipDto>()
+            CreateMap<ShipDb, ShipDto>()
                 .ReverseMap();
         }
     }

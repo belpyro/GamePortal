@@ -10,7 +10,7 @@ namespace AliaksNad.Battleship.Data.Models
     {
         public int ShipId { get; set; }
 
-        public bool isAlife { get; set; }
+        public bool isAlife { get; set; } = true;
 
         public int? BattleAreaId { get; set; }
 
