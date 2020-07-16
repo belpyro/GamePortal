@@ -14,7 +14,6 @@ export class TextblockComponent implements OnInit {
   constructor(public textsetService: TextsetService) { }
 
   ngOnInit(): void {
-    //this.textsetService.getTextSetById(22).subscribe(data => this.textset = data);
     this.textsetService.getAllTextSet().subscribe(data => this.textset = data);
   }
 
