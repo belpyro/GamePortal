@@ -1,5 +1,4 @@
 ﻿<Project ToolsVersion="15.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
-  <Import Project="..\packages\NullGuard.Fody.2.2.0\build\NullGuard.Fody.props" Condition="Exists('..\packages\NullGuard.Fody.2.2.0\build\NullGuard.Fody.props')" />
   <Import Project="..\packages\EntityFramework.6.4.4\build\EntityFramework.props" Condition="Exists('..\packages\EntityFramework.6.4.4\build\EntityFramework.props')" />
   <Import Project="..\packages\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.2.0.1\build\net46\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.props" Condition="Exists('..\packages\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.2.0.1\build\net46\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.props')" />
   <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
@@ -213,9 +212,6 @@
     </Reference>
     <Reference Include="NSwag.Generation.WebApi, Version=13.6.1.0, Culture=neutral, PublicKeyToken=c2d88086e098d109, processorArchitecture=MSIL">
       <HintPath>..\packages\NSwag.Generation.WebApi.13.6.1\lib\net45\NSwag.Generation.WebApi.dll</HintPath>
-    </Reference>
-    <Reference Include="NullGuard, Version=2.2.0.0, Culture=neutral, PublicKeyToken=1ca091877d12ca03, processorArchitecture=MSIL">
-      <HintPath>..\packages\NullGuard.Fody.2.2.0\lib\net40\NullGuard.dll</HintPath>
     </Reference>
     <Reference Include="Owin, Version=1.0.0.0, Culture=neutral, PublicKeyToken=f0ebd12fd5e55cc5, processorArchitecture=MSIL">
       <HintPath>..\packages\Owin.1.0\lib\net40\Owin.dll</HintPath>
@@ -438,6 +434,10 @@
     <Folder Include="Views\Default\" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\AliaksNad.Battleship.Logic\AliaksNad.Battleship.Logic.csproj">
+      <Project>{56dcd764-ed73-409b-961b-521fe4d34f27}</Project>
+      <Name>AliaksNad.Battleship.Logic</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Kbalan.TouchType.Logic\Kbalan.TouchType.Logic.csproj">
       <Project>{4118173a-5fa8-4258-85ef-b7dc939042c3}</Project>
       <Name>Kbalan.TouchType.Logic</Name>
@@ -448,10 +448,6 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\AliaksNad.Battleship.Logic\AliaksNad.Battleship.Logic.csproj">
-      <Project>{56dcd764-ed73-409b-961b-521fe4d34f27}</Project>
-      <Name>AliaksNad.Battleship.Logic</Name>
-    </ProjectReference>
     <ProjectReference Include="..\Igro.Quoridor.Logic\Igro.Quoridor.Logic.csproj">
       <Project>{645c087d-0f20-45e8-83a0-703051fcbc14}</Project>
       <Name>Igro.Quoridor.Logic</Name>
@@ -489,11 +485,8 @@
     <Error Condition="!Exists('..\packages\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.2.0.1\build\net46\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.props')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.2.0.1\build\net46\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.props'))" />
     <Error Condition="!Exists('..\packages\EntityFramework.6.4.4\build\EntityFramework.props')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\EntityFramework.6.4.4\build\EntityFramework.props'))" />
     <Error Condition="!Exists('..\packages\EntityFramework.6.4.4\build\EntityFramework.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\EntityFramework.6.4.4\build\EntityFramework.targets'))" />
-    <Error Condition="!Exists('..\packages\NullGuard.Fody.2.2.0\build\NullGuard.Fody.props')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\NullGuard.Fody.2.2.0\build\NullGuard.Fody.props'))" />
-    <Error Condition="!Exists('..\packages\Fody.6.2.0\build\Fody.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\Fody.6.2.0\build\Fody.targets'))" />
   </Target>
   <Import Project="..\packages\EntityFramework.6.4.4\build\EntityFramework.targets" Condition="Exists('..\packages\EntityFramework.6.4.4\build\EntityFramework.targets')" />
-  <Import Project="..\packages\Fody.6.2.0\build\Fody.targets" Condition="Exists('..\packages\Fody.6.2.0\build\Fody.targets')" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
   <Target Name="BeforeBuild">

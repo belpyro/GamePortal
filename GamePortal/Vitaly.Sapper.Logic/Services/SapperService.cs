@@ -30,12 +30,6 @@ namespace Vitaly.Sapper.Logic.Services
 
         public UserDto UserInfoById(int id)
         {
-            //var dbModel = new UserDb { Id = id };
-            //_context.Users.Attach(dbModel);
-            //var entry = _context.Entry(dbModel);
-
-            ////entry.Collection("Users").Load();
-            //return _mapper.Map<UserDto>(entry.Entity);
             var models = _context.Users.Find(id);
             return _mapper.Map<UserDto>(models);
         }
@@ -58,9 +52,9 @@ namespace Vitaly.Sapper.Logic.Services
 
         public void UserDelete(int id)
         {
-            var dbModel = _context.Users.Find(id); //SELECT
+            var dbModel = _context.Users.Find(id);
             _context.Users.Remove(dbModel);
-            _context.SaveChanges(); //DELETE
+            _context.SaveChanges();
         }
 
         #region IDisposable Support
