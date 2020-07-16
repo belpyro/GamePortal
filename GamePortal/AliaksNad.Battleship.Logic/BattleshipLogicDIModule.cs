@@ -11,6 +11,9 @@ using Ninject;
 using AliaksNad.Battleship.Logic.Aspects;
 using Serilog;
 using Ninject.Extensions.Interception.Infrastructure.Language;
+using Microsoft.AspNet.Identity;
+using Microsoft.AspNet.Identity.EntityFramework;
+using AliaksNad.Battleship.Logic.Services.Contracts;
 
 namespace AliaksNad.Battleship.Logic
 {
@@ -27,21 +30,51 @@ namespace AliaksNad.Battleship.Logic
                     return r.ParentContext != null && r.ParentContext.Plan.Type.Namespace.StartsWith("AliaksNad.Battleship");
                 });
 
-            var logger = new LoggerConfiguration().CreateLogger();
-
+            var logger = new LoggerProfile().CreateLogger();
             this.Bind<ILogger>().ToConstant(logger)
                 .When(r =>
                 {
                     return r.ParentContext != null && r.ParentContext.Plan.Type.Namespace.StartsWith("AliaksNad.Battleship");
                 });
 
-            this.Bind<UsersContext>().ToSelf();
             this.Bind<BattleAreaContext>().ToSelf();
 
             this.Bind<IValidator<UserDto>>().To<UserDtoValidator>();
+            this.Bind<IValidator<BattleAreaDto>>().To<BattleAreaDtoValidator>();
 
-            this.Bind<IUserService>().To<UserService>().Intercept().With<ValidationInterceptor>();
-            this.Bind<IGameService>().To<GameService>();
+            this.Bind<IUserStore<IdentityUser>>().To<UserStore<IdentityUser>>();
+            var user = this.Bind<UserManager<IdentityUser>>().ToMethod(ctx => 
+            {
+                var manager = new UserManager<IdentityUser>(ctx.Kernel.Get<IUserStore<IdentityUser>>());
+                manager.UserValidator = new UserValidator<IdentityUser>(manager)
+                {
+                    AllowOnlyAlphanumericUserNames = false,
+                    RequireUniqueEmail = true
+                };
+                manager.PasswordValidator = new PasswordValidator() 
+                {
+                    RequireDigit = false,
+                    RequiredLength = 3,
+                    RequireLowercase = false,
+                    RequireNonLetterOrDigit = false,
+                    RequireUppercase = false
+                };
+                manager.EmailService = new BattleshipEmailService();
+
+                manager.UserTokenProvider = new EmailTokenProvider<IdentityUser>();
+
+                return manager;
+            }).When(r =>
+            {
+                return r.ParentContext != null && r.ParentContext.Plan.Type.Namespace.StartsWith("AliaksNad.Battleship");
+            });
+
+            var userServiceBinding = this.Bind<IUserService>().To<UserService>();
+            userServiceBinding.Intercept().With<ValidationInterceptor>();
+            userServiceBinding.Intercept().With<BattleshipLoggerInterceptor>();
+
+            var gameServiceBinding = this.Bind<IGameService>().To<GameService>();
+            gameServiceBinding.Intercept().With<BattleshipLoggerInterceptor>();
         }
     }
 }

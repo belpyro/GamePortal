@@ -3,10 +3,15 @@ using AutoMapper.QueryableExtensions;
 using CSharpFunctionalExtensions;
 using FluentValidation;
 using FluentValidation.Results;
+using Fody;
 using JetBrains.Annotations;
+using Kbalan.Logic.Extensions;
 using Kbalan.TouchType.Data.Contexts;
 using Kbalan.TouchType.Data.Models;
 using Kbalan.TouchType.Logic.Dto;
+using Microsoft.AspNet.Identity;
+using Microsoft.AspNet.Identity.EntityFramework;
+using Microsoft.AspNet.Identity.Owin;
 using System;
 using System.Collections.Generic;
 using System.Data.Entity.Infrastructure;
@@ -15,214 +20,98 @@ using System.Data.SqlClient;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Web.Http.Results;
 
 namespace Kbalan.TouchType.Logic.Services
 {
+    [ConfigureAwait(false)]
     public class UserService : IUserService
     {
-        private readonly TouchTypeGameContext _gameContext;
+        private UserManager<IdentityUser> _userManager;
         private readonly IMapper _mapper;
 
-        public UserService([NotNull]TouchTypeGameContext gameContext, [NotNull]IMapper mapper)
+        public UserService(UserManager<IdentityUser> userManager, IMapper mapper)
         {
-            this._gameContext = gameContext;
+            _userManager = userManager;
             this._mapper = mapper;
-    }
-
-        /// <summary>
-        /// Implementation of IUserService GetAll() method
-        /// </summary>
-        /// <returns></returns>
-        public Result<IEnumerable<UserSettingStatisticDto>> GetAll()
-        {
-            try
-            {
-                var getAllResult = _gameContext.Users.ProjectToArray<UserSettingStatisticDto>(_mapper.ConfigurationProvider);
-                return Result.Success<IEnumerable<UserSettingStatisticDto>>(getAllResult);
-            }
-            catch (DbUpdateException ex)
-            {
-                return Result.Failure<IEnumerable<UserSettingStatisticDto>>(ex.Message);
-            }
-        }
-        public async Task<Result<IEnumerable<UserSettingStatisticDto>>> GetAllAsync ()
-        {
-            try
-            {
-                var getAllResult = await _gameContext.Users
-                    .ProjectToArrayAsync<UserSettingStatisticDto>(_mapper.ConfigurationProvider)
-                    .ConfigureAwait(false);
-                return Result.Success<IEnumerable<UserSettingStatisticDto>>(getAllResult);
-            }
-            catch (DbUpdateException ex)
-            {
-                return Result.Failure<IEnumerable<UserSettingStatisticDto>>(ex.Message);
-            }
         }
 
-        /// <summary>
-        /// Implementation of GetById()
-        /// </summary>
-        /// <param name="Id"></param>
-        /// <returns></returns>
-        public Result<Maybe<UserSettingStatisticDto>> GetById(int id)
+        public async Task<Result> Register(NewUserDto model)
         {
-            try
+            // validation username existing
+            var user = new IdentityUser
             {
-                Maybe<UserSettingStatisticDto> getResultById = _gameContext.Users.Where(x => x.Id == id)
-                    .ProjectToSingleOrDefault<UserSettingStatisticDto>(_mapper.ConfigurationProvider);
+                Email = model.Email,
+                UserName = model.UserName
+            };
 
-                    return Result.Success(getResultById);
-            }
-            catch (SqlException ex)
-            {
-                return Result.Failure<Maybe<UserSettingStatisticDto>>(ex.Message);
-            }
-        }
-        public async Task<Result<Maybe<UserSettingStatisticDto>>> GetByIdAsync(int id)
-        {
-            try
-            {
-                Maybe<UserSettingStatisticDto> getResultById = await _gameContext.Users.Where(x => x.Id == id)
-                    .ProjectToSingleOrDefaultAsync<UserSettingStatisticDto>(_mapper.ConfigurationProvider)
-                    .ConfigureAwait(false);
+            var result = await _userManager.CreateAsync(user, model.Password);
+            var result2 = await _userManager.AddToRoleAsync(user.Id, "user");
 
-                return Result.Success(getResultById);
-            }
-            catch (SqlException ex)
-            {
-                return Result.Failure<Maybe<UserSettingStatisticDto>>(ex.Message);
-            }
+            var token = await _userManager.GenerateEmailConfirmationTokenAsync(user.Id);
+
+            await _userManager.SendEmailAsync(user.Id, "Confirm your email", $"click on https://localhost:44444/api/user/email/confirm?userId={user.Id}&token={token}");
+
+            return Result.Combine(result.ToFunctionalResult(), result2.ToFunctionalResult());
         }
 
-        /// <summary>
-        /// Add new user to RegisterUserDto collection. If user with such id or name exist's null will be
-        /// returned
-        /// </summary>
-        /// <param name="model">RegisterUserDto model</param>
-        /// <returns>New User or null</returns>
-        public Result<UserSettingDto> Add(UserSettingDto model)
+        public async Task<Result> RegisterExternalUser(ExternalLoginInfo info)
         {
-            try
-            {
-                var DbModel = _mapper.Map<UserDb>(model);
+            var user = await _userManager.FindAsync(info.Login);
+            if (user != null) return Result.Success();
 
-                _gameContext.Users.Add(DbModel);
-                _gameContext.SaveChanges();
-
-                model.Id = DbModel.Id;
-                return Result.Success(model);
-            }
-            catch (DbUpdateException ex)
-            {
-                return Result.Failure<UserSettingDto>(ex.Message);
-            }
-        }
-        public async Task<Result<UserSettingDto>> AddAsync(UserSettingDto model)
-        {
-            try
-            {
-                var DbModel = _mapper.Map<UserDb>(model);
-
-                _gameContext.Users.Add(DbModel);
-                await _gameContext.SaveChangesAsync().ConfigureAwait(false);
-
-                model.Id = DbModel.Id;
-                return Result.Success(model);
-            }
-            catch (DbUpdateException ex)
-            {
-                return Result.Failure<UserSettingDto>(ex.Message);
-            }
+            user = new IdentityUser(info.DefaultUserName) { Email = info.Email };
+            await _userManager.CreateAsync(user);
+            await _userManager.AddLoginAsync(user.Id, info.Login);
+            return Result.Success();
         }
 
-        /// <summary>
-        /// Implementation of Update()
-        /// </summary>
-        /// <param name="model"></param>
-        public Result Update(UserDto model)
+        public async Task<Result> ChangePassword(string userId, string token, string newPassword)
         {
-
-            try
-            {
-                var dbModel = _mapper.Map<UserDb>(model);
-
-                _gameContext.Users.Attach(dbModel);
-
-                var entry = _gameContext.Entry(dbModel);
-                entry.Property(x => x.NickName).IsModified = true;
-                entry.Property(x => x.Password).IsModified = true;
-                _gameContext.SaveChanges();
-
-                return Result.Success();
-            }
-            catch (DbUpdateException ex)
-            {
-                return Result.Failure(ex.Message);
-            }
-        }
-        public async Task<Result> UpdateAsync(UserDto model)
-        {
-
-            try
-            {
-                var dbModel = _mapper.Map<UserDb>(model);
-
-                _gameContext.Users.Attach(dbModel);
-
-                var entry = _gameContext.Entry(dbModel);
-                entry.Property(x => x.NickName).IsModified = true;
-                entry.Property(x => x.Password).IsModified = true;
-                await _gameContext.SaveChangesAsync().ConfigureAwait(false);
-
-                return Result.Success();
-            }
-            catch (DbUpdateException ex)
-            {
-                return Result.Failure(ex.Message);
-            }
+            var result = await _userManager.ResetPasswordAsync(userId, token, newPassword);
+            return result.ToFunctionalResult();
         }
 
-        /// <summary>
-        /// Implementation of Delete()
-        /// </summary>
-        /// <param name="id">User id</param>
-        /// <returns>true or false</returns>
-        public Result Delete(int id)
+        public async Task<Result> ConfirmEmail(string userId, string token)
         {
-            try
-            {
-                var dbModel = _gameContext.Users.Find(id);
-
-                if (dbModel == null)
-                    return Result.Failure($"No user with id {id} exist");
-
-                _gameContext.Users.Remove(dbModel);
-                _gameContext.SaveChanges();
-                return Result.Success();
-            }
-            catch (DbUpdateException ex)
-            {
-                return Result.Failure(ex.Message);
-            }
+            var data = await _userManager.ConfirmEmailAsync(userId, token);
+            return data.ToFunctionalResult();
         }
-        public async Task<Result> DeleteAsync(int id)
+
+        public async Task<Result> ResetPassword(string email)
         {
-            try
-            {
-                var dbModel = await _gameContext.Users.FindAsync(id).ConfigureAwait(false);
+            var user = await _userManager.FindByEmailAsync(email);
+            if (user == null) throw new ValidationException("User doesn't exist");
 
-                if (dbModel == null)
-                    return Result.Failure($"No user with id {id} exist");
+            var token = await _userManager.GeneratePasswordResetTokenAsync(user.Id);
+            await _userManager.SendEmailAsync(user.Id, "Reset your password", $"Click on yourhost/api/users/password/reset?userId={user.Id}&token={token}");
+            return Result.Success();
+        }
 
-                _gameContext.Users.Remove(dbModel);
-                await _gameContext.SaveChangesAsync().ConfigureAwait(false);
-                return Result.Success();
-            }
-            catch (DbUpdateException ex)
-            {
-                return Result.Failure(ex.Message);
-            }
+        public async Task<Result<IReadOnlyCollection<UserDto>>> GetAllAsync()
+        {
+            var users = await _userManager.Users.ProjectToListAsync<UserDto>(_mapper.ConfigurationProvider);
+            return Result.Success((IReadOnlyCollection<UserDto>)users.AsReadOnly());
+        }
+
+        public async Task<Maybe<UserDto>> GetUser(string username, string password)
+        {
+            var user = await _userManager.FindByNameAsync(username);
+            if (user == null) return null;
+
+            var isValid = await _userManager.CheckPasswordAsync(user, password);
+            return isValid ? _mapper.Map<UserDto>(user) : null;
+        }
+
+        public async Task<Result> DeleteAsync(string username)
+        {
+            var user = await _userManager.FindByNameAsync(username);
+            if (user == null) return Result.Failure("User doesn't exist");
+
+            var result = await _userManager.DeleteAsync(user);
+            return Result.Combine(result.ToFunctionalResult());
+
+
         }
 
         #region IDisposable Support
@@ -238,7 +127,7 @@ namespace Kbalan.TouchType.Logic.Services
                 {
                     // TODO: dispose managed state (managed objects).
                 }
-                _gameContext.Dispose();
+                _userManager.Dispose();
                 GC.SuppressFinalize(this);
                 // TODO: free unmanaged resources (unmanaged objects) and override a finalizer below.
                 // TODO: set large fields to null.

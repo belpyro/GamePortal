@@ -29,7 +29,7 @@ namespace GamePortal.Web.Api.Controllers.TouchType
         //Get All TextSets
         [HttpGet]
         [Route("")]
-        public async Task<IHttpActionResult> GetAll()
+        public async Task<IHttpActionResult> GetAllAsync()
         {
             var result = await _textSetService.GetAllAsync();
             return result.IsSuccess ? Ok(result.Value) : (IHttpActionResult)StatusCode(HttpStatusCode.InternalServerError);

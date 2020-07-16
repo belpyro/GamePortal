@@ -1,4 +1,6 @@
 ﻿using Kbalan.TouchType.Data.Models;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Converters;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -18,6 +20,7 @@ namespace Kbalan.TouchType.Logic.Dto
 
         public string TextForTyping { get; set; }
 
+        [JsonConverter(typeof(StringEnumConverter))]
         public LevelOfText LevelOfText { get; set; }
     }
 }
