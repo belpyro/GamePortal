@@ -12,6 +12,7 @@ import { AppRoutingModule } from './app-routing.module';
 import { UserComponent } from './components/user/user.component';
 import { CommonModule } from '@angular/common';
 import { TextblockComponent } from './components/text/textblock/textblock.component';
+import { NotFoundComponent } from './components/not-found/not-found.component';
 
 
 @NgModule({
@@ -22,6 +23,7 @@ import { TextblockComponent } from './components/text/textblock/textblock.compon
     RegistrationComponent,
     UserComponent,
     TextblockComponent,
+    NotFoundComponent,
 
   ],
   imports: [
