@@ -108,13 +108,13 @@ namespace AliaksNad.Battleship.Logic.Services
             {
                 var targetCell = await CheckShipAsync(target);
 
-                if (targetCell.Value.HasValue)
+                if (targetCell != null)
                 {
-                    var saveShipResult = await SaveDamagedShipAsync(targetCell.Value.Value);
+                    await SaveDamagedShipAsync(targetCell);
                 }
                 else
                 {
-                    var SaveEmptyCellResult = await SaveEmptyCellAsync(target);
+                    await SaveEmptyCellAsync(target);
                 }
 
                 Maybe<TargetDto> result = _mapper.Map<TargetDto>(targetCell);
@@ -127,25 +127,23 @@ namespace AliaksNad.Battleship.Logic.Services
             }
         }
 
-        private async Task<Result<Maybe<CoordinatesDb>>> CheckShipAsync(TargetDto target)
+        private async Task<CoordinatesDb> CheckShipAsync(TargetDto target)
         {
             try
             {
                 var fleetDb = await _battleAreaContext.Ships.AsNoTracking()
                     .Where(x => x.BattleAreaId == target.EnemyBattleAreaId && x.isAlife == true).Include(x => x.Coordinates).ToArrayAsync();
 
-                Maybe<CoordinatesDb> targetCell = fleetDb.SelectMany(x => x.Coordinates)
+                return fleetDb.SelectMany(x => x.Coordinates)
                     .Where(x => x.CoordinateX == target.Coordinates.CoordinateX && x.CoordinateY == target.Coordinates.CoordinateY).SingleOrDefault();
-
-                return Result.Success(targetCell);
             }
             catch (DbUpdateException ex)
             {
-                return Result.Failure<Maybe<CoordinatesDb>>(ex.Message);
+                throw new NotImplementedException(); // TODO
             }
         }
 
-        private async Task<Result> SaveDamagedShipAsync(CoordinatesDb target)
+        private async Task SaveDamagedShipAsync(CoordinatesDb target)
         {
             try
             {
@@ -158,13 +156,10 @@ namespace AliaksNad.Battleship.Logic.Services
                 //CheckShip(fleetDb, targetFleetCell);  //TODO
 
                 await _battleAreaContext.SaveChangesAsync();
-                
-                return Result.Success();
             }
             catch (DbUpdateException ex)
             {
                 _logger.Warning(ex, "An error occurred while updating the model in the DB");
-                return Result.Failure<Maybe<CoordinatesDto>>(ex.Message);
             }
         }
 
@@ -196,26 +191,23 @@ namespace AliaksNad.Battleship.Logic.Services
             }
         }
 
-        private async Task<Result> SaveEmptyCellAsync(TargetDto target)
+        private async Task SaveEmptyCellAsync(TargetDto target)
         {
             try
             {
                 var emptyCellsDb = await _battleAreaContext.MissCells.AsNoTracking()
                     .Where(x => x.BattleAreaId == target.EnemyBattleAreaId).SingleOrDefaultAsync();
                 
-                var targetDb = _mapper.Map<CoordinatesDb>(target);
+                var targetDb = _mapper.Map<CoordinatesDb>(target.Coordinates);
                 targetDb.MissCellId = emptyCellsDb.MissCellId;
                 targetDb.IsDamage = true;
 
                 _battleAreaContext.Coordinates.Add(targetDb);
                 _battleAreaContext.SaveChanges();
-
-                return Result.Success();
             }
             catch (DbUpdateException ex)
             {
                 _logger.Warning(ex, "An error occurred while updating the model in the DB");
-                return Result.Failure<Maybe<CoordinatesDto>>(ex.Message);
             }
         }
     }

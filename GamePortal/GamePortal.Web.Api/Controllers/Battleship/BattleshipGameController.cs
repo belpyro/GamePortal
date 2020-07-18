@@ -87,7 +87,7 @@ namespace GamePortal.Web.Api.Controllers.Battleship
             if (result.IsFailure)
                 return StatusCode(HttpStatusCode.InternalServerError);
 
-            return result.Value.HasValue ? Ok(result) : (IHttpActionResult)NotFound();
+            return result.Value.HasValue ? Ok() : (IHttpActionResult)NotFound();
         }
     }
 }
