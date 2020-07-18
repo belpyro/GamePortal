@@ -383,6 +383,7 @@
     <Compile Include="Controllers\TouchType\TTGStatisticsController.cs" />
     <Compile Include="Controllers\TouchType\TTGUsersController.cs" />
     <Compile Include="Controllers\TouchType\TTGTextsController.cs" />
+    <Compile Include="Filters\Battleship\ModelStateValidationAttribute.cs" />
     <Compile Include="HttpApplicationInitializationHttpModule.cs" />
     <Compile Include="Middleware\BattleshipIdentityServerExtension.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

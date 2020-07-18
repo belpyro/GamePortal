@@ -4,6 +4,7 @@ using AliaksNad.Battleship.Logic.Services;
 using AliaksNad.Battleship.Logic.Services.Contracts;
 using FluentValidation;
 using FluentValidation.WebApi;
+using GamePortal.Web.Api.Filters.Battleship;
 using JetBrains.Annotations;
 using System;
 using System.Collections.Generic;
@@ -15,7 +16,7 @@ using System.Web.Http.Description;
 
 namespace GamePortal.Web.Api.Controllers.Battleship
 {
-    [RoutePrefix("api/battleship/game")]
+    [RoutePrefix("api/battleship/game"), ModelStateValidation]
     public class BattleshipGameController : ApiController
     {
         private readonly IGameService _gameService;
@@ -80,8 +81,8 @@ namespace GamePortal.Web.Api.Controllers.Battleship
         [Route("coordinates")]
         public async Task<IHttpActionResult> CheckHitAsync([FromBody]TargetDto target)
         {
-            if (!ModelState.IsValid)
-                return BadRequest(ModelState);
+            //if (!ModelState.IsValid)
+            //    return BadRequest(ModelState);
 
             var result = await _gameService.CheckTargetAsync(target);
             if (result.IsFailure)

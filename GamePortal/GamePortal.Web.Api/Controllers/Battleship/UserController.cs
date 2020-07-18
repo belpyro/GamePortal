@@ -11,12 +11,13 @@ using AliaksNad.Battleship.Logic.Services;
 using AliaksNad.Battleship.Logic.Services.Contracts;
 using FluentValidation;
 using FluentValidation.WebApi;
+using GamePortal.Web.Api.Filters.Battleship;
 using Microsoft.AspNet.Identity;
 using Microsoft.Owin.Security;
 
 namespace GamePortal.Web.Api.Controllers.Battleship
 {
-    [RoutePrefix("api/battleship/Users")]
+    [RoutePrefix("api/battleship/Users"), ModelStateValidation]
     public class UserController : ApiController
     {
         private readonly IUserService _userService;
