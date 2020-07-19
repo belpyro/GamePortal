@@ -69,9 +69,8 @@ namespace GamePortal.Web.Api.Controllers.Battleship
         {
             var battleArea = await _gameService.GetByIdAsync(id);
             if (battleArea.IsFailure)
-            {
                 return StatusCode(HttpStatusCode.InternalServerError);
-            }
+
             return battleArea.Value.HasNoValue ? (IHttpActionResult)NotFound() : Ok(battleArea.Value.Value);
         }
 
@@ -85,15 +84,11 @@ namespace GamePortal.Web.Api.Controllers.Battleship
         public async Task<IHttpActionResult> CheckHitAsync([CustomizeValidator(RuleSet = "PreValidation")][FromBody]TargetDto target)
         {
             var validator = _kernal.Get<IValidator<TargetDto>>();
-            var validationResult = validator.Validate(target, "PostValidation");
+            var validationResult = validator.Validate(target, "PreValidation");
             if (!validationResult.IsValid)
             {
                 return BadRequest(validationResult.Errors.ToString());
             }
-
-
-            if (!ModelState.IsValid)
-                return BadRequest(ModelState);
 
             var result = await _gameService.CheckTargetAsync(target);
             if (result.IsFailure)

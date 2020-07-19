@@ -1,4 +1,5 @@
 ﻿using AliaksNad.Battleship.Logic.Validators;
+using AliaksNad.Battleship.Logic.Validators.Game;
 using FluentValidation.Attributes;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;

@@ -18,6 +18,8 @@ using AliaksNad.Battleship.Logic.Configuration;
 using AliaksNad.Battleship.Logic.Models.User;
 using AliaksNad.Battleship.Logic.Models.Game;
 using Ninject.Web.WebApi.FilterBindingSyntax;
+using AliaksNad.Battleship.Logic.Validators.Game;
+using AliaksNad.Battleship.Logic.Validators.User;
 
 namespace AliaksNad.Battleship.Logic
 {
@@ -83,6 +85,7 @@ namespace AliaksNad.Battleship.Logic
 
             var gameServiceBinding = this.Bind<IGameService>().To<GameService>();
             gameServiceBinding.Intercept().With<BattleshipLoggerInterceptor>();
+            gameServiceBinding.Intercept().With<ValidationInterceptor2>();
 
             this.Bind<BattleshipIdentityServerConfiguration>().ToSelf();
             this.Bind<BattleshipIdentityServerTokenAuthenticationConfiguration>().ToSelf();

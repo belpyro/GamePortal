@@ -1,4 +1,4 @@
-﻿using AliaksNad.Battleship.Logic.Validators;
+﻿using AliaksNad.Battleship.Logic.Validators.Game;
 using FluentValidation.Attributes;
 
 namespace AliaksNad.Battleship.Logic.Models.Game

@@ -6,19 +6,20 @@ using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.EntityFramework;
 using System;
 using System.Collections.Generic;
+using System.Data.Entity;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace AliaksNad.Battleship.Logic.Validators
+namespace AliaksNad.Battleship.Logic.Validators.User
 {
     class UserDtoValidator : AbstractValidator<UserDto>
     {
-        private readonly UserManager<IdentityUser> _userManager;
+        private readonly BattleAreaContext _context;
 
-        public UserDtoValidator(UserManager<IdentityUser> userManager)
+        public UserDtoValidator(BattleAreaContext context)
         {
-            this._userManager = userManager;
+            this._context = context;
 
             RuleSet("PreValidation", () =>
             {
@@ -26,15 +27,15 @@ namespace AliaksNad.Battleship.Logic.Validators
                     .WithMessage("Field Name is invalid");
             });
 
-            //RuleSet("PostValidation", () =>
-            //{
-            //    RuleFor(x => x.Name).Must(CheckDuplicate);
-            //});
+            RuleSet("PostValidation", () =>
+            {
+                RuleFor(x => x.UserName).Must(CheckDuplicate);
+            });
         }
 
-        //private bool CheckDuplicate(string name)
-        //{
-        //    return !_contexts.Users.AsNoTracking().Any(x => x.Name == name);
-        //}
+        private bool CheckDuplicate(string name)
+        {
+            return !_context.Users.AsNoTracking().Any(x => x.UserName == name);
+        }
     }
 }

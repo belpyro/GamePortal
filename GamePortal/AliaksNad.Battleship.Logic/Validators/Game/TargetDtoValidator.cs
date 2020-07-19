@@ -6,7 +6,7 @@ using System.Data.Entity;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace AliaksNad.Battleship.Logic.Validators
+namespace AliaksNad.Battleship.Logic.Validators.Game
 {
     class TargetDtoValidator : AbstractValidator<TargetDto>
     {
@@ -16,7 +16,7 @@ namespace AliaksNad.Battleship.Logic.Validators
         public TargetDtoValidator(BattleAreaContext context, CoordinatesDtoValidator validator)
         {
             _context = context;
-            this._validator = validator;
+            _validator = validator;
 
             RuleSet("PreValidation", () =>
             {
@@ -27,20 +27,27 @@ namespace AliaksNad.Battleship.Logic.Validators
 
             RuleSet("PostValidation", () =>
             {
-                RuleFor(x => x).MustAsync((x, cancellation) => CheckDuplicate(x))
+                RuleFor(x => x.EnemyBattleAreaId).GreaterThan(0)
+                .WithMessage("Wrong enemy id.");
+
+                RuleFor(x => x).Must(CheckDuplicateAsync)
                 .WithMessage("This Coordinates already exist.");
             });
         }
 
-        private async Task<bool> CheckDuplicate(TargetDto target)
+        private bool CheckDuplicateAsync(TargetDto target)
         {
-            var result = await _context.Coordinates.AsNoTracking().Where(x => x.CoordinatesId == target.EnemyBattleAreaId)
-                .Where(x => x.CoordinateX == x.CoordinateX && x.CoordinateY == target.Coordinates.CoordinateY).ToArrayAsync();
+            var result = _context.MissCells.AsNoTracking().Where(x => x.BattleAreaId == target.EnemyBattleAreaId).SelectMany(x => x.Coordinates)
+                .Where(x => x.CoordinateX == x.CoordinateX && x.CoordinateY == target.Coordinates.CoordinateY).ToArray();
 
-            if (result != null)
+            var result2 = _context.Ships.AsNoTracking().Where(x => x.BattleAreaId == target.EnemyBattleAreaId).SelectMany(x => x.Coordinates)
+                .Where(x => x.CoordinateX == x.CoordinateX && x.CoordinateY == target.Coordinates.CoordinateY).ToArray();
+
+            if (result != null && result2 != null)
             {
                 return false;
             }
+
             return true;
         }
     }

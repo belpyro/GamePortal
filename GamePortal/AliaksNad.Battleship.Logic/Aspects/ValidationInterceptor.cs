@@ -1,6 +1,7 @@
 ﻿
 
 using AliaksNad.Battleship.Logic.Models;
+using AliaksNad.Battleship.Logic.Models.Game;
 using AliaksNad.Battleship.Logic.Models.User;
 using CSharpFunctionalExtensions;
 using FluentValidation;
@@ -36,6 +37,35 @@ namespace AliaksNad.Battleship.Logic.Aspects
             }
 
             invocation.Proceed();
+        }
+    }
+
+    class ValidationInterceptor2 : SimpleInterceptor
+    {
+        private readonly IKernel _kernal;
+
+        public ValidationInterceptor2(IKernel kernal)
+        {
+            _kernal = kernal;
+        }
+
+        protected override void BeforeInvoke(IInvocation invocation)
+        {
+            var arg = invocation.Request.Arguments.OfType<TargetDto>().FirstOrDefault();
+            if (arg != null)
+            {
+                var validator = _kernal.Get<IValidator<TargetDto>>();
+                var validationResult = validator.Validate(arg as TargetDto, "PreValidation");
+                if (!validationResult.IsValid)
+                {
+                    invocation.ReturnValue = Result.Failure<UserDto>(validationResult.Errors.Select(x => x.ErrorMessage).First());
+                }
+            }
+        }
+
+        protected override void AfterInvoke(IInvocation invocation)
+        {
+            base.AfterInvoke(invocation);
         }
     }
 }

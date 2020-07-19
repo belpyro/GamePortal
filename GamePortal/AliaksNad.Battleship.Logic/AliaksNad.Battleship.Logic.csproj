@@ -260,9 +260,9 @@
     <Compile Include="Services\Contracts\IUserService.cs" />
     <Compile Include="Services\UserFaker.cs" />
     <Compile Include="Services\UserService.cs" />
-    <Compile Include="Validators\CoordinatesDtoValidator.cs" />
-    <Compile Include="Validators\TargetDtoValidator.cs" />
-    <Compile Include="Validators\UserDtoValidator.cs" />
+    <Compile Include="Validators\Game\CoordinatesDtoValidator.cs" />
+    <Compile Include="Validators\Game\TargetDtoValidator.cs" />
+    <Compile Include="Validators\User\UserDtoValidator.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
