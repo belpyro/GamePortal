@@ -1,6 +1,5 @@
 ﻿using AliaksNad.Battleship.Logic.Configuration;
 using GamePortal.Web.Api.Config;
-using IdentityServer3.AccessTokenValidation;
 using Ninject;
 using Owin;
 
@@ -8,17 +7,17 @@ namespace GamePortal.Web.Api.Middleware
 {
     internal static class BattleshipIdentityServerExtension
     {
-        public static IAppBuilder UseBattleshipIdentityServer (this IAppBuilder app, BattleshipIdentityServerConfiguration IdentServConfig,
-            BattleshipIdentityServerTokenAuthenticationConfiguration identTokenConf)
+        public static IAppBuilder UseBattleshipIdentityServer(this IAppBuilder app, IKernel kernel)
         {
-            var option = IdentServConfig.Getoptions();
+            var identityServerConfig = kernel.Get<BattleshipIdentityServerConfiguration>();
+            var option = identityServerConfig.Getoptions();
             option.SigningCertificate = Certificate.Get();
-
             app.UseIdentityServer(option);
 
-            var config = identTokenConf.Get();
+            var serverTokenConfig = kernel.Get<BattleshipIdentityServerTokenAuthenticationConfiguration>();
+            var config = serverTokenConfig.Get();
             config.SigningCertificate = Certificate.Get();
-            //app.UseIdentityServerBearerTokenAuthentication(config);
+            app.UseIdentityServerBearerTokenAuthentication(config);
 
             return app;
         }
