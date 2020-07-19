@@ -2,7 +2,7 @@
 
 namespace AliaksNad.Battleship.Logic.Models.Game
 {
-    public class EmptyCellsDto
+    public class EmptyCellDto
     {
         public IEnumerable<CoordinatesDto> Coordinates { get; set; }
     }

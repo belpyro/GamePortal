@@ -76,18 +76,22 @@
     <Compile Include="Contexts\BattleAreaContext.cs" />
     <Compile Include="Contexts\Configurations\BattleAreasDbConfiguration.cs" />
     <Compile Include="Contexts\Configurations\CoordinatesDbConfiguration.cs" />
-    <Compile Include="Contexts\Configurations\MissCellsConfiguration.cs" />
+    <Compile Include="Contexts\Configurations\EmptyCellConfiguration.cs" />
     <Compile Include="Contexts\Configurations\ShipsDbConfiguration.cs" />
-    <Compile Include="Migrations\202007131955361_InitialCreate.cs" />
-    <Compile Include="Migrations\202007131955361_InitialCreate.designer.cs">
-      <DependentUpon>202007131955361_InitialCreate.cs</DependentUpon>
+    <Compile Include="Migrations\202007191637000_InitialCreate.cs" />
+    <Compile Include="Migrations\202007191637000_InitialCreate.designer.cs">
+      <DependentUpon>202007191637000_InitialCreate.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\202007191701351_EnableCascadeDelete.cs" />
+    <Compile Include="Migrations\202007191701351_EnableCascadeDelete.designer.cs">
+      <DependentUpon>202007191701351_EnableCascadeDelete.cs</DependentUpon>
     </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Migrations\SeedConfig.cs" />
     <Compile Include="Models\CoordinatesDb.cs" />
     <Compile Include="Models\BattleAreaDb.cs" />
     <Compile Include="Models\BattleAreaEntity.cs" />
-    <Compile Include="Models\MissCellDb.cs" />
+    <Compile Include="Models\EmptyCellDb.cs" />
     <Compile Include="Models\ShipDb.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
@@ -96,8 +100,11 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="Migrations\202007131955361_InitialCreate.resx">
-      <DependentUpon>202007131955361_InitialCreate.cs</DependentUpon>
+    <EmbeddedResource Include="Migrations\202007191637000_InitialCreate.resx">
+      <DependentUpon>202007191637000_InitialCreate.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202007191701351_EnableCascadeDelete.resx">
+      <DependentUpon>202007191701351_EnableCascadeDelete.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

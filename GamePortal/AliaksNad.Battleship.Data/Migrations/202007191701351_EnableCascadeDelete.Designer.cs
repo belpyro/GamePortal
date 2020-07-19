@@ -7,13 +7,13 @@ namespace AliaksNad.Battleship.Data.Migrations
     using System.Resources;
     
     [GeneratedCode("EntityFramework.Migrations", "6.4.4")]
-    public sealed partial class InitialCreate : IMigrationMetadata
+    public sealed partial class EnableCascadeDelete : IMigrationMetadata
     {
-        private readonly ResourceManager Resources = new ResourceManager(typeof(InitialCreate));
+        private readonly ResourceManager Resources = new ResourceManager(typeof(EnableCascadeDelete));
         
         string IMigrationMetadata.Id
         {
-            get { return "202007131955361_InitialCreate"; }
+            get { return "202007191701351_EnableCascadeDelete"; }
         }
         
         string IMigrationMetadata.Source

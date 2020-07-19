@@ -2,9 +2,9 @@
 
 namespace AliaksNad.Battleship.Data.Models
 {
-    public class MissCellDb
+    public class EmptyCellDb
     {
-        public int MissCellId { get; set; }
+        public int EmptyCellId { get; set; }
 
         public int? BattleAreaId { get; set; }
 

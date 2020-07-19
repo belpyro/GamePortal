@@ -127,6 +127,35 @@ namespace AliaksNad.Battleship.Logic.Services
             }
         }
 
+        /// <summary>
+        /// Delete battle area by id.
+        /// </summary>
+        /// <param name="id">BattleArea id.</param>
+        /// <returns></returns>
+        public async Task<Result> DeleteBattleAreaAsync (int id)
+        {
+            try
+            {
+                var result = await _battleAreaContext.BattleAreas.Include(x => x.Ships).Where(x => x.BattleAreaId == id)
+                    .SingleOrDefaultAsync();
+
+                if (result != null)
+                {
+                    _battleAreaContext.Ships.RemoveRange(result.Ships);
+                    _battleAreaContext.BattleAreas.Remove(result);
+                    _battleAreaContext.SaveChanges(); 
+
+                    return Result.Success();
+                }
+
+                return Result.Failure("Battle area was not found.");
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+        }
+
         private async Task<CoordinatesDb> CheckShipAsync(TargetDto target)
         {
             try
@@ -172,7 +201,7 @@ namespace AliaksNad.Battleship.Logic.Services
                 int maxY = ship.Coordinates.Select(x => x.CoordinateY).Max() + 1;
                 int minY = ship.Coordinates.Select(x => x.CoordinateY).Min() - 1;
 
-                var emptyCells = new MissCellDb();
+                var emptyCells = new EmptyCellDb();
 
                 for (int x = minX; x < maxX; x++)
                 {
@@ -195,11 +224,11 @@ namespace AliaksNad.Battleship.Logic.Services
         {
             try
             {
-                var emptyCellsDb = await _battleAreaContext.MissCells.AsNoTracking()
+                var emptyCellsDb = await _battleAreaContext.EmptyCell.AsNoTracking()
                     .Where(x => x.BattleAreaId == target.EnemyBattleAreaId).SingleOrDefaultAsync();
                 
                 var targetDb = _mapper.Map<CoordinatesDb>(target.Coordinates);
-                targetDb.MissCellId = emptyCellsDb.MissCellId;
+                targetDb.EmptyCellId = emptyCellsDb.EmptyCellId;
                 targetDb.IsDamage = true;
 
                 _battleAreaContext.Coordinates.Add(targetDb);

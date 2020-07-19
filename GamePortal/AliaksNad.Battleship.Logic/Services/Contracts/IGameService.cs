@@ -31,5 +31,12 @@ namespace AliaksNad.Battleship.Logic.Services.Contracts
         /// <param name="target">Enemy coordinates.</param>
         /// <returns></returns>
         Task<Result<Maybe<TargetDto>>> CheckTargetAsync(TargetDto target);
+
+        /// <summary>
+        /// Delete battle area by id.
+        /// </summary>
+        /// <param name="id">BattleArea id.</param>
+        /// <returns></returns>
+        Task<Result> DeleteBattleAreaAsync(int id);
     }
 }

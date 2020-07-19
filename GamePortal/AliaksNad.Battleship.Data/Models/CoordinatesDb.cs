@@ -14,8 +14,8 @@
 
         public ShipDb ShipDb { get; set; }
 
-        public int? MissCellId { get; set; }
+        public int? EmptyCellId { get; set; }
 
-        public MissCellDb MissCellDb { get; set; }
+        public EmptyCellDb EmptyCellDb { get; set; }
     }
 }

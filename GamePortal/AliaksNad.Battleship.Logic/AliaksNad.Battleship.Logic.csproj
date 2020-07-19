@@ -244,13 +244,13 @@
     <Compile Include="DIModules\ServiceModule.cs" />
     <Compile Include="DIModules\UserManagerModule.cs" />
     <Compile Include="DIModules\ValidatorModule.cs" />
-    <Compile Include="Models\Game\EmptyCellsDto.cs" />
+    <Compile Include="Models\Game\EmptyCellDto.cs" />
     <Compile Include="Models\Game\TargetDto.cs" />
     <Compile Include="Models\User\LoginDto.cs" />
     <Compile Include="Models\User\NewUserDto.cs" />
     <Compile Include="Models\User\UserDto.cs" />
     <Compile Include="Profiles\LoggerProfile.cs" />
-    <Compile Include="Profiles\MissCellProfile.cs" />
+    <Compile Include="Profiles\EmptyCellProfile.cs" />
     <Compile Include="Services\BattleShipEmailService.cs" />
     <Compile Include="BattleshipLogicDIModule.cs" />
     <Compile Include="Extensions\IdentityExtensions.cs" />

@@ -11,6 +11,6 @@ namespace AliaksNad.Battleship.Logic.Models.Game
     {
         public IEnumerable<ShipDto> Ships { get; set; }
 
-        public IEnumerable<EmptyCellsDto> MissCells { get; set; }
+        public IEnumerable<EmptyCellDto> EmptyCells { get; set; }
     }
 }

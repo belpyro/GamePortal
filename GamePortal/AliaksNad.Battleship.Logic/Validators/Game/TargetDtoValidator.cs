@@ -37,7 +37,7 @@ namespace AliaksNad.Battleship.Logic.Validators.Game
 
         private bool CheckDuplicateAsync(TargetDto target)
         {
-            var result = _context.MissCells.AsNoTracking().Where(x => x.BattleAreaId == target.EnemyBattleAreaId).SelectMany(x => x.Coordinates)
+            var result = _context.EmptyCell.AsNoTracking().Where(x => x.BattleAreaId == target.EnemyBattleAreaId).SelectMany(x => x.Coordinates)
                 .Where(x => x.CoordinateX == x.CoordinateX && x.CoordinateY == target.Coordinates.CoordinateY).ToArray();
 
             var result2 = _context.Ships.AsNoTracking().Where(x => x.BattleAreaId == target.EnemyBattleAreaId).SelectMany(x => x.Coordinates)

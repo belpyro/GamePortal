@@ -96,5 +96,18 @@ namespace GamePortal.Web.Api.Controllers.Battleship
 
             return result.Value.HasValue ? Ok() : (IHttpActionResult)NotFound();
         }
+
+        /// <summary>
+        /// Delete battle area by id.
+        /// </summary>
+        /// <param name="id">Battle area id.</param>
+        /// <returns></returns>
+        [HttpDelete, Route("{id:int:min(1)}")]      
+        public async Task<IHttpActionResult> DeleteByIdAsync(int id)
+        {
+            var result = await _gameService.DeleteBattleAreaAsync(id);
+
+            return result.IsSuccess ? StatusCode(HttpStatusCode.NoContent) : StatusCode(HttpStatusCode.InternalServerError);
+        }
     }
 }

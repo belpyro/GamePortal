@@ -18,13 +18,13 @@
                 .PrimaryKey(t => t.BattleAreaId);
             
             CreateTable(
-                "dbo.MissCells",
+                "dbo.EmptyCell",
                 c => new
                     {
-                        MissCellId = c.Int(nullable: false, identity: true),
+                        EmptyCellId = c.Int(nullable: false, identity: true),
                         BattleAreaId = c.Int(),
                     })
-                .PrimaryKey(t => t.MissCellId)
+                .PrimaryKey(t => t.EmptyCellId)
                 .ForeignKey("dbo.BattleAreas", t => t.BattleAreaId)
                 .Index(t => t.BattleAreaId);
             
@@ -37,13 +37,13 @@
                         CoordinateY = c.Int(nullable: false),
                         IsDamage = c.Boolean(nullable: false),
                         ShipId = c.Int(),
-                        MissCellId = c.Int(),
+                        EmptyCellId = c.Int(),
                     })
                 .PrimaryKey(t => t.CoordinatesId)
                 .ForeignKey("dbo.Ships", t => t.ShipId)
-                .ForeignKey("dbo.MissCells", t => t.MissCellId)
+                .ForeignKey("dbo.EmptyCell", t => t.EmptyCellId)
                 .Index(t => t.ShipId)
-                .Index(t => t.MissCellId);
+                .Index(t => t.EmptyCellId);
             
             CreateTable(
                 "dbo.Ships",
@@ -134,8 +134,8 @@
             DropForeignKey("dbo.AspNetUserClaims", "UserId", "dbo.AspNetUsers");
             DropForeignKey("dbo.AspNetUserRoles", "RoleId", "dbo.AspNetRoles");
             DropForeignKey("dbo.Ships", "BattleAreaId", "dbo.BattleAreas");
-            DropForeignKey("dbo.MissCells", "BattleAreaId", "dbo.BattleAreas");
-            DropForeignKey("dbo.Coordinates", "MissCellId", "dbo.MissCells");
+            DropForeignKey("dbo.EmptyCell", "BattleAreaId", "dbo.BattleAreas");
+            DropForeignKey("dbo.Coordinates", "EmptyCellId", "dbo.EmptyCell");
             DropForeignKey("dbo.Coordinates", "ShipId", "dbo.Ships");
             DropIndex("dbo.AspNetUserLogins", new[] { "UserId" });
             DropIndex("dbo.AspNetUserClaims", new[] { "UserId" });
@@ -144,9 +144,9 @@
             DropIndex("dbo.AspNetUserRoles", new[] { "UserId" });
             DropIndex("dbo.AspNetRoles", "RoleNameIndex");
             DropIndex("dbo.Ships", new[] { "BattleAreaId" });
-            DropIndex("dbo.Coordinates", new[] { "MissCellId" });
+            DropIndex("dbo.Coordinates", new[] { "EmptyCellId" });
             DropIndex("dbo.Coordinates", new[] { "ShipId" });
-            DropIndex("dbo.MissCells", new[] { "BattleAreaId" });
+            DropIndex("dbo.EmptyCell", new[] { "BattleAreaId" });
             DropTable("dbo.AspNetUserLogins");
             DropTable("dbo.AspNetUserClaims");
             DropTable("dbo.AspNetUsers");
@@ -154,7 +154,7 @@
             DropTable("dbo.AspNetRoles");
             DropTable("dbo.Ships");
             DropTable("dbo.Coordinates");
-            DropTable("dbo.MissCells");
+            DropTable("dbo.EmptyCell");
             DropTable("dbo.BattleAreas");
         }
     }
