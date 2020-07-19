@@ -1,6 +1,7 @@
 ﻿using AliaksNad.Battleship.Logic.Models.Game;
 using FluentValidation;
 using Ninject;
+using Ninject.Web.WebApi.Filter;
 using System;
 using System.Collections.Generic;
 using System.Linq;

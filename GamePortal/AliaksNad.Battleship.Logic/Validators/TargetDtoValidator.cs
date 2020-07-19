@@ -10,12 +10,12 @@ namespace AliaksNad.Battleship.Logic.Validators
 {
     class TargetDtoValidator : AbstractValidator<TargetDto>
     {
-        private readonly BattleAreaContext _Context;
+        private readonly BattleAreaContext _context;
         private readonly CoordinatesDtoValidator _validator;
 
-        public TargetDtoValidator(BattleAreaContext Context, CoordinatesDtoValidator validator)
+        public TargetDtoValidator(BattleAreaContext context, CoordinatesDtoValidator validator)
         {
-            Context = _Context;
+            _context = context;
             this._validator = validator;
 
             RuleSet("PreValidation", () =>
@@ -34,7 +34,7 @@ namespace AliaksNad.Battleship.Logic.Validators
 
         private async Task<bool> CheckDuplicate(TargetDto target)
         {
-            var result = await _Context.Coordinates.AsNoTracking().Where(x => x.CoordinatesId == target.EnemyBattleAreaId)
+            var result = await _context.Coordinates.AsNoTracking().Where(x => x.CoordinatesId == target.EnemyBattleAreaId)
                 .Where(x => x.CoordinateX == x.CoordinateX && x.CoordinateY == target.Coordinates.CoordinateY).ToArrayAsync();
 
             if (result != null)

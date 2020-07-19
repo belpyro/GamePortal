@@ -17,6 +17,7 @@ using AliaksNad.Battleship.Logic.Services.Contracts;
 using AliaksNad.Battleship.Logic.Configuration;
 using AliaksNad.Battleship.Logic.Models.User;
 using AliaksNad.Battleship.Logic.Models.Game;
+using Ninject.Web.WebApi.FilterBindingSyntax;
 
 namespace AliaksNad.Battleship.Logic
 {
@@ -41,6 +42,12 @@ namespace AliaksNad.Battleship.Logic
                 });
 
             this.Bind<BattleAreaContext>().ToSelf();
+
+            //AssemblyScanner
+            //    .FindValidatorsInAssembly(Assembly.GetExecutingAssembly())
+            //    .ForEach(result => Bind(result.InterfaceType)
+            //    .To(result.ValidatorType)
+            //    .InSingletonScope());
 
             this.Bind<IValidator<UserDto>>().To<UserDtoValidator>();
             this.Bind<IValidator<CoordinatesDto>>().To<CoordinatesDtoValidator>();

@@ -35,7 +35,7 @@ namespace GamePortal.Web.Api.Controllers.Battleship
         /// <param name="model">New user model</param>
         /// <returns></returns>
         [HttpPost, Route("register")]
-        public async Task<IHttpActionResult> Register([FromBody]NewUserDto model)
+        public async Task<IHttpActionResult> Register([CustomizeValidator(RuleSet = "PreValidation"), FromBody]NewUserDto model)
         {
             if (!ModelState.IsValid) return BadRequest("Invalid model");
 
@@ -49,7 +49,7 @@ namespace GamePortal.Web.Api.Controllers.Battleship
         /// <param name="model">User name and password</param>
         /// <returns></returns>
         [HttpPost, Route("login")]
-        public async Task<IHttpActionResult> Login([FromBody]LoginDto model)
+        public async Task<IHttpActionResult> Login([CustomizeValidator(RuleSet = "PreValidation"), FromBody]LoginDto model)
         {
             if (!ModelState.IsValid) return BadRequest("Invalid model");
 

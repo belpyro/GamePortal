@@ -6,6 +6,7 @@ using FluentValidation;
 using FluentValidation.WebApi;
 using GamePortal.Web.Api.Filters.Battleship;
 using JetBrains.Annotations;
+using Ninject;
 using System;
 using System.Collections.Generic;
 using System.Net;
@@ -20,10 +21,12 @@ namespace GamePortal.Web.Api.Controllers.Battleship
     public class BattleshipGameController : ApiController
     {
         private readonly IGameService _gameService;
+        private readonly IKernel _kernal;
 
-        public BattleshipGameController([NotNull] IGameService gameService)
+        public BattleshipGameController([NotNull] IGameService gameService, IKernel kernal)
         {
             this._gameService = gameService;
+            this._kernal = kernal;
         }
 
         /// <summary>
@@ -33,7 +36,7 @@ namespace GamePortal.Web.Api.Controllers.Battleship
         /// <returns></returns>
         [HttpPost]
         [Route("")]
-        public async Task<IHttpActionResult> AddAsync([CustomizeValidator(RuleSet = "PreValidation")][FromBody]BattleAreaDto BattleAreaDtoCoordinates)
+        public async Task<IHttpActionResult> AddAsync([CustomizeValidator(RuleSet = "PreValidation"), FromBody]BattleAreaDto BattleAreaDtoCoordinates)
         {
             if (!ModelState.IsValid)
             {
@@ -79,10 +82,18 @@ namespace GamePortal.Web.Api.Controllers.Battleship
         /// <returns></returns>
         [HttpPost]
         [Route("coordinates")]
-        public async Task<IHttpActionResult> CheckHitAsync([FromBody]TargetDto target)
+        public async Task<IHttpActionResult> CheckHitAsync([CustomizeValidator(RuleSet = "PreValidation")][FromBody]TargetDto target)
         {
-            //if (!ModelState.IsValid)
-            //    return BadRequest(ModelState);
+            var validator = _kernal.Get<IValidator<TargetDto>>();
+            var validationResult = validator.Validate(target, "PostValidation");
+            if (!validationResult.IsValid)
+            {
+                return BadRequest(validationResult.Errors.ToString());
+            }
+
+
+            if (!ModelState.IsValid)
+                return BadRequest(ModelState);
 
             var result = await _gameService.CheckTargetAsync(target);
             if (result.IsFailure)
