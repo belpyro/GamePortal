@@ -237,6 +237,13 @@
     <Compile Include="Aspects\ValidationInterceptor.cs" />
     <Compile Include="Configuration\BattleshipIdentityServerConfiguration.cs" />
     <Compile Include="Configuration\BattleshipIdentityServerTokenAuthenticationConfiguration.cs" />
+    <Compile Include="DIModules\ContextModule.cs" />
+    <Compile Include="DIModules\IdentityServerModule.cs" />
+    <Compile Include="DIModules\LoggerModule.cs" />
+    <Compile Include="DIModules\MapperModule.cs" />
+    <Compile Include="DIModules\ServiceModule.cs" />
+    <Compile Include="DIModules\UserManagerModule.cs" />
+    <Compile Include="DIModules\ValidatorModule.cs" />
     <Compile Include="Models\Game\EmptyCellsDto.cs" />
     <Compile Include="Models\Game\TargetDto.cs" />
     <Compile Include="Models\User\LoginDto.cs" />
