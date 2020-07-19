@@ -9,13 +9,14 @@ using System.Text;
 using System.Threading.Tasks;
 using Kbalan.TouchType.Data.Migrations;
 using Serilog;
+using Microsoft.AspNet.Identity.EntityFramework;
 
 namespace Kbalan.TouchType.Data.Contexts
 {
     /// <summary>
     /// Context for TouchTypeGame
     /// </summary>
-    public sealed class TouchTypeGameContext : DbContext
+    public sealed class TouchTypeGameContext : IdentityDbContext
     {
         public TouchTypeGameContext() : base ("TouchTypeGameContext")
         {

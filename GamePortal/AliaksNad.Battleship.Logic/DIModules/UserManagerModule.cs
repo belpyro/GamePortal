@@ -10,7 +10,12 @@ namespace AliaksNad.Battleship.Logic.DIModules
     {
         public override void Load()
         {
-            this.Bind<IUserStore<IdentityUser>>().To<UserStore<IdentityUser>>();
+            this.Bind<IUserStore<IdentityUser>>().To<UserStore<IdentityUser>>()
+                .When(r =>
+                {
+                    return r.ParentContext != null && r.ParentContext.Plan.Type.Namespace.StartsWith("AliaksNad.Battleship");
+                });
+
             var user = this.Bind<UserManager<IdentityUser>>().ToMethod(ctx =>
             {
                 var manager = new UserManager<IdentityUser>(ctx.Kernel.Get<IUserStore<IdentityUser>>());
