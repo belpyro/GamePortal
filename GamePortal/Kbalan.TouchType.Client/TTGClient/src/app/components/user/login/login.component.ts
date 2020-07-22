@@ -15,7 +15,7 @@ export class LoginComponent implements OnInit {
      private router: Router) { }
 
   ngOnInit(): void {
-    this.loginService.LoggedOn$.pipe(filter(_ =>_)).subscribe( _ => {
+    this.loginService.LoggedOn$.pipe(filter(_ => _)).subscribe( _ => {
         this.router.navigate(['text']);
     });
   }

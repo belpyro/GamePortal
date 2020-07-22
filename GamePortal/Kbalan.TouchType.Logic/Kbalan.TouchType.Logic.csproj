@@ -251,6 +251,7 @@
     <Compile Include="Dto\LoginDto.cs" />
     <Compile Include="Dto\NewUserDto.cs" />
     <Compile Include="Dto\TextSetDto.cs" />
+    <Compile Include="Dto\TextSetDtomin.cs" />
     <Compile Include="Dto\UserDto%27s\UserStatisticDto.cs" />
     <Compile Include="Dto\UserDto%27s\UserSettingDto.cs" />
     <Compile Include="Dto\UserDto%27s\UserSettingStatisticDto.cs" />

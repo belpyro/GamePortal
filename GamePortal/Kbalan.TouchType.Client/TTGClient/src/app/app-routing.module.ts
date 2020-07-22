@@ -14,7 +14,7 @@ const routes: Routes = [
     {path: 'login', component: LoginComponent}
   ]
 },
-{path: 'text', component: TextblockComponent, canActivate:[TextGuard]},
+{path: 'text', component: TextblockComponent, canActivate: [TextGuard]},
 {path: '', redirectTo: '/user/login', pathMatch: 'full'},
 {path: '**', component: NotFoundComponent}
 ];

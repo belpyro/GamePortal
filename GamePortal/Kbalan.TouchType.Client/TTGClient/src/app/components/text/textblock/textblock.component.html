@@ -1,44 +1,52 @@
 
 <div class="container text-container">
   <app-navbar></app-navbar>
+<div class="dropgroup">
   <div class="btn-group ">
     <button type="button" class="btn btn-danger dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
       Hard
     </button>
-    <div class="dropdown-menu dropdown-menu_easy">
-    <ul>
-        <li  *ngFor="let text of textset">{{text.Name}}</li>
-    </ul>
+    <div class="dropdown-menu dropdown-menu_hard">
+      <a class="dropdown-item"  *ngFor="let hardtext of hardtextset"
+      (click) = "SelectText(hardtext.Id)">{{hardtext.Name}}</a>
     </div>
+  </div>
+  <div class="btn-group ">
     <button type="button" class="btn btn-success dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
       Medium
     </button>
     <div class="dropdown-menu dropdown-menu_medium">
-
+      <a  class="dropdown-item"  *ngFor="let middletext of middletextset"
+      (click) = "SelectText(middletext.Id)">{{middletext.Name}}</a>
     </div>
-    <button type="button" class="btn btn-warning dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+  </div>
+  <div class="btn-group ">
+    <button type="button" class="btn btn-warning dropdown-toggle" data-toggle="dropdown" >
       Easy
     </button>
-    <div class="dropdown-menu dropdown-menu_easy">
-
+    <div class="dropdown-menu dropdown-menu_all">
+      <a class="dropdown-item"  *ngFor="let easytext of easytextset"
+      (click) = "SelectText(easytext.Id)">{{easytext.Name}}</a>
     </div>
+  </div>
+  <div class="btn-group ">
     <button type="button" class="btn btn-info dropdown-toggle" data-toggle="dropdown" >
       All
     </button>
-    <div class="dropdown-menu dropdown-menu_easy">
-      <ul>
-        <li>sedfsdf</li>
-        <li>dsfsa</li>
-        <li  *ngFor="let text of textset">{{text.Name}}</li>
-    </ul>
+    <div class="dropdown-menu dropdown-menu_all">
+      <a class="dropdown-item"  *ngFor="let alltext of alltextset"
+      (click) = "SelectText(alltext.Id)">{{alltext.Name}}</a>
     </div>
   </div>
-  <div class="wrapper-textset">
+</div>
+
+
+  <div class="wrapper-textset" *ngIf="selectedtext">
 
     <div class="blog-post">
-      <h2 class="blog-post-title">{{textset.Name || 'Unknown'}}</h2>
-      <p class="blog-post-level">{{textset.LevelOfText || 'Unknown'}}</p>
-      <p>{{textset.TextForTyping || 'Text is disable'}}</p>
+      <h2 class="blog-post-title">{{selectedtext.Name || 'Unknown'}}</h2>
+      <p class="blog-post-level">{{selectedtext.LevelOfText || 'Unknown'}}</p>
+      <p class="blog-post-text">{{selectedtext.TextForTyping || 'Unknown'}}</p>
     </div>
   </div>
   </div>

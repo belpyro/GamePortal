@@ -25,3 +25,14 @@ color: rgb(197, 230, 184)
 .text-container{
   height: 100vh;
 }
+
+.dropgroup{
+  display: flex;
+}
+
+.dropdown-item{
+  cursor: pointer;
+}
+.blog-post-text{
+  color: #000;
+}

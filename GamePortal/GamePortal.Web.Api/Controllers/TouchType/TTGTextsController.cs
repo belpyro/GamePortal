@@ -51,10 +51,25 @@ namespace GamePortal.Web.Api.Controllers.TouchType
             return result.Value.HasNoValue ? (IHttpActionResult)NotFound() :  Ok(result.Value.Value);
         }
 
+        ///Get Random TextSet by Level of the text random
+        [HttpGet]
+        [Route("searchbylevelrand/{level}")]
+        public async Task<IHttpActionResult> GetRandomByLevelAsync(int level)
+        {
+            if (level < 0 || level > 2)
+            {
+                return BadRequest("Level must be Easy, Middle or Hard");
+            }
+
+            var result = await _textSetService.GetByLevelAsyncRandom(level);
+            return result.IsSuccess ? Ok(result.Value) : (IHttpActionResult)BadRequest(result.Error);
+
+        }
+
         ///Get Random TextSet by Level of the text
         [HttpGet]
         [Route("searchbylevel/{level}")]
-        public async Task<IHttpActionResult> GetRandomByLevelAsync(int level)
+        public async Task<IHttpActionResult> GetByLevelAsync(int level)
         {
             if (level < 0 || level > 2)
             {
