@@ -8,6 +8,7 @@ import { TextSetDtomin } from '../models/textsetDtomin';
   providedIn: 'root'
 })
 export class TextsetService {
+  [x: string]: any;
 
   constructor(private http: HttpClient) { }
 
@@ -25,5 +26,9 @@ getAllTextSet(){
 
   getTextSetByLevelRandom(level: number){
     return this.http.get<TextSetDto>(`${environment.backendurl}/api/textsets/searchbylevelrand/${level}`);
+  }
+
+  addTextSetToDb(model){
+    return this.http.post(`${environment.backendurl}/api/textsets`, model);
   }
 }

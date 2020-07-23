@@ -1,22 +1,25 @@
 <body>
-  <form class="form-signin">
+  <form class="form-signin" [formGroup] = "loginGroup" (ngSubmit)="this.login()">
 
 <div class="form-label-group">
-  <input type="email" id="inputEmail" class="form-control" placeholder="Email address" required="" autofocus="">
+  <input type="email" id="inputEmail" class="form-control"
+   placeholder="Email address"  autofocus="" formControlName = "email">
   <label for="inputEmail">Email address</label>
 </div>
 
 <div class="form-label-group">
-  <input type="password" id="inputPassword" class="form-control" placeholder="Password" required="">
+  <input type="password" id="inputPassword" class="form-control"
+   placeholder="Password" required="" formControlName = "password">
   <label for="inputPassword">Password</label>
 </div>
 
 <div class="checkbox mb-3">
   <label>
-    <input type="checkbox" value="remember-me"> Remember me
+    <input type="checkbox" value="remember-me" formControlName = "remember"> Remember me
   </label>
 </div>
-<button class="btn btn-lg btn-primary btn-block" type="submit" (click)="onSubmit()">Sign in</button>
+<button class="btn btn-lg btn-primary btn-block" type="submit" [disabled]="!loginGroup.valid"
+>Sign in</button>
 
 <div class = "internalLog">
   <a href="#" class ="google-reg"></a>

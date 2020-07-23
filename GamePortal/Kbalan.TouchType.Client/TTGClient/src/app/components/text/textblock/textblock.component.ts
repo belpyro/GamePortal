@@ -2,6 +2,7 @@ import { TextsetService } from './../../../services/textset.service';
 import { Component, OnInit } from '@angular/core';
 import { TextSetDto } from 'src/app/models/textsetDto';
 import { TextSetDtomin } from 'src/app/models/textsetDtomin';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 
 
 @Component({
@@ -11,13 +12,22 @@ import { TextSetDtomin } from 'src/app/models/textsetDtomin';
 })
 export class TextblockComponent implements OnInit {
 
+isTextSelected = false;
+addNewText = false;
 selectedtext: TextSetDto;
 alltextset: TextSetDtomin[];
 easytextset: TextSetDtomin[];
 middletextset: TextSetDtomin[];
 hardtextset: TextSetDtomin[];
+textGroup: FormGroup;
 
-  constructor(public textsetService: TextsetService) { }
+  constructor(public textsetService: TextsetService, private fb: FormBuilder) {
+    this.textGroup = this.fb.group({
+      textname: ['' , [Validators.required, Validators.minLength(5)]],
+      textarea: ['', [Validators.required, Validators.minLength(5)]],
+      textradio: ['', [Validators.required]]
+    });
+  }
 
   ngOnInit(): void {
     this.textsetService.getAllTextSet().subscribe(data => this.alltextset = data);
@@ -28,6 +38,23 @@ hardtextset: TextSetDtomin[];
 
   SelectText(id: number){
     this.textsetService.getTextSetById(id).subscribe(data => this.selectedtext = data);
+    this.isTextSelected = true;
+    this.addNewText = false;
+  }
+
+  addNewTextSet(){
+    this.isTextSelected = false;
+    this.addNewText = true;
+  }
+
+  sendTextToServer(){
+  const newText: TextSetDto  = {
+  Name : this.textGroup.value.textname,
+  Id : 0,
+  TextForTyping : this.textGroup.value.textarea,
+  LevelOfText : this.textGroup.value.textradio
+  };
+  this.textsetService.addTextSetToDb(newText).subscribe();
   }
 
 }
