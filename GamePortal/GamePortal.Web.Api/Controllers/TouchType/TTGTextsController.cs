@@ -10,6 +10,7 @@ using FluentValidation;
 using JetBrains.Annotations;
 using Kbalan.TouchType.Logic.Dto;
 using Kbalan.TouchType.Logic.Services;
+using Kbalan.TouchType.Logic.Exceptions;
 
 namespace GamePortal.Web.Api.Controllers.TouchType
 {
@@ -88,9 +89,20 @@ namespace GamePortal.Web.Api.Controllers.TouchType
         {
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
+            try
+            {
+                var result = await _textSetService.AddAsync(model);
+                return result.IsSuccess ? Created($"/textsets/{result.Value.Id}", result.Value) : (IHttpActionResult)BadRequest(result.Error);
+            }
+            catch (TTGValidationException ex)
+            {
 
-            var result = await _textSetService.AddAsync(model);
-            return result.IsSuccess ? Created($"/textsets/{result.Value.Id}", result.Value) : (IHttpActionResult)BadRequest(result.Error); 
+                return (IHttpActionResult)BadRequest(ex.Message);
+            }
+
+
+           
+
         }
 
         //Update Text by Id 
