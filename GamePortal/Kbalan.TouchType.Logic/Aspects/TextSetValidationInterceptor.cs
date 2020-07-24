@@ -36,7 +36,7 @@ namespace Kbalan.TouchType.Logic.Aspects
                 if (text == null)
                 {
                     invocation.Proceed();
-                    throw new TTGValidationException("No Text add");
+                    return;
                 }
                 //New logger and validator
                 var logger = _kernel.Get<ILogger>();

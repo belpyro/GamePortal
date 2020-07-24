@@ -3,6 +3,7 @@ import { Component, OnInit } from '@angular/core';
 import { TextSetDto } from 'src/app/models/textsetDto';
 import { TextSetDtomin } from 'src/app/models/textsetDtomin';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { ToastrService } from 'ngx-toastr';
 
 
 @Component({
@@ -21,7 +22,7 @@ middletextset: TextSetDtomin[];
 hardtextset: TextSetDtomin[];
 textGroup: FormGroup;
 
-  constructor(public textsetService: TextsetService, private fb: FormBuilder) {
+  constructor(private toastr: ToastrService, public textsetService: TextsetService, private fb: FormBuilder) {
     this.textGroup = this.fb.group({
       textname: ['' , [Validators.required, Validators.minLength(5)]],
       textarea: ['', [Validators.required, Validators.minLength(5)]],
@@ -54,7 +55,18 @@ textGroup: FormGroup;
   TextForTyping : this.textGroup.value.textarea,
   LevelOfText : this.textGroup.value.textradio
   };
-  this.textsetService.addTextSetToDb(newText).subscribe();
+  this.textsetService.addTextSetToDb(newText).subscribe(  (res: any ) => {
+    console.log(res);
+    if (res != null)
+    {
+      this.toastr.success(`text ${newText.Name} successfully added to collection `);
+    }
+  },
+  err => {
+    if ( err.status === 400 )
+    {
+      this.toastr.error(err.error.Message);
+    }
+  });
   }
-
 }
