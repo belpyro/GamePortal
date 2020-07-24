@@ -123,6 +123,7 @@
     <Compile Include="Models\LevelOfText.cs" />
     <Compile Include="Models\Role.cs" />
     <Compile Include="Models\TextSetDb.cs" />
+    <Compile Include="Models\TextSetDbmin.cs" />
     <Compile Include="Models\UserDb.cs" />
     <Compile Include="Models\SettingDb.cs" />
     <Compile Include="Models\StatisticDb.cs" />

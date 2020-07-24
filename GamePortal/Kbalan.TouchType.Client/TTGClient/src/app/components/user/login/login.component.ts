@@ -1,5 +1,10 @@
+import { LoginService } from './../../../services/login.service';
 import { Component, OnInit } from '@angular/core';
 import { ToastrService } from 'ngx-toastr';
+import { Router } from '@angular/router';
+import {filter} from 'rxjs/operators';
+import { FormControl, Validators, FormGroup, FormBuilder } from '@angular/forms';
+
 
 @Component({
   selector: 'app-login',
@@ -8,15 +13,29 @@ import { ToastrService } from 'ngx-toastr';
 })
 export class LoginComponent implements OnInit {
 
-  constructor(private toastr: ToastrService) { }
+  loginGroup = new FormGroup({});
+  constructor(
+    private toastr: ToastrService,
+    private loginService: LoginService,
+    private router: Router,
+    private fb: FormBuilder
+    ) {
+      this.loginGroup = this.fb.group({
+        email: ['', [Validators.required, Validators.email]],
+        password: ['', [Validators.required]],
+        remember: [true],
+      });
+    }
 
   ngOnInit(): void {
-    this.showSuccess();
+    this.loginService.LoggedOn$.pipe(filter(_ => _)).subscribe( _ => {
+        this.router.navigate(['text']);
+    });
   }
 
 
-  onSubmit(){
-    this.showError();
+  login(){
+    this.loginService.login();
   }
   showError(){
     this.toastr.error('Loggin error');
