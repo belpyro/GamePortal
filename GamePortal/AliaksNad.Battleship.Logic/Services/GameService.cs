@@ -166,7 +166,7 @@ namespace AliaksNad.Battleship.Logic.Services
                 return fleetDb.SelectMany(x => x.Coordinates)
                     .Where(x => x.CoordinateX == target.Coordinates.CoordinateX && x.CoordinateY == target.Coordinates.CoordinateY).SingleOrDefault();
             }
-            catch (DbUpdateException ex)
+            catch (DbUpdateException)
             {
                 throw new NotImplementedException(); // TODO
             }
