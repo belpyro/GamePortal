@@ -1,4 +1,6 @@
+import { EmptyCellDto } from './EmptyCellsDto';
+import { ShipDto } from './ShipsDto';
 export interface BattleAreaDto{
-  Ships: string;
-  MissCells: string;
+  Ships: ShipDto[];
+  EmptyCells: EmptyCellDto;
 }
