@@ -4,7 +4,7 @@ using FluentValidation;
 
 namespace AliaksNad.Battleship.Logic.Validators.Game
 {
-    class CoordinatesDtoValidator : AbstractValidator<CoordinatesDto>
+    public class CoordinatesDtoValidator : AbstractValidator<CoordinatesDto>
     {
         public CoordinatesDtoValidator()
         {

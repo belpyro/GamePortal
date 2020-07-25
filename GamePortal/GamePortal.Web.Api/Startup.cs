@@ -20,6 +20,7 @@ using Microsoft.Owin.Security.Cookies;
 using Microsoft.Owin.Cors;
 using System.Web.Cors;
 using System.Threading.Tasks;
+using GamePortal.Web.Api.Config;
 
 [assembly: OwinStartup(typeof(GamePortal.Web.Api.Startup))]
 
@@ -81,6 +82,7 @@ namespace GamePortal.Web.Api
                 ClientId = "TTGWebClient",
                 ClientSecret = "secret",
                 RequireHttps = false,
+                SigningCertificate = Certificate.Get(),
                 ValidationMode = ValidationMode.Local,
                 IssuerName = "http://localhost:10000/",
                 ValidAudiences = new[] { "http://localhost:10000/resources" }
