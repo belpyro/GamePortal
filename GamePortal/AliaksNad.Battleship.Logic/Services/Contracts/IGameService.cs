@@ -1,4 +1,5 @@
 ﻿using AliaksNad.Battleship.Logic.Models;
+using AliaksNad.Battleship.Logic.Models.Game;
 using CSharpFunctionalExtensions;
 using System.Collections.Generic;
 using System.Threading.Tasks;
@@ -25,10 +26,17 @@ namespace AliaksNad.Battleship.Logic.Services.Contracts
         Task<Result<Maybe<BattleAreaDto>>> GetByIdAsync(int id);
 
         /// <summary>
-        /// Checking hit by enemy coordinates.
+        /// Check enemy ship with target coordinates.
         /// </summary>
-        /// <param name="coordinates">Enemy coordinates.</param>
+        /// <param name="target">Enemy coordinates.</param>
         /// <returns></returns>
-        Task<Result<Maybe<CoordinatesDto>>> CheckHitAsync(CoordinatesDto coordinates);
+        Task<Result<Maybe<TargetDto>>> CheckTargetAsync(TargetDto target);
+
+        /// <summary>
+        /// Delete battle area by id.
+        /// </summary>
+        /// <param name="id">BattleArea id.</param>
+        /// <returns></returns>
+        Task<Result> DeleteBattleAreaAsync(int id);
     }
 }

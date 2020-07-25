@@ -8,12 +8,14 @@ namespace AliaksNad.Battleship.Data.Models
 {
     public class ShipDb
     {
-        public int Id { get; set; }
+        public int ShipId { get; set; }
 
-        public BattleAreaDb BattleArea { get; set; }
+        public bool isAlife { get; set; } = true;
 
         public int? BattleAreaId { get; set; }
 
-        public ICollection<CoordinatesDb> ShipCoordinates { get; set; }
+        public BattleAreaDb BattleAreas { get; set; }
+
+        public ICollection<CoordinatesDb> Coordinates { get; set; }
     }
 }
