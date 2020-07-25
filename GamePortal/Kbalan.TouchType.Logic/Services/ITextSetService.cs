@@ -17,8 +17,8 @@ namespace Kbalan.TouchType.Logic.Services
         /// Return all text sets from TextSetDto
         /// </summary>
         /// <returns>All text sets from RegisterUserDto</returns>
-        Result<IEnumerable<TextSetDto>> GetAll();
-        Task<Result<IEnumerable<TextSetDto>>> GetAllAsync();
+        Result<IEnumerable<TextSetDtomin>> GetAll();
+        Task<Result<IEnumerable<TextSetDtomin>>> GetAllAsync();
 
         /// <summary>
         /// Returns text set from TextSetDto collection by it's id. 
@@ -33,8 +33,16 @@ namespace Kbalan.TouchType.Logic.Services
         /// </summary>
         /// <param name="level">text set level</param>
         /// <returns>Single text set from TextSetDto or null</returns>
-        Result<TextSetDto> GetByLevel(int level);
-        Task<Result<TextSetDto>> GetByLevelAsync(int level);
+        Result<TextSetDto> GetByLevelRandom(int level);
+        Task<Result<TextSetDto>> GetByLevelAsyncRandom(int level);
+
+        /// <summary>
+        /// Returns text set from TextSetDto collection by it's id.
+        /// </summary>
+        /// <param name="level">text set level</param>
+        /// <returns>Single text set from TextSetDto or null</returns>
+        Result<IEnumerable<TextSetDto>> GetByLevel(int level);
+        Task<Result<IEnumerable<TextSetDto>>> GetByLevelAsync(int level);
 
         /// <summary>
         /// Add new text set to TextSetDto collection
