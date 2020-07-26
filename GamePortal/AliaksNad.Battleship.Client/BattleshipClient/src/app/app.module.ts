@@ -12,6 +12,7 @@ import { NotFoundComponent } from './components/main/notfound/notfound.component
 import { GameBoardComponent } from './components/game/game-board/game-board.component';
 import { ReactiveFormsModule } from '@angular/forms';
 import { ProfileComponent } from './components/main/profile/profile.component';
+import { BattlefieldComponent } from './components/game/battlefield/battlefield.component';
 
 @NgModule({
   declarations: [
@@ -22,7 +23,8 @@ import { ProfileComponent } from './components/main/profile/profile.component';
     HomeComponent,
     NotFoundComponent,
     GameBoardComponent,
-    ProfileComponent
+    ProfileComponent,
+    BattlefieldComponent,
   ],
   imports: [
     BrowserModule,
