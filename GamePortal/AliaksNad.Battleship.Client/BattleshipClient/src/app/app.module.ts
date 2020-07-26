@@ -10,6 +10,8 @@ import { HttpClientModule } from '@angular/common/http';
 import { HomeComponent } from './components/main/home/home.component';
 import { NotFoundComponent } from './components/main/notfound/notfound.component';
 import { GameBoardComponent } from './components/game/game-board/game-board.component';
+import { ReactiveFormsModule } from '@angular/forms';
+import { ProfileComponent } from './components/main/profile/profile.component';
 
 @NgModule({
   declarations: [
@@ -19,10 +21,12 @@ import { GameBoardComponent } from './components/game/game-board/game-board.comp
     AreaComponent,
     HomeComponent,
     NotFoundComponent,
-    GameBoardComponent
+    GameBoardComponent,
+    ProfileComponent
   ],
   imports: [
     BrowserModule,
+    ReactiveFormsModule,
     HttpClientModule,
     BattleshipRoutesModule
   ],

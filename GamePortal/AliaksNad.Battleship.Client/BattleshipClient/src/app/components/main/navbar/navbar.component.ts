@@ -12,7 +12,7 @@ export class NavbarComponent implements OnInit {
   message: string;
   isLogged: boolean = false;
 
-  constructor(private ntf: NotificationService, private loginService: LoginService) { }
+  constructor(private ntf: NotificationService, public loginService: LoginService) { }
 
   ngOnInit(): void {
     this.ntf.Message$.subscribe(msg => this.message = msg);

@@ -1,3 +1,5 @@
+import { ProfileComponent } from './../components/main/profile/profile.component';
+import { BattleshipGuard } from './battleship.guard';
 import { NotFoundComponent } from './../components/main/notfound/notfound.component';
 import { LoginComponent } from './../components/security/login/login.component';
 import { AreaComponent } from './../components/game/area/area.component';
@@ -9,8 +11,9 @@ import { GameBoardComponent } from '../components/game/game-board/game-board.com
 
 export const routes: Routes = [
   { path: 'home', component: HomeComponent },
-  { path: 'play', component: GameBoardComponent },
+  { path: 'play', component: GameBoardComponent, canActivate: [BattleshipGuard] },
   { path: 'login', component: LoginComponent },
+  { path: 'profile', component: ProfileComponent, canActivate: [BattleshipGuard] },
   { path: '', redirectTo: 'home', pathMatch: 'full' },
   { path: '**', component: NotFoundComponent }
 ];
