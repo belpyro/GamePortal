@@ -16,7 +16,7 @@ namespace AliaksNad.Battleship.Logic.DIModules
                     return r.ParentContext != null && r.ParentContext.Plan.Type.Namespace.StartsWith("AliaksNad.Battleship");
                 });
 
-            var user = this.Bind<UserManager<IdentityUser>>().ToMethod(ctx =>
+            this.Bind<UserManager<IdentityUser>>().ToMethod(ctx =>
             {
                 var manager = new UserManager<IdentityUser>(ctx.Kernel.Get<IUserStore<IdentityUser>>());
                 manager.UserValidator = new UserValidator<IdentityUser>(manager)

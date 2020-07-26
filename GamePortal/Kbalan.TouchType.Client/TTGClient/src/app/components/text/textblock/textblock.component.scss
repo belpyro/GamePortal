@@ -12,7 +12,7 @@ color: rgb(197, 230, 184)
 }
 
 .wrapper-textset{
-  height: 100%;
+
   width: 100%;
   display: flex;
   flex-direction: column;
@@ -22,3 +22,32 @@ color: rgb(197, 230, 184)
 .btn-group{
   width: 100%;
 }
+.text-container{
+  height: 100vh;
+}
+
+.dropgroup{
+  display: flex;
+}
+
+.dropdown-item{
+  cursor: pointer;
+}
+.blog-post-text{
+  color: #000;
+}
+
+.editdelete-btn{
+  display: flex;
+  width: 13vw;
+  justify-content: space-between;
+}
+
+.wrapper-textset{
+margin-top: 20vh;
+}
+
+.textadd-form{
+  margin-top: 20vh;
+}
+

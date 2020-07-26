@@ -13,7 +13,7 @@ using System.Threading.Tasks;
 
 namespace AliaksNad.Battleship.Logic.Validators.User
 {
-    class UserDtoValidator : AbstractValidator<UserDto>
+    public class UserDtoValidator : AbstractValidator<UserDto>
     {
         private readonly BattleAreaContext _context;
 

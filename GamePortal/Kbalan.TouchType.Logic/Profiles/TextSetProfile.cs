@@ -14,6 +14,7 @@ namespace Kbalan.TouchType.Logic.Profiles
         public TextSetProfile()
         {
             CreateMap<TextSetDb, TextSetDto>().ReverseMap();
+            CreateMap<TextSetDbmin, TextSetDtomin>().ReverseMap();
         }
         
     }

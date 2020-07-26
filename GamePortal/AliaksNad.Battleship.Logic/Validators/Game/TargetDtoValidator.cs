@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace AliaksNad.Battleship.Logic.Validators.Game
 {
-    class TargetDtoValidator : AbstractValidator<TargetDto>
+    public class TargetDtoValidator : AbstractValidator<TargetDto>
     {
         private readonly BattleAreaContext _context;
         private readonly CoordinatesDtoValidator _validator;
