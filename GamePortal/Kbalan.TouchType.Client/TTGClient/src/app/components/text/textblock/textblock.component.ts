@@ -31,6 +31,10 @@ textGroup: FormGroup;
   }
 
   ngOnInit(): void {
+    this.initTextSet();
+  }
+
+  initTextSet(){
     this.textsetService.getAllTextSet().subscribe(data => this.alltextset = data);
     this.textsetService.getTextSetByLevel(0).subscribe(data => this.easytextset = data);
     this.textsetService.getTextSetByLevel(1).subscribe(data => this.middletextset = data);
@@ -68,5 +72,6 @@ textGroup: FormGroup;
       this.toastr.error(err.error.Message);
     }
   });
+  this.initTextSet();
   }
 }
