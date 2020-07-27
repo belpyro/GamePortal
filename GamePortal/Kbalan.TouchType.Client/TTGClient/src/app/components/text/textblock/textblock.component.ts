@@ -4,6 +4,7 @@ import { TextSetDto } from 'src/app/models/textsetDto';
 import { TextSetDtomin } from 'src/app/models/textsetDtomin';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ToastrService } from 'ngx-toastr';
+import { Console } from 'console';
 
 
 @Component({
@@ -39,6 +40,7 @@ textGroup: FormGroup;
     this.textsetService.getTextSetByLevel(0).subscribe(data => this.easytextset = data);
     this.textsetService.getTextSetByLevel(1).subscribe(data => this.middletextset = data);
     this.textsetService.getTextSetByLevel(2).subscribe(data => this.hardtextset = data);
+    console.log(this.alltextset);
   }
 
   SelectText(id: number){
@@ -60,10 +62,10 @@ textGroup: FormGroup;
   LevelOfText : this.textGroup.value.textradio
   };
   this.textsetService.addTextSetToDb(newText).subscribe(  (res: any ) => {
-    console.log(res);
     if (res != null)
     {
       this.toastr.success(`text ${newText.Name} successfully added to collection `);
+      this.initTextSet();
     }
   },
   err => {
@@ -72,6 +74,5 @@ textGroup: FormGroup;
       this.toastr.error(err.error.Message);
     }
   });
-  this.initTextSet();
   }
 }
