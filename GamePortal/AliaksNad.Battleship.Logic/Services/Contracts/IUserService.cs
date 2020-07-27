@@ -1,4 +1,5 @@
 ﻿using AliaksNad.Battleship.Logic.Models;
+using AliaksNad.Battleship.Logic.Models.User;
 using CSharpFunctionalExtensions;
 using Microsoft.AspNet.Identity.Owin;
 using System;

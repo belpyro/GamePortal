@@ -22,9 +22,8 @@ namespace AliaksNad.Battleship.Data.Contexts
         }
 
         public DbSet<BattleAreaDb> BattleAreas { get; set; }
-
         public DbSet<ShipDb> Ships { get; set; }
-
+        public DbSet<EmptyCellDb> EmptyCell { get; set; }
         public DbSet<CoordinatesDb> Coordinates { get; set; }
 
         protected override void OnModelCreating(DbModelBuilder modelBuilder)
