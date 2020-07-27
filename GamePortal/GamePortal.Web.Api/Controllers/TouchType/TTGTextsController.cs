@@ -127,9 +127,8 @@ namespace GamePortal.Web.Api.Controllers.TouchType
             {
                 return BadRequest("ID must be greater than 0");
             }
-
             var result = await _textSetService.DeleteAsync(id);
-            return result.IsSuccess ? Ok($"Text set with id {id} deleted succesfully!") : (IHttpActionResult)BadRequest(result.Error);
+            return result.IsSuccess ? Ok($"Text with id {id} successfully deleted") : (IHttpActionResult)BadRequest(result.Error);
         }
     }
 }

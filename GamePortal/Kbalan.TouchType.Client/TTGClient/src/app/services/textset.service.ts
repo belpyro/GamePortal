@@ -31,4 +31,9 @@ getAllTextSet(){
   addTextSetToDb(model){
     return this.http.post(`${environment.backendurl}/api/textsets`, model);
   }
+
+  deleteTextfromDb(id)
+  {
+    return this.http.delete(`${environment.backendurl}/api/textsets/${id}`);
+  }
 }

@@ -4,7 +4,7 @@ import { TextSetDto } from 'src/app/models/textsetDto';
 import { TextSetDtomin } from 'src/app/models/textsetDtomin';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ToastrService } from 'ngx-toastr';
-import { Console } from 'console';
+import swal from 'sweetalert';
 
 
 @Component({
@@ -40,7 +40,6 @@ textGroup: FormGroup;
     this.textsetService.getTextSetByLevel(0).subscribe(data => this.easytextset = data);
     this.textsetService.getTextSetByLevel(1).subscribe(data => this.middletextset = data);
     this.textsetService.getTextSetByLevel(2).subscribe(data => this.hardtextset = data);
-    console.log(this.alltextset);
   }
 
   SelectText(id: number){
@@ -52,6 +51,33 @@ textGroup: FormGroup;
   addNewTextSet(){
     this.isTextSelected = false;
     this.addNewText = true;
+  }
+
+  deleteText(id: number){
+    swal({
+      title: 'Are you sure you want to Delete?',
+      text: 'You will not be able to restore the data!',
+      icon: 'warning',
+      buttons: ['Stop', 'Do it!'],
+      dangerMode: true
+  }).then((willDelete) => {
+    if (willDelete) {
+  ( this.textsetService.deleteTextfromDb(id).subscribe(  (res: any ) => {
+    if (res != null)
+    {
+      this.toastr.success(res);
+      this.initTextSet();
+      this.isTextSelected = false;
+    }
+  },
+  err => {
+    if ( err != null )
+    {
+      this.toastr.error(err.error.Message);
+    }
+  }));
+}
+});
   }
 
   sendTextToServer(){
