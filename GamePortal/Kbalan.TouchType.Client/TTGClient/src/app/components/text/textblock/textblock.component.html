@@ -49,7 +49,7 @@
       <p class="blog-post-level">{{selectedtext.LevelOfText || 'Unknown'}}</p>
       <p class="blog-post-text">{{selectedtext.TextForTyping || 'Unknown'}}</p>
       <div class="editdelete-btn">
-        <button type="button"  class="btn btn-success">Edit</button>
+        <button type="button" (click) = "editText(selectedtext.Id)" class="btn btn-success">Edit</button>
         <button type="button" (click) = "deleteText(selectedtext.Id)" class="btn btn-danger">Delete</button>
       </div>
     </div>
@@ -58,7 +58,7 @@
   <form [formGroup] = "this.textGroup" class="textadd-form" *ngIf="addNewText">
     <div class="form-group">
       <label for="textname">Name of text</label>
-      <input class="form-control" id="textname" placeholder="name of text" formControlName = "textname">
+      <input class="form-control" id="textname" placeholder="name of text"  formControlName = "textname">
     </div>
     <div class="form-group">
       <label for="maintext">Text</label>

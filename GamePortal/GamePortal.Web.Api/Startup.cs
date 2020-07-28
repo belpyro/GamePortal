@@ -58,37 +58,7 @@ namespace GamePortal.Web.Api
                 AuthenticationType = DefaultAuthenticationTypes.ApplicationCookie
             });
 
-            app.UseGoogleAuthentication(new GoogleOAuth2AuthenticationOptions
-            {
-                ClientId = "719719063561-v05dg5416mu8km1u2filstn03oqj98s4.apps.googleusercontent.com",
-                ClientSecret = "n8sW2lGlSM7QsayPw97knojT",
-                AuthenticationType = "TTGGoogle"
-            });
 
-            app.UseVKontakteAuthentication(new VKontakteAuthenticationOptions
-            {
-                ClientId = "7526371",
-                ClientSecret = "Z3blscBduDFc17p8NpWw",
-                AuthenticationType = "TTGVk",
-                Scope = { "email" }
-            });
-
-            app.Map("/ttg/login/google", b => b.Use<TTGGoogleAuthMiddleWare>());
-            app.Map("/ttg/login/vk", b => b.Use<TTGVkAuthMiddleWare>());
-
-            app.UseIdentityServerBearerTokenAuthentication(new IdentityServerBearerTokenAuthenticationOptions
-            {
-                Authority = "http://localhost:10000/",
-                ClientId = "TTGWebClient",
-                ClientSecret = "secret",
-                RequireHttps = false,
-                SigningCertificate = Certificate.Get(),
-                ValidationMode = ValidationMode.Local,
-                IssuerName = "http://localhost:10000/",
-                ValidAudiences = new[] { "http://localhost:10000/resources" }
-            });
-
-            app.UseBattleshipIdentityServer(kernel);
 
             var provide = new CorsPolicyProvider
             {
@@ -101,6 +71,18 @@ namespace GamePortal.Web.Api
             };
 
             app.UseCors(new CorsOptions { PolicyProvider = provide });
+
+
+            app.UseBattleshipIdentityServer(kernel);
+
+            //TTG External Authentification Options
+            app.UseIdentityServerBearerTokenAuthentication(TTGAuthOptionsFactory.GetIdentityServerBearerTokenAuthenticationOptions());
+            app.UseGoogleAuthentication(TTGAuthOptionsFactory.GetGoogleAuthenticationOptions());
+            app.UseVKontakteAuthentication(TTGAuthOptionsFactory.GetVKontakteAuthenticationOptions());
+
+            //TTG External Authentification Maps
+            app.Map("/ttg/login/google", b => b.Use<TTGGoogleAuthMiddleWare>());
+            app.Map("/ttg/login/vk", b => b.Use<TTGVkAuthMiddleWare>());
 
             app.UseNinjectMiddleware(() => kernel).UseNinjectWebApi(config);
         }

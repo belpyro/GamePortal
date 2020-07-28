@@ -13,6 +13,7 @@ import { UserComponent } from './components/user/user.component';
 import { CommonModule } from '@angular/common';
 import { TextblockComponent } from './components/text/textblock/textblock.component';
 import { NotFoundComponent } from './components/not-found/not-found.component';
+import {OAuthModule} from 'angular-oauth2-oidc';
 
 
 @NgModule({
@@ -37,6 +38,7 @@ import { NotFoundComponent } from './components/not-found/not-found.component';
     }),
     AppRoutingModule,
     CommonModule,
+    OAuthModule.forRoot()
 
   ],
   providers: [],

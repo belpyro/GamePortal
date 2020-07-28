@@ -6,6 +6,7 @@ using System.Linq;
 using System.Security.Claims;
 using System.Security.Cryptography.X509Certificates;
 using System.Threading.Tasks;
+using System.Web.Cors;
 using AutoMapper.Execution;
 using IdentityServer3.AspNetIdentity;
 using IdentityServer3.Core.Configuration;
@@ -18,6 +19,7 @@ using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.EntityFramework;
 using Microsoft.IdentityModel.Protocols;
 using Microsoft.Owin;
+using Microsoft.Owin.Cors;
 using Ninject;
 using Owin;
 
@@ -29,6 +31,16 @@ namespace KBalan.IdentityServerHost
     {
         public void Configuration(IAppBuilder app)
         {
+            var provide = new CorsPolicyProvider
+            {
+                PolicyResolver = ctx => Task.FromResult(new CorsPolicy
+                {
+                    AllowAnyHeader = true,
+                    AllowAnyMethod = true,
+                    AllowAnyOrigin = true
+                })
+            };
+            app.UseCors(new CorsOptions { PolicyProvider = provide });
             IdentityServerServiceFactory factory = new IdentityServerServiceFactory();
             var client = new Client()
             {
@@ -37,7 +49,7 @@ namespace KBalan.IdentityServerHost
                 AllowAccessToAllScopes = true,
                 ClientName = "TTG Web Client",
                 Flow = Flows.AuthorizationCode,
-                RedirectUris = new List<string>() { "https://localhost:5555" }
+                RedirectUris = new List<string>() { "https://localhost:5555", "http://localhost:4200/index.html" }
             };
 
             factory.UseInMemoryScopes(StandardScopes.All.Append(
@@ -70,7 +82,7 @@ namespace KBalan.IdentityServerHost
                 Factory = factory,
                 SigningCertificate = LoadCertificate()
             });
-            
+
         }
 
         private static X509Certificate2 LoadCertificate()

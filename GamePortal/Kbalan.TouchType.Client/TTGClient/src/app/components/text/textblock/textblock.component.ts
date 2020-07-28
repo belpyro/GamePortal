@@ -25,7 +25,7 @@ textGroup: FormGroup;
 
   constructor(private toastr: ToastrService, public textsetService: TextsetService, private fb: FormBuilder) {
     this.textGroup = this.fb.group({
-      textname: ['' , [Validators.required, Validators.minLength(5)]],
+      textname: [ '', [Validators.required, Validators.minLength(5)]],
       textarea: ['', [Validators.required, Validators.minLength(5)]],
       textradio: ['', [Validators.required]]
     });
@@ -78,7 +78,14 @@ textGroup: FormGroup;
   }));
 }
 });
-  }
+}
+
+editText(id: number)
+{
+  this.textGroup.value.textname = this.selectedtext.Name;
+  this.isTextSelected = false;
+  this.addNewText = true;
+}
 
   sendTextToServer(){
   const newText: TextSetDto  = {

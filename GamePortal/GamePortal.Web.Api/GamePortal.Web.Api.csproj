@@ -402,6 +402,7 @@
   <ItemGroup>
     <Compile Include="App_Start\CustomValidatorFactory.cs" />
     <Compile Include="Config\Certificate.cs" />
+    <Compile Include="Config\TTGAuthOptionsFactory.cs" />
     <Compile Include="Controllers\Battleship\BattleshipGameController.cs" />
     <Compile Include="Controllers\Battleship\LoginController.cs" />
     <Compile Include="Controllers\Battleship\UserController.cs" />
@@ -418,8 +419,8 @@
     <Compile Include="Filters\Battleship\ModelStateValidationAttribute.cs" />
     <Compile Include="HttpApplicationInitializationHttpModule.cs" />
     <Compile Include="Middleware\BattleshipIdentityServerExtension.cs" />
-    <Compile Include="Middleware\TTGGoogleAuthMiddleWare.cs" />
-    <Compile Include="Middleware\TTGVkAuthMiddleWare.cs" />
+    <Compile Include="Middleware\TTGAuthMiddleware\TTGGoogleAuthMiddleWare.cs" />
+    <Compile Include="Middleware\TTGAuthMiddleware\TTGVkAuthMiddleWare.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Startup.cs" />
   </ItemGroup>
