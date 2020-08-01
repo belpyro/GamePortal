@@ -1,9 +1,54 @@
 <a>Something</a>
 
-<table>
-  <tbody>
-    <tr *ngFor="let item of num">
-      <th *ngFor="let item of num"></th>
-    </tr>
-  </tbody>
-</table>
+<div>
+  <table>
+    <tbody>
+      <tr *ngFor="let item of num">
+        <th
+          class="battlefield-cell battlefield-cell__busy battlefield-cell__hit battlefield-cell__done"
+          *ngFor="let item of num"
+        >
+          <div class="battlefield-cell-content">
+            <span class="z"></span>
+          </div>
+        </th>
+      </tr>
+    </tbody>
+  </table>
+</div>
+
+<div>
+  <table>
+    <tbody>
+      <tr>
+        <td
+          class="battlefield-cell battlefield-cell__busy battlefield-cell__hit battlefield-cell__done"
+        >
+          <div class="battlefield-cell-content" data-y="5" data-x="3">
+            <span class="z"></span>&nbsp;
+            <!-- <div
+              data-id="gpcuVzFpb8vg"
+              data-length="1"
+              data-position="h"
+              class="ship-box ship-box__h"
+              style="
+                width: 2em;
+                height: 2em;
+                padding-right: 0px;
+                padding-bottom: 0px;
+              "
+            ></div> -->
+          </div>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+
+<div [ngClass]="{ invisible: visibility }">
+  <h1>Hello Angular 5</h1>
+  <p>
+    Angular 5 представляет модульную архитектуру приложения
+  </p>
+</div>
+<button (click)="toggle()">Toggle</button>

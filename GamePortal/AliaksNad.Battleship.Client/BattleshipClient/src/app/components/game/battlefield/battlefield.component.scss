@@ -12,3 +12,68 @@ th:hover {
   padding: 14px 14px;
   background-color: cyan;
 }
+.H {
+  content: "h";
+  height: 100%;
+  width: 100%;
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: 1;
+  overflow: hidden;
+  box-sizing: border-box;
+  content: "";
+  position: absolute;
+  z-index: -1;
+  background: red;
+  -webkit-transform: rotate(-45deg);
+  -moz-transform: rotate(-45deg);
+  -ms-transform: rotate(-45deg);
+  transform: rotate(-45deg);
+}
+
+.battlefield-cell-content {
+  position: relative;
+  height: 2em;
+  width: 2em;
+}
+
+// .battlefield-cell__hit .battlefield-cell-content {
+//   background: 0 0;
+//   position: relative;
+// }
+.battlefield-cell__hit .battlefield-cell-content .z {
+  height: 100%;
+  width: 100%;
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: 1;
+  overflow: hidden;
+  box-sizing: border-box;
+}
+.battlefield-cell__hit .battlefield-cell-content .z:after,
+.battlefield-cell__hit .battlefield-cell-content .z:before {
+  content: "";
+  position: absolute;
+  z-index: -1;
+  background: red;
+  -webkit-transform: rotate(-45deg);
+  -moz-transform: rotate(-45deg);
+  -ms-transform: rotate(-45deg);
+  transform: rotate(-45deg);
+}
+.battlefield-cell__hit .battlefield-cell-content .z:before {
+  left: 50%;
+  width: 2px;
+  top: -25%;
+  height: 150%;
+  margin-top: 1px;
+}
+.battlefield-cell__hit .battlefield-cell-content .z:after {
+  top: 50%;
+  height: 2px;
+  left: -25%;
+  width: 150%;
+  margin-left: -1px;
+}
