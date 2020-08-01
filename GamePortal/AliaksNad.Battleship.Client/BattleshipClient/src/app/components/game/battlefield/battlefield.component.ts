@@ -8,30 +8,39 @@ import { Component, OnInit } from '@angular/core';
 export class BattlefieldComponent implements OnInit {
 
   num: number[][] = [[], []];
+  visibility = false;
+  hit = false;
+  ship = false;
+  myStyle = 'battlefield-cell__hit';
 
   constructor() { }
 
+  get getStyle() {
+    return this.myStyle.toString;
+  }
   ngOnInit(): void {
   }
 
-  initialMap() {
+  toggle(): void {
+    this.visibility = !this.visibility;
+  }
 
-    let createMap = () => {
-      let a = [];
-      for (let i = 0; i < 10; i++) {
-        for (let e = 0; e < 10; e++) {
-          a.push({ x: i, y: e, hit: Math.random() >= 0.5, hasBoat: Math.random() >= 0.5 });
-        }
+  checkHit(): void {
+    this.hit = !this.hit;
+  }
+
+  checkShip(): void {
+    this.ship = !this.ship;
+  }
+
+  calculateClasses() {
+    let x = this.ship;
+    let y = this.hit;
+    if (y) {
+      if (x) {
+        return { 'battlefield-cell__hit': true };
       }
-      return a;
+      return { 'battlefield-cell__miss': true };
     }
-
   }
-
-  visibility: boolean = false
-  // переключаем переменную
-  toggle() {
-    this.visibility = !this.visibility
-  }
-
 }

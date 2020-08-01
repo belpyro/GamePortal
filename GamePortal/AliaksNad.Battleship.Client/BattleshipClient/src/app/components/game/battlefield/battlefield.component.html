@@ -1,23 +1,25 @@
 <a>Something</a>
 
-<div>
+<div class="margin">
   <table>
     <tbody>
       <tr *ngFor="let item of num">
-        <th
-          class="battlefield-cell battlefield-cell__busy battlefield-cell__hit battlefield-cell__done"
+        <td
+          (click)="checkHit()"
+          [ngClass]="calculateClasses()"
+          class="battlefield-cell battlefield-cell__busy battlefield-cell__done"
           *ngFor="let item of num"
         >
           <div class="battlefield-cell-content">
             <span class="z"></span>
           </div>
-        </th>
+        </td>
       </tr>
     </tbody>
   </table>
 </div>
 
-<div>
+<div class="margin">
   <table>
     <tbody>
       <tr>
@@ -26,18 +28,20 @@
         >
           <div class="battlefield-cell-content" data-y="5" data-x="3">
             <span class="z"></span>&nbsp;
-            <!-- <div
-              data-id="gpcuVzFpb8vg"
-              data-length="1"
-              data-position="h"
-              class="ship-box ship-box__h"
-              style="
-                width: 2em;
-                height: 2em;
-                padding-right: 0px;
-                padding-bottom: 0px;
-              "
-            ></div> -->
+          </div>
+        </td>
+        <td
+          class="battlefield-cell battlefield-cell__busy battlefield-cell__hit battlefield-cell__done"
+        >
+          <div class="battlefield-cell-content" data-y="5" data-x="3">
+            <span class="z"></span>&nbsp;
+          </div>
+        </td>
+        <td
+          class="battlefield-cell battlefield-cell__miss battlefield-cell__last"
+        >
+          <div class="battlefield-cell-content" data-y="5" data-x="1">
+            <span class="z"></span>&nbsp;
           </div>
         </td>
       </tr>
@@ -45,10 +49,17 @@
   </table>
 </div>
 
-<div [ngClass]="{ invisible: visibility }">
+<div class="margin">
+  <input type="checkbox" (change)="checkShip()" />
+  <label>Ship?</label>
+  <button class="margin" (click)="checkHit()">Hit</button>
+</div>
+<div class="margin" [ngClass]="{ invisible: visibility }">
   <h1>Hello Angular 5</h1>
   <p>
     Angular 5 представляет модульную архитектуру приложения
   </p>
 </div>
-<button (click)="toggle()">Toggle</button>
+<div>
+  <button class="margin" (click)="toggle()">Toggle</button>
+</div>

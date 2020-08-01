@@ -1,35 +1,17 @@
+.margin {
+  margin: 2em;
+}
 table {
   border-collapse: collapse;
   border: 2px solid grey;
   background-color: lightcyan;
 }
-th {
+td {
   border: 1px solid grey;
-  padding: 14px 14px;
 }
-th:hover {
+td:hover {
   border: 1px solid grey;
-  padding: 14px 14px;
   background-color: cyan;
-}
-.H {
-  content: "h";
-  height: 100%;
-  width: 100%;
-  position: absolute;
-  top: 0;
-  left: 0;
-  z-index: 1;
-  overflow: hidden;
-  box-sizing: border-box;
-  content: "";
-  position: absolute;
-  z-index: -1;
-  background: red;
-  -webkit-transform: rotate(-45deg);
-  -moz-transform: rotate(-45deg);
-  -ms-transform: rotate(-45deg);
-  transform: rotate(-45deg);
 }
 
 .battlefield-cell-content {
@@ -37,11 +19,6 @@ th:hover {
   height: 2em;
   width: 2em;
 }
-
-// .battlefield-cell__hit .battlefield-cell-content {
-//   background: 0 0;
-//   position: relative;
-// }
 .battlefield-cell__hit .battlefield-cell-content .z {
   height: 100%;
   width: 100%;
@@ -57,7 +34,7 @@ th:hover {
   content: "";
   position: absolute;
   z-index: -1;
-  background: red;
+  background: brown;
   -webkit-transform: rotate(-45deg);
   -moz-transform: rotate(-45deg);
   -ms-transform: rotate(-45deg);
@@ -76,4 +53,15 @@ th:hover {
   left: -25%;
   width: 150%;
   margin-left: -1px;
+}
+.battlefield-cell__miss .battlefield-cell-content .z {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  height: 5px;
+  width: 5px;
+  background: green;
+  border-radius: 50%;
+  margin-top: -2px;
+  margin-left: -2px;
 }
