@@ -43,4 +43,19 @@ export class BattlefieldComponent implements OnInit {
       return { 'battlefield-cell__miss': true };
     }
   }
+
+  getCss() {
+    let x = this.ship;
+    let y = this.hit;
+    //if (y) {
+    if (x) {
+      return 'battlefield-cell__hit';
+    }
+    return 'battlefield-cell__miss';
+    //}
+  }
+
+  details(elem: HTMLElement) {
+    elem.className = this.getCss();
+  }
 }

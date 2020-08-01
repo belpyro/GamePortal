@@ -5,10 +5,12 @@
     <tbody>
       <tr *ngFor="let item of num">
         <td
-          (click)="checkHit()"
+          (click)="details(demo)"
+          id="index"
+          #demo
           [ngClass]="calculateClasses()"
           class="battlefield-cell battlefield-cell__busy battlefield-cell__done"
-          *ngFor="let item of num"
+          *ngFor="let item of num; let col = index"
         >
           <div class="battlefield-cell-content">
             <span class="z"></span>
