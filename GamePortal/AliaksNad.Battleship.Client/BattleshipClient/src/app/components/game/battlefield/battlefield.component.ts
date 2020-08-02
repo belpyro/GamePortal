@@ -34,20 +34,17 @@ export class BattlefieldComponent implements OnInit {
     console.log(`Component "foo start" ${size} initialised!`);
     this.arr = [];
     this.sign = [];
-    for (var i = 0; i < size; i++) {
+    for (let i = 0; i < size; i++) {
       this.arr.push(i);
       this.sign.push([]);
-      for (var g = 0; g < size; g++) {
+      for (let g = 0; g < size; g++) {
         this.sign[i].push('');
-        console.log('Component "fooc" initialised!');
       }
     }
-    // this.size = this.arr.length;
   }
 
-  push(parent, index): void {
-    //this.sign[parent][index] = 'X';
-    this.sign[parent][index] = 'battlefield-cell__miss';
+  push(trIndex, tdIndex): void {
+    this.sign[trIndex][tdIndex] = 'battlefield-cell__hit';
   }
 
   toggle(): void {
