@@ -16,6 +16,7 @@ export class TextblockComponent implements OnInit {
 
 isTextSelected = false;
 addNewText = false;
+editTextbuttonEnable = false;
 selectedtext: TextSetDto;
 alltextset: TextSetDtomin[];
 easytextset: TextSetDtomin[];
@@ -49,6 +50,11 @@ textGroup: FormGroup;
   }
 
   addNewTextSet(){
+    this.editTextbuttonEnable = false;
+    this.textGroup.setValue({
+      textname: '',
+      textarea: '',
+      textradio: 'Easy' });
     this.isTextSelected = false;
     this.addNewText = true;
   }
@@ -82,14 +88,42 @@ textGroup: FormGroup;
 });
 }
 
-editText(id: number)
+editText()
 {
-  this.textGroup.value.textname = this.selectedtext.Name;
+  this.editTextbuttonEnable = true;
+  console.log(this.selectedtext.LevelOfText);
+  this.textGroup.setValue({
+    textname: this.selectedtext.Name,
+    textarea: this.selectedtext.TextForTyping,
+    textradio: this.selectedtext.LevelOfText });
   this.isTextSelected = false;
   this.addNewText = true;
 }
 
-  sendTextToServer(){
+sendEditedTexttoServer()
+{
+  const newText: TextSetDto  = {
+    Name : this.textGroup.value.textname,
+    Id : this.selectedtext.Id,
+    TextForTyping : this.textGroup.value.textarea,
+    LevelOfText : this.textGroup.value.textradio
+    };
+  this.textsetService.updateTextfromDb(newText).subscribe(  (res: any ) => {
+      if (res != null)
+      {
+        this.toastr.success(`text ${newText.Name} successfully added to collection `);
+        this.initTextSet();
+      }
+    },
+    err => {
+      if ( err.status === 400 )
+      {
+        this.toastr.error(err.error.Message);
+      }
+    });
+}
+
+sendTextToServer(){
   const newText: TextSetDto  = {
   Name : this.textGroup.value.textname,
   Id : 0,

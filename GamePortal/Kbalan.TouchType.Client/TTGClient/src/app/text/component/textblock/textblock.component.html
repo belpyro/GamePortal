@@ -49,7 +49,7 @@
       <p class="blog-post-level">{{selectedtext.LevelOfText || 'Unknown'}}</p>
       <p class="blog-post-text">{{selectedtext.TextForTyping || 'Unknown'}}</p>
       <div class="editdelete-btn">
-        <button type="button" (click) = "editText(selectedtext.Id)" class="btn btn-success">Edit</button>
+        <button type="button" (click) = "editText()" class="btn btn-success">Edit</button>
         <button type="button" (click) = "deleteText(selectedtext.Id)" class="btn btn-danger">Delete</button>
       </div>
     </div>
@@ -65,18 +65,19 @@
       <textarea class="form-control" id="maintext" rows="5" placeholder="text..." formControlName = "textarea"></textarea>
     </div>
     <div class="form-check form-check-inline">
-      <input class="form-check-input" type="radio"  id="textLevelEasy" value=0 formControlName = "textradio">
+      <input class="form-check-input" type="radio"  id="textLevelEasy" value='Easy' formControlName = "textradio">
       <label class="form-check-label" for="textLevelEasy">easy</label>
     </div>
     <div class="form-check form-check-inline">
-      <input class="form-check-input" type="radio" id="textLevelMiddle" value=1 formControlName = "textradio">
+      <input class="form-check-input" type="radio" id="textLevelMiddle" value='Medium' formControlName = "textradio">
       <label class="form-check-label" for="textLevelMiddle">middle</label>
     </div>
     <div class="form-check form-check-inline">
-      <input class="form-check-input" type="radio" id="textLevelHard" value=2 formControlName = "textradio">
+      <input class="form-check-input" type="radio" id="textLevelHard" value='Hard' formControlName = "textradio">
       <label class="form-check-label" for="textLevelHard">hard</label>
     </div>
     <br>
-    <button class="btn btn-success" (click) = "sendTextToServer()" [disabled]="textGroup.invalid">Add text</button>
+    <button class="btn btn-success" (click) = "sendTextToServer()" [disabled]="textGroup.invalid" *ngIf="!editTextbuttonEnable">Add text</button>
+    <button class="btn btn-success" (click) = "sendEditedTexttoServer()" [disabled]="textGroup.invalid" *ngIf="editTextbuttonEnable">Edit text</button>
   </form>
   </div>

@@ -36,4 +36,8 @@ getAllTextSet(){
   {
     return this.http.delete(`${environment.backendurl}/api/textsets/${id}`);
   }
+
+  updateTextfromDb(model){
+    return this.http.put(`${environment.backendurl}/api/textsets`, model);
+  }
 }
