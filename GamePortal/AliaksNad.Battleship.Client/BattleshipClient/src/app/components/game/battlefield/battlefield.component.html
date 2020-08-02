@@ -1,16 +1,38 @@
 <a>Something</a>
+desktop_windows.loa
+<div class="margin">
+  <h1>Table {{ size }}</h1>
+  <input type="number" [(ngModel)]="size" />
+  <button (click)="foo(size)">PRESS</button>
+
+  <table class="margin">
+    <tr *ngFor="let item of arr; let trIndex = index">
+      <td
+        *ngFor="let item of arr; let tdIndex = index"
+        (click)="push(trIndex, tdIndex)"
+        [class]="sign[trIndex][tdIndex]"
+        class="battlefield-cell battlefield-cell__busy battlefield-cell__done"
+      >
+        <div class="battlefield-cell-content">
+          <span class="z"></span>
+        </div>
+      </td>
+    </tr>
+  </table>
+  <label> arr = {{ arr | json }} sign = {{ sign | json }} </label>
+</div>
 
 <div class="margin">
   <table>
     <tbody>
-      <tr *ngFor="let item of num">
+      <tr *ngFor="let item of tableColumns">
         <td
           (click)="details(demo)"
           id="index"
           #demo
           [ngClass]="calculateClasses()"
           class="battlefield-cell battlefield-cell__busy battlefield-cell__done"
-          *ngFor="let item of num; let col = index"
+          *ngFor="let item of tableColumns"
         >
           <div class="battlefield-cell-content">
             <span class="z"></span>
@@ -26,7 +48,8 @@
     <tbody>
       <tr>
         <td
-          class="battlefield-cell battlefield-cell__busy battlefield-cell__hit battlefield-cell__done"
+          [class]="red"
+          class="battlefield-cell battlefield-cell__busy battlefield-cell__done"
         >
           <div class="battlefield-cell-content" data-y="5" data-x="3">
             <span class="z"></span>&nbsp;

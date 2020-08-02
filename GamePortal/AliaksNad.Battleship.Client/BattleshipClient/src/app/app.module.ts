@@ -10,7 +10,7 @@ import { HttpClientModule } from '@angular/common/http';
 import { HomeComponent } from './components/main/home/home.component';
 import { NotFoundComponent } from './components/main/notfound/notfound.component';
 import { GameBoardComponent } from './components/game/game-board/game-board.component';
-import { ReactiveFormsModule } from '@angular/forms';
+import { ReactiveFormsModule, FormsModule } from '@angular/forms';
 import { ProfileComponent } from './components/main/profile/profile.component';
 import { BattlefieldComponent } from './components/game/battlefield/battlefield.component';
 
@@ -30,6 +30,7 @@ import { BattlefieldComponent } from './components/game/battlefield/battlefield.
     BrowserModule,
     ReactiveFormsModule,
     HttpClientModule,
+    FormsModule,
     BattleshipRoutesModule
   ],
   providers: [],
