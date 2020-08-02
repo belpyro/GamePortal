@@ -55,8 +55,8 @@ namespace GamePortal.Web.Api
 
             app.UseCookieAuthentication(new CookieAuthenticationOptions
             {
-                AuthenticationType = DefaultAuthenticationTypes.ApplicationCookie
-            });
+                AuthenticationType = DefaultAuthenticationTypes.ApplicationCookie,
+        });
 
 
 

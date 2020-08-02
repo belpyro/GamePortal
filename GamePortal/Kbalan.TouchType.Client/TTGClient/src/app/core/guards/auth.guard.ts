@@ -1,4 +1,4 @@
-import { LoginService } from './services/login.service';
+import { LoginService } from '../services/login.service';
 import { Injectable } from '@angular/core';
 import { CanActivate, ActivatedRouteSnapshot, RouterStateSnapshot, UrlTree, Router } from '@angular/router';
 import { Observable } from 'rxjs';
@@ -6,11 +6,8 @@ import { Observable } from 'rxjs';
 @Injectable({
   providedIn: 'root'
 })
-export class TextGuard implements CanActivate {
+export class AuthGuard implements CanActivate {
 
-  /**
-   *
-   */
   constructor(private loginService: LoginService, private router: Router) {
   }
   canActivate(
@@ -20,7 +17,7 @@ export class TextGuard implements CanActivate {
     {
        return true;
     }
-    this.router.navigate(['user/login']);
+    this.router.navigate(['entry/login']);
     return false;
   }
 }

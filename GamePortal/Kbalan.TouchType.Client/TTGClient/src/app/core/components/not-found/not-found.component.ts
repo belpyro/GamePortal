@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { OAuthService } from 'angular-oauth2-oidc';
 
 @Component({
   selector: 'app-not-found',
@@ -7,9 +8,16 @@ import { Component, OnInit } from '@angular/core';
 })
 export class NotFoundComponent implements OnInit {
 
-  constructor() { }
+  access_token: string;
+
+  constructor(private oauth: OAuthService) { }
 
   ngOnInit(): void {
+    if (this.oauth.hasValidAccessToken())
+    {
+      console.log('valid token');
+      this.access_token = this.oauth.getAccessToken();
+    }
   }
 
 }

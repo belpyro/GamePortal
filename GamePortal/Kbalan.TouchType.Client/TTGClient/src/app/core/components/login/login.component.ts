@@ -1,4 +1,4 @@
-import { LoginService } from './../../../services/login.service';
+import { LoginService } from '../../../core/services/login.service';
 import { Component, OnInit } from '@angular/core';
 import { ToastrService } from 'ngx-toastr';
 import { Router } from '@angular/router';
@@ -21,14 +21,14 @@ export class LoginComponent implements OnInit {
     private fb: FormBuilder
     ) {
       this.loginGroup = this.fb.group({
-        email: ['', [Validators.required, Validators.email]],
+        username: ['', [Validators.required]],
         password: ['', [Validators.required]],
         remember: [true],
       });
     }
 
   ngOnInit(): void {
-    this.loginService.LoggedOn$.pipe(filter(_ => _)).subscribe( _ => {
+    this.loginService.LoggedOn$.subscribe((_) => {
         this.router.navigate(['text']);
     });
   }
@@ -36,6 +36,14 @@ export class LoginComponent implements OnInit {
 
   login(){
     this.loginService.login();
+  }
+
+  loginWithPassword() {
+    console.log(this.loginGroup.value);
+    this.loginService.login(
+      this.loginGroup.value.username,
+      this.loginGroup.value.password
+    );
   }
   showError(){
     this.toastr.error('Loggin error');

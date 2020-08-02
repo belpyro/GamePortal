@@ -4,7 +4,7 @@
     <span class="navbar-toggler-icon"></span>
   </button>
   <div class="collapse navbar-collapse" id="navbarCollapse">
-    <ul class="navbar-nav mr-auto">
+    <ul class="navbar-nav mr-auto" >
       <li class="nav-item ">
         <a class="nav-link" href="#" routerLinkActive = "active">Home </a>
       </li>
@@ -15,7 +15,10 @@
         <a class="nav-link " href="#" routerLinkActive = "active">Users</a>
       </li>
       <li class="nav-item">
-        <a class="nav-link " href="#" (click)="this.loginService.logout()" >Logout</a>
+        <a class="nav-link " href="#" (click)="this.logout()" >Logout</a>
+      </li>
+      <li class="nav-item" *ngIf="this.user$ | async; let u">
+        <a class="nav-link">Welcome {{ u.email }} </a>
       </li>
     </ul>
     <form class="form-inline mt-2 mt-md-0">

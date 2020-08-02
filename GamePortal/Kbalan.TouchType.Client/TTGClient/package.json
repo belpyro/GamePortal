@@ -26,7 +26,7 @@
     "ngx-toastr": "^12.1.0",
     "popper.js": "^1.16.1",
     "rxjs": "~6.5.4",
-    "sweetalert": "^2.1.2",
+    "sweetalert2": "^9.17.1",
     "tslib": "^1.10.0",
     "zone.js": "~0.10.2"
   },

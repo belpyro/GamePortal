@@ -1,10 +1,10 @@
 <body>
-  <form class="form-signin" [formGroup] = "loginGroup" (ngSubmit)="this.login()">
+  <form class="form-signin" [formGroup] = "loginGroup" (ngSubmit)="this.loginWithPassword()">
 
 <div class="form-label-group">
-  <input type="email" id="inputEmail" class="form-control"
-   placeholder="Email address"  autofocus="" formControlName = "email">
-  <label for="inputEmail">Email address</label>
+  <input  id="inputUsername" class="form-control"
+  placeholder="UserName" autofocus="" formControlName = "username">
+  <label for="inputUsername">Username</label>
 </div>
 
 <div class="form-label-group">

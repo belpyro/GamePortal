@@ -1,10 +1,10 @@
-import { TextsetService } from './../../../services/textset.service';
+import { TextsetService } from '../../services/textset.service';
 import { Component, OnInit } from '@angular/core';
-import { TextSetDto } from 'src/app/models/textsetDto';
-import { TextSetDtomin } from 'src/app/models/textsetDtomin';
+import { TextSetDto } from 'src/app/text/models/textsetDto';
+import { TextSetDtomin } from 'src/app/text/models/textsetDtomin';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import Swal from 'sweetalert2';
 import { ToastrService } from 'ngx-toastr';
-import swal from 'sweetalert';
 
 
 @Component({
@@ -54,13 +54,15 @@ textGroup: FormGroup;
   }
 
   deleteText(id: number){
-    swal({
-      title: 'Are you sure you want to Delete?',
-      text: 'You will not be able to restore the data!',
+    Swal.fire({
+      title: 'Are you sure?',
+      text: 'You will not be able to revert this!',
       icon: 'warning',
-      buttons: ['Stop', 'Do it!'],
-      dangerMode: true
-  }).then((willDelete) => {
+      showCancelButton: true,
+      confirmButtonColor: '#3085d6',
+      cancelButtonColor: '#d33',
+      confirmButtonText: 'Yes, delete it!'
+    }).then((willDelete) => {
     if (willDelete) {
   ( this.textsetService.deleteTextfromDb(id).subscribe(  (res: any ) => {
     if (res != null)
