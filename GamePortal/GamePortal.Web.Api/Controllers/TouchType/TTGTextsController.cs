@@ -18,6 +18,7 @@ namespace GamePortal.Web.Api.Controllers.TouchType
     /// Controller for TextSet
     /// </summary>
     [RoutePrefix("api/textsets")]
+    [Authorize]
     public class TTGTextsController : ApiController
     {
         private readonly ITextSetService _textSetService;

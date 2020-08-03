@@ -1,36 +1,28 @@
 import { filter, switchMap, map } from 'rxjs/operators';
-import { Injectable } from '@angular/core';
+import { Injectable, InjectionToken, Inject } from '@angular/core';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { UserDto } from '../models/UserDto';
 import { Router } from '@angular/router';
 import { OAuthService, AuthConfig, OAuthEvent, OAuthInfoEvent, OAuthSuccessEvent } from 'angular-oauth2-oidc';
+import { PASSWORD_FLOW_CONFIG, CODE_FLOW_CONFIG } from '../configs/auth.config';
 
-
-export const oauthConfig: AuthConfig = {
-  issuer: 'http://localhost:10000',
-  redirectUri: window.location.origin + '/index.html',
-  clientId: 'TTGUserClient',
-  dummyClientSecret: 'secret',
-  // responseType: 'code',
-  scope: 'openid profile email api',
-  requireHttps: false,
-  showDebugInformation: true,
-  disablePKCE: true,
-  oidc: false,
-  logoutUrl: 'http://localhost:10000/connect/endsession',
-  postLogoutRedirectUri: window.location.origin + '/entry/login',
-};
 
 
 
 @Injectable()
 export class LoginService {
-  private loggedOnSubject: BehaviorSubject<UserDto> = new BehaviorSubject<UserDto>(null);
+  private loggedOnSubject: BehaviorSubject<UserDto> = new BehaviorSubject<
+    UserDto
+  >(null);
   private user: UserDto;
 
-  constructor(private router: Router, private oauth: OAuthService) {
-    this.oauth.configure(oauthConfig);
-    this.oauth.loadDiscoveryDocumentAndTryLogin();
+  constructor(
+    private router: Router,
+    private oauth: OAuthService,
+    @Inject(PASSWORD_FLOW_CONFIG) private passFlow: AuthConfig,
+    @Inject(CODE_FLOW_CONFIG) private codeFlow: AuthConfig
+  ) {
+    this.oauth.tryLogin();
     this.oauth.events
       .pipe(
         filter((value) => value.type === 'token_received'),
@@ -47,19 +39,27 @@ export class LoginService {
     return this.loggedOnSubject.value;
   }
 
-  login(userName?: string, password?: string) {
-    if (!userName || !password) {
-      this.oauth.initLoginFlow();
+  async loginWithCode() {
+    try {
+      await this.configureOauth(this.codeFlow);
+      this.oauth.initCodeFlow();
+    } catch (error) {
+      console.log(`cannot login: ${error}`);
     }
+  }
 
-
-    this.oauth
-      .fetchTokenUsingPasswordFlowAndLoadUserProfile(userName, password)
-      .then((userInfo) => {
-        this.user = Object.assign({} as UserDto, userInfo);
-        this.loggedOnSubject.next(this.user);
-      })
-      .catch((reason) => console.error(reason));
+  async loginWithPass(userName: string, password: string) {
+    await this.configureOauth(this.passFlow);
+    try {
+      const userInfo = await this.oauth.fetchTokenUsingPasswordFlowAndLoadUserProfile(
+        userName,
+        password
+      );
+      this.user = Object.assign({} as UserDto, userInfo);
+      this.loggedOnSubject.next(this.user);
+    } catch (error) {
+      console.log(`cannot login: ${error}`);
+    }
   }
 
   logout(){
@@ -67,6 +67,11 @@ export class LoginService {
     this.loggedOnSubject.next(null);
     this.oauth.logOut(false);
     this.router.navigate(['/entry/login']);
+  }
+
+  private async configureOauth(config: AuthConfig) {
+    this.oauth.configure(config);
+    await this.oauth.loadDiscoveryDocument();
   }
 
 }

@@ -14,13 +14,13 @@ namespace GamePortal.Web.Api.Config
         {
             return new IdentityServerBearerTokenAuthenticationOptions
             {
-                Authority = "http://localhost:10000/",
+                Authority = "http://localhost:10000",
                 ClientId = "TTGWebClient",
                 ClientSecret = "secret",
                 RequireHttps = false,
                 SigningCertificate = Certificate.Get(),
                 ValidationMode = ValidationMode.Local,
-                IssuerName = "http://localhost:10000/",
+                IssuerName = "http://localhost:10000",
                 ValidAudiences = new[] { "http://localhost:10000/resources" }
             };
         }
