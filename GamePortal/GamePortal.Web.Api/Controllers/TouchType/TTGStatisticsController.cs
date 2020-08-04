@@ -1,6 +1,7 @@
 ﻿using FluentValidation;
 using JetBrains.Annotations;
 using Kbalan.TouchType.Logic.Dto;
+using Kbalan.TouchType.Logic.Exceptions;
 using Kbalan.TouchType.Logic.Services;
 using System;
 using System.Collections.Generic;
@@ -50,9 +51,17 @@ namespace GamePortal.Web.Api.Controllers.TouchType
         [Route("")]
         public async Task<IHttpActionResult> UpdateAsync(string id, [FromBody]StatisticDto model)
         {
-            var result = await _statisticService.UpdateAsync(id, model);
-            return result.IsSuccess ? Ok($"Statistic of user with id {id} updated succesfully!") : (IHttpActionResult)BadRequest(result.Error);
 
+            try
+            {
+                var result = await _statisticService.UpdateAsync(id, model);
+                return result.IsSuccess ? Ok($"Statistic of user with id {id} updated succesfully!") : (IHttpActionResult)BadRequest(result.Error);
+            }
+            catch (TTGValidationException ex)
+            {
+
+                return (IHttpActionResult)BadRequest(ex.Message);
+            }
         }
     }
 }

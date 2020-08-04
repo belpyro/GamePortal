@@ -11,7 +11,7 @@ namespace Kbalan.TouchType.Logic.Dto
     /// <summary>
     ///  Model for transfering User information with related setting, but without related statistic
     /// </summary>
-    [Validator(typeof(UserSettingDtoValidator))]
+    [Validator(typeof(NewUserValidator))]
     public class UserSettingDto
     {
         public string Id { get; set; }

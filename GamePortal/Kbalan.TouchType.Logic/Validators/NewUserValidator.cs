@@ -13,29 +13,27 @@ namespace Kbalan.TouchType.Logic.Validators
     /// <summary>
     /// Class for validation of UserServiceDto
     /// </summary>
-    public class UserSettingDtoValidator : AbstractValidator<UserSettingDto>
+    public class NewUserValidator : AbstractValidator<NewUserDto>
     {
         private readonly TouchTypeGameContext _context;
 
-        public UserSettingDtoValidator(TouchTypeGameContext context)
+        public NewUserValidator(TouchTypeGameContext context)
         {
             /* Rule Set for validarion on presentation layer. 
                 Rules: 
                 1. Nickname must be more than three symbols. 
                 2. Password must be more than five symbols
                 3. Password must contain at least one uppercase symbol and one number. And shouldn't contain whitespaces.
-                4. Email should have valid email format 
-                5. Level of Text must be matching LevelOfText enum*/
+                4. Email should have valid email format */
             RuleSet("PreValidation", () =>
             {
-                RuleFor(x => x.Username).NotNull().MinimumLength(3)
+                RuleFor(x => x.UserName).NotNull().MinimumLength(3)
                                 .WithMessage("Name should have more than 2 symbols");
                 RuleFor(x => x.Password).NotNull().MinimumLength(6)
                                 .WithMessage("Password should have more than 5 symbols")
                                 .Must(CheckPassword)
                                 .WithMessage("Password should contain at least one uppercase symbol and number and NO whitespaces!!");
-                //RuleFor(x => x.).EmailAddress().WithMessage("Incorrect Email!!1");
-                RuleFor(x => x.Setting.LevelOfText).IsInEnum().WithMessage("Level must be Easy(0), Middle(1) or Hard(2)");
+                RuleFor(x => x.Email).EmailAddress().WithMessage("Incorrect Email!!1");
             });
 
             /* Rule Set for validarion on logic layer with handling to context. 
@@ -43,8 +41,8 @@ namespace Kbalan.TouchType.Logic.Validators
                1. No user wiht such nickname shouldn't exist.*/
             RuleSet("PostValidation", () =>
             {
-                RuleFor(x => x.Username).Must(CheckDublicateName).WithMessage("Such Nickname is already exist");
-                //RuleFor(x => x.Setting.Email).Must(CheckDuplicateEmail).WithMessage("Such Email is already exist");
+                RuleFor(x => x.UserName).Must(CheckDublicateName).WithMessage("Such Nickname is already exist");
+                RuleFor(x => x.Email).Must(CheckDuplicateEmail).WithMessage("Such Email is already exist");
             });
             this._context = context;
         }

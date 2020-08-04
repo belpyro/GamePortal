@@ -12,6 +12,7 @@ using FluentValidation;
 using FluentValidation.WebApi;
 using JetBrains.Annotations;
 using Kbalan.TouchType.Logic.Dto;
+using Kbalan.TouchType.Logic.Exceptions;
 using Kbalan.TouchType.Logic.Services;
 using Kbalan.TouchType.Logic.Validators;
 using Microsoft.AspNet.Identity;
@@ -39,10 +40,19 @@ namespace GamePortal.Web.Api.Controllers.TouchType
         public async Task<IHttpActionResult> Register([FromBody]NewUserDto model)
         {
             if (!ModelState.IsValid) return BadRequest("Invalid model");
+            try
+            {
+                var result = await _userService.Register(model);
 
-            var result = await _userService.Register(model);
+                return result.IsSuccess ? StatusCode(HttpStatusCode.NoContent) : StatusCode(HttpStatusCode.InternalServerError);
+            }
 
-            return result.IsSuccess ? StatusCode(HttpStatusCode.NoContent) : StatusCode(HttpStatusCode.InternalServerError);
+            catch (TTGValidationException ex)
+            {
+
+                return (IHttpActionResult)BadRequest(ex.Message);
+            }
+
         }
 
         //Get All RegisterUsers

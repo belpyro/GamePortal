@@ -54,7 +54,7 @@ namespace Kbalan.TouchType.Logic
                 .CreateLogger();
             this.Bind<ILogger>().ToConstant(TTGlogger);
             this.Bind<TouchTypeGameContext>().ToSelf();
-            this.Bind<IValidator<UserSettingDto>>().To<UserSettingDtoValidator>();
+            this.Bind<IValidator<NewUserDto>>().To<NewUserValidator>();
             this.Bind<IValidator<SettingDto>>().To<SettingDtoValidator>();
             this.Bind<IValidator<StatisticDto>>().To<StatisticDtoValidator>();
             this.Bind<IValidator<TextSetDto>>().To<TextSetDtoValidator>();
@@ -99,12 +99,12 @@ namespace Kbalan.TouchType.Logic
             userBinding.Intercept().With<LoggerInterceptor>();
 
             var settingBinding = Bind<ISettingService>().To<SettingService>();
-            userBinding.Intercept().With<SettingValidationInterceptor>();
-            userBinding.Intercept().With<LoggerInterceptor>();
+            settingBinding.Intercept().With<SettingValidationInterceptor>();
+            settingBinding.Intercept().With<LoggerInterceptor>();
 
             var statisticBinding = Bind<IStatisticService>().To<StatisticService>();
-            userBinding.Intercept().With<StatisticValidationInterceptor>();
-            userBinding.Intercept().With<LoggerInterceptor>();
+            statisticBinding.Intercept().With<StatisticValidationInterceptor>();
+            statisticBinding.Intercept().With<LoggerInterceptor>();
 
         }
     }

@@ -299,7 +299,7 @@
     <Compile Include="Validators\SettingDtoValidator.cs" />
     <Compile Include="Validators\StatisticDtoValidator.cs" />
     <Compile Include="Validators\TextSetDtoValidator.cs" />
-    <Compile Include="Validators\UserSettingDtoValidator.cs" />
+    <Compile Include="Validators\NewUserValidator.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Kbalan.TouchType.Data\Kbalan.TouchType.Data.csproj">
