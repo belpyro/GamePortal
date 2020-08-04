@@ -11,6 +11,7 @@ import { HomeComponent } from './components/main/home/home.component';
 import { NotFoundComponent } from './components/main/notfound/notfound.component';
 import { GameBoardComponent } from './components/game/game-board/game-board.component';
 import { ReactiveFormsModule, FormsModule } from '@angular/forms';
+import { DragDropModule } from '@angular/cdk/drag-drop';
 import { ProfileComponent } from './components/main/profile/profile.component';
 import { BattlefieldComponent } from './components/game/battlefield/battlefield.component';
 
@@ -31,7 +32,8 @@ import { BattlefieldComponent } from './components/game/battlefield/battlefield.
     ReactiveFormsModule,
     HttpClientModule,
     FormsModule,
-    BattleshipRoutesModule
+    BattleshipRoutesModule,
+    DragDropModule,
   ],
   providers: [],
   bootstrap: [AppComponent]

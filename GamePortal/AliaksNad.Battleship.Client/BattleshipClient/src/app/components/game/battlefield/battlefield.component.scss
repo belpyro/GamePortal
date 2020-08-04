@@ -65,3 +65,44 @@ td:hover {
   margin-top: -2px;
   margin-left: -2px;
 }
+
+.battlefield-cell {
+  border: 1px solid #b4b4ff;
+  padding: 0;
+}
+.battlefield-cell__busy {
+  border-color: rgba(0, 0, 255, 0.1);
+}
+
+.ship-box {
+  z-index: 2;
+  left: 0;
+  top: 0;
+  border: 2px solid #00f;
+  background: rgba(0, 0, 255, 0.05);
+  position: absolute !important;
+  margin: -2px;
+}
+.ui-draggable {
+  cursor: move !important;
+}
+.pop {
+  height: 50px;
+  width: 40%;
+  margin-left: 20px;
+  border: 1px solid saddlebrown;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.divcss {
+  border: 5px solid fuchsia;
+}
+/* Animate items as they’re being sorted. */
+.cdk-drop-list-dragging .cdk-drag {
+  transition: transform 250ms cubic-bezier(0, 0, 0.2, 1);
+}
+/* Animate an item that has been dropped. */
+.cdk-drag-animating {
+  transition: transform 300ms cubic-bezier(0, 0, 0.2, 1);
+}

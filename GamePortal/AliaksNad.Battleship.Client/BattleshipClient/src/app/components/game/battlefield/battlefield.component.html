@@ -23,6 +23,64 @@ desktop_windows.loa
 </div>
 
 <div class="margin">
+  <div style="display: flex;" class="divcss">
+    <div
+      cdkDropList
+      [cdkDropListData]="artists"
+      [cdkDropListConnectedTo]="secondList"
+      #firstList="cdkDropList"
+      (cdkDropListDropped)="drop($event)"
+      style="width: 30%;"
+    >
+      <div *ngFor="let artist of artists" class="pop" cdkDrag>{{ artist }}</div>
+    </div>
+    <div
+      cdkDropList
+      [cdkDropListData]="alteArtists"
+      [cdkDropListConnectedTo]="firstList"
+      #secondList="cdkDropList"
+      (cdkDropListDropped)="drop($event)"
+      style="width: 30%;"
+    >
+      <div *ngFor="let artist of alteArtists" class="pop" cdkDrag>
+        {{ artist }}
+      </div>
+    </div>
+  </div>
+  <div
+    class="margin"
+    cdkDropList
+    (cdkDropListDropped)="drop($event)"
+    class="divcss"
+  >
+    <div *ngFor="let artist of artists" class="pop" cdkDrag>{{ artist }}</div>
+  </div>
+
+  <div class="margin">
+    <td class="battlefield-cell battlefield-cell__busy">
+      <div class="battlefield-cell-content" data-y="2" data-x="5">
+        <span class="z"></span>&nbsp;
+        <div
+          data-id="JmTQRvOYiE3O"
+          data-length="1"
+          data-position="h"
+          class="ship-box ship-box__h ui-draggable ship-box__draggable"
+          style="
+            width: 2em;
+            height: 2em;
+            padding-right: 0px;
+            padding-bottom: 0px;
+            left: 0px;
+            top: 0px;
+            margin: -2px;
+          "
+        ></div>
+      </div>
+    </td>
+  </div>
+</div>
+
+<div class="margin">
   <table>
     <tbody>
       <tr *ngFor="let item of tableColumns">
