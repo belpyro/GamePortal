@@ -41,8 +41,8 @@ namespace Kbalan.TouchType.Logic.Validators
                1. No user wiht such nickname shouldn't exist.*/
             RuleSet("PostValidation", () =>
             {
-                RuleFor(x => x.UserName).Must(CheckDublicateName).WithMessage("Such Nickname is already exist");
-                RuleFor(x => x.Email).Must(CheckDuplicateEmail).WithMessage("Such Email is already exist");
+                RuleFor(x => x).Must(CheckDublicateName).WithMessage("Such Nickname is already exist");
+                RuleFor(x => x).Must(CheckDuplicateEmail).WithMessage("Such Email is already exist");
             });
             this._context = context;
         }
@@ -52,9 +52,9 @@ namespace Kbalan.TouchType.Logic.Validators
         /// </summary>
         /// <param name="name"></param>
         /// <returns></returns>
-        private bool CheckDuplicateEmail(string email)
+        private bool CheckDuplicateEmail(NewUserDto arg)
         {
-            return !_context.ApplicationUsers.AsNoTracking().Any(x => x.Email == email);
+            return !_context.ApplicationUsers.AsNoTracking().Where(x => x.UserName != arg.UserName).Any(x => x.Email == arg.Email);
         }
 
         /// <summary>
@@ -72,9 +72,9 @@ namespace Kbalan.TouchType.Logic.Validators
         /// </summary>
         /// <param name="name"></param>
         /// <returns></returns>
-        private bool CheckDublicateName(string name)
+        private bool CheckDublicateName(NewUserDto arg)
         {
-            return  !_context.ApplicationUsers.AsNoTracking().Any(x => x.UserName == name);
+            return  !_context.ApplicationUsers.AsNoTracking().Where(x => x.Email != arg.Email).Any(x => x.UserName == arg.UserName);
         }
     }
 }
