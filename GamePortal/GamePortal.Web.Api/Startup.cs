@@ -31,6 +31,7 @@ namespace GamePortal.Web.Api
         public void Configuration(IAppBuilder app)
         {
             var config = new HttpConfiguration();
+
             config.MapHttpAttributeRoutes();
 
             config.Routes.MapHttpRoute(

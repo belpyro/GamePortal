@@ -26,11 +26,11 @@ namespace Kbalan.TouchType.Data.Contexts
 
         public DbSet<TextSetDb> TextSets { get; set; }
 
-        public DbSet<UserDb> Users { get; set; }
-
         public DbSet<StatisticDb> Statistics { get; set; }
 
         public DbSet<SettingDb> Setting { get; set; }
+
+       public DbSet<ApplicationUser> ApplicationUsers { get; set; }
 
         protected override void OnModelCreating(DbModelBuilder modelBuilder)
         {

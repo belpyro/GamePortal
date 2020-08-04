@@ -28,8 +28,8 @@ namespace Kbalan.TouchType.Logic.Aspects
         public void Intercept(IInvocation invocation)
         {
             //id null checking
-            var userId = invocation.Request.Arguments.OfType<Int32>().SingleOrDefault();
-            if (userId == 0)
+            var userId = invocation.Request.Arguments.OfType<String>().SingleOrDefault();
+            if (userId == null)
             {
                 invocation.Proceed();
                 return;
@@ -58,7 +58,7 @@ namespace Kbalan.TouchType.Logic.Aspects
             if (invocation.Request.Method.Name.Equals("Update"))
             {
                 //Cheking if user with id exist
-                var userModel = _kernel.Get<TouchTypeGameContext>().Users.Include("Statistic").SingleOrDefault(x => x.Id == (int)userId);
+                var userModel = _kernel.Get<TouchTypeGameContext>().ApplicationUsers.Include("Statistic").SingleOrDefault(x => x.Id == (string)userId);
                 if (userModel == null)
                 {
                     invocation.ReturnValue = Result.Failure($"No user with id {userId} exist");

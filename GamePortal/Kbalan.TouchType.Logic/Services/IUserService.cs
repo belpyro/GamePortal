@@ -24,6 +24,8 @@ namespace Kbalan.TouchType.Logic.Services
 
         Task<Maybe<UserDto>> GetUser(string username, string password);
 
+        Task<Result<Maybe<UserSettingStatisticDto>>> GetAsync(string id);
+
         Task<Result> RegisterExternalUser(ExternalLoginInfo info);
 
         Task<Result> DeleteAsync(string username);

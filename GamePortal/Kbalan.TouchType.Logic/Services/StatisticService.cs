@@ -36,7 +36,7 @@ namespace Kbalan.TouchType.Logic.Services
         {
             try
             {
-                var models = _gameContext.Users.Include("Statistic").ToArray();
+                var models = _gameContext.ApplicationUsers.Include("Statistic").ToArray();
                 return Result.Success<IEnumerable<UserStatisticDto>>(_mapper.Map<IEnumerable<UserStatisticDto>>(models));
             }
             catch (DbUpdateException ex)
@@ -48,7 +48,7 @@ namespace Kbalan.TouchType.Logic.Services
         {
             try
             {
-                var models = await _gameContext.Users.Include("Statistic").ToArrayAsync().ConfigureAwait(false);
+                var models = await _gameContext.ApplicationUsers.Include("Statistic").ToArrayAsync().ConfigureAwait(false);
                 return Result.Success<IEnumerable<UserStatisticDto>>(_mapper.Map<IEnumerable<UserStatisticDto>>(models));
             }
             catch (DbUpdateException ex)
@@ -62,11 +62,11 @@ namespace Kbalan.TouchType.Logic.Services
         /// </summary>
         /// <param name="id">user id</param>
         /// <returns>user with statistic</returns>
-        public Result<Maybe<UserStatisticDto>> GetById(int id)
+        public Result<Maybe<UserStatisticDto>> GetById(string id)
         {
             try
             {
-                Maybe<UserStatisticDto> getResultById = _gameContext.Users.Where(x => x.Id == id)
+                Maybe<UserStatisticDto> getResultById = _gameContext.ApplicationUsers.Where(x => x.Id == id)
                     .ProjectToSingleOrDefault<UserStatisticDto>(_mapper.ConfigurationProvider);
 
                     return Result.Success(getResultById);
@@ -77,11 +77,11 @@ namespace Kbalan.TouchType.Logic.Services
                 return Result.Failure<Maybe<UserStatisticDto>>(ex.Message);
             }
         }
-        public async Task<Result<Maybe<UserStatisticDto>>> GetByIdAsync(int id)
+        public async Task<Result<Maybe<UserStatisticDto>>> GetByIdAsync(string id)
         {
             try
             {
-                Maybe<UserStatisticDto> getResultById = await _gameContext.Users.Where(x => x.Id == id)
+                Maybe<UserStatisticDto> getResultById = await _gameContext.ApplicationUsers.Where(x => x.Id == id)
                     .ProjectToSingleOrDefaultAsync<UserStatisticDto>(_mapper.ConfigurationProvider).ConfigureAwait(false);
 
                 return Result.Success(getResultById);
@@ -98,10 +98,10 @@ namespace Kbalan.TouchType.Logic.Services
         /// </summary>
         /// <param name="id">user's id</param>
         /// <param name="model">new statistic model</param>
-        public Result Update(int id, StatisticDto model)
+        public Result Update(string id, StatisticDto model)
         {
             //Cheking if user with id exist
-            var userModel = _gameContext.Users.Include("Statistic").SingleOrDefault(x => x.Id == id);
+            var userModel = _gameContext.ApplicationUsers.Include("Statistic").SingleOrDefault(x => x.Id == id);
 
             //Replace model statistic id from Dto to correct id from Db and Valiate
             model.StatisticId = userModel.Statistic.StatisticId;
@@ -110,7 +110,7 @@ namespace Kbalan.TouchType.Logic.Services
                 var modelDb = _mapper.Map<StatisticDb>(model);
 
                 modelDb.StatisticId = userModel.Statistic.StatisticId;
-                modelDb.User = userModel.Statistic.User;
+                modelDb.AppUser = userModel.Statistic.AppUser;
                 userModel.Statistic = modelDb;
 
                 _gameContext.Users.Attach(userModel);
@@ -123,10 +123,10 @@ namespace Kbalan.TouchType.Logic.Services
                 return Result.Failure(ex.Message);
             }
         }
-        public async Task<Result> UpdateAsync(int id, StatisticDto model)
+        public async Task<Result> UpdateAsync(string id, StatisticDto model)
         {
             //Cheking if user with id exist
-            var userModel = await _gameContext.Users.Include("Statistic").SingleOrDefaultAsync(x => x.Id == id)
+            var userModel = await _gameContext.ApplicationUsers.Include("Statistic").SingleOrDefaultAsync(x => x.Id == id)
                 .ConfigureAwait(false);
 
             //Replace model statistic id from Dto to correct id from Db and Valiate
@@ -136,7 +136,7 @@ namespace Kbalan.TouchType.Logic.Services
                 var modelDb = _mapper.Map<StatisticDb>(model);
 
                 modelDb.StatisticId = userModel.Statistic.StatisticId;
-                modelDb.User = userModel.Statistic.User;
+                modelDb.AppUser = userModel.Statistic.AppUser;
                 userModel.Statistic = modelDb;
 
                 _gameContext.Users.Attach(userModel);

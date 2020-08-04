@@ -54,6 +54,15 @@ namespace GamePortal.Web.Api.Controllers.TouchType
             return result.IsSuccess ? Ok(result.Value) : (IHttpActionResult)BadRequest(result.Error);
         }
 
+        //Get User by Id
+        [HttpGet]
+        [Route("{id}")]
+        public async Task<IHttpActionResult> GetAsync(string id)
+        {
+            var result = await _userService.GetAsync(id);
+            return result.IsSuccess ? Ok(result.Value.Value) : (IHttpActionResult)BadRequest(result.Error);
+        }
+
         [HttpPost, Route("login")]
         public async Task<IHttpActionResult> Login([FromBody]LoginDto model)
         {
@@ -77,12 +86,12 @@ namespace GamePortal.Web.Api.Controllers.TouchType
 
         //Delete User by Id
         [HttpDelete]
-        [Route("{username}")]
-        public async Task<IHttpActionResult> DeleteAsync(string username)
+        [Route("{id}")]
+        public async Task<IHttpActionResult> DeleteAsync(string id)
         {
 
-            var result =  await _userService.DeleteAsync(username);
-            return result.IsSuccess ? Ok($"User {username} deleted with his setting and statistic succesfully!") : (IHttpActionResult)BadRequest(result.Error);
+            var result =  await _userService.DeleteAsync(id);
+            return result.IsSuccess ? Ok($"User {id} deleted with his setting and statistic succesfully!") : (IHttpActionResult)BadRequest(result.Error);
 
         }
 

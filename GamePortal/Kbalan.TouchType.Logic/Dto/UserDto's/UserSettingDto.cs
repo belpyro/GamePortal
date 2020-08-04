@@ -14,9 +14,9 @@ namespace Kbalan.TouchType.Logic.Dto
     [Validator(typeof(UserSettingDtoValidator))]
     public class UserSettingDto
     {
-        public int Id { get; set; }
+        public string Id { get; set; }
 
-        public string NickName { get; set; }
+        public string Username { get; set; }
 
         public string Password { get; set; }
 

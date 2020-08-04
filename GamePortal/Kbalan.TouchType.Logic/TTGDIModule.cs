@@ -17,6 +17,7 @@ using Ninject.Planning;
 using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.EntityFramework;
 using Kbalan.Logic;
+using Kbalan.TouchType.Data.Models;
 
 namespace Kbalan.TouchType.Logic
 {
@@ -63,13 +64,16 @@ namespace Kbalan.TouchType.Logic
             textSetBinding.Intercept().With<TextSetValidationInterceptor>();
             textSetBinding.Intercept().With<LoggerInterceptor>();
 
-            this.Bind<IUserStore<IdentityUser>>().ToMethod(ctx => new UserStore<IdentityUser>(ctx.Kernel.Get<TouchTypeGameContext>()));
-            this.Bind<UserManager<IdentityUser>>().ToMethod(ctx =>
+            this.Bind<IUserStore<ApplicationUser>>().ToMethod(ctx => new UserStore<ApplicationUser>(ctx.Kernel.Get<TouchTypeGameContext>())).When(r =>
             {
-                var manager = new UserManager<IdentityUser>(new UserStore<IdentityUser>(new TouchTypeGameContext()));
+                return r.ParentContext != null && r.ParentContext.Plan.Type.Namespace.StartsWith("Kbalan.TouchType");
+            }); ;
+            this.Bind<UserManager<ApplicationUser>>().ToMethod(ctx =>
+            {
+                var manager = new UserManager<ApplicationUser>(new UserStore<ApplicationUser>(new TouchTypeGameContext()));
                 
                 manager.EmailService = new EmailService();
-                manager.UserValidator = new UserValidator<IdentityUser>(manager)
+                manager.UserValidator = new UserValidator<ApplicationUser>(manager)
                 {
                     AllowOnlyAlphanumericUserNames = false,
                     RequireUniqueEmail = true
@@ -83,7 +87,7 @@ namespace Kbalan.TouchType.Logic
                     RequireUppercase = false
                 };
 
-                manager.UserTokenProvider = new EmailTokenProvider<IdentityUser>();
+                manager.UserTokenProvider = new EmailTokenProvider<ApplicationUser>();
 
                 return manager;
             }).When(r =>
