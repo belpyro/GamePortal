@@ -5,77 +5,41 @@
   margin: auto;
 }
 
-.form-label-group {
-  position: relative;
-  margin-bottom: 1rem;
+input.form-control,input.form-control:focus{
+  background-color: #636b7b;
+  color: #fff;
+  border: 1px solid #636b7b;
+
 }
 
-.form-label-group > input,
-.form-label-group > label {
-  height: 3.125rem;
-  padding: .75rem;
+input.form-control:focus{
+  box-shadow: none;
 }
 
-.form-label-group > label {
-  position: absolute;
-  top: 0;
-  left: 0;
-  display: block;
-  width: 100%;
-  margin-bottom: 0; /* Override default `<label>` margin */
-  line-height: 1.5;
-  color: #495057;
-  pointer-events: none;
-  cursor: text; /* Match the input under the label */
-  border: 1px solid transparent;
-  border-radius: .25rem;
-  transition: all .1s ease-in-out;
-}
-
-.form-label-group input::-webkit-input-placeholder {
-  color: transparent;
-}
-
-.form-label-group input:-ms-input-placeholder {
-  color: transparent;
-}
-
-.form-label-group input::-ms-input-placeholder {
-  color: transparent;
-}
-
-.form-label-group input::-moz-placeholder {
-  color: transparent;
-}
-
-.form-label-group input::placeholder {
-  color: transparent;
-}
-
-.form-label-group input:not(:placeholder-shown) {
-  padding-top: 1.25rem;
-  padding-bottom: .25rem;
-}
-
-.form-label-group input:not(:placeholder-shown) ~ label {
-  padding-top: .25rem;
-  padding-bottom: .25rem;
-  font-size: 12px;
-  color: #777;
-}
-
-.mb-3{
+button[type=submit].btn, .btn-block {
+  margin-top: 15px;
+  border-radius: 20px;
+  width: 187px;
+  background-color: #04c582;
   color: #fff;
 }
-.login-logo{
-  width: 200px;
-  height: 200px;
+
+.btn-secondary {
+  font-size: 17px;
+  background-color: rgb(211, 117, 40);
 }
 
-.btn-block{
-  width: 55%;
-  margin-bottom: 20px;
+div.form-label-group label:not(.text-danger){
+  color: #545d6a;
+  font-weight: 700;
 }
+
+div.form-label-group.required>label:first-child:after{
+  content:'*';
+  color: #fff;
+  padding-left: 5px;
+}
+
 
 .google-reg{
   margin-bottom: 10px;

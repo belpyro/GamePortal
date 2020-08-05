@@ -54,7 +54,7 @@ namespace Kbalan.TouchType.Logic.Validators
         /// <returns></returns>
         private bool CheckDuplicateEmail(NewUserDto arg)
         {
-            return !_context.ApplicationUsers.AsNoTracking().Where(x => x.UserName != arg.UserName).Any(x => x.Email == arg.Email);
+            return !_context.ApplicationUsers.AsNoTracking().Any(x => x.Email == arg.Email);
         }
 
         /// <summary>
@@ -74,7 +74,7 @@ namespace Kbalan.TouchType.Logic.Validators
         /// <returns></returns>
         private bool CheckDublicateName(NewUserDto arg)
         {
-            return  !_context.ApplicationUsers.AsNoTracking().Where(x => x.Email != arg.Email).Any(x => x.UserName == arg.UserName);
+            return  !_context.ApplicationUsers.AsNoTracking().Any(x => x.UserName == arg.UserName);
         }
     }
 }

@@ -44,7 +44,7 @@ namespace GamePortal.Web.Api.Controllers.TouchType
             {
                 var result = await _userService.Register(model);
 
-                return result.IsSuccess ? StatusCode(HttpStatusCode.NoContent) : StatusCode(HttpStatusCode.InternalServerError);
+                return result.IsSuccess ?  Created($"/users/register{result}", result) : (IHttpActionResult)BadRequest(result.Error);
             }
 
             catch (TTGValidationException ex)

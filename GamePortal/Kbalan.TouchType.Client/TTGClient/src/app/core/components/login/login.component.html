@@ -1,23 +1,21 @@
 <body>
   <form class="form-signin" [formGroup] = "loginGroup" (ngSubmit)="this.loginWithPassword()">
 
-<div class="form-label-group">
-  <input  id="inputUsername" class="form-control"
-  placeholder="UserName" autofocus="" formControlName = "username">
+<div class="form-label-group required">
   <label for="inputUsername">Username</label>
+  <input  id="inputUsername" class="form-control"
+   autofocus="" formControlName = "username">
+
 </div>
 
-<div class="form-label-group">
-  <input type="password" id="inputPassword" class="form-control"
-   placeholder="Password" required="" formControlName = "password">
+<div class="form-label-group required">
   <label for="inputPassword">Password</label>
+  <input type="password" id="inputPassword" class="form-control"
+   required="" formControlName = "password">
+
 </div>
 
-<div class="checkbox mb-3">
-  <label>
-    <input type="checkbox" value="remember-me" formControlName = "remember"> Remember me
-  </label>
-</div>
+
 <button class="btn btn-lg btn-primary btn-block" type="submit" [disabled]="!loginGroup.valid"
 >Sign in</button>
 
