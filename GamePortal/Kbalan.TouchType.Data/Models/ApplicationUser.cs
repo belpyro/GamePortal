@@ -16,6 +16,13 @@ namespace Kbalan.TouchType.Data.Models
 
         public StatisticDb Statistic { get; set; }
 
+        public DateTime RegistrationDate { get; set; }
+
+        public DateTime LastLoginDate { get; set; }
+
+        [Required]
+        public bool IsBlocked { get; set; }
+
         [NotMapped]
         public string Role { get; set; }
     }

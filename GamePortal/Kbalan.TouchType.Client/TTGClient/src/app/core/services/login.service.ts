@@ -57,7 +57,7 @@ export class LoginService {
       await this.configureOauth(this.codeFlow);
       this.oauth.initCodeFlow();
     } catch (error) {
-      console.log(`cannot login: ${error}`);
+      this.toastr.error(`cannot login: ${error}`);
     }
   }
 
@@ -65,8 +65,9 @@ export class LoginService {
     await this.configureOauth(this.passFlow);
     try {
       await this.oauth.fetchTokenUsingPasswordFlow(userName, password);
+      this.toastr.success(`Welcome, ${userName}`);
     } catch (error) {
-      console.log(`cannot login: ${error}`);
+      this.toastr.error(`Incorrect username or password`);
     }
   }
 
@@ -87,7 +88,6 @@ export class LoginService {
       const user = await this.oauth.loadUserProfile();
       this.isLoggedOnSubject.next(true);
       this.loggedOnSubject.next(user);
-      this.toastr.success(`Welcome, ${user.preferred_username}`);
     }
   }
 }

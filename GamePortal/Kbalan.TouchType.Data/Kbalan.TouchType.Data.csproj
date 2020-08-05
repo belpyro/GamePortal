@@ -106,9 +106,9 @@
     <Compile Include="Contexts\Configurations\TextSetDbConfiguration.cs" />
     <Compile Include="Contexts\TouchTypeGameContext.cs" />
     <Compile Include="Contexts\Configurations\ApplicationUserConfiguration.cs" />
-    <Compile Include="Migrations\202008032343450_Initial.cs" />
-    <Compile Include="Migrations\202008032343450_Initial.designer.cs">
-      <DependentUpon>202008032343450_Initial.cs</DependentUpon>
+    <Compile Include="Migrations\202008052250142_Init.cs" />
+    <Compile Include="Migrations\202008052250142_Init.designer.cs">
+      <DependentUpon>202008052250142_Init.cs</DependentUpon>
     </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\ApplicationUser.cs" />
@@ -126,8 +126,8 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="Migrations\202008032343450_Initial.resx">
-      <DependentUpon>202008032343450_Initial.cs</DependentUpon>
+    <EmbeddedResource Include="Migrations\202008052250142_Init.resx">
+      <DependentUpon>202008052250142_Init.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

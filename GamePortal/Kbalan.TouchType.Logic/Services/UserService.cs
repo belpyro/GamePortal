@@ -45,8 +45,12 @@ namespace Kbalan.TouchType.Logic.Services
                 Email = model.Email,
                 UserName = model.UserName,
                 Setting = new SettingDb(),
-                Statistic = new StatisticDb()
-                
+                Statistic = new StatisticDb(),
+                RegistrationDate = DateTime.UtcNow,
+                LastLoginDate = DateTime.UtcNow,
+                IsBlocked = false
+
+
             };
 
             var result = await _userManager.CreateAsync(user, model.Password);

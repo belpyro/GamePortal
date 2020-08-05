@@ -9,6 +9,8 @@ import { NotFoundComponent } from './core/components/not-found/not-found.compone
 import { EntryMenuComponent } from './core/components/entrymenu/entrymenu.component';
 import { CommonModule } from '@angular/common';
 import { TextModule } from './text/text.module';
+import { UsermanagerComponent } from './user/usermanager/usermanager.component';
+import { UserModule } from './user/user.module';
 
 
 const routes: Routes = [
@@ -18,6 +20,7 @@ const routes: Routes = [
   ]
 },
 {path: 'text', component: TextblockComponent, canActivate: [AuthGuard]},
+{path: 'users', component: UsermanagerComponent, canActivate: [AuthGuard]},
 {path: '', redirectTo: '/entry/login', pathMatch: 'full'},
 {path: '**', component: NotFoundComponent}
 ];
@@ -27,6 +30,7 @@ const routes: Routes = [
     CommonModule,
     CoreModule,
     TextModule,
+    UserModule,
     RouterModule.forRoot(routes)
   ],
   exports: [CoreModule , RouterModule]
