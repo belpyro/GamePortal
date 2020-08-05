@@ -13,7 +13,7 @@ export class NavbarComponent implements OnInit, OnDestroy {
   message: string;
   email: string;
   user$: Observable<UserDto>;
-  isLoggedOn = false;
+  isLoggedOn$: Observable<boolean>;
 
   constructor(
     private loginService: LoginService,
@@ -24,6 +24,7 @@ export class NavbarComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     this.user$ = this.loginService.LoggedOn$;
+    this.isLoggedOn$ = this.loginService.isLoggedOn$;
   }
 
   logout(){

@@ -1,42 +1,55 @@
-import { filter, switchMap, map } from 'rxjs/operators';
+import { filter, switchMap, map, share } from 'rxjs/operators';
 import { Injectable, InjectionToken, Inject } from '@angular/core';
-import { BehaviorSubject, Observable } from 'rxjs';
+import { BehaviorSubject, Observable, from } from 'rxjs';
 import { UserDto } from '../models/UserDto';
 import { Router } from '@angular/router';
-import { OAuthService, AuthConfig, OAuthEvent, OAuthInfoEvent, OAuthSuccessEvent } from 'angular-oauth2-oidc';
+import { OAuthService, AuthConfig, OAuthEvent, OAuthInfoEvent, OAuthSuccessEvent, NullValidationHandler, } from 'angular-oauth2-oidc';
 import { PASSWORD_FLOW_CONFIG, CODE_FLOW_CONFIG } from '../configs/auth.config';
+import { ToastrService } from 'ngx-toastr';
 
 
 
 
-@Injectable()
+@Injectable({ providedIn: 'root' })
 export class LoginService {
-  private loggedOnSubject: BehaviorSubject<UserDto> = new BehaviorSubject<
-    UserDto
-  >(null);
-  private user: UserDto;
+  private loggedOnSubject = new BehaviorSubject<UserDto>(null);
+  private isLoggedOnSubject = new BehaviorSubject<boolean>(false);
 
   constructor(
+    private toastr: ToastrService,
     private router: Router,
     private oauth: OAuthService,
     @Inject(PASSWORD_FLOW_CONFIG) private passFlow: AuthConfig,
     @Inject(CODE_FLOW_CONFIG) private codeFlow: AuthConfig
   ) {
-    this.oauth.tryLogin();
+    this.oauth.configure(codeFlow);
+    this.oauth.loadDiscoveryDocumentAndTryLogin().then(() => this.tryLogin());
     this.oauth.events
       .pipe(
+        filter((value) => value instanceof OAuthSuccessEvent),
         filter((value) => value.type === 'token_received'),
-        map((_) => Object.assign({} as UserDto, this.oauth.getIdentityClaims()))
+        switchMap((_) => from(this.oauth.loadUserProfile()))
       )
-      .subscribe((u) => this.loggedOnSubject.next(u));
+      .subscribe((u) => {
+        this.loggedOnSubject.next(u);
+        this.isLoggedOnSubject.next(true);
+      });
   }
 
   get LoggedOn$(): Observable<UserDto> {
-    return this.loggedOnSubject.asObservable();
+    return this.loggedOnSubject.asObservable().pipe(share());
   }
 
   get LoggedOn() {
     return this.loggedOnSubject.value;
+  }
+
+  get isLoggedOn$() {
+    return this.isLoggedOnSubject.asObservable().pipe(share());
+  }
+
+  get isLoggedOn() {
+    return this.isLoggedOnSubject.value;
   }
 
   async loginWithCode() {
@@ -51,22 +64,17 @@ export class LoginService {
   async loginWithPass(userName: string, password: string) {
     await this.configureOauth(this.passFlow);
     try {
-      const userInfo = await this.oauth.fetchTokenUsingPasswordFlowAndLoadUserProfile(
-        userName,
-        password
-      );
-      this.user = Object.assign({} as UserDto, userInfo);
-      this.loggedOnSubject.next(this.user);
+      await this.oauth.fetchTokenUsingPasswordFlow(userName, password);
     } catch (error) {
       console.log(`cannot login: ${error}`);
     }
   }
 
-  logout(){
-    this.user = null;
+  async logout() {
     this.loggedOnSubject.next(null);
-    this.oauth.logOut(false);
-    this.router.navigate(['/entry/login']);
+    this.isLoggedOnSubject.next(false);
+    this.oauth.logOut();
+    await this.router.navigate(['home']);
   }
 
   private async configureOauth(config: AuthConfig) {
@@ -74,4 +82,12 @@ export class LoginService {
     await this.oauth.loadDiscoveryDocument();
   }
 
+  private async tryLogin() {
+    if (this.oauth.hasValidAccessToken()) {
+      const user = await this.oauth.loadUserProfile();
+      this.isLoggedOnSubject.next(true);
+      this.loggedOnSubject.next(user);
+      this.toastr.success(`Welcome, ${user.preferred_username}`);
+    }
+  }
 }

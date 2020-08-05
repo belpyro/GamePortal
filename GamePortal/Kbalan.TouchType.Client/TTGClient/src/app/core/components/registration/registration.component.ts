@@ -72,11 +72,5 @@ export class RegistrationComponent implements OnInit {
         }
       });
   }
-  showError(){
-    this.toastr.error('Loggin error');
-  }
-  showSuccess() {
-    this.toastr.success('Success');
-  }
 }
 

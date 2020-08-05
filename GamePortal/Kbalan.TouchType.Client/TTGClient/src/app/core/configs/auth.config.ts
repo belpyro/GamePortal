@@ -18,7 +18,7 @@ export const oauthPassConfig: AuthConfig = {
 export const oauthCodeConfig: AuthConfig = {
   issuer: 'http://localhost:10000',
   redirectUri: window.location.origin + '/index.html',
-  clientId: 'TTGWEBClient',
+  clientId: 'TTGWebClient',
   dummyClientSecret: 'secret',
   responseType: 'code',
   scope: 'openid profile email api',
