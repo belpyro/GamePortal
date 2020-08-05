@@ -1,5 +1,3 @@
-<a>Something</a>
-desktop_windows.loa
 <div class="margin">
   <h1>Table {{ size }}</h1>
   <input type="number" [(ngModel)]="size" />
@@ -78,71 +76,4 @@ desktop_windows.loa
       </div>
     </td>
   </div>
-</div>
-
-<div class="margin">
-  <table>
-    <tbody>
-      <tr *ngFor="let item of tableColumns">
-        <td
-          (click)="details(demo)"
-          id="index"
-          #demo
-          [ngClass]="calculateClasses()"
-          class="battlefield-cell battlefield-cell__busy battlefield-cell__done"
-          *ngFor="let item of tableColumns"
-        >
-          <div class="battlefield-cell-content">
-            <span class="z"></span>
-          </div>
-        </td>
-      </tr>
-    </tbody>
-  </table>
-</div>
-
-<div class="margin">
-  <table>
-    <tbody>
-      <tr>
-        <td
-          [class]="red"
-          class="battlefield-cell battlefield-cell__busy battlefield-cell__done"
-        >
-          <div class="battlefield-cell-content" data-y="5" data-x="3">
-            <span class="z"></span>&nbsp;
-          </div>
-        </td>
-        <td
-          class="battlefield-cell battlefield-cell__busy battlefield-cell__hit battlefield-cell__done"
-        >
-          <div class="battlefield-cell-content" data-y="5" data-x="3">
-            <span class="z"></span>&nbsp;
-          </div>
-        </td>
-        <td
-          class="battlefield-cell battlefield-cell__miss battlefield-cell__last"
-        >
-          <div class="battlefield-cell-content" data-y="5" data-x="1">
-            <span class="z"></span>&nbsp;
-          </div>
-        </td>
-      </tr>
-    </tbody>
-  </table>
-</div>
-
-<div class="margin">
-  <input type="checkbox" (change)="checkShip()" />
-  <label>Ship?</label>
-  <button class="margin" (click)="checkHit()">Hit</button>
-</div>
-<div class="margin" [ngClass]="{ invisible: visibility }">
-  <h1>Hello Angular 5</h1>
-  <p>
-    Angular 5 представляет модульную архитектуру приложения
-  </p>
-</div>
-<div>
-  <button class="margin" (click)="toggle()">Toggle</button>
 </div>
