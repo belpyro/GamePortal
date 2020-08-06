@@ -212,3 +212,44 @@ td:hover {
 .example-list.cdk-drop-list-dragging .example-box:not(.cdk-drag-placeholder) {
   transition: transform 250ms cubic-bezier(0, 0, 0.2, 1);
 }
+.tet {
+  border: 5px solid fuchsia;
+  height: 20em;
+  margin: 2em;
+  width: 60em;
+}
+.example-parent {
+  border: 2px solid #dfa612;
+  color: black;
+  display: flex;
+  font-family: sans-serif;
+  font-weight: bold;
+}
+
+.example-origin {
+  flex-basis: 100%;
+  flex-grow: 1;
+  padding: 10px;
+}
+
+.example-draggable {
+  background-color: #4aae9b;
+  font-weight: normal;
+  margin-bottom: 10px;
+  margin-top: 10px;
+  padding: 10px;
+}
+
+.example-dropzone {
+  background-color: #6db65b;
+  flex-basis: 100%;
+  flex-grow: 1;
+  padding: 10px;
+}
+.divTet {
+  float: left;
+  width: 35px;
+  height: 35px;
+  margin: 1px;
+  padding: 1px;
+}

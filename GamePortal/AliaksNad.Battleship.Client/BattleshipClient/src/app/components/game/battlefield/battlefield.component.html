@@ -1,62 +1,70 @@
-<div class="margin">
-  <table style="width: 100%;">
-    <div cdkDropListGroup>
-      <tr *ngFor="let item of fleet">
-        <td
-          *ngFor="let subItem of item.children"
-          cdkDropList
-          (cdkDropListDropped)="drop($event)"
-        >
-          <div cdkDrag class="box">{{ subItem.item }}</div>
-        </td>
-      </tr>
-    </div>
-  </table>
-  <label> arr = {{ tableData | json }} </label>
-</div>
-
-<div cdkDropListGroup>
-  <div class="example-container" *ngFor="let f of tableData">
-    <div class="example-list" cdkDropList (cdkDropListDropped)="drop($event)">
-      <div class="example-box" *ngFor="let item of f" cdkDrag>
-        {{ item }}
-      </div>
-    </div>
-  </div>
-</div>
-
-<div cdkDropListGroup>
-  <div class="example-container">
-    <h2>To do</h2>
-
-    <div
-      cdkDropList
-      [cdkDropListData]="todo"
-      class="example-list"
-      (cdkDropListDropped)="drop($event)"
+<table class="margin">
+  <tr *ngFor="let item of arr; let trIndex = index">
+    <td
+      *ngFor="let item of arr; let tdIndex = index"
+      (click)="push(trIndex, tdIndex)"
+      [class]="sign[trIndex][tdIndex]"
+      class="battlefield-cell battlefield-cell__busy battlefield-cell__done"
     >
-      <div class="example-box" *ngFor="let item of todo" cdkDrag>
-        {{ item }}
+      <div class="battlefield-cell-content">
+        <span class="z"></span>
+        <div
+          draggable="true"
+          data-id="JmTQRvOYiE3O"
+          data-length="1"
+          data-position="h"
+          class="ship-box ship-box__h ui-draggable ship-box__draggable"
+          style="
+            width: 2em;
+            height: 2em;
+            padding-right: 0px;
+            padding-bottom: 0px;
+            left: 0px;
+            top: 0px;
+            margin: -2px;
+          "
+        ></div>
       </div>
-    </div>
+    </td>
+  </tr>
+</table>
+
+<div class="tet">
+  <h2>Drag and Drop demo</h2>
+  <div class="divTet" (drop)="drop($event)" (dragover)="allowDrop($event)">
+    <img
+      src="https://images.pexels.com/photos/658687/pexels-photo-658687.jpeg?auto=compress&cs=tinysrgb&h=350"
+      draggable="true"
+      (dragstart)="drag($event)"
+      id="drag1"
+      width="30"
+      height="30"
+    />
   </div>
 
-  <div class="example-container">
-    <h2>Done</h2>
-
-    <div
-      cdkDropList
-      [cdkDropListData]="done"
-      class="example-list"
-      (cdkDropListDropped)="drop($event)"
-    >
-      <div class="example-box" *ngFor="let item of done" cdkDrag>
-        {{ item }}
-      </div>
-    </div>
-  </div>
-  <label> arr = {{ done | json }} </label>
+  <div
+    class="divTet"
+    (drop)="drop($event)"
+    (dragover)="allowDrop($event)"
+  ></div>
 </div>
+<table class="margin">
+  <tr *ngFor="let item of arr; let trIndex = index">
+    <td
+      *ngFor="let item of arr; let tdIndex = index"
+      class="battlefield-cell battlefield-cell__busy battlefield-cell__done"
+    >
+      <div class="battlefield-cell-content">
+        <span class="z"></span>
+        <div
+          class="divTet"
+          (drop)="drop($event)"
+          (dragover)="allowDrop($event)"
+        ></div>
+      </div>
+    </td>
+  </tr>
+</table>
 
 <div class="margin">
   <h1>Table {{ size }}</h1>
@@ -87,7 +95,7 @@
       [cdkDropListData]="artists"
       [cdkDropListConnectedTo]="secondList"
       #firstList="cdkDropList"
-      (cdkDropListDropped)="drop($event)"
+      (cdkDropListDropped)="dropSmt($event)"
       style="width: 30%;"
     >
       <div *ngFor="let artist of artists" class="pop" cdkDrag>{{ artist }}</div>
@@ -97,7 +105,7 @@
       [cdkDropListData]="alteArtists"
       [cdkDropListConnectedTo]="firstList"
       #secondList="cdkDropList"
-      (cdkDropListDropped)="drop($event)"
+      (cdkDropListDropped)="dropSmt($event)"
       style="width: 30%;"
     >
       <div *ngFor="let artist of alteArtists" class="pop" cdkDrag>
@@ -108,7 +116,7 @@
   <div
     class="margin"
     cdkDropList
-    (cdkDropListDropped)="drop($event)"
+    (cdkDropListDropped)="dropSmt($event)"
     class="divcss"
   >
     <div *ngFor="let artist of artists" class="pop" cdkDrag>{{ artist }}</div>

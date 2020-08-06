@@ -12,6 +12,7 @@ export class BattlefieldComponent implements OnInit {
   myStyle = 'battlefield-cell__hit';
   red = 'battlefield-cell__miss';
   size = 10;
+  tet = 3;
   arr = new Array();
   sign = new Array();
   artists = [
@@ -99,7 +100,7 @@ export class BattlefieldComponent implements OnInit {
     this.sign[trIndex][tdIndex] = 'battlefield-cell__hit';
   }
 
-  drop(event: CdkDragDrop<{}[]>) {
+  dropSmt(event: CdkDragDrop<{}[]>) {
     if (event.previousContainer == event.container) {
       moveItemInArray(event.container.data, event.previousIndex, event.currentIndex);
     } else {
@@ -108,4 +109,19 @@ export class BattlefieldComponent implements OnInit {
 
   }
 
+
+
+  drop(ev) {
+    ev.preventDefault();
+    var data = ev.dataTransfer.getData("text");
+    ev.target.appendChild(document.getElementById(data));
+  }
+
+  allowDrop(ev) {
+    ev.preventDefault();
+  }
+
+  drag(ev) {
+    ev.dataTransfer.setData("text", ev.target.id);
+  }
 }
