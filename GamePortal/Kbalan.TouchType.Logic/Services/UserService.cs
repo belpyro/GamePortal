@@ -14,6 +14,7 @@ using Microsoft.AspNet.Identity.EntityFramework;
 using Microsoft.AspNet.Identity.Owin;
 using System;
 using System.Collections.Generic;
+using System.Data.Entity;
 using System.Data.Entity.Infrastructure;
 using System.Data.Entity.Migrations;
 using System.Data.SqlClient;
@@ -27,10 +28,10 @@ namespace Kbalan.TouchType.Logic.Services
     [ConfigureAwait(false)]
     public class UserService : IUserService
     {
-        private UserManager<IdentityUser> _userManager;
+        private UserManager<ApplicationUser> _userManager;
         private readonly IMapper _mapper;
 
-        public UserService(UserManager<IdentityUser> userManager, IMapper mapper)
+        public UserService(UserManager<ApplicationUser> userManager, IMapper mapper)
         {
             _userManager = userManager;
             this._mapper = mapper;
@@ -39,10 +40,17 @@ namespace Kbalan.TouchType.Logic.Services
         public async Task<Result> Register(NewUserDto model)
         {
             // validation username existing
-            var user = new IdentityUser
+            var user = new ApplicationUser
             {
                 Email = model.Email,
-                UserName = model.UserName
+                UserName = model.UserName,
+                Setting = new SettingDb(),
+                Statistic = new StatisticDb(),
+                RegistrationDate = DateTime.UtcNow,
+                LastLoginDate = DateTime.UtcNow,
+                IsBlocked = false
+
+
             };
 
             var result = await _userManager.CreateAsync(user, model.Password);
@@ -60,7 +68,11 @@ namespace Kbalan.TouchType.Logic.Services
             var user = await _userManager.FindAsync(info.Login);
             if (user != null) return Result.Success();
 
-            user = new IdentityUser(info.DefaultUserName) { Email = info.Email };
+            user = new ApplicationUser()
+            { 
+                Email = info.Email,
+                UserName = info.DefaultUserName
+            };
             await _userManager.CreateAsync(user);
             await _userManager.AddLoginAsync(user.Id, info.Login);
             return Result.Success();
@@ -103,9 +115,25 @@ namespace Kbalan.TouchType.Logic.Services
             return isValid ? _mapper.Map<UserDto>(user) : null;
         }
 
-        public async Task<Result> DeleteAsync(string username)
+        public async Task <Result<Maybe<UserSettingStatisticDto>>> GetAsync(string id)
         {
-            var user = await _userManager.FindByNameAsync(username);
+            try
+            {
+                Maybe<UserSettingStatisticDto> getResultById = await _userManager.Users.Where(x => x.Id == id).Include("Setting").Include("Statistic")
+                    .ProjectToSingleOrDefaultAsync<UserSettingStatisticDto>(_mapper.ConfigurationProvider)
+                    .ConfigureAwait(false);
+
+                return Result.Success(getResultById);
+            }
+            catch (SqlException ex)
+            {
+                return Result.Failure<Maybe<UserSettingStatisticDto>>(ex.Message);
+            }
+        }
+
+        public async Task<Result> DeleteAsync(string id)
+        {
+            var user = await _userManager.FindByIdAsync(id);
             if (user == null) return Result.Failure("User doesn't exist");
 
             var result = await _userManager.DeleteAsync(user);

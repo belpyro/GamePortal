@@ -12,6 +12,7 @@ using FluentValidation;
 using FluentValidation.WebApi;
 using JetBrains.Annotations;
 using Kbalan.TouchType.Logic.Dto;
+using Kbalan.TouchType.Logic.Exceptions;
 using Kbalan.TouchType.Logic.Services;
 using Kbalan.TouchType.Logic.Validators;
 using Microsoft.AspNet.Identity;
@@ -39,10 +40,19 @@ namespace GamePortal.Web.Api.Controllers.TouchType
         public async Task<IHttpActionResult> Register([FromBody]NewUserDto model)
         {
             if (!ModelState.IsValid) return BadRequest("Invalid model");
+            try
+            {
+                var result = await _userService.Register(model);
 
-            var result = await _userService.Register(model);
+                return result.IsSuccess ?  Created($"/users/register{result}", result) : (IHttpActionResult)BadRequest(result.Error);
+            }
 
-            return result.IsSuccess ? StatusCode(HttpStatusCode.NoContent) : StatusCode(HttpStatusCode.InternalServerError);
+            catch (TTGValidationException ex)
+            {
+
+                return (IHttpActionResult)BadRequest(ex.Message);
+            }
+
         }
 
         //Get All RegisterUsers
@@ -52,6 +62,15 @@ namespace GamePortal.Web.Api.Controllers.TouchType
         {
             var result = await _userService.GetAllAsync();
             return result.IsSuccess ? Ok(result.Value) : (IHttpActionResult)BadRequest(result.Error);
+        }
+
+        //Get User by Id
+        [HttpGet]
+        [Route("{id}")]
+        public async Task<IHttpActionResult> GetAsync(string id)
+        {
+            var result = await _userService.GetAsync(id);
+            return result.IsSuccess ? Ok(result.Value.Value) : (IHttpActionResult)BadRequest(result.Error);
         }
 
         [HttpPost, Route("login")]
@@ -77,12 +96,12 @@ namespace GamePortal.Web.Api.Controllers.TouchType
 
         //Delete User by Id
         [HttpDelete]
-        [Route("{username}")]
-        public async Task<IHttpActionResult> DeleteAsync(string username)
+        [Route("{id}")]
+        public async Task<IHttpActionResult> DeleteAsync(string id)
         {
 
-            var result =  await _userService.DeleteAsync(username);
-            return result.IsSuccess ? Ok($"User {username} deleted with his setting and statistic succesfully!") : (IHttpActionResult)BadRequest(result.Error);
+            var result =  await _userService.DeleteAsync(id);
+            return result.IsSuccess ? Ok($"User {id} deleted with his setting and statistic succesfully!") : (IHttpActionResult)BadRequest(result.Error);
 
         }
 

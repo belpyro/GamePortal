@@ -11,6 +11,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Ninject.Extensions.Interception;
+using Kbalan.TouchType.Logic.Exceptions;
 
 namespace Kbalan.TouchType.Logic.Aspects
 {
@@ -29,8 +30,8 @@ namespace Kbalan.TouchType.Logic.Aspects
         public void Intercept(IInvocation invocation)
         {
             //id null checking
-            var userId = invocation.Request.Arguments.OfType<Int32>().SingleOrDefault();
-            if (userId == 0)
+            var userId = invocation.Request.Arguments.OfType<String>().SingleOrDefault();
+            if (userId == null)
             {
                 invocation.Proceed();
                 return;
@@ -47,25 +48,25 @@ namespace Kbalan.TouchType.Logic.Aspects
             var settingValidator = _kernel.Get<IValidator<SettingDto>>();
 
             //Prevalidation for Update method
-            if (invocation.Request.Method.Name.Equals("Update"))
+            if (invocation.Request.Method.Name.Equals("UpdateAsync"))
             {
                 var preValidationResult = settingValidator.Validate(model, ruleSet: "PreValidation");
                 if (!preValidationResult.IsValid)
                 {
                     invocation.ReturnValue = Result.Failure(preValidationResult.Errors.Select(x => x.ErrorMessage).First());
-                    return;
+                    throw new TTGValidationException(invocation.ReturnValue.ToString());
                 }
             }
  
             //Implementation of validation for update method
-            if ( invocation.Request.Method.Name.Equals("Update"))
+            if ( invocation.Request.Method.Name.Equals("UpdateAsync"))
              {
                 //Cheking if user with id exist
-                var userModel = _kernel.Get<TouchTypeGameContext>().Users.Include("Setting").SingleOrDefault(x => x.Id == (int)userId);
+                var userModel = _kernel.Get<TouchTypeGameContext>().ApplicationUsers.Include("Setting").SingleOrDefault(x => x.Id == (string)userId);
                 if (userModel == null)
                 {
                     invocation.ReturnValue = Result.Failure($"No user with id {userId} exist");
-                    return;
+                    throw new TTGValidationException(invocation.ReturnValue.ToString());
                 }
 
                 //Replace model setting id from Dto to correct id from Db
@@ -76,7 +77,7 @@ namespace Kbalan.TouchType.Logic.Aspects
                 if (!validationResult.IsValid)
                 {
                     invocation.ReturnValue = Result.Failure(validationResult.Errors.Select(x => x.ErrorMessage).First());
-                    return;
+                    throw new TTGValidationException(invocation.ReturnValue.ToString());
                 }
             }
 

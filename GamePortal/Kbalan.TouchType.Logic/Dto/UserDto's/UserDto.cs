@@ -18,6 +18,14 @@ namespace Kbalan.TouchType.Logic.Dto
             public string Id { get; set; }
 
             public string UserName { get; set; }
-        
+
+            public DateTime RegistrationDate { get; set; }
+
+            public DateTime LastLoginDate { get; set; }
+
+            public bool IsBlocked { get; set; }
+
+
+
     }
 }

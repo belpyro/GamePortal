@@ -37,7 +37,7 @@ namespace Kbalan.TouchType.Logic.Services
         {
             try
             {
-                var models = _gameContext.Users.Include("Setting").ToArray();
+                var models = _gameContext.ApplicationUsers.Include("Setting").ToArray();
                 return Result.Success<IEnumerable<UserSettingDto>>(_mapper.Map<IEnumerable<UserSettingDto>>(models));
             }
             catch (DbUpdateException ex)
@@ -49,7 +49,7 @@ namespace Kbalan.TouchType.Logic.Services
         {
             try
             {
-                var models = await _gameContext.Users.Include("Setting").ToArrayAsync().ConfigureAwait(false);
+                var models = await _gameContext.ApplicationUsers.Include("Setting").ToArrayAsync().ConfigureAwait(false);
                 return Result.Success<IEnumerable<UserSettingDto>>(_mapper.Map<IEnumerable<UserSettingDto>>(models));
             }
             catch (DbUpdateException ex)
@@ -63,11 +63,11 @@ namespace Kbalan.TouchType.Logic.Services
         /// </summary>
         /// <param name="id">user id</param>
         /// <returns>user with setting</returns>
-        public Result<Maybe<UserSettingDto>> GetById(int id)
+        public Result<Maybe<UserSettingDto>> GetById(string id)
         {
             try
             {
-                Maybe<UserSettingDto> getResultById = _gameContext.Users.Where(x => x.Id == id)
+                Maybe<UserSettingDto> getResultById = _gameContext.ApplicationUsers.Where(x => x.Id == id)
                     .ProjectToSingleOrDefault<UserSettingDto>(_mapper.ConfigurationProvider);
 
                     return Result.Success(getResultById);
@@ -77,11 +77,11 @@ namespace Kbalan.TouchType.Logic.Services
                 return Result.Failure<Maybe<UserSettingDto>>(ex.Message);
             }
         }
-        public async Task<Result<Maybe<UserSettingDto>>> GetByIdAsync(int id)
+        public async Task<Result<Maybe<UserSettingDto>>> GetByIdAsync(string id)
         {
             try
             {
-                Maybe<UserSettingDto> getResultById = await _gameContext.Users.Where(x => x.Id == id)
+                Maybe<UserSettingDto> getResultById = await _gameContext.ApplicationUsers.Where(x => x.Id == id)
                     .ProjectToSingleOrDefaultAsync<UserSettingDto>(_mapper.ConfigurationProvider)
                     .ConfigureAwait(false);
 
@@ -98,10 +98,10 @@ namespace Kbalan.TouchType.Logic.Services
         /// </summary>
         /// <param name="id">user's id</param>
         /// <param name="model">new settting model</param>
-        public Result Update(int id, SettingDto model)
+        public Result Update(string id, SettingDto model)
         {
             //Cheking if user with id exist
-            var userModel = _gameContext.Users.Include("Setting").SingleOrDefault(x => x.Id == id);
+            var userModel = _gameContext.ApplicationUsers.Include("Setting").SingleOrDefault(x => x.Id == id);
 
             //Replace model setting id from Dto to correct id from Db and Valiate
             model.SettingId = userModel.Setting.SettingId;
@@ -111,7 +111,7 @@ namespace Kbalan.TouchType.Logic.Services
                 var modelDb = _mapper.Map<SettingDb>(model);
 
                 modelDb.SettingId = userModel.Setting.SettingId;
-                modelDb.User = userModel.Setting.User;
+                modelDb.AppUser = userModel.Setting.AppUser;
                 userModel.Setting = modelDb;
 
                 _gameContext.Users.Attach(userModel);
@@ -124,10 +124,10 @@ namespace Kbalan.TouchType.Logic.Services
                 return Result.Failure(ex.Message);
             }
         }
-        public async Task<Result> UpdateAsync(int id, SettingDto model)
+        public async Task<Result> UpdateAsync(string id, SettingDto model)
         {
             //Cheking if user with id exist
-            var userModel = await _gameContext.Users.Include("Setting").SingleOrDefaultAsync(x => x.Id == id)
+            var userModel = await _gameContext.ApplicationUsers.Include("Setting").SingleOrDefaultAsync(x => x.Id == id)
                 .ConfigureAwait(false);
 
             //Replace model setting id from Dto to correct id from Db and Valiate
@@ -138,7 +138,7 @@ namespace Kbalan.TouchType.Logic.Services
                 var modelDb = _mapper.Map<SettingDb>(model);
 
                 modelDb.SettingId = userModel.Setting.SettingId;
-                modelDb.User = userModel.Setting.User;
+                modelDb.AppUser = userModel.Setting.AppUser;
                 userModel.Setting = modelDb;
 
                 _gameContext.Users.Attach(userModel);

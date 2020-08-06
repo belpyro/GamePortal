@@ -18,6 +18,7 @@ namespace GamePortal.Web.Api.Controllers.TouchType
     /// Controller for TextSet
     /// </summary>
     [RoutePrefix("api/textsets")]
+    [Authorize]
     public class TTGTextsController : ApiController
     {
         private readonly ITextSetService _textSetService;
@@ -100,9 +101,6 @@ namespace GamePortal.Web.Api.Controllers.TouchType
                 return (IHttpActionResult)BadRequest(ex.Message);
             }
 
-
-           
-
         }
 
         //Update Text by Id 
@@ -112,9 +110,16 @@ namespace GamePortal.Web.Api.Controllers.TouchType
         {
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
+            try
+            {
+                var result = await _textSetService.UpdateAsync(model);
+                return result.IsSuccess ? Ok($"Text set with id {model.Id} updated succesfully!") : (IHttpActionResult)BadRequest(result.Error);
+            }
+            catch (TTGValidationException ex)
+            {
 
-            var result = await _textSetService.UpdateAsync(model);
-            return result.IsSuccess ? Ok($"Text set with id {model.Id} updated succesfully!") : (IHttpActionResult)BadRequest(result.Error);
+                return (IHttpActionResult)BadRequest(ex.Message);
+            }
 
         }
 
@@ -127,9 +132,8 @@ namespace GamePortal.Web.Api.Controllers.TouchType
             {
                 return BadRequest("ID must be greater than 0");
             }
-
             var result = await _textSetService.DeleteAsync(id);
-            return result.IsSuccess ? Ok($"Text set with id {id} deleted succesfully!") : (IHttpActionResult)BadRequest(result.Error);
+            return result.IsSuccess ? Ok($"Text with id {id} successfully deleted") : (IHttpActionResult)BadRequest(result.Error);
         }
     }
 }

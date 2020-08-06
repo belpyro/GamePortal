@@ -1,6 +1,7 @@
 ﻿using FluentValidation;
 using JetBrains.Annotations;
 using Kbalan.TouchType.Logic.Dto;
+using Kbalan.TouchType.Logic.Exceptions;
 using Kbalan.TouchType.Logic.Services;
 using System;
 using System.Collections.Generic;
@@ -38,12 +39,8 @@ namespace GamePortal.Web.Api.Controllers.TouchType
         //Get single Setting Info by User Id
         [HttpGet]
         [Route("{id}")]
-        public async Task<IHttpActionResult> GetByIdAsync([FromUri]int id)
+        public async Task<IHttpActionResult> GetByIdAsync([FromUri]string id)
         {
-            if (id <= 0)
-            {
-                return BadRequest("ID must be greater than 0");
-            }
             var result = await _settingService.GetByIdAsync(id);
             if (result.IsFailure)
                 return (IHttpActionResult)StatusCode(HttpStatusCode.InternalServerError);
@@ -53,10 +50,19 @@ namespace GamePortal.Web.Api.Controllers.TouchType
         //Update single setting by User Id
         [HttpPut]
         [Route("")]
-        public async Task<IHttpActionResult> UpdateAsync(int id ,[FromBody]SettingDto model)
+        public async Task<IHttpActionResult> UpdateAsync(string id ,[FromBody]SettingDto model)
         {
-            var result = await _settingService.UpdateAsync(id, model);
-            return result.IsSuccess ? Ok($"Settings of user with id {id} updated succesfully!") : (IHttpActionResult)BadRequest(result.Error);
+            try
+            {
+                var result = await _settingService.UpdateAsync(id, model);
+                return result.IsSuccess ? Ok($"Settings of user with id {id} updated succesfully!") : (IHttpActionResult)BadRequest(result.Error);
+            }
+            catch (TTGValidationException ex)
+            {
+
+                return (IHttpActionResult)BadRequest(ex.Message);
+            }
+
         }
     }
 }
