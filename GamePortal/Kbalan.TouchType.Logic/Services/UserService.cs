@@ -102,7 +102,21 @@ namespace Kbalan.TouchType.Logic.Services
 
         public async Task<Result<IReadOnlyCollection<UserDto>>> GetAllAsync()
         {
-            var users = await _userManager.Users.ProjectToListAsync<UserDto>(_mapper.ConfigurationProvider);
+            var users = _userManager.Users.Include(u => u.Roles)
+                        .Select(u => new UserDto
+                        {
+                            Id = u.Id,
+                            UserName = u.UserName,
+                            LastLoginDate = u.LastLoginDate,
+                            RegistrationDate = u.RegistrationDate,
+                            IsBlocked = u.IsBlocked,
+                    
+        })
+                        .ToList();
+            foreach (var user in users)
+            {
+                user.UserRole = _userManager.GetRoles(user.Id).FirstOrDefault().ToString();
+            }
             return Result.Success((IReadOnlyCollection<UserDto>)users.AsReadOnly());
         }
 

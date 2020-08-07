@@ -37,6 +37,7 @@ export class UsermanagerComponent implements OnInit {
             regdate: num.RegistrationDate,
             logdate: num.LastLoginDate,
             blocked: num.IsBlocked,
+            role: num.UserRole,
             selected: false,
            });
        }
