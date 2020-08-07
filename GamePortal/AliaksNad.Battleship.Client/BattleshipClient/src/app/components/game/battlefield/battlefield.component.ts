@@ -1,5 +1,4 @@
 import { Component, OnInit } from '@angular/core';
-import { CdkDragDrop, moveItemInArray, transferArrayItem } from '@angular/cdk/drag-drop';
 
 @Component({
   selector: 'app-battlefield',
@@ -9,70 +8,12 @@ import { CdkDragDrop, moveItemInArray, transferArrayItem } from '@angular/cdk/dr
 
 export class BattlefieldComponent implements OnInit {
 
-  myStyle = 'battlefield-cell__hit';
-  red = 'battlefield-cell__miss';
+  cssOfHit = 'battlefield-cell__hit';
+  cssOfMiss = 'battlefield-cell__miss';
   size = 10;
-  tet = 3;
   arr = new Array();
   sign = new Array();
-  artists = [
-    'Artist I - Davido',
-    'Artist II - Wizkid',
-    'Artist III - Burna Boy'
-  ];
-  alteArtists = [
-    'Artist 1 — Odunsi',
-    'Artist 2 — Nonso',
-    'Artist 3 — Wavy the creator'
-  ];
-  tableData = [
-    [{ id: 1, data: 'test1' }, { id: 2, data: 'test1' }, { id: 3, data: 'test1' }],
-    [{ id: 4, data: 'test1' }, { id: 5, data: 'test1' }, { id: 6, data: 'test1' }],
-    [{ id: 7, data: 'test1' }, { id: 8, data: 'test1' }, { id: 9, data: 'test1' }],
-  ];
-  todo = [
-    'Get to work',
-    'Pick up groceries',
-    'Go home',
-    'Fall asleep'
-  ];
 
-  done = [
-    'Get up',
-    'Brush teeth',
-    'Take a shower',
-    'Check e-mail',
-    'Walk dog'
-  ];
-  fleet = [
-    {
-      item: 'Fleet #1',
-      children: [
-        { item: 'Admiral Flankson' },
-        { item: 'pvt. centeras' },
-        { item: 'pvt. leeft' },
-        { item: 'pvt. rijks' }
-      ]
-    },
-    {
-      item: 'Fleet #2',
-      children: [
-        { item: 'Admiral Parkour' },
-        { item: 'pvt. jumph' },
-        { item: 'pvt. landts' },
-        { item: 'pvt. drobs' }
-      ]
-    },
-    {
-      item: 'Fleet #3',
-      children: [
-        { item: 'Admiral Tombs' },
-        { item: 'pvt. zomboss' },
-        { item: 'pvt. digger' },
-        { item: 'pvt. skaari' }
-      ]
-    }
-  ]
 
   constructor() {
   }
@@ -97,31 +38,20 @@ export class BattlefieldComponent implements OnInit {
   }
 
   push(trIndex, tdIndex): void {
-    this.sign[trIndex][tdIndex] = 'battlefield-cell__hit';
+    this.sign[trIndex][tdIndex] = 'battlefield-cell__miss';
   }
 
-  dropSmt(event: CdkDragDrop<{}[]>) {
-    if (event.previousContainer == event.container) {
-      moveItemInArray(event.container.data, event.previousIndex, event.currentIndex);
-    } else {
-      transferArrayItem(event.previousContainer.data, event.container.data, event.previousIndex, event.currentIndex);
-    }
-
-  }
-
-
-
-  drop(ev) {
+  drop(ev): void {
     ev.preventDefault();
-    var data = ev.dataTransfer.getData("text");
+    const data = ev.dataTransfer.getData('text');
     ev.target.appendChild(document.getElementById(data));
   }
 
-  allowDrop(ev) {
+  allowDrop(ev): void {
     ev.preventDefault();
   }
 
-  drag(ev) {
-    ev.dataTransfer.setData("text", ev.target.id);
+  drag(ev): void {
+    ev.dataTransfer.setData('text', ev.target.id);
   }
 }

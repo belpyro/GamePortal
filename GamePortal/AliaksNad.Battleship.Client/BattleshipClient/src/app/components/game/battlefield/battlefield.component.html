@@ -1,70 +1,55 @@
-<table class="margin">
-  <tr *ngFor="let item of arr; let trIndex = index">
-    <td
-      *ngFor="let item of arr; let tdIndex = index"
-      (click)="push(trIndex, tdIndex)"
-      [class]="sign[trIndex][tdIndex]"
-      class="battlefield-cell battlefield-cell__busy battlefield-cell__done"
-    >
-      <div class="battlefield-cell-content">
-        <span class="z"></span>
+<div class="divcss">
+  <table class="margin">
+    <tr *ngFor="let item of arr; let trIndex = index">
+      <td
+        *ngFor="let item of arr; let tdIndex = index"
+        (click)="push(trIndex, tdIndex)"
+        [class]="sign[trIndex][tdIndex]"
+        class="battlefield-cell battlefield-cell__busy battlefield-cell__done"
+      >
         <div
+          class="battlefield-cell-content"
+          (drop)="drop($event)"
+          (dragover)="allowDrop($event)"
+        >
+          <span class="z"></span>
+        </div>
+      </td>
+    </tr>
+  </table>
+
+  <div class="margin">
+    <td class="battlefield-cell battlefield-cell__busy">
+      <div
+        class="battlefield-cell-content"
+        data-y="2"
+        data-x="5"
+        (drop)="drop($event)"
+        (dragover)="allowDrop($event)"
+      >
+        <span class="z"></span>&nbsp;
+        <div
+          id="drag2"
           draggable="true"
+          (dragstart)="drag($event)"
           data-id="JmTQRvOYiE3O"
           data-length="1"
           data-position="h"
           class="ship-box ship-box__h ui-draggable ship-box__draggable"
           style="
-            width: 2em;
+            width: 4em;
             height: 2em;
             padding-right: 0px;
             padding-bottom: 0px;
             left: 0px;
             top: 0px;
-            margin: -2px;
+            margin: 0px;
           "
         ></div>
       </div>
     </td>
-  </tr>
-</table>
-
-<div class="tet">
-  <h2>Drag and Drop demo</h2>
-  <div class="divTet" (drop)="drop($event)" (dragover)="allowDrop($event)">
-    <img
-      src="https://images.pexels.com/photos/658687/pexels-photo-658687.jpeg?auto=compress&cs=tinysrgb&h=350"
-      draggable="true"
-      (dragstart)="drag($event)"
-      id="drag1"
-      width="30"
-      height="30"
-    />
   </div>
-
-  <div
-    class="divTet"
-    (drop)="drop($event)"
-    (dragover)="allowDrop($event)"
-  ></div>
 </div>
-<table class="margin">
-  <tr *ngFor="let item of arr; let trIndex = index">
-    <td
-      *ngFor="let item of arr; let tdIndex = index"
-      class="battlefield-cell battlefield-cell__busy battlefield-cell__done"
-    >
-      <div class="battlefield-cell-content">
-        <span class="z"></span>
-        <div
-          class="divTet"
-          (drop)="drop($event)"
-          (dragover)="allowDrop($event)"
-        ></div>
-      </div>
-    </td>
-  </tr>
-</table>
 
 <div class="margin">
   <h1>Table {{ size }}</h1>
@@ -89,59 +74,24 @@
 </div>
 
 <div class="margin">
-  <div style="display: flex;" class="divcss">
-    <div
-      cdkDropList
-      [cdkDropListData]="artists"
-      [cdkDropListConnectedTo]="secondList"
-      #firstList="cdkDropList"
-      (cdkDropListDropped)="dropSmt($event)"
-      style="width: 30%;"
-    >
-      <div *ngFor="let artist of artists" class="pop" cdkDrag>{{ artist }}</div>
+  <td class="battlefield-cell battlefield-cell__busy">
+    <div class="battlefield-cell-content" data-y="2" data-x="5">
+      <span class="z"></span>&nbsp;
+      <div
+        data-id="JmTQRvOYiE3O"
+        data-length="1"
+        data-position="h"
+        class="ship-box ship-box__h ui-draggable ship-box__draggable"
+        style="
+          width: 2em;
+          height: 2em;
+          padding-right: 0px;
+          padding-bottom: 0px;
+          left: 0px;
+          top: 0px;
+          margin: -2px;
+        "
+      ></div>
     </div>
-    <div
-      cdkDropList
-      [cdkDropListData]="alteArtists"
-      [cdkDropListConnectedTo]="firstList"
-      #secondList="cdkDropList"
-      (cdkDropListDropped)="dropSmt($event)"
-      style="width: 30%;"
-    >
-      <div *ngFor="let artist of alteArtists" class="pop" cdkDrag>
-        {{ artist }}
-      </div>
-    </div>
-  </div>
-  <div
-    class="margin"
-    cdkDropList
-    (cdkDropListDropped)="dropSmt($event)"
-    class="divcss"
-  >
-    <div *ngFor="let artist of artists" class="pop" cdkDrag>{{ artist }}</div>
-  </div>
-
-  <div class="margin">
-    <td class="battlefield-cell battlefield-cell__busy">
-      <div class="battlefield-cell-content" data-y="2" data-x="5">
-        <span class="z"></span>&nbsp;
-        <div
-          data-id="JmTQRvOYiE3O"
-          data-length="1"
-          data-position="h"
-          class="ship-box ship-box__h ui-draggable ship-box__draggable"
-          style="
-            width: 2em;
-            height: 2em;
-            padding-right: 0px;
-            padding-bottom: 0px;
-            left: 0px;
-            top: 0px;
-            margin: -2px;
-          "
-        ></div>
-      </div>
-    </td>
-  </div>
+  </td>
 </div>
