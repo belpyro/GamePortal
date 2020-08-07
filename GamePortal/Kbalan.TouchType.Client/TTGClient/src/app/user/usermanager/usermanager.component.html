@@ -1,5 +1,14 @@
 <div class="container">
   <app-navbar></app-navbar>
+
+  <mat-toolbar class= "usertoolbar" color = "primary">
+    <ul class = "toolbarlist">
+      <button type="button" class="btn btn-lg btn-block" [disabled]="!checkIfAnySelected()" (click)="onBlock()">
+          <mat-icon class = "icon"  (click)="onBlock()" >lock</mat-icon>
+      </button>
+    </ul>
+  </mat-toolbar>
+
   <table class="table table-striped">
     <thead>
         <tr>

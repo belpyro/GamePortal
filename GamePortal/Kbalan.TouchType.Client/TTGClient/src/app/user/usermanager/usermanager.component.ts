@@ -49,4 +49,24 @@ export class UsermanagerComponent implements OnInit {
       user.selected = this.selectedAll;
     }
   }
+
+  onBlock(){
+    for (const user of this.allUsers) {
+      if (user.selected === true)
+      {
+        user.status = true;
+        this.userservice.block(user.id).subscribe();
+      }
+    }
+  }
+
+  checkIfAnySelected() {
+    for (const user of this.allUsers) {
+      if (user.selected === true)
+      {
+        return true;
+      }
+    }
+    return false;
+  }
 }

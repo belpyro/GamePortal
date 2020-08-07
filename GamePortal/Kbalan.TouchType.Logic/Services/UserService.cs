@@ -102,7 +102,7 @@ namespace Kbalan.TouchType.Logic.Services
 
         public async Task<Result<IReadOnlyCollection<UserDto>>> GetAllAsync()
         {
-            var users = _userManager.Users.Include(u => u.Roles)
+            var users = await _userManager.Users.Include(u => u.Roles)
                         .Select(u => new UserDto
                         {
                             Id = u.Id,
@@ -111,8 +111,7 @@ namespace Kbalan.TouchType.Logic.Services
                             RegistrationDate = u.RegistrationDate,
                             IsBlocked = u.IsBlocked,
                     
-        })
-                        .ToList();
+        }).ToListAsync();
             foreach (var user in users)
             {
                 user.UserRole = _userManager.GetRoles(user.Id).FirstOrDefault().ToString();
@@ -155,6 +154,16 @@ namespace Kbalan.TouchType.Logic.Services
 
 
         }
+
+        public async Task<Result> BlockAsync(string id)
+        {
+
+            var user = await _userManager.FindByIdAsync(id);
+            user.IsBlocked = true;
+            var result = await _userManager.UpdateAsync(user);
+            return Result.Combine(result.ToFunctionalResult());
+        }
+
 
         #region IDisposable Support
         private bool disposedValue = false; // To detect redundant calls

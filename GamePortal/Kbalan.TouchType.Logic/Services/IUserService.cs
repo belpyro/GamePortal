@@ -29,5 +29,7 @@ namespace Kbalan.TouchType.Logic.Services
         Task<Result> RegisterExternalUser(ExternalLoginInfo info);
 
         Task<Result> DeleteAsync(string username);
+
+        Task<Result> BlockAsync(string id);
     }
 }
