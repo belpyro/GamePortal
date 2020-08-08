@@ -13,8 +13,22 @@ td {
   border: 1px solid grey;
 }
 td:hover {
-  border: 1px solid grey;
   background-color: cyan;
+}
+
+.row {
+  border: 4px solid #fcffcb;
+}
+.column {
+  margin: auto;
+  margin-left: 8em;
+  margin-right: 2em;
+}
+.button {
+  height: 3em;
+  width: 7em;
+  margin-top: 5em;
+  border-radius: 15px;
 }
 
 .battlefield-cell-content {

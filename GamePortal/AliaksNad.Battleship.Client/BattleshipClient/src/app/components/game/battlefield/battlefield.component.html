@@ -1,35 +1,17 @@
-<div class="divcss">
-  <table class="margin">
-    <tr *ngFor="let item of arr; let trIndex = index">
-      <td
-        *ngFor="let item of arr; let tdIndex = index"
-        (click)="push(trIndex, tdIndex)"
-        [class]="sign[trIndex][tdIndex]"
-        class="battlefield-cell battlefield-cell__busy battlefield-cell__done"
-      >
-        <div
-          class="battlefield-cell-content"
-          (drop)="drop($event)"
-          (dragover)="allowDrop($event)"
-        >
-          <span class="z"></span>
-        </div>
-      </td>
-    </tr>
-  </table>
-
-  <div class="margin">
-    <td class="battlefield-cell battlefield-cell__busy">
+<div class="row">
+  <div class="column" style="margin-top: 4em;">
+    <td class="battlefield-cell battlefield-cell__busy battlefield-cell__done">
       <div
         class="battlefield-cell-content"
         data-y="2"
         data-x="5"
         (drop)="drop($event)"
+        draggable="false"
         (dragover)="allowDrop($event)"
       >
-        <span class="z"></span>&nbsp;
+        <span draggable="false" class="z"></span>&nbsp;
         <div
-          id="drag2"
+          id="drag6"
           draggable="true"
           (dragstart)="drag($event)"
           data-id="JmTQRvOYiE3O"
@@ -48,6 +30,32 @@
         ></div>
       </div>
     </td>
+  </div>
+  <div class="column">
+    <table>
+      <tr *ngFor="let item of arr; let trIndex = index">
+        <td
+          *ngFor="let item of arr; let tdIndex = index"
+          (click)="push(trIndex, tdIndex)"
+          [class]="sign[trIndex][tdIndex]"
+          class="battlefield-cell battlefield-cell__busy battlefield-cell__done"
+        >
+          <div
+            id="{{ trIndex }}*{{ tdIndex }}"
+            class="battlefield-cell-content"
+            draggable="false"
+            (drop)="drop($event)"
+            (dragover)="allowDrop($event)"
+          >
+            <span draggable="false" class="z"></span>
+          </div>
+        </td>
+      </tr>
+    </table>
+  </div>
+  <div>
+    <button class="button" (click)="ibitializeShip()"></button>
+    <div #elem></div>
   </div>
 </div>
 
