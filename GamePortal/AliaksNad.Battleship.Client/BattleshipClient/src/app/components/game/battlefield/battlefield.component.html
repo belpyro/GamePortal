@@ -17,16 +17,7 @@
           data-id="JmTQRvOYiE3O"
           data-length="1"
           data-position="h"
-          class="ship-box ship-box__h ui-draggable ship-box__draggable"
-          style="
-            width: 4em;
-            height: 2em;
-            padding-right: 0px;
-            padding-bottom: 0px;
-            left: 0px;
-            top: 0px;
-            margin: 0px;
-          "
+          class="ship-box ui-draggable ship-zero"
         ></div>
       </div>
     </td>
@@ -47,14 +38,14 @@
             (drop)="drop($event)"
             (dragover)="allowDrop($event)"
           >
-            <span draggable="false" class="z"></span>
+            <span draggable="false" class="z"></span>&nbsp;
           </div>
         </td>
       </tr>
     </table>
   </div>
   <div>
-    <button class="button" (click)="ibitializeShip()"></button>
+    <button class="button" (click)="ceedFleet()"></button>
     <div #elem></div>
   </div>
 </div>

@@ -1,5 +1,5 @@
-import { Component, OnInit, Inject, ViewChild, ElementRef, Renderer2 } from '@angular/core';
-import { DOCUMENT } from '@angular/common';
+import { Component, OnInit, ViewChild, ElementRef, Renderer2, ɵAPP_ID_RANDOM_PROVIDER } from '@angular/core';
+import { TableShipDto } from './TableShipDto';
 
 @Component({
   selector: 'app-battlefield',
@@ -18,6 +18,11 @@ export class BattlefieldComponent implements OnInit {
   size = 10;
   arr = new Array();
   sign = new Array();
+  fleet: TableShipDto[] = [
+    { StartCoordinates: { CoordinateX: 2, CoordinateY: 2 }, isHorizontal: true, length: 2 },
+    { StartCoordinates: { CoordinateX: 5, CoordinateY: 5 }, isHorizontal: false, length: 2 },
+    { StartCoordinates: { CoordinateX: 7, CoordinateY: 3 }, isHorizontal: true, length: 2 },
+  ];
 
   constructor(private renderer: Renderer2) { }
   ngOnInit(): void {
@@ -43,12 +48,10 @@ export class BattlefieldComponent implements OnInit {
   }
 
   drag(ev): void {
-    console.log(ev)
     ev.dataTransfer.setData('ship', ev.target.id);
   }
 
   allowDrop(ev): void {
-    console.log(ev)
     ev.preventDefault();
   }
 
@@ -56,29 +59,55 @@ export class BattlefieldComponent implements OnInit {
     ev.preventDefault();
     const data = ev.dataTransfer.getData('ship');
     ev.target.append(document.getElementById(data));
-    console.log(ev)
   }
 
-  ibitializeShip(): void {
-    const Cell = document.getElementById('3*3');
+  ceedFleet(): void {
+    // const fleet = this.fleet;
+    const fleet = this.generateFleet();
+    for (let g = 0; g < fleet.length; g++) {
+      this.initializeShip(fleet[g], g);
+    }
+  }
 
+  initializeShip(shipModel: TableShipDto, id: number): void {
+    console.log(shipModel);
     const ship = this.renderer.createElement('div');
+    this.renderer.setAttribute(ship, 'id', `${Math.random().toString(36).substring(7)}`);
 
     this.renderer.addClass(ship, 'ship-box');
-    this.renderer.addClass(ship, 'ship-box__h');
     this.renderer.addClass(ship, 'ui-draggable');
-    this.renderer.addClass(ship, 'ship-box__draggable');
-    this.renderer.setStyle(ship, 'width', '4em');
-    this.renderer.setStyle(ship, 'height', '2em');
-    this.renderer.setStyle(ship, 'padding-right', '0px');
-    this.renderer.setStyle(ship, 'padding-bottom', '0px');
-    this.renderer.setStyle(ship, 'left', '0px');
-    this.renderer.setStyle(ship, 'top', '0px');
-    this.renderer.setStyle(ship, 'margin', '0px');
+    this.renderer.addClass(ship, 'ship-zero');
+
     this.renderer.setAttribute(ship, 'draggable', 'true');
-    this.renderer.setAttribute(ship, 'id', 'drag9');
     this.renderer.listen(ship, 'dragstart', (event) => { this.drag(event); });
 
+    if (shipModel.isHorizontal) {
+      this.renderer.setStyle(ship, 'height', `${shipModel.length * 2}em`);
+    } else {
+      this.renderer.setStyle(ship, 'width', `${shipModel.length * 2}em`);
+    }
+
+    const Cell = document.getElementById
+      (`${shipModel.StartCoordinates.CoordinateX}*${shipModel.StartCoordinates.CoordinateY}`);
     this.renderer.appendChild(Cell, ship);
+  }
+
+  generateFleet(): TableShipDto[] {
+    const result = new Array(10);
+    for (let index = 0; index < result.length; index++) {
+      result[index] = {
+        StartCoordinates: {
+          CoordinateX: this.randomBtw(0, 9),
+          CoordinateY: this.randomBtw(0, 9)
+        },
+        isHorizontal: Math.random() >= 0.5,
+        length: this.randomBtw(1, 4)
+      };
+    }
+    return result;
+  }
+
+  randomBtw(min, max): number {
+    return Math.floor(Math.random() * (max - min + 1) + min);
   }
 }
