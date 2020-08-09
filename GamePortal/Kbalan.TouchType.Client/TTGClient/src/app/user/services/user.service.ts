@@ -17,4 +17,10 @@ export class UserService {
   block(id){
     return this.http.get(`${environment.backendurl}/api/users/block/${id}` );
  }
+  unblock(id){
+    return this.http.get(`${environment.backendurl}/api/users/unblock/${id}` );
+}
+delete(id){
+  return this.http.delete(`${environment.backendurl}/api/users/${id}`);
+}
 }

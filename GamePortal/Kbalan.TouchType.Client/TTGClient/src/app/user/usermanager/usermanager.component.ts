@@ -18,12 +18,24 @@ export class UsermanagerComponent implements OnInit {
   constructor(private router: Router, private userservice: UserService, private toastr: ToastrService) { }
 
   ngOnInit(): void {
-    this.initUsers();
-    console.log(this.allIncomeUsers);
-    console.log(this.allUsers);
+    this.userservice.getAllUsers().subscribe(
+      res => {
+        this.allIncomeUsers = res;
+        for (const num of this.allIncomeUsers) {
+          this.allUsers.push(  {
+            id: num.Id,
+            username: num.UserName,
+            regdate: num.RegistrationDate,
+            logdate: num.LastLoginDate,
+            blocked: num.IsBlocked,
+            role: num.UserRole,
+            selected: false,
+           });
+       }
+      });
   }
 
-  loadTemplate(users) {
+  loadTemplate(allIncomeUsers) {
     return this.readOnlyTemplate;
 }
   initUsers(){
@@ -51,11 +63,32 @@ export class UsermanagerComponent implements OnInit {
   }
 
   onBlock(){
-    for (const user of this.allUsers) {
-      if (user.selected === true)
+    for (let i = 0; i < this.allUsers.length; i++) {
+      if (this.allUsers[i].selected === true)
       {
-        user.status = true;
-        this.userservice.block(user.id).subscribe();
+        this.allUsers[i].blocked = true;
+        this.userservice.block(this.allUsers[i].id).subscribe();
+      }
+    }
+  }
+
+  onUnBlock(){
+    for (let i = 0; i < this.allUsers.length; i++) {
+      if (this.allUsers[i].selected === true)
+      {
+        this.allUsers[i].blocked = false;
+        this.userservice.unblock(this.allUsers[i].id).subscribe();
+      }
+    }
+  }
+
+  onDelete(){
+    for (let i = 0; i < this.allUsers.length; i++) {
+      if (this.allUsers[i].selected === true)
+      {
+        this.userservice.delete(this.allUsers[i].id).subscribe();
+        this.allUsers.splice(i, i);
+        i--;
       }
     }
   }

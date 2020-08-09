@@ -4,8 +4,15 @@
   <mat-toolbar class= "usertoolbar" color = "primary">
     <ul class = "toolbarlist">
       <button type="button" class="btn btn-lg btn-block" [disabled]="!checkIfAnySelected()" (click)="onBlock()">
-          <mat-icon class = "icon"  (click)="onBlock()" >lock</mat-icon>
+          <mat-icon class = "icon" >lock</mat-icon>
       </button>
+      <button type="button" class="btn btn-lg btn-block" [disabled]="!checkIfAnySelected()" (click)="onUnBlock()">
+        <mat-icon class = "icon" >lock_open</mat-icon>
+    </button>
+
+    <button type="button" class="btn btn-lg btn-block" [disabled]="!checkIfAnySelected()" (click)="onDelete()">
+      <mat-icon class = "icon" >delete</mat-icon>
+  </button>
     </ul>
   </mat-toolbar>
 

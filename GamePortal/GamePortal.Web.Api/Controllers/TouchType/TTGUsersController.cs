@@ -113,5 +113,14 @@ namespace GamePortal.Web.Api.Controllers.TouchType
             var result = await _userService.BlockAsync(id);
             return result.IsSuccess ? Ok() : (IHttpActionResult)BadRequest(result.Error);
         }
+
+        [HttpGet]
+        [Route("unblock/{id}")]
+        //Post : /api/users/block
+        public async Task<IHttpActionResult> UnBlock(string id)
+        {
+            var result = await _userService.UnBlockAsync(id);
+            return result.IsSuccess ? Ok() : (IHttpActionResult)BadRequest(result.Error);
+        }
     }
 }

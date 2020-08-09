@@ -164,6 +164,15 @@ namespace Kbalan.TouchType.Logic.Services
             return Result.Combine(result.ToFunctionalResult());
         }
 
+        public async Task<Result> UnBlockAsync(string id)
+        {
+
+            var user = await _userManager.FindByIdAsync(id);
+            user.IsBlocked = false;
+            var result = await _userManager.UpdateAsync(user);
+            return Result.Combine(result.ToFunctionalResult());
+        }
+
 
         #region IDisposable Support
         private bool disposedValue = false; // To detect redundant calls
