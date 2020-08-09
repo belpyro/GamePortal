@@ -22,8 +22,8 @@ export class BattlefieldComponent implements OnInit {
   arr = new Array();
   sign = new Array();
   busyCell = new Array();
-  shipSize: number[] = [4, 3];
-  // shipSize: number[] = [4, 3, 3, 2, 2, 2, 1, 1, 1, 1];
+  // shipSize: number[] = [2, 2, 1, 1, 1, 1];
+  shipSize: number[] = [4, 3, 3, 2, 2, 2, 1, 1, 1, 1];
   fleetExample: TableShipDto[] = [
     { StartCoordinates: { CoordinateX: 3, CoordinateY: 3 }, isHorizontal: true, length: 2 },
     { StartCoordinates: { CoordinateX: 5, CoordinateY: 5 }, isHorizontal: false, length: 2 },
@@ -71,32 +71,29 @@ export class BattlefieldComponent implements OnInit {
   }
 
   ceedFleet(): void {
-    const fleet = this.generateFleet();
-    this.fleet = this.toShipDto(fleet[1]);
-    for (let g = 0; g < fleet.length; g++) {
-      this.initializeShip(fleet[g]);
+    this.busyCell = [];
+    const shipSize = this.shipSize;
+
+    for (const size of shipSize) {
+      const ship = this.generateShip(size);
+      const byseCell = this.setBusyCell(ship);
+
+      this.busyCell = byseCell.concat(this.busyCell);
+      // this.pushBusy(byseCell);
+      this.initializeShip(ship);
     }
-    console.log('start set busy cell');
-    this.busyCell = this.setBusyCell(fleet[1]);
-    this.pushBysu(this.busyCell);
   }
 
-  pushBysu(cell: CoordinatesDto[]): void {
-    for (let i = 0; i < cell.length; i++) {
-
-      console.log(`Cell = ${cell[i]}`);
-
-      let x = cell[i].CoordinateX;
-      let y = cell[i].CoordinateY;
-
-      console.log(`x= ${x}, y= ${y}`);
-
+  pushBusy(area: CoordinatesDto[]): void {
+    for (const cell of area) {
+      const x = cell.CoordinateX;
+      const y = cell.CoordinateY;
+      console.log(`cell x = ${x}, y = ${y}`)
       this.sign[x][y] = 'battlefield-cell__miss';
     }
   }
 
   initializeShip(shipModel: TableShipDto): void {
-    console.log(shipModel);
     const ship = this.renderer.createElement('div');
     this.renderer.setAttribute(ship, 'id', `${Math.random().toString(36).substring(7)}`);
 
@@ -118,19 +115,60 @@ export class BattlefieldComponent implements OnInit {
     this.renderer.appendChild(Cell, ship);
   }
 
-  generateFleet(): TableShipDto[] {
-    const result = new Array(this.shipSize.length);
-    for (let index = 0; index < result.length; index++) {
-      result[index] = {
+  generateShip(shipSize: number): TableShipDto {
+    let ship: TableShipDto;
+    do {
+      ship = {
         StartCoordinates: {
           CoordinateX: this.randomBtw(0, 9),
           CoordinateY: this.randomBtw(0, 9)
         },
         isHorizontal: Math.random() >= 0.5,
-        length: this.shipSize[index],
+        length: shipSize,
       };
+    } while (
+      this.areaCheck(ship)
+      ||
+      this.isBusy(ship)
+    );
+    console.log(`generateShip finish = ${ship}`);
+    return ship;
+  }
+
+  areaCheck(ship: TableShipDto): boolean {
+    if (ship.isHorizontal) {
+      const maxX = ship.StartCoordinates.CoordinateX + ship.length;
+      if (maxX > 9) {
+        return true;
+      }
+      return false;
+    } else {
+      const maxY = ship.StartCoordinates.CoordinateY + ship.length;
+      if (maxY > 9) {
+        return true;
+      }
+      return false;
     }
-    return result;
+  }
+
+  isBusy(tableShip: TableShipDto): boolean {
+    const newShip = this.toShipDto(tableShip);
+
+    console.log(`isBusy start = ${newShip.Coordinates}`);
+    const busyArea = this.busyCell as CoordinatesDto[];
+    for (const newCell of newShip.Coordinates) {
+      for (const busyCell of busyArea) {
+        if (newCell.CoordinateX === busyCell.CoordinateX &&
+          newCell.CoordinateY === busyCell.CoordinateY) {
+
+          console.log(`newCell = ${newCell.CoordinateX}, ${newCell.CoordinateY}`);
+          console.log(`busyCell = ${busyCell.CoordinateX}, ${busyCell.CoordinateY}`);
+
+          return true;
+        }
+      }
+    }
+    return false;
   }
 
   randomBtw(min, max): number {
@@ -160,6 +198,7 @@ export class BattlefieldComponent implements OnInit {
 
   setBusyCell(value: TableShipDto): CoordinatesDto[] {
     const busyCell = new Array();
+
     let fromX: number = value.StartCoordinates.CoordinateX;
     fromX -= 1;
 
@@ -197,4 +236,5 @@ export class BattlefieldComponent implements OnInit {
     }
     return busyCell;
   }
+
 }
