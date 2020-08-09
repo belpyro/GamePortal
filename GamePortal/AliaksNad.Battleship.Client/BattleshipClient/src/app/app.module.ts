@@ -1,6 +1,6 @@
 import { BattleshipRoutesModule } from './battleshiproutes/battleshiproutes.module';
 import { BrowserModule } from '@angular/platform-browser';
-import { NgModule } from '@angular/core';
+import { NgModule, Pipe } from '@angular/core';
 
 import { AppComponent } from './app.component';
 import { NavbarComponent } from './components/main/navbar/navbar.component';
@@ -14,6 +14,7 @@ import { ReactiveFormsModule, FormsModule } from '@angular/forms';
 import { DragDropModule } from '@angular/cdk/drag-drop';
 import { ProfileComponent } from './components/main/profile/profile.component';
 import { BattlefieldComponent } from './components/game/battlefield/battlefield.component';
+import { FleetArrPipe } from './components/game/battlefield/fleetArrPpipe';
 
 @NgModule({
   declarations: [
@@ -25,6 +26,7 @@ import { BattlefieldComponent } from './components/game/battlefield/battlefield.
     NotFoundComponent,
     GameBoardComponent,
     ProfileComponent,
+    FleetArrPipe,
     BattlefieldComponent,
   ],
   imports: [

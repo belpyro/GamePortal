@@ -46,8 +46,11 @@
   </div>
   <div>
     <button class="button" (click)="ceedFleet()"></button>
-    <div #elem></div>
   </div>
+</div>
+<div class="row" #elem>
+  <a>fleet = {{ fleet | json }}</a>
+  <a>busyCell = {{ busyCell | json }}</a>
 </div>
 
 <div class="margin">
@@ -69,7 +72,8 @@
       </td>
     </tr>
   </table>
-  <label> arr = {{ arr | json }} sign = {{ sign | json }} </label>
+  <label>arr = {{ arr | json }}</label>
+  <label>sign = {{ sign | json }} </label>
 </div>
 
 <div class="margin">
