@@ -1,7 +1,6 @@
 import { ShipDto } from './../../../models/ShipsDto';
 import { CoordinatesDto } from './../../../models/CoordinatesDto';
-import { FleetArrPipe } from './fleetArrPpipe';
-import { Component, OnInit, ViewChild, ElementRef, Renderer2, ɵAPP_ID_RANDOM_PROVIDER } from '@angular/core';
+import { Component, OnInit, ViewChild, ElementRef, Renderer2 } from '@angular/core';
 import { TableShipDto } from './TableShipDto';
 
 @Component({
@@ -22,22 +21,13 @@ export class BattlefieldComponent implements OnInit {
   arr = new Array();
   sign = new Array();
   busyCell = new Array();
-  // shipSize: number[] = [2, 2, 1, 1, 1, 1];
   shipSize: number[] = [4, 3, 3, 2, 2, 2, 1, 1, 1, 1];
-  fleetExample: TableShipDto[] = [
-    { StartCoordinates: { CoordinateX: 3, CoordinateY: 3 }, isHorizontal: true, length: 2 },
-    { StartCoordinates: { CoordinateX: 5, CoordinateY: 5 }, isHorizontal: false, length: 2 },
-    { StartCoordinates: { CoordinateX: 7, CoordinateY: 3 }, isHorizontal: true, length: 3 },
-  ];
-  fleet: ShipDto;
-  tblFleet: TableShipDto;
+  fleet = new Array();
 
   constructor(private renderer: Renderer2) { }
   ngOnInit(): void {
     this.foo(this.size);
   }
-
-  ngAfterViewInit(): void { }
 
   foo(size): void {
     this.arr = new Array();
@@ -52,8 +42,8 @@ export class BattlefieldComponent implements OnInit {
   }
 
 
-  push(trIndex, tdIndex): void {
-    this.sign[trIndex][tdIndex] = 'battlefield-cell__hit';
+  push(tdIndex, trIndex): void {
+    this.sign[tdIndex][trIndex] = 'battlefield-cell__hit';
   }
 
   drag(ev): void {
@@ -71,25 +61,24 @@ export class BattlefieldComponent implements OnInit {
   }
 
   ceedFleet(): void {
+    this.foo(this.size);
     this.busyCell = [];
     const shipSize = this.shipSize;
 
     for (const size of shipSize) {
       const ship = this.generateShip(size);
-      const byseCell = this.setBusyCell(ship);
-
-      this.busyCell = byseCell.concat(this.busyCell);
-      // this.pushBusy(byseCell);
       this.initializeShip(ship);
+      const busyCell = this.setBusyCell(ship);
+
+      this.busyCell = busyCell.concat(this.busyCell);
+      this.fleet.push(this.toShipDto(ship));
+      this.pushBusy(busyCell);
     }
   }
 
   pushBusy(area: CoordinatesDto[]): void {
     for (const cell of area) {
-      const x = cell.CoordinateX;
-      const y = cell.CoordinateY;
-      console.log(`cell x = ${x}, y = ${y}`)
-      this.sign[x][y] = 'battlefield-cell__miss';
+      this.sign[cell.CoordinateX][cell.CoordinateY] = 'battlefield-cell__miss';
     }
   }
 
@@ -105,9 +94,9 @@ export class BattlefieldComponent implements OnInit {
     this.renderer.listen(ship, 'dragstart', (event) => { this.drag(event); });
 
     if (shipModel.isHorizontal) {
-      this.renderer.setStyle(ship, 'height', `${shipModel.length * 2}em`);
-    } else {
       this.renderer.setStyle(ship, 'width', `${shipModel.length * 2}em`);
+    } else {
+      this.renderer.setStyle(ship, 'height', `${shipModel.length * 2}em`);
     }
 
     const Cell = document.getElementById
@@ -127,24 +116,22 @@ export class BattlefieldComponent implements OnInit {
         length: shipSize,
       };
     } while (
-      this.areaCheck(ship)
-      ||
+      this.areaCheck(ship) ||
       this.isBusy(ship)
     );
-    console.log(`generateShip finish = ${ship}`);
     return ship;
   }
 
   areaCheck(ship: TableShipDto): boolean {
     if (ship.isHorizontal) {
       const maxX = ship.StartCoordinates.CoordinateX + ship.length;
-      if (maxX > 9) {
+      if (maxX > 10) {
         return true;
       }
       return false;
     } else {
       const maxY = ship.StartCoordinates.CoordinateY + ship.length;
-      if (maxY > 9) {
+      if (maxY > 10) {
         return true;
       }
       return false;
@@ -154,16 +141,11 @@ export class BattlefieldComponent implements OnInit {
   isBusy(tableShip: TableShipDto): boolean {
     const newShip = this.toShipDto(tableShip);
 
-    console.log(`isBusy start = ${newShip.Coordinates}`);
     const busyArea = this.busyCell as CoordinatesDto[];
     for (const newCell of newShip.Coordinates) {
       for (const busyCell of busyArea) {
         if (newCell.CoordinateX === busyCell.CoordinateX &&
           newCell.CoordinateY === busyCell.CoordinateY) {
-
-          console.log(`newCell = ${newCell.CoordinateX}, ${newCell.CoordinateY}`);
-          console.log(`busyCell = ${busyCell.CoordinateX}, ${busyCell.CoordinateY}`);
-
           return true;
         }
       }
@@ -199,42 +181,37 @@ export class BattlefieldComponent implements OnInit {
   setBusyCell(value: TableShipDto): CoordinatesDto[] {
     const busyCell = new Array();
 
-    let fromX: number = value.StartCoordinates.CoordinateX;
-    fromX -= 1;
+    const fromX: number = (value.StartCoordinates.CoordinateX) - 1;
+    const fromY: number = (value.StartCoordinates.CoordinateY) - 1;
 
-    let fromY: number = value.StartCoordinates.CoordinateY;
-    fromY -= 1;
-
-    let lengthX: number = value.length;
-    let lengthY: number = value.length;
+    let lengthX: number = (value.length) + 2;
+    let lengthY: number = (value.length) + 2;
 
     if (value.isHorizontal) {
-      lengthX += 2;
       lengthY = 3;
-
-      for (let i = 0; i < lengthY; i++) {
-        for (let g = 0; g < lengthX; g++) {
-          busyCell.push({
-            CoordinateX: fromX + g,
-            CoordinateY: fromY + i
-          });
-        }
-      }
-    }
-    if (!value.isHorizontal) {
+    } else {
       lengthX = 3;
-      lengthY += 2;
+    }
 
-      for (let i = 0; i < lengthY; i++) {
-        for (let g = 0; g < lengthX; g++) {
-          busyCell.push({
-            CoordinateX: fromX + g,
-            CoordinateY: fromY + i
-          });
-        }
+    for (let i = 0; i < lengthY; i++) {
+      for (let g = 0; g < lengthX; g++) {
+        busyCell.push({
+          CoordinateX: this.getBeteen(fromX + g),
+          CoordinateY: this.getBeteen(fromY + i)
+        });
       }
     }
+
     return busyCell;
   }
 
+  getBeteen(int: number, min = 0, max = 9): number {
+    if (int < min) {
+      int = min;
+    }
+    if (int > max) {
+      int = max;
+    }
+    return int;
+  }
 }

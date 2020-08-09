@@ -27,12 +27,12 @@
       <tr *ngFor="let item of arr; let trIndex = index">
         <td
           *ngFor="let item of arr; let tdIndex = index"
-          (click)="push(trIndex, tdIndex)"
-          [class]="sign[trIndex][tdIndex]"
+          (click)="push(tdIndex, trIndex)"
+          [class]="sign[tdIndex][trIndex]"
           class="battlefield-cell battlefield-cell__busy battlefield-cell__done"
         >
           <div
-            id="{{ trIndex }}*{{ tdIndex }}"
+            id="{{ tdIndex }}*{{ trIndex }}"
             class="battlefield-cell-content"
             draggable="false"
             (drop)="drop($event)"
@@ -49,8 +49,8 @@
   </div>
 </div>
 <div class="row" #elem>
-  <a>fleet = {{ fleet | json }}</a>
-  <a>busyCell = {{ busyCell | json }}</a>
+  <a class="column">fleet = {{ fleet | json }}</a>
+  <a class="column">busyCell = {{ busyCell | json }}</a>
 </div>
 
 <div class="margin">
