@@ -3,8 +3,6 @@
     <td class="battlefield-cell battlefield-cell__busy battlefield-cell__done">
       <div
         class="battlefield-cell-content"
-        data-y="2"
-        data-x="5"
         (drop)="drop($event)"
         draggable="false"
         (dragover)="allowDrop($event)"
@@ -14,18 +12,16 @@
           id="drag6"
           draggable="true"
           (dragstart)="drag($event)"
-          data-id="JmTQRvOYiE3O"
-          data-length="1"
-          data-position="h"
           class="ship-box ui-draggable ship-zero"
         ></div>
       </div>
     </td>
   </div>
   <div class="column">
-    <table>
-      <tr *ngFor="let item of arr; let trIndex = index">
+    <table draggable="false">
+      <tr *ngFor="let item of arr; let trIndex = index" draggable="false">
         <td
+          draggable="false"
           *ngFor="let item of arr; let tdIndex = index"
           (click)="push(tdIndex, trIndex)"
           [class]="sign[tdIndex][trIndex]"
@@ -49,7 +45,8 @@
   </div>
 </div>
 <div class="row" #elem>
-  <a class="column">fleet = {{ fleet | json }}</a>
+  <a class="column">fleetDto = {{ fleetDto | json }}</a>
+  <a class="column">tableFleet = {{ tableFleet | json }}</a>
   <a class="column">busyCell = {{ busyCell | json }}</a>
 </div>
 

@@ -22,14 +22,15 @@ export class BattlefieldComponent implements OnInit {
   sign = new Array();
   busyCell = new Array();
   shipSize: number[] = [4, 3, 3, 2, 2, 2, 1, 1, 1, 1];
-  fleet = new Array();
+  fleetDto: ShipDto[] = new Array();
+  tableFleet: TableShipDto[] = new Array();
 
   constructor(private renderer: Renderer2) { }
   ngOnInit(): void {
     this.foo(this.size);
   }
 
-  foo(size): void {
+  foo(size: number): void {
     this.arr = new Array();
     this.sign = new Array();
     for (let i = 0; i < size; i++) {
@@ -41,13 +42,13 @@ export class BattlefieldComponent implements OnInit {
     }
   }
 
-
   push(tdIndex, trIndex): void {
     this.sign[tdIndex][trIndex] = 'battlefield-cell__hit';
   }
 
   drag(ev): void {
     ev.dataTransfer.setData('ship', ev.target.id);
+    this.resetBysuCell(ev.target.id);
   }
 
   allowDrop(ev): void {
@@ -60,6 +61,25 @@ export class BattlefieldComponent implements OnInit {
     ev.target.append(document.getElementById(data));
   }
 
+  resetBysuCell(shipId: string): void {
+    console.log(`start, id = ${shipId}`);
+    this.busyCell = [];
+
+    const tableFleet = this.tableFleet;
+    for (const ship of tableFleet) {
+      if (shipId !== ship.id) {
+        const busyCell = this.setBusyCell(ship);
+        this.busyCell = busyCell.concat(this.busyCell);
+        this.pushBusy2(busyCell);
+      }
+    }
+  }
+  pushBusy2(area: CoordinatesDto[]): void {
+    for (const cell of area) {
+      this.sign[cell.CoordinateX][cell.CoordinateY] = 'battlefield-cell__hit';
+    }
+  }
+
   ceedFleet(): void {
     this.foo(this.size);
     this.busyCell = [];
@@ -67,12 +87,14 @@ export class BattlefieldComponent implements OnInit {
 
     for (const size of shipSize) {
       const ship = this.generateShip(size);
-      this.initializeShip(ship);
       const busyCell = this.setBusyCell(ship);
 
       this.busyCell = busyCell.concat(this.busyCell);
-      this.fleet.push(this.toShipDto(ship));
       this.pushBusy(busyCell);
+
+      this.fleetDto.push(this.toShipDto(ship));
+      this.tableFleet.push(ship);
+      this.initializeShip(ship);
     }
   }
 
@@ -84,7 +106,7 @@ export class BattlefieldComponent implements OnInit {
 
   initializeShip(shipModel: TableShipDto): void {
     const ship = this.renderer.createElement('div');
-    this.renderer.setAttribute(ship, 'id', `${Math.random().toString(36).substring(7)}`);
+    this.renderer.setAttribute(ship, 'id', shipModel.id);
 
     this.renderer.addClass(ship, 'ship-box');
     this.renderer.addClass(ship, 'ui-draggable');
@@ -114,6 +136,7 @@ export class BattlefieldComponent implements OnInit {
         },
         isHorizontal: Math.random() >= 0.5,
         length: shipSize,
+        id: this.generateId(),
       };
     } while (
       this.areaCheck(ship) ||
@@ -155,6 +178,10 @@ export class BattlefieldComponent implements OnInit {
 
   randomBtw(min, max): number {
     return Math.floor(Math.random() * (max - min + 1) + min);
+  }
+
+  generateId(): string {
+    return `${Math.random().toString(36).substring(4)}`;
   }
 
   toShipDto(value: TableShipDto): ShipDto {

@@ -1,5 +1,5 @@
 import { CoordinatesDto } from './CoordinatesDto';
 
-export interface ShipDto{
+export interface ShipDto {
   Coordinates: CoordinatesDto[];
 }

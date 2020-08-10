@@ -1,7 +1,7 @@
 import { NotificationService } from './../../../services/notification.service';
 import { BattleAreaDto } from './../../../models/BattleAreaDto';
 import { GameService } from './../../../services/game.service';
-import { Component, OnInit, SkipSelf, Self, Input } from '@angular/core';
+import { Component, OnInit, SkipSelf, Self, Input, ViewChild, ElementRef, Renderer2 } from '@angular/core';
 
 @Component({
   selector: 'app-area',
@@ -12,9 +12,21 @@ import { Component, OnInit, SkipSelf, Self, Input } from '@angular/core';
 export class AreaComponent implements OnInit {
 
   @Input() battleArea: BattleAreaDto;
+  @ViewChild('table') table: ElementRef;
+  size = 10;
 
-  constructor(public gameService: GameService, private ntf: NotificationService) { }
+  constructor(private renderer: Renderer2) { }
 
-  ngOnInit(): void {}
+  ngOnInit(): void { }
+
+  tableInitialize(): void {
+    const size = this.size;
+    for (let i = 0; i < size; i++) {
+      for (let j = 0; j < size; j++) {
+        // const cell = this.renderer.createComponent('div');
+
+      }
+    }
+  }
 
 }

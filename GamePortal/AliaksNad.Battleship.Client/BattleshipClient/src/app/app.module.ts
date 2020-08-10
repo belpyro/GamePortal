@@ -15,6 +15,7 @@ import { DragDropModule } from '@angular/cdk/drag-drop';
 import { ProfileComponent } from './components/main/profile/profile.component';
 import { BattlefieldComponent } from './components/game/battlefield/battlefield.component';
 import { FleetArrPipe } from './components/game/battlefield/fleetArrPpipe';
+import { CellComponent } from './components/game/cell/cell.component';
 
 @NgModule({
   declarations: [
@@ -28,6 +29,7 @@ import { FleetArrPipe } from './components/game/battlefield/fleetArrPpipe';
     ProfileComponent,
     FleetArrPipe,
     BattlefieldComponent,
+    CellComponent,
   ],
   imports: [
     BrowserModule,
