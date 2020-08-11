@@ -24,6 +24,7 @@ export class BattlefieldComponent implements OnInit {
   shipSize: number[] = [4, 3, 3, 2, 2, 2, 1, 1, 1, 1];
   fleetDto: ShipDto[] = new Array();
   tableFleet: TableShipDto[] = new Array();
+  dirtyId: string;
 
   constructor(private renderer: Renderer2) { }
   ngOnInit(): void {
@@ -48,16 +49,33 @@ export class BattlefieldComponent implements OnInit {
 
   drag(ev): void {
     ev.dataTransfer.setData('ship', ev.target.id);
+    this.dirtyId = ev.target.id;
+    ev.target.style.border = '2px solid Lightgreen';
     this.resetBysuCell(ev.target.id);
   }
 
   allowDrop(ev): void {
-    ev.preventDefault();
+    const evId = this.dirtyId;
+    console.log('alliw 1, target id = ' + evId);
+    const fleet = this.tableFleet;
+    for (const ship of fleet) {
+      console.log('alliw 2, ship id = ' + ship.id);
+
+      if (evId === ship.id) {
+        console.log('alliw 3 check = ' + this.isBusy(ship));
+
+        if (!this.isBusy(ship)) {
+          ev.preventDefault();
+          console.log('area check' + ship.id);
+        }
+      }
+    }
   }
 
   drop(ev): void {
     ev.preventDefault();
     const data = ev.dataTransfer.getData('ship');
+    console.log(data);
     ev.target.append(document.getElementById(data));
   }
 
@@ -163,8 +181,10 @@ export class BattlefieldComponent implements OnInit {
 
   isBusy(tableShip: TableShipDto): boolean {
     const newShip = this.toShipDto(tableShip);
-
+    console.log(newShip);
     const busyArea = this.busyCell as CoordinatesDto[];
+    console.log(busyArea);
+
     for (const newCell of newShip.Coordinates) {
       for (const busyCell of busyArea) {
         if (newCell.CoordinateX === busyCell.CoordinateX &&

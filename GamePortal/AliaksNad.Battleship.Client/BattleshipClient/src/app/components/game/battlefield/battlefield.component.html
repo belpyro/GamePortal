@@ -5,7 +5,7 @@
         class="battlefield-cell-content"
         (drop)="drop($event)"
         draggable="false"
-        (dragover)="allowDrop($event)"
+        (dragenter)="allowDrop($event)"
       >
         <span draggable="false" class="z"></span>&nbsp;
         <div
@@ -32,7 +32,7 @@
             class="battlefield-cell-content"
             draggable="false"
             (drop)="drop($event)"
-            (dragover)="allowDrop($event)"
+            (dragenter)="allowDrop($event)"
           >
             <span draggable="false" class="z"></span>&nbsp;
           </div>
