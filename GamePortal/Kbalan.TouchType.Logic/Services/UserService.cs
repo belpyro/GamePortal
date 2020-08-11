@@ -144,6 +144,11 @@ namespace Kbalan.TouchType.Logic.Services
             }
         }
 
+        /// <summary>
+        /// Delete user from Db async by id
+        /// </summary>
+        /// <param name="id">id</param>
+        /// <returns></returns>
         public async Task<Result> DeleteAsync(string id)
         {
             var user = await _userManager.FindByIdAsync(id);
@@ -155,6 +160,11 @@ namespace Kbalan.TouchType.Logic.Services
 
         }
 
+        /// <summary>
+        /// Change user field "IsBlocked" to true(Blocking user on client)
+        /// </summary>
+        /// <param name="id">id</param>
+        /// <returns></returns>
         public async Task<Result> BlockAsync(string id)
         {
 
@@ -164,6 +174,11 @@ namespace Kbalan.TouchType.Logic.Services
             return Result.Combine(result.ToFunctionalResult());
         }
 
+        /// <summary>
+        /// Change user field "IsBlocked" to false(Unblocking user on client)
+        /// </summary>
+        /// <param name="id">id</param>
+        /// <returns></returns>
         public async Task<Result> UnBlockAsync(string id)
         {
 
@@ -173,6 +188,41 @@ namespace Kbalan.TouchType.Logic.Services
             return Result.Combine(result.ToFunctionalResult());
         }
 
+        /// <summary>
+        /// Change user role to "administrator"
+        /// </summary>
+        /// <param name="id">id</param>
+        /// <returns></returns>
+        public async Task<Result> MakeRoleAdminAsync(string id)
+        {
+            var user = await _userManager.FindByIdAsync(id);
+
+            var userrole = _userManager.GetRoles(user.Id).FirstOrDefault();
+
+            await _userManager.RemoveFromRoleAsync(user.Id, userrole);
+
+            var result = await _userManager.AddToRoleAsync(user.Id, "administrator");
+
+            return Result.Combine(result.ToFunctionalResult());
+        }
+
+        /// <summary>
+        /// Change user role to "user"
+        /// </summary>
+        /// <param name="id">id</param>
+        /// <returns></returns>
+        public async Task<Result> MakeRoleUserAsync(string id)
+        {
+            var user = await _userManager.FindByIdAsync(id);
+
+            var userrole = _userManager.GetRoles(user.Id).FirstOrDefault();
+
+            await _userManager.RemoveFromRoleAsync(user.Id, userrole);
+
+            var result = await _userManager.AddToRoleAsync(user.Id, "user");
+
+            return Result.Combine(result.ToFunctionalResult());
+        }
 
         #region IDisposable Support
         private bool disposedValue = false; // To detect redundant calls
@@ -211,6 +261,8 @@ namespace Kbalan.TouchType.Logic.Services
             // TODO: uncomment the following line if the finalizer is overridden above.
             // GC.SuppressFinalize(this);
         }
+
+
 
         #endregion
     }

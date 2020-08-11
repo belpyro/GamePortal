@@ -23,4 +23,10 @@ export class UserService {
 delete(id){
   return this.http.delete(`${environment.backendurl}/api/users/${id}`);
 }
+mkRoleAdmin(id){
+  return this.http.get(`${environment.backendurl}/api/users/mkadmin/${id}`);
+}
+mkRoleUser(id){
+  return this.http.get(`${environment.backendurl}/api/users/mkuser/${id}`);
+}
 }
