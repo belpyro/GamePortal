@@ -37,5 +37,7 @@ namespace Kbalan.TouchType.Logic.Services
         Task<Result> MakeRoleAdminAsync(string id);
 
         Task<Result> MakeRoleUserAsync(string id);
+
+        Task<Result> UpdateLoginDateAsync(string id);
     }
 }

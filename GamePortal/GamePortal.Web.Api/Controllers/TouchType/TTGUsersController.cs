@@ -140,5 +140,14 @@ namespace GamePortal.Web.Api.Controllers.TouchType
             var result = await _userService.MakeRoleUserAsync(id);
             return result.IsSuccess ? Ok() : (IHttpActionResult)BadRequest(result.Error);
         }
+
+        [HttpGet]
+        [Route("logdate/{id}")]
+        //Post : /api/users/logdate/id
+        public async Task<IHttpActionResult> UpdateLoginDateAsync(string id)
+        {
+            var result = await _userService.UpdateLoginDateAsync(id);
+            return result.IsSuccess ? Ok() : (IHttpActionResult)BadRequest(result.Error);
+        }
     }
 }

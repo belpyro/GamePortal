@@ -1,4 +1,6 @@
 ﻿using Kbalan.TouchType.Data.Models;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Converters;
 
 namespace Kbalan.TouchType.Logic.Dto
 {
@@ -11,6 +13,7 @@ namespace Kbalan.TouchType.Logic.Dto
 
         public string Avatar { get; set; }
 
+        [JsonConverter(typeof(StringEnumConverter))]
         public LevelOfText LevelOfText { get; set; } = LevelOfText.Easy;
 
     }

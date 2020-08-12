@@ -132,6 +132,7 @@ namespace Kbalan.TouchType.Logic.Services
         {
             try
             {
+
                 Maybe<UserSettingStatisticDto> getResultById = await _userManager.Users.Where(x => x.Id == id).Include("Setting").Include("Statistic")
                     .ProjectToSingleOrDefaultAsync<UserSettingStatisticDto>(_mapper.ConfigurationProvider)
                     .ConfigureAwait(false);
@@ -220,6 +221,22 @@ namespace Kbalan.TouchType.Logic.Services
             await _userManager.RemoveFromRoleAsync(user.Id, userrole);
 
             var result = await _userManager.AddToRoleAsync(user.Id, "user");
+
+            return Result.Combine(result.ToFunctionalResult());
+        }
+
+        /// <summary>
+        /// Change user last login date
+        /// </summary>
+        /// <param name="id">id</param>
+        /// <returns></returns>
+        public async Task<Result> UpdateLoginDateAsync(string id)
+        {
+            var user = await _userManager.FindByIdAsync(id);
+
+            user.LastLoginDate = DateTime.UtcNow;
+
+            var result = await _userManager.UpdateAsync(user);
 
             return Result.Combine(result.ToFunctionalResult());
         }
