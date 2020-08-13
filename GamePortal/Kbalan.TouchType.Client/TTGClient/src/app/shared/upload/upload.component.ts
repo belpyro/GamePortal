@@ -1,6 +1,7 @@
 import { Component, OnInit, Output, EventEmitter } from '@angular/core';
 import { HttpEventType, HttpClient } from '@angular/common/http';
 import { environment } from 'src/environments/environment';
+import { ToastrService } from 'ngx-toastr';
 
 @Component({
   selector: 'app-upload',
@@ -14,7 +15,7 @@ export class UploadComponent implements OnInit {
   // tslint:disable-next-line: no-output-on-prefix
   @Output() public onUploadFinished = new EventEmitter();
 
-  constructor(private http: HttpClient) { }
+  constructor(private http: HttpClient, private toastr: ToastrService) { }
 
   ngOnInit(): void {
   }
@@ -24,6 +25,10 @@ export class UploadComponent implements OnInit {
     }
 
     const fileToUpload = files[0] as File;
+    const extn = fileToUpload.name.split('.').pop();
+    if (extn === 'svg' || extn === 'png' || extn === 'jpg' || extn === 'jpeg' )
+    {
+
     const formData = new FormData();
     formData.append('file', fileToUpload, fileToUpload.name);
 
@@ -35,7 +40,20 @@ export class UploadComponent implements OnInit {
         else if (event.type === HttpEventType.Response) {
           this.message = 'Upload success.';
           this.onUploadFinished.emit(event.body);
+          if (event.status === 200)
+          {
+            this.toastr.success('Avatar succsesfully changed');
+          }
+        }
+      },
+      err => {
+        if ( err != null )
+        {
+          this.toastr.error(err.error.Message);
         }
       });
+  }else{
+    this.toastr.error('Incorrect file extension(only jpeg, jpg, png or svg are applied');
   }
+}
 }

@@ -7,6 +7,7 @@ import { UserDto } from 'src/app/core/models/UserDto';
 import { LoginService } from 'src/app/core/services/login.service';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { environment } from 'src/environments/environment';
+import { url } from 'inspector';
 
 
 @Component({
@@ -52,6 +53,10 @@ export class HomecomponentComponent implements OnInit {
 
   }
   public createImgPath = () => {
+    if (this.userProfile.Setting.Avatar === null)
+    {
+      return './../../../../assets/No_avatar.jpg';
+    }
     if (this.timeStamp) {
       return this.linkPicture + '?' + this.timeStamp;
    }

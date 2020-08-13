@@ -23,7 +23,7 @@ namespace Kbalan.TouchType.Logic.Services
 {
     public class UploadService : IUploadService
     {
-
+        private const int TenMegaBytes = 10 * 1024 * 1024;
         public UploadService()
         {
     
@@ -32,12 +32,16 @@ namespace Kbalan.TouchType.Logic.Services
 
         public async Task<Result<String>> UploadAsync(HttpPostedFile file, string userId)
         {
+            
             try
             {
 
                 var folderName = Path.Combine("Resources", "Images");
                 var pathToSave = Path.Combine(HttpContext.Current.Server.MapPath("~/"), folderName);
-
+                if(file.ContentLength > TenMegaBytes )
+                {
+                    return Result.Failure<String>("File is more than 10mb");
+                }
                 var fileName =  userId + Path.GetExtension(file.FileName);
                 if (file.ContentLength > 0)
                 {
