@@ -44,6 +44,18 @@ export class HomecomponentComponent implements OnInit {
   } as SettingDto;
     this.homeservice.updateSetting(setting).subscribe();
   }
+  changeLevel(){
+    this.userProfile.Setting.LevelOfText = this.LevelGroup.value.textradio;
+    this.updateSetting();
+  }
+  disableChangeLevelBtn(){
+    if (this.userProfile.Setting.LevelOfText === this.LevelGroup.value.textradio)
+    {
+      return true;
+    }else{
+      return false;
+    }
+  }
   async initUser(){
     await this.homeservice.getUser().subscribe(res => {
       this.userProfile = res;
