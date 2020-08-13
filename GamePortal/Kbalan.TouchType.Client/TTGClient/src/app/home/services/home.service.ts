@@ -16,4 +16,7 @@ export class HomeService {
     const user = JSON.parse(token);
     return this.http.get<UserProfileDto>(`${environment.backendurl}/api/users/${user.sub}`);
   }
+  updateSetting(model){
+    return this.http.put(`${environment.backendurl}/api/settings`, model);
+  }
 }

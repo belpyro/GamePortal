@@ -30,14 +30,15 @@ namespace Kbalan.TouchType.Logic.Services
         }
 
 
-        public async Task<Result<String>> UploadAsync(HttpPostedFile file)
+        public async Task<Result<String>> UploadAsync(HttpPostedFile file, string userId)
         {
             try
             {
 
                 var folderName = Path.Combine("Resources", "Images");
                 var pathToSave = Path.Combine(HttpContext.Current.Server.MapPath("~/"), folderName);
-                var fileName = Path.GetFileName(file.FileName);
+
+                var fileName =  userId + Path.GetExtension(file.FileName);
                 if (file.ContentLength > 0)
                 {
 

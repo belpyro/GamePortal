@@ -50,12 +50,12 @@ namespace GamePortal.Web.Api.Controllers.TouchType
         //Update single setting by User Id
         [HttpPut]
         [Route("")]
-        public async Task<IHttpActionResult> UpdateAsync(string id ,[FromBody]SettingDto model)
+        public async Task<IHttpActionResult> UpdateAsync([FromBody]SettingDto model)
         {
             try
             {
-                var result = await _settingService.UpdateAsync(id, model);
-                return result.IsSuccess ? Ok($"Settings of user with id {id} updated succesfully!") : (IHttpActionResult)BadRequest(result.Error);
+                var result = await _settingService.UpdateAsync(model);
+                return result.IsSuccess ? Ok($"Settings of user with id {model.SettingId} updated succesfully!") : (IHttpActionResult)BadRequest(result.Error);
             }
             catch (TTGValidationException ex)
             {

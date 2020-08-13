@@ -1,5 +1,6 @@
 ﻿using JetBrains.Annotations;
 using Kbalan.TouchType.Logic.Services;
+using Microsoft.AspNet.Identity;
 using Namotion.Reflection;
 using System;
 using System.Collections.Generic;
@@ -28,8 +29,8 @@ namespace GamePortal.Web.Api.Controllers.TouchType
         public async Task<IHttpActionResult> UploadAsync()
         {
             var file = HttpContext.Current.Request.Files[0];
-            
-            var result = await _uploadService.UploadAsync(file);
+            var userId = RequestContext.Principal.Identity.GetUserId();
+            var result = await _uploadService.UploadAsync(file, userId);
             return result.IsSuccess ? Ok(result.Value) : (IHttpActionResult)BadRequest(result.Error);
         }
     }

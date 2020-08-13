@@ -19,7 +19,7 @@ namespace Kbalan.TouchType.Logic.Services
         /// file upload method interface
         /// </summary>
         /// <returns>Result</returns>
-        Task<Result<String>> UploadAsync(HttpPostedFile file);
+        Task<Result<String>> UploadAsync(HttpPostedFile file, string userId);
 
     }
 }
