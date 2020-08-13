@@ -8,26 +8,23 @@
           </div>
           <div class="bg-light-gray padding-30px-all md-padding-25px-all sm-padding-20px-all text-center">
               <h4 class="margin-10px-bottom font-size24 md-font-size22 sm-font-size20 font-weight-600">Role</h4>
-              <div class="col-8">
-                <input type="file" name="files" id="uploadBox" multiple class="form-control" />
-            </div>
+              <app-upload (onUploadFinished)="uploadFinished($event)"></app-upload>
           </div>
       </div>
 
       <div class="col-lg-8 col-md-7">
         <div class="team-single-text padding-50px-left sm-no-padding-left">
-            <h4 class="font-size38 sm-font-size32 xs-font-size30">{{incomeUser.Username}}</h4>
+            <h4 class="font-size38 sm-font-size32 xs-font-size30">{{userProfile.Username}}</h4>
             <div class="contact-info-section margin-40px-tb">
                 <ul class="list-style9 no-margin">
                     <li>
-
                         <div class="row">
                             <div class="col-md-5 col-5">
                                 <i class="fas fa-graduation-cap text-green"></i>
                                 <strong class="margin-10px-left text-green">Id:</strong>
                             </div>
                             <div class="col-md-7 col-7">
-                                <p>{{incomeUser.Id}}</p>
+                                <p>{{userProfile.Id}}</p>
                             </div>
                         </div>
 
@@ -40,7 +37,7 @@
                                 <strong class="margin-10px-left text-green">Registration Date:</strong>
                             </div>
                             <div class="col-md-7 col-7">
-                                <p>{{incomeUser.RegistrationDate}}</p>
+                                <p>{{userProfile.RegistrationDate}}</p>
                             </div>
                         </div>
 
@@ -54,7 +51,7 @@
                                 <strong class="margin-10px-left xs-margin-four-left text-green">Email:</strong>
                             </div>
                             <div class="col-md-7 col-7">
-                                <p>{{incomeUser.Email}}</p>
+                                <p>{{userProfile.Email}}</p>
                             </div>
                         </div>
                     </li>
@@ -68,7 +65,7 @@
                               <strong class="margin-10px-left xs-margin-four-left text-pink">Number Of Games Played:</strong>
                           </div>
                           <div class="col-md-7 col-7">
-                              <p>{{incomeUser.Statistic.NumberOfGamesPlayed}}</p>
+                              <p>{{userProfile.Statistic.NumberOfGamesPlayed}}</p>
                           </div>
                       </div>
                   </li>
@@ -79,7 +76,7 @@
                             <strong class="margin-10px-left xs-margin-four-left text-pink">Avarage Speed:</strong>
                         </div>
                         <div class="col-md-7 col-7">
-                            <p>{{incomeUser.Statistic.AvarageSpeed}}</p>
+                            <p>{{userProfile.Statistic.AvarageSpeed}}</p>
                         </div>
                     </div>
                 </li>
@@ -90,7 +87,7 @@
                           <strong class="margin-10px-left xs-margin-four-left text-pink">Max Speed Record:</strong>
                       </div>
                       <div class="col-md-7 col-7">
-                          <p>{{incomeUser.Statistic.MaxSpeedRecord}}</p>
+                          <p>{{userProfile.Statistic.MaxSpeedRecord}}</p>
                       </div>
                   </div>
               </li>

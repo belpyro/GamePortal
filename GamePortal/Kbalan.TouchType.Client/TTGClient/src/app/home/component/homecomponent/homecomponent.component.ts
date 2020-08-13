@@ -13,9 +13,7 @@ import { FormGroup, FormBuilder, Validators } from '@angular/forms';
   styleUrls: ['./homecomponent.component.scss']
 })
 export class HomecomponentComponent implements OnInit {
-  incomeUser: UserProfileDto;
-  user$: Observable<UserDto>;
-  isLoggedOn$: Observable<boolean>;
+  userProfile?: UserProfileDto;
   loggedUser: UserDto;
   LevelGroup: FormGroup;
   constructor(private homeservice: HomeService, private loginService: LoginService, private fb: FormBuilder) {
@@ -25,16 +23,17 @@ export class HomecomponentComponent implements OnInit {
    }
 
   ngOnInit(): void {
-    this.user$ = this.loginService.LoggedOn$;
-    this.isLoggedOn$ = this.loginService.isLoggedOn$;
-    this.user$.subscribe(event => this.loggedUser = event);
     this.initUser();
   }
+   uploadFinished = (event) => {
+    this.userProfile.Avatar = event;
+    console.log(this.userProfile.Avatar);
+  }
   async initUser(){
-    await this.homeservice.getUser(this.loggedUser.sub).subscribe(res => {
-      this.incomeUser = res;
+    await this.homeservice.getUser().subscribe(res => {
+      this.userProfile = res;
       this.LevelGroup.setValue({
-      textradio: this.incomeUser.Setting.LevelOfText }); } );
+      textradio: this.userProfile.Setting.LevelOfText }); } );
 
   }
 }

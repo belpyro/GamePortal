@@ -9,5 +9,4 @@ export interface UserProfileDto {
   Statistic?: StatisticDto;
   Setting?: SettingDto;
   Avatar?: string;
-  LevelOfText: string;
 }
