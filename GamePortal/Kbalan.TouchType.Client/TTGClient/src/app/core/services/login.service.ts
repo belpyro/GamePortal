@@ -6,6 +6,8 @@ import { Router } from '@angular/router';
 import { OAuthService, AuthConfig, OAuthEvent, OAuthInfoEvent, OAuthSuccessEvent, NullValidationHandler, } from 'angular-oauth2-oidc';
 import { PASSWORD_FLOW_CONFIG, CODE_FLOW_CONFIG } from '../configs/auth.config';
 import { ToastrService } from 'ngx-toastr';
+import { environment } from 'src/environments/environment';
+import { HttpClient } from '@angular/common/http';
 
 
 
@@ -19,6 +21,7 @@ export class LoginService {
     private toastr: ToastrService,
     private router: Router,
     private oauth: OAuthService,
+    private http: HttpClient,
     @Inject(PASSWORD_FLOW_CONFIG) private passFlow: AuthConfig,
     @Inject(CODE_FLOW_CONFIG) private codeFlow: AuthConfig
   ) {
@@ -33,6 +36,8 @@ export class LoginService {
       .subscribe((u) => {
         this.loggedOnSubject.next(u);
         this.isLoggedOnSubject.next(true);
+        this.toastr.success(`Welcome, ${u.preferred_username}`);
+        this.lastLoginDateUpdate(u.sub).subscribe();
       });
   }
 
@@ -65,7 +70,7 @@ export class LoginService {
     await this.configureOauth(this.passFlow);
     try {
       await this.oauth.fetchTokenUsingPasswordFlow(userName, password);
-      this.toastr.success(`Welcome, ${userName}`);
+
     } catch (error) {
       this.toastr.error(`Incorrect username or password`);
     }
@@ -89,5 +94,9 @@ export class LoginService {
       this.isLoggedOnSubject.next(true);
       this.loggedOnSubject.next(user);
     }
+  }
+
+  lastLoginDateUpdate(id){
+    return this.http.get(`${environment.backendurl}/api/users/logdate/${id}`);
   }
 }
