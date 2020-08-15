@@ -25,6 +25,12 @@ export class BattlefieldComponent implements OnInit {
   fleetDto: ShipDto[] = new Array();
   tableFleet: TableShipDto[] = new Array();
   dirtyId: string;
+  exapleShip: TableShipDto = {
+    id: 'test',
+    StartCoordinates: { CoordinateX: 9, CoordinateY: 9 },
+    isHorizontal: false,
+    length: 1
+  };
 
   constructor(private renderer: Renderer2) { }
   ngOnInit(): void {
@@ -55,18 +61,20 @@ export class BattlefieldComponent implements OnInit {
   }
 
   allowDrop(ev): void {
+
     const evId = this.dirtyId;
-    console.log('alliw 1, target id = ' + evId);
+
     const fleet = this.tableFleet;
+
     for (const ship of fleet) {
-      console.log('alliw 2, ship id = ' + ship.id);
 
       if (evId === ship.id) {
-        console.log('alliw 3 check = ' + this.isBusy(ship));
 
-        if (!this.isBusy(ship)) {
+        ship.StartCoordinates.CoordinateX = ev.target.getAttribute('coordinate-x');
+        ship.StartCoordinates.CoordinateY = ev.target.getAttribute('coordinate-y');
+
+        if (!this.validationCheck(ship)) {
           ev.preventDefault();
-          console.log('area check' + ship.id);
         }
       }
     }
@@ -75,12 +83,10 @@ export class BattlefieldComponent implements OnInit {
   drop(ev): void {
     ev.preventDefault();
     const data = ev.dataTransfer.getData('ship');
-    console.log(data);
     ev.target.append(document.getElementById(data));
   }
 
   resetBysuCell(shipId: string): void {
-    console.log(`start, id = ${shipId}`);
     this.busyCell = [];
 
     const tableFleet = this.tableFleet;
@@ -156,22 +162,24 @@ export class BattlefieldComponent implements OnInit {
         length: shipSize,
         id: this.generateId(),
       };
-    } while (
-      this.areaCheck(ship) ||
-      this.isBusy(ship)
-    );
+    } while (this.validationCheck(ship));
     return ship;
   }
 
+  validationCheck(ship: TableShipDto): boolean {
+    return this.areaCheck(ship) || this.employmentСheck(ship);
+  }
   areaCheck(ship: TableShipDto): boolean {
     if (ship.isHorizontal) {
-      const maxX = ship.StartCoordinates.CoordinateX + ship.length;
+      const maxX = +ship.StartCoordinates.CoordinateX + +ship.length;
+      console.log(maxX);
       if (maxX > 10) {
         return true;
       }
       return false;
     } else {
-      const maxY = ship.StartCoordinates.CoordinateY + ship.length;
+      const maxY = +ship.StartCoordinates.CoordinateY + +ship.length;
+      console.log(maxY);
       if (maxY > 10) {
         return true;
       }
@@ -179,11 +187,9 @@ export class BattlefieldComponent implements OnInit {
     }
   }
 
-  isBusy(tableShip: TableShipDto): boolean {
+  employmentСheck(tableShip: TableShipDto): boolean {
     const newShip = this.toShipDto(tableShip);
-    console.log(newShip);
     const busyArea = this.busyCell as CoordinatesDto[];
-    console.log(busyArea);
 
     for (const newCell of newShip.Coordinates) {
       for (const busyCell of busyArea) {
@@ -204,24 +210,57 @@ export class BattlefieldComponent implements OnInit {
     return `${Math.random().toString(36).substring(4)}`;
   }
 
+  toShipDtoNEW(value: TableShipDto): ShipDto {
+
+    const result = new Array(value.length);
+
+    for (let i = 0; i < result.length; i++) {
+      result[i] = {
+        CoordinateX: value.StartCoordinates.CoordinateX,
+        CoordinateY: value.StartCoordinates.CoordinateY,
+      };
+    }
+
+    let xIncrease = 0;
+    let yIncrease = 0;
+
+    if (value.isHorizontal) {
+      xIncrease = 1;
+    } else {
+      yIncrease = 1;
+    }
+
+    for (let i = 0; i < result.length; i++) {
+      result[i] = {
+        CoordinateX: +value.StartCoordinates.CoordinateX + +xIncrease,
+        CoordinateY: +value.StartCoordinates.CoordinateY + +yIncrease,
+      };
+    }
+
+
+    return { Coordinates: result };
+  }
+
   toShipDto(value: TableShipDto): ShipDto {
     const result = new Array(value.length);
+
 
     if (value.isHorizontal) {
       for (let i = 0; i < result.length; i++) {
         result[i] = {
-          CoordinateX: value.StartCoordinates.CoordinateX + i,
-          CoordinateY: value.StartCoordinates.CoordinateY
+          CoordinateX: +value.StartCoordinates.CoordinateX + +i,
+          CoordinateY: +value.StartCoordinates.CoordinateY
         };
       }
     } else {
       for (let i = 0; i < result.length; i++) {
         result[i] = {
-          CoordinateX: value.StartCoordinates.CoordinateX,
-          CoordinateY: value.StartCoordinates.CoordinateY + i
+          CoordinateX: +value.StartCoordinates.CoordinateX,
+          CoordinateY: +value.StartCoordinates.CoordinateY + +i
         };
       }
     }
+
     return { Coordinates: result };
   }
 

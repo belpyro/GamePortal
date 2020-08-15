@@ -7,7 +7,7 @@
         draggable="false"
         (dragenter)="allowDrop($event)"
       >
-        <span draggable="false" class="z"></span>&nbsp;
+        <span draggable="false" class="z"></span>
         <div
           id="drag6"
           draggable="true"
@@ -29,12 +29,14 @@
         >
           <div
             id="{{ tdIndex }}*{{ trIndex }}"
+            attr.Coordinate-X="{{ tdIndex }}"
+            attr.Coordinate-Y="{{ trIndex }}"
             class="battlefield-cell-content"
             draggable="false"
             (drop)="drop($event)"
-            (dragenter)="allowDrop($event)"
+            (dragover)="allowDrop($event)"
           >
-            <span draggable="false" class="z"></span>&nbsp;
+            <span draggable="false" class="z"></span>
           </div>
         </td>
       </tr>
