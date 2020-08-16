@@ -61,12 +61,22 @@ namespace AliaksNad.Battleship.Logic.Configuration
                 AllowAccessToAllScopes = true,
                 ClientName = "Battleship Web Client",
                 Flow = Flows.AuthorizationCode,
-                RedirectUris = new List<string>() { "https://localhost:44555" }
+                RedirectUris = new List<string>() { "https://localhost:44555", "http://localhost:4200/index.html" }
+            };
+
+            var userClient = new Client
+            {
+                ClientId = "BattleshipUserClient",
+                ClientSecrets = new List<Secret> { new Secret("secret".Sha256()) },
+                AllowAccessToAllScopes = true,
+                ClientName = "Battleship Web Client",
+                Flow = Flows.ResourceOwner,
+                RedirectUris = new List<string>() { "https://localhost:44555", "http://localhost:4200/index.html" }
             };
 
             factory
                 .UseInMemoryScopes(StandardScopes.All)
-                .UseInMemoryClients(new[] { client })
+                .UseInMemoryClients(new[] { client, userClient })
                 .UserService = new Registration<IUserService>(new AspNetIdentityUserService<IdentityUser, string>(_userManager));
 
             return factory;

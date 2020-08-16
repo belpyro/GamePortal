@@ -44,6 +44,18 @@ namespace GamePortal.Web.Api
 
             config.Services.Replace(typeof(IExceptionLogger), new ElmahExceptionLogger());   // Replace system logger for elmarh
 
+            var provide = new CorsPolicyProvider
+            {
+                PolicyResolver = ctx => Task.FromResult(new CorsPolicy
+                {
+                    AllowAnyHeader = true,
+                    AllowAnyMethod = true,
+                    AllowAnyOrigin = true
+                })
+            };
+            app.UseCors(new CorsOptions { PolicyProvider = provide });
+
+            app.UseStaticFiles();
             app.UseSwagger(typeof(Startup).Assembly).UseSwaggerUi3();
 
             FluentValidationModelValidatorProvider.Configure(config, opt =>
@@ -90,17 +102,6 @@ namespace GamePortal.Web.Api
 
             app.UseBattleshipIdentityServer(kernel);
 
-            var provide = new CorsPolicyProvider
-            {
-                PolicyResolver = ctx => Task.FromResult(new CorsPolicy
-                {
-                    AllowAnyHeader = true,
-                    AllowAnyMethod = true,
-                    AllowAnyOrigin = true
-                })
-            };
-
-            app.UseCors(new CorsOptions { PolicyProvider = provide });
 
             app.UseNinjectMiddleware(() => kernel).UseNinjectWebApi(config);
         }

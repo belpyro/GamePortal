@@ -3,6 +3,7 @@ using Ninject.Modules;
 using Ninject;
 using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.EntityFramework;
+using AliaksNad.Battleship.Data.Contexts;
 
 namespace AliaksNad.Battleship.Logic.DIModules
 {
@@ -10,15 +11,11 @@ namespace AliaksNad.Battleship.Logic.DIModules
     {
         public override void Load()
         {
-            this.Bind<IUserStore<IdentityUser>>().To<UserStore<IdentityUser>>()
-                .When(r =>
-                {
-                    return r.ParentContext != null && r.ParentContext.Plan.Type.Namespace.StartsWith("AliaksNad.Battleship");
-                });
+            this.Bind<IUserStore<IdentityUser>>().ToMethod(ctx => new UserStore<IdentityUser>(ctx.Kernel.Get<BattleAreaContext>()));
 
             this.Bind<UserManager<IdentityUser>>().ToMethod(ctx =>
             {
-                var manager = new UserManager<IdentityUser>(ctx.Kernel.Get<IUserStore<IdentityUser>>());
+                var manager = new UserManager<IdentityUser>(new UserStore<IdentityUser>(ctx.Kernel.Get<BattleAreaContext>()));
                 manager.UserValidator = new UserValidator<IdentityUser>(manager)
                 {
                     AllowOnlyAlphanumericUserNames = false,

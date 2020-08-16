@@ -56,23 +56,18 @@ export class BattlefieldComponent implements OnInit {
   drag(ev): void {
     ev.dataTransfer.setData('ship', ev.target.id);
     this.dirtyId = ev.target.id;
-    ev.target.style.border = '2px solid Lightgreen';
+    ev.target.style.border = '2px solid green';
     this.resetBysuCell(ev.target.id);
   }
 
   allowDrop(ev): void {
-
     const evId = this.dirtyId;
-
     const fleet = this.tableFleet;
 
     for (const ship of fleet) {
-
       if (evId === ship.id) {
-
         ship.StartCoordinates.CoordinateX = ev.target.getAttribute('coordinate-x');
         ship.StartCoordinates.CoordinateY = ev.target.getAttribute('coordinate-y');
-
         if (!this.validationCheck(ship)) {
           ev.preventDefault();
         }
@@ -82,8 +77,10 @@ export class BattlefieldComponent implements OnInit {
 
   drop(ev): void {
     ev.preventDefault();
-    const data = ev.dataTransfer.getData('ship');
-    ev.target.append(document.getElementById(data));
+    const shipId = ev.dataTransfer.getData('ship');
+    const ship = document.getElementById(shipId);
+    this.renderer.setStyle(ship, 'border', ``);
+    ev.target.append(ship);
   }
 
   resetBysuCell(shipId: string): void {

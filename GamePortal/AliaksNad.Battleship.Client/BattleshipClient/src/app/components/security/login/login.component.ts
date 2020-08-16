@@ -14,7 +14,7 @@ export class LoginComponent implements OnInit {
   //   {
   //   email: new FormControl('', [Validators.required, Validators.email]),
   //   pass: new FormControl('', [Validators.required]),
-  //   remember: new FormControl('true')
+  //   remember: new FormControl('true'),
   // });
 
   // emailControl = new FormControl('', [Validators.required, Validators.email]);
@@ -27,8 +27,8 @@ export class LoginComponent implements OnInit {
     private fb: FormBuilder
   ) {
     this.loginGroup = this.fb.group({
-      email: [''],
-      pass: [''],
+      userName: [''],
+      password: [''],
       remember: ['true'],
     });
   }
@@ -41,6 +41,14 @@ export class LoginComponent implements OnInit {
 
   login(): void {
     this.loginService.login();
+  }
+
+  loginWithPassword(): void {
+    console.log('log');
+    console.log(this.loginGroup.value);
+    this.loginService.login(
+      this.loginGroup.value.userName,
+      this.loginGroup.value.password);
   }
 
 }

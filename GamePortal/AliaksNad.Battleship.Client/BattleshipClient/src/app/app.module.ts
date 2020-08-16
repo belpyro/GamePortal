@@ -11,11 +11,11 @@ import { HomeComponent } from './components/main/home/home.component';
 import { NotFoundComponent } from './components/main/notfound/notfound.component';
 import { GameBoardComponent } from './components/game/game-board/game-board.component';
 import { ReactiveFormsModule, FormsModule } from '@angular/forms';
-import { DragDropModule } from '@angular/cdk/drag-drop';
 import { ProfileComponent } from './components/main/profile/profile.component';
 import { BattlefieldComponent } from './components/game/battlefield/battlefield.component';
 import { FleetArrPipe } from './components/game/battlefield/fleetArrPpipe';
 import { CellComponent } from './components/game/cell/cell.component';
+import { OAuthModule } from 'angular-oauth2-oidc';
 
 @NgModule({
   declarations: [
@@ -37,7 +37,7 @@ import { CellComponent } from './components/game/cell/cell.component';
     HttpClientModule,
     FormsModule,
     BattleshipRoutesModule,
-    DragDropModule,
+    OAuthModule.forRoot(),
   ],
   providers: [],
   bootstrap: [AppComponent]
