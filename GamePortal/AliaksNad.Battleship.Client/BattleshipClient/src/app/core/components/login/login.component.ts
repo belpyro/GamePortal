@@ -34,7 +34,7 @@ export class LoginComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.loginService.LoggedOn$.pipe(filter(_ => _)).subscribe(_ => {
+    this.loginService.LoggedOn$.subscribe((_) => {
       this.router.navigate(['play']);
     });
   }

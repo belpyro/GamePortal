@@ -1,15 +1,18 @@
 import { UserDto } from './../models/UserDto';
 import { OAuthModule, OAuthService, AuthConfig } from 'angular-oauth2-oidc';
 import { Injectable } from '@angular/core';
-import { BehaviorSubject } from 'rxjs';
+import { BehaviorSubject, Observable } from 'rxjs';
 import { Router } from '@angular/router';
+import { environment } from 'src/environments/environment';
+import { filter, map } from 'rxjs/operators';
 
 export const oauthConfig: AuthConfig = {
-  issuer: 'https://localhost:44313',
+  issuer: environment.issuerUrl,
   redirectUri: window.location.origin + '/index.html ',
+  // clientId: 'BattleshipWebClient',
   clientId: 'BattleshipUserClient',
-  // dummyClientSecret: 'secret',
-  responseType: 'code',
+  dummyClientSecret: 'secret',
+  // responseType: 'code',
   scope: 'openid profile email',
   requireHttps: false,
   skipIssuerCheck: true,
@@ -17,21 +20,28 @@ export const oauthConfig: AuthConfig = {
   // strictDiscoveryDocumentValidation: false,
   showDebugInformation: true,
   disablePKCE: true,
+  oidc: false,
   postLogoutRedirectUri: window.location.origin + '/login',
 };
 
 @Injectable()
 export class LoginService {
 
-  private loggedOnSubject = new BehaviorSubject<boolean>(true);
+  private loggedOnSubject: BehaviorSubject<UserDto> = new BehaviorSubject<UserDto>(null);
   private user: UserDto;
 
   constructor(private router: Router, private oauth: OAuthService) {
     this.oauth.configure(oauthConfig);
     this.oauth.loadDiscoveryDocumentAndTryLogin();
+    this.oauth.events
+      .pipe(
+        filter((value) => value.type === 'token_received'),
+        map((_) => Object.assign({} as UserDto, this.oauth.getIdentityClaims()))
+      )
+      .subscribe((u) => this.loggedOnSubject.next(u));
   }
 
-  get LoggedOn$() {
+  get LoggedOn$(): Observable<UserDto> {
     return this.loggedOnSubject.asObservable();
   }
 
@@ -40,19 +50,23 @@ export class LoginService {
   }
 
   login(userName?: string, password?: string) {
-    this.oauth.fetchTokenUsingPasswordFlowAndLoadUserProfile(userName, password).then(
-      (userInfo) => {
-        this.user = { uid: userInfo.sub, fullName: 'Trest' };
-        this.loggedOnSubject.next(true);
-      }
-    );
-    // this.oauth.initCodeFlow();
+    if (!userName || !password) {
+      this.oauth.initCodeFlow();
+    }
+
+    this.oauth
+      .fetchTokenUsingPasswordFlowAndLoadUserProfile(userName, password)
+      .then((userInfo) => {
+        this.user = Object.assign({} as UserDto, userInfo);
+        this.loggedOnSubject.next(this.user);
+      })
+      .catch((reason) => console.error(reason));
   }
 
   logout() {
     this.user = null;
-    this.loggedOnSubject.next(false);
+    this.loggedOnSubject.next(null);
+    this.oauth.logOut(true);
     this.router.navigate(['home']);
   }
-
 }

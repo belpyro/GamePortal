@@ -70,35 +70,35 @@ namespace GamePortal.Web.Api
                 AuthenticationType = DefaultAuthenticationTypes.ApplicationCookie
             });
 
-            app.UseGoogleAuthentication(new GoogleOAuth2AuthenticationOptions
-            {
-                ClientId = "719719063561-v05dg5416mu8km1u2filstn03oqj98s4.apps.googleusercontent.com",
-                ClientSecret = "n8sW2lGlSM7QsayPw97knojT",
-                AuthenticationType = "TTGGoogle"
-            });
+            //app.UseGoogleAuthentication(new GoogleOAuth2AuthenticationOptions
+            //{
+            //    ClientId = "719719063561-v05dg5416mu8km1u2filstn03oqj98s4.apps.googleusercontent.com",
+            //    ClientSecret = "n8sW2lGlSM7QsayPw97knojT",
+            //    AuthenticationType = "TTGGoogle"
+            //});
 
-            app.UseVKontakteAuthentication(new VKontakteAuthenticationOptions
-            {
-                ClientId = "7526371",
-                ClientSecret = "Z3blscBduDFc17p8NpWw",
-                AuthenticationType = "TTGVk",
-                Scope = { "email" }
-            });
+            //app.UseVKontakteAuthentication(new VKontakteAuthenticationOptions
+            //{
+            //    ClientId = "7526371",
+            //    ClientSecret = "Z3blscBduDFc17p8NpWw",
+            //    AuthenticationType = "TTGVk",
+            //    Scope = { "email" }
+            //});
 
-            app.Map("/ttg/login/google", b => b.Use<TTGGoogleAuthMiddleWare>());
-            app.Map("/ttg/login/vk", b => b.Use<TTGVkAuthMiddleWare>());
+            //app.Map("/ttg/login/google", b => b.Use<TTGGoogleAuthMiddleWare>());
+            //app.Map("/ttg/login/vk", b => b.Use<TTGVkAuthMiddleWare>());
 
-            app.UseIdentityServerBearerTokenAuthentication(new IdentityServerBearerTokenAuthenticationOptions
-            {
-                Authority = "http://localhost:10000/",
-                ClientId = "TTGWebClient",
-                ClientSecret = "secret",
-                RequireHttps = false,
-                SigningCertificate = Certificate.Get(),
-                ValidationMode = ValidationMode.Local,
-                IssuerName = "http://localhost:10000/",
-                ValidAudiences = new[] { "http://localhost:10000/resources" }
-            });
+            //app.UseIdentityServerBearerTokenAuthentication(new IdentityServerBearerTokenAuthenticationOptions
+            //{
+            //    Authority = "http://localhost:10000/",
+            //    ClientId = "TTGWebClient",
+            //    ClientSecret = "secret",
+            //    RequireHttps = false,
+            //    SigningCertificate = Certificate.Get(),
+            //    ValidationMode = ValidationMode.Local,
+            //    IssuerName = "http://localhost:10000/",
+            //    ValidAudiences = new[] { "http://localhost:10000/resources" }
+            //});
 
             app.UseBattleshipIdentityServer(kernel);
 

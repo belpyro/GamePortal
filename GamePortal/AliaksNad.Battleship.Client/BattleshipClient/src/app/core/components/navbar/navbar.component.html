@@ -18,28 +18,28 @@
           >Home</a
         >
       </li>
-      <li class="nav-item" *ngIf="isLogged">
+      <li class="nav-item" *ngIf="this.user$ | async">
         <a class="nav-link" routerLink="/profile" routerLinkActive="active"
           >Profile</a
         >
       </li>
-      <li class="nav-item" *ngIf="isLogged">
+      <li class="nav-item" *ngIf="this.user$ | async">
         <a class="nav-link" routerLink="/play" routerLinkActive="active"
           >Play game</a
         >
       </li>
     </ul>
     <ul class="navbar-nav">
-      <li class="nav-item" *ngIf="!isLogged">
+      <li class="nav-item" *ngIf="!(this.user$ | async)">
         <a class="nav-link" routerLink="/login" routerLinkActive="active"
           >Login</a
         >
       </li>
-      <li class="nav-item" *ngIf="this.loginService.LoggedOn">
-        <a class="nav-link" (click)="this.loginService.logout()">Logout</a>
+      <li class="nav-item" *ngIf="this.user$ | async">
+        <a class="nav-link" (click)="this.logout()">Logout</a>
       </li>
-      <li class="nav-item" *ngIf="this.loginService.LoggedOn">
-        <a class="nav-link">Welcome {{ this.email }}</a>
+      <li class="nav-item" *ngIf="this.user$ | async">
+        <a class="nav-link">Welcome {{ (this.user$ | async).email }}</a>
       </li>
     </ul>
     <!-- <form class="form-inline mt-2 mt-md-0">
