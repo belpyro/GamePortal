@@ -1,7 +1,6 @@
-import { NotificationService } from './../../../services/notification.service';
-import { BattleAreaDto } from './../../../models/BattleAreaDto';
-import { GameService } from './../../../services/game.service';
 import { Component, OnInit, SkipSelf, Self, Input, ViewChild, ElementRef, Renderer2 } from '@angular/core';
+import { GameService } from '../../services/game.service';
+import { BattleAreaDto } from '../../models/BattleAreaDto';
 
 @Component({
   selector: 'app-area',

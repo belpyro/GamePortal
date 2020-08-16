@@ -1,7 +1,7 @@
-import { ShipDto } from './../../../models/ShipsDto';
-import { CoordinatesDto } from './../../../models/CoordinatesDto';
 import { Component, OnInit, ViewChild, ElementRef, Renderer2 } from '@angular/core';
 import { TableShipDto } from './TableShipDto';
+import { ShipDto } from '../../models/ShipsDto';
+import { CoordinatesDto } from '../../models/CoordinatesDto';
 
 @Component({
   selector: 'app-battlefield',

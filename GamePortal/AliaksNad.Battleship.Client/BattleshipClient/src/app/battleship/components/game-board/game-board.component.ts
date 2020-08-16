@@ -1,6 +1,6 @@
-import { GameService } from './../../../services/game.service';
+import { GameService } from './../../services/game.service';
+import { BattleAreaDto } from './../../models/BattleAreaDto';
 import { Component, OnInit, Input } from '@angular/core';
-import { BattleAreaDto } from '../../../models/BattleAreaDto';
 
 @Component({
   selector: 'app-game-board',

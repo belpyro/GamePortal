@@ -1,8 +1,8 @@
+import { environment } from '../../../environments/environment';
 import { BattleAreaDto } from './../models/BattleAreaDto';
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { share } from 'rxjs/operators';
-import { environment } from 'src/environments/environment';
 
 @Injectable({ providedIn: 'root' })
 export class GameService {

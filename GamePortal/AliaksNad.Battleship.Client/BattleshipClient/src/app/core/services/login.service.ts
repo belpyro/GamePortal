@@ -1,5 +1,5 @@
-import { OAuthModule, OAuthService, AuthConfig } from 'angular-oauth2-oidc';
 import { UserDto } from './../models/UserDto';
+import { OAuthModule, OAuthService, AuthConfig } from 'angular-oauth2-oidc';
 import { Injectable } from '@angular/core';
 import { BehaviorSubject } from 'rxjs';
 import { Router } from '@angular/router';
@@ -8,20 +8,19 @@ export const oauthConfig: AuthConfig = {
   issuer: 'https://localhost:44313',
   redirectUri: window.location.origin + '/index.html ',
   clientId: 'BattleshipUserClient',
-  dummyClientSecret: 'secret',
-  // responseType: 'code',
+  // dummyClientSecret: 'secret',
+  responseType: 'code',
   scope: 'openid profile email',
   requireHttps: false,
   skipIssuerCheck: true,
-  skipSubjectCheck: true,
-  strictDiscoveryDocumentValidation: false,
+  // skipSubjectCheck: true,
+  // strictDiscoveryDocumentValidation: false,
   showDebugInformation: true,
-  oidc: false,
+  disablePKCE: true,
+  postLogoutRedirectUri: window.location.origin + '/login',
 };
 
-@Injectable({
-  providedIn: 'root'
-})
+@Injectable()
 export class LoginService {
 
   private loggedOnSubject = new BehaviorSubject<boolean>(true);

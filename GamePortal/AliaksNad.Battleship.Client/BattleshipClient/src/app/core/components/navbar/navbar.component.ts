@@ -1,9 +1,9 @@
-import { UserDto } from './../../../models/UserDto';
-import { LoginService } from './../../../services/login.service';
-import { NotificationService } from './../../../services/notification.service';
+import { LoginService } from '../../services/login.service';
 import { Component, OnInit } from '@angular/core';
 import { OAuthService } from 'angular-oauth2-oidc';
 import { map } from 'rxjs/operators';
+import { NotificationService } from '../../services/notification.service';
+import { UserDto } from '../../models/UserDto';
 
 @Component({
   selector: 'app-navbar',
