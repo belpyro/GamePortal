@@ -3,5 +3,6 @@ export interface TableUserDto {
   UserName?: string;
   RegistrationDate?: Date;
   LastLoginDate?: Date;
-  IsBlocked: boolean;
+  IsBlocked?: boolean;
+  UserRole?: string;
 }

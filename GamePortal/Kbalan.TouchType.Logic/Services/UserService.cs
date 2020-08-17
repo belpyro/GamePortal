@@ -102,7 +102,20 @@ namespace Kbalan.TouchType.Logic.Services
 
         public async Task<Result<IReadOnlyCollection<UserDto>>> GetAllAsync()
         {
-            var users = await _userManager.Users.ProjectToListAsync<UserDto>(_mapper.ConfigurationProvider);
+            var users = await _userManager.Users.Include(u => u.Roles)
+                        .Select(u => new UserDto
+                        {
+                            Id = u.Id,
+                            UserName = u.UserName,
+                            LastLoginDate = u.LastLoginDate,
+                            RegistrationDate = u.RegistrationDate,
+                            IsBlocked = u.IsBlocked,
+                    
+        }).ToListAsync();
+            foreach (var user in users)
+            {
+                user.UserRole = _userManager.GetRoles(user.Id).FirstOrDefault().ToString();
+            }
             return Result.Success((IReadOnlyCollection<UserDto>)users.AsReadOnly());
         }
 
@@ -119,6 +132,7 @@ namespace Kbalan.TouchType.Logic.Services
         {
             try
             {
+
                 Maybe<UserSettingStatisticDto> getResultById = await _userManager.Users.Where(x => x.Id == id).Include("Setting").Include("Statistic")
                     .ProjectToSingleOrDefaultAsync<UserSettingStatisticDto>(_mapper.ConfigurationProvider)
                     .ConfigureAwait(false);
@@ -131,6 +145,11 @@ namespace Kbalan.TouchType.Logic.Services
             }
         }
 
+        /// <summary>
+        /// Delete user from Db async by id
+        /// </summary>
+        /// <param name="id">id</param>
+        /// <returns></returns>
         public async Task<Result> DeleteAsync(string id)
         {
             var user = await _userManager.FindByIdAsync(id);
@@ -140,6 +159,86 @@ namespace Kbalan.TouchType.Logic.Services
             return Result.Combine(result.ToFunctionalResult());
 
 
+        }
+
+        /// <summary>
+        /// Change user field "IsBlocked" to true(Blocking user on client)
+        /// </summary>
+        /// <param name="id">id</param>
+        /// <returns></returns>
+        public async Task<Result> BlockAsync(string id)
+        {
+
+            var user = await _userManager.FindByIdAsync(id);
+            user.IsBlocked = true;
+            var result = await _userManager.UpdateAsync(user);
+            return Result.Combine(result.ToFunctionalResult());
+        }
+
+        /// <summary>
+        /// Change user field "IsBlocked" to false(Unblocking user on client)
+        /// </summary>
+        /// <param name="id">id</param>
+        /// <returns></returns>
+        public async Task<Result> UnBlockAsync(string id)
+        {
+
+            var user = await _userManager.FindByIdAsync(id);
+            user.IsBlocked = false;
+            var result = await _userManager.UpdateAsync(user);
+            return Result.Combine(result.ToFunctionalResult());
+        }
+
+        /// <summary>
+        /// Change user role to "administrator"
+        /// </summary>
+        /// <param name="id">id</param>
+        /// <returns></returns>
+        public async Task<Result> MakeRoleAdminAsync(string id)
+        {
+            var user = await _userManager.FindByIdAsync(id);
+
+            var userrole = _userManager.GetRoles(user.Id).FirstOrDefault();
+
+            await _userManager.RemoveFromRoleAsync(user.Id, userrole);
+
+            var result = await _userManager.AddToRoleAsync(user.Id, "administrator");
+
+            return Result.Combine(result.ToFunctionalResult());
+        }
+
+        /// <summary>
+        /// Change user role to "user"
+        /// </summary>
+        /// <param name="id">id</param>
+        /// <returns></returns>
+        public async Task<Result> MakeRoleUserAsync(string id)
+        {
+            var user = await _userManager.FindByIdAsync(id);
+
+            var userrole = _userManager.GetRoles(user.Id).FirstOrDefault();
+
+            await _userManager.RemoveFromRoleAsync(user.Id, userrole);
+
+            var result = await _userManager.AddToRoleAsync(user.Id, "user");
+
+            return Result.Combine(result.ToFunctionalResult());
+        }
+
+        /// <summary>
+        /// Change user last login date
+        /// </summary>
+        /// <param name="id">id</param>
+        /// <returns></returns>
+        public async Task<Result> UpdateLoginDateAsync(string id)
+        {
+            var user = await _userManager.FindByIdAsync(id);
+
+            user.LastLoginDate = DateTime.UtcNow;
+
+            var result = await _userManager.UpdateAsync(user);
+
+            return Result.Combine(result.ToFunctionalResult());
         }
 
         #region IDisposable Support
@@ -179,6 +278,8 @@ namespace Kbalan.TouchType.Logic.Services
             // TODO: uncomment the following line if the finalizer is overridden above.
             // GC.SuppressFinalize(this);
         }
+
+
 
         #endregion
     }

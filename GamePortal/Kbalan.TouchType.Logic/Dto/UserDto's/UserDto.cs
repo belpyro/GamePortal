@@ -1,5 +1,8 @@
 ﻿using FluentValidation.Attributes;
+using IdentityModel;
+using Kbalan.TouchType.Data.Models;
 using Kbalan.TouchType.Logic.Validators;
+using Microsoft.AspNet.Identity.EntityFramework;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -23,7 +26,10 @@ namespace Kbalan.TouchType.Logic.Dto
 
             public DateTime LastLoginDate { get; set; }
 
-            public bool IsBlocked { get; set; }
+            public string UserRole { get; set; }
+
+
+        public bool IsBlocked { get; set; }
 
 
 

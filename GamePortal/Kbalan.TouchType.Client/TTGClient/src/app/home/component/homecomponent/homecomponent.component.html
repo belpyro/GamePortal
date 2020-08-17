@@ -1,0 +1,121 @@
+<div class="container">
+<app-navbar></app-navbar>
+<div class="team-single">
+  <div class="row">
+      <div class="col-lg-4 col-md-5 xs-margin-30px-bottom">
+          <div class="team-single-img">
+              <img [src]="createImgPath()" alt="">
+          </div>
+          <div class="bg-light-gray padding-30px-all md-padding-25px-all sm-padding-20px-all text-center">
+              <app-upload (onUploadFinished)="uploadFinished($event)"></app-upload>
+          </div>
+      </div>
+
+      <div class="col-lg-8 col-md-7">
+        <div class="team-single-text padding-50px-left sm-no-padding-left">
+            <h4 class="font-size38 sm-font-size32 xs-font-size30">{{userProfile.Username}}</h4>
+            <div class="contact-info-section margin-40px-tb">
+                <ul class="list-style9 no-margin">
+                    <li>
+                        <div class="row">
+                            <div class="col-md-5 col-5">
+                                <i class="fas fa-graduation-cap text-green"></i>
+                                <strong class="margin-10px-left text-green">Id:</strong>
+                            </div>
+                            <div class="col-md-7 col-7">
+                                <p>{{userProfile.Id}}</p>
+                            </div>
+                        </div>
+
+                    </li>
+                    <li>
+
+                        <div class="row">
+                            <div class="col-md-5 col-5">
+                                <i class="far fa-gem text-green"></i>
+                                <strong class="margin-10px-left text-green">Registration Date:</strong>
+                            </div>
+                            <div class="col-md-7 col-7">
+                                <p>{{userProfile.RegistrationDate}}</p>
+                            </div>
+                        </div>
+
+                    </li>
+
+
+                    <li>
+                        <div class="row">
+                            <div class="col-md-5 col-5">
+                                <i class="fas fa-envelope text-green"></i>
+                                <strong class="margin-10px-left xs-margin-four-left text-green">Email:</strong>
+                            </div>
+                            <div class="col-md-7 col-7">
+                                <p>{{userProfile.Email}}</p>
+                            </div>
+                        </div>
+                    </li>
+                    <li>
+                    <br><br><br><strong class="margin-10px-left xs-margin-four-left text-pink">Statistic</strong>
+                    </li>
+                    <li>
+                      <div class="row">
+                          <div class="col-md-5 col-5">
+                              <i class="fas fa-envelope text-green"></i>
+                              <strong class="margin-10px-left xs-margin-four-left text-pink">Number Of Games Played:</strong>
+                          </div>
+                          <div class="col-md-7 col-7">
+                              <p>{{userProfile.Statistic.NumberOfGamesPlayed}}</p>
+                          </div>
+                      </div>
+                  </li>
+                  <li>
+                    <div class="row">
+                        <div class="col-md-5 col-5">
+                            <i class="fas fa-envelope text-green"></i>
+                            <strong class="margin-10px-left xs-margin-four-left text-pink">Avarage Speed:</strong>
+                        </div>
+                        <div class="col-md-7 col-7">
+                            <p>{{userProfile.Statistic.AvarageSpeed}}</p>
+                        </div>
+                    </div>
+                </li>
+                <li>
+                  <div class="row">
+                      <div class="col-md-5 col-5">
+                          <i class="fas fa-envelope text-green"></i>
+                          <strong class="margin-10px-left xs-margin-four-left text-pink">Max Speed Record:</strong>
+                      </div>
+                      <div class="col-md-7 col-7">
+                          <p>{{userProfile.Statistic.MaxSpeedRecord}}</p>
+                      </div>
+                  </div>
+              </li>
+                </ul>
+            </div>
+
+              <br><br><br><strong class="margin-10px-left xs-margin-four-left ">Level Of Text</strong><br>
+
+          <form [formGroup] = "this.LevelGroup" class="changelevel-form" >
+            <div class="form-check form-check-inline">
+              <input class="form-check-input" type="radio"  id="textLevelEasy" value='Easy' formControlName = "textradio">
+              <label class="form-check-label" for="textLevelEasy">easy</label>
+            </div>
+            <div class="form-check form-check-inline">
+              <input class="form-check-input" type="radio" id="textLevelMiddle" value='Medium' formControlName = "textradio">
+              <label class="form-check-label" for="textLevelMiddle">middle</label>
+            </div>
+            <div class="form-check form-check-inline">
+              <input class="form-check-input" type="radio" id="textLevelHard" value='Hard' formControlName = "textradio">
+              <label class="form-check-label" for="textLevelHard">hard</label>
+            </div>
+            <button class="btn btn-success" (click) = "changeLevel()" [disabled]= "disableChangeLevelBtn()" >Change level</button>
+          </form>
+        </div>
+    </div>
+
+    <div class="col-md-12">
+
+    </div>
+
+
+</div>

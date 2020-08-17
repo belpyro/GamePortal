@@ -34,7 +34,7 @@ namespace Kbalan.TouchType.Logic.Services
         /// <param name="id">User id</param>
         /// <returns></returns>
         Result Update(string id, SettingDto model);
-        Task<Result> UpdateAsync(string id, SettingDto model);
+        Task<Result> UpdateAsync(SettingDto model);
     }
 }
 

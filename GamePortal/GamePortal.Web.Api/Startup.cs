@@ -21,6 +21,9 @@ using Microsoft.Owin.Cors;
 using System.Web.Cors;
 using System.Threading.Tasks;
 using GamePortal.Web.Api.Config;
+using Microsoft.AspNetCore.Http.Features;
+using Microsoft.Owin.StaticFiles;
+using Microsoft.Extensions.FileProviders;
 
 [assembly: OwinStartup(typeof(GamePortal.Web.Api.Startup))]
 
@@ -33,6 +36,7 @@ namespace GamePortal.Web.Api
             var config = new HttpConfiguration();
 
             config.MapHttpAttributeRoutes();
+
 
             config.Routes.MapHttpRoute(
                 name: "DefaultApi",

@@ -105,5 +105,49 @@ namespace GamePortal.Web.Api.Controllers.TouchType
 
         }
 
+        [HttpGet]
+        [Route("block/{id}")]
+        //Post : /api/users/block/id
+        public async Task<IHttpActionResult> BlockAsync(string id)
+        {
+            var result = await _userService.BlockAsync(id);
+            return result.IsSuccess ? Ok() : (IHttpActionResult)BadRequest(result.Error);
+        }
+
+        [HttpGet]
+        [Route("unblock/{id}")]
+        //Post : /api/users/block/id
+        public async Task<IHttpActionResult> UnBlockAsync(string id)
+        {
+            var result = await _userService.UnBlockAsync(id);
+            return result.IsSuccess ? Ok() : (IHttpActionResult)BadRequest(result.Error);
+        }
+
+        [HttpGet]
+        [Route("mkadmin/{id}")]
+        //Post : /api/users/mkadmin/id
+        public async Task<IHttpActionResult> MakeRoleAdminAsync(string id)
+        {
+            var result = await _userService.MakeRoleAdminAsync(id);
+            return result.IsSuccess ? Ok() : (IHttpActionResult)BadRequest(result.Error);
+        }
+
+        [HttpGet]
+        [Route("mkuser/{id}")]
+        //Post : /api/users/mkuser/id
+        public async Task<IHttpActionResult> MakeRoleUserAsync(string id)
+        {
+            var result = await _userService.MakeRoleUserAsync(id);
+            return result.IsSuccess ? Ok() : (IHttpActionResult)BadRequest(result.Error);
+        }
+
+        [HttpGet]
+        [Route("logdate/{id}")]
+        //Post : /api/users/logdate/id
+        public async Task<IHttpActionResult> UpdateLoginDateAsync(string id)
+        {
+            var result = await _userService.UpdateLoginDateAsync(id);
+            return result.IsSuccess ? Ok() : (IHttpActionResult)BadRequest(result.Error);
+        }
     }
 }

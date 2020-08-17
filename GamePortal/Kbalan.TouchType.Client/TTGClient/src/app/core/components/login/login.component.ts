@@ -39,7 +39,6 @@ export class LoginComponent implements OnInit {
   }
 
   loginWithPassword() {
-    console.log(this.loginGroup.value);
     this.loginService.loginWithPass(
       this.loginGroup.value.username,
       this.loginGroup.value.password

@@ -1,3 +1,4 @@
+import { HomecomponentComponent } from './home/component/homecomponent/homecomponent.component';
 import { CoreModule } from './core/core.module';
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
@@ -11,6 +12,7 @@ import { CommonModule } from '@angular/common';
 import { TextModule } from './text/text.module';
 import { UsermanagerComponent } from './user/usermanager/usermanager.component';
 import { UserModule } from './user/user.module';
+import { HomeModule } from './home/home.module';
 
 
 const routes: Routes = [
@@ -21,12 +23,14 @@ const routes: Routes = [
 },
 {path: 'text', component: TextblockComponent, canActivate: [AuthGuard]},
 {path: 'users', component: UsermanagerComponent, canActivate: [AuthGuard]},
+{path: 'home', component: HomecomponentComponent, canActivate: [AuthGuard]},
 {path: '', redirectTo: '/entry/login', pathMatch: 'full'},
 {path: '**', component: NotFoundComponent}
 ];
 
 @NgModule({
   imports: [
+    HomeModule,
     CommonModule,
     CoreModule,
     TextModule,

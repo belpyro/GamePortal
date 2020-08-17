@@ -67,6 +67,7 @@ namespace KBalan.IdentityServerHost
 
             factory.UseInMemoryScopes(StandardScopes.All.Append(
                     new Scope() { Name = "api", DisplayName = "Api", Description = "Access to API", Type = ScopeType.Resource, Claims = new List<ScopeClaim> { new ScopeClaim("api-version", true) } }))
+
             .UseInMemoryClients(new[] { client, userClient });
 
             factory.UserService = new Registration<IUserService>(UserServiceFactory.Create());
