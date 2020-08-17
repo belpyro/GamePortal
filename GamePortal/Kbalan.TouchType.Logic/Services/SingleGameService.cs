@@ -15,6 +15,9 @@ using System.Threading.Tasks;
 
 namespace Kbalan.TouchType.Logic.Services
 {
+    /// <summary>
+    /// Service for single game methods
+    /// </summary>
     class SingleGameService: ISingleGameService
     {
         //Constants for results of user turn
@@ -91,21 +94,39 @@ namespace Kbalan.TouchType.Logic.Services
             }
         }
 
+        /// <summary>
+        /// Handling of user's turn. Method receive the id of the game and string with 
+        /// text, which user has typed + text which user has already succsefull typed 
+        /// before. Method compare this text with text in "CurrentPartToType". If it's not 
+        /// equal method return 0. If it equal and lenght of user text is equal to lenght of 
+        /// whole text, this means that user has typed all symbols of the text sucssesfully
+        /// and return 2(which means that game is finished) and delete text from db. In case
+        /// if only text is equal method return 1. and save new data(SymbolTyped and CurrentPartToType)
+        /// to db
+        /// </summary>
+        /// <param name="id"></param>
+        /// <param name="turn"></param>
+        /// <returns></returns>
         public async Task<Result<SingleGameResultDto>> UserTurnAsync(int id, string turn)
         {
             try
             {
+                //check if the game is exists
                 var singleGame = await _gameContext.SingleGames.FirstOrDefaultAsync(x => x.Id == id);
                 if(singleGame == null)
                 {
                     return Result.Failure<SingleGameResultDto>($"No games with id {id} exists");
                 }
 
+                //check if text from client is equal to expected text
                 if(singleGame.CurrentPartToType.Equals(turn))
                 {
+                    //increase sucsessfull typed symbol
                     singleGame.SymbolsTyped++;
+                    //checking if symbols of client text is equal or not to whole text
                     if(singleGame.SymbolsTyped == singleGame.SymbolsToType)
                     {
+                        //send finished game flag and delete game from db
                         singleGame.IsGameFinished = true;
                         _gameContext.SingleGames.Remove(singleGame);
                         await _gameContext.SaveChangesAsync();
@@ -114,6 +135,7 @@ namespace Kbalan.TouchType.Logic.Services
                     }
                     else
                     {
+                        //send correct turn flag and save changes to(symbol typed and current text to type) db
                         singleGame.CurrentPartToType = singleGame.TextForTyping.Substring(0, singleGame.SymbolsTyped+1);
                         _gameContext.SingleGames.Attach(singleGame);
                         var entry = _gameContext.Entry(singleGame);
@@ -125,6 +147,7 @@ namespace Kbalan.TouchType.Logic.Services
                 }
                 else
                 {
+                    //send incorrect turn flag
                     return Result.Success(new SingleGameResultDto { TurnResult = INCORRECT });
                 }
             }

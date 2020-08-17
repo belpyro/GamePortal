@@ -23,7 +23,12 @@ namespace GamePortal.Web.Api.Controllers.TouchType
             this._singleGameService = singleGameService;
         }
 
-        //Add new SingleGame
+        /// <summary>
+        /// Method for starting new game. 
+        /// Create a new game in Db and send info about it to client
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
         [HttpGet]
         [Route("{id}")]
         public async Task<IHttpActionResult> AddNewSingleGameAsync(string id)
@@ -42,7 +47,11 @@ namespace GamePortal.Web.Api.Controllers.TouchType
 
         }
 
-        //Make a turn
+        /// <summary>
+        /// Method for handling user turn(each user click on keyboard during game is playing)
+        /// </summary>
+        /// <param name="model"></param>
+        /// <returns></returns>
         [HttpPut]
         [Route("")]
         public async Task<IHttpActionResult> UserTurnAsync([FromBody]NewSingleGameDto model)
