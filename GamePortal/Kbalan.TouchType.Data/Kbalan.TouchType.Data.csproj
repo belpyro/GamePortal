@@ -110,11 +110,16 @@
     <Compile Include="Migrations\202008052250142_Init.designer.cs">
       <DependentUpon>202008052250142_Init.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\202008170903389_SingleGameAdd.cs" />
+    <Compile Include="Migrations\202008170903389_SingleGameAdd.designer.cs">
+      <DependentUpon>202008170903389_SingleGameAdd.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\ApplicationUser.cs" />
     <Compile Include="Models\Entity.cs" />
     <Compile Include="Models\LevelOfText.cs" />
     <Compile Include="Models\Role.cs" />
+    <Compile Include="Models\SingleGame.cs" />
     <Compile Include="Models\TextSetDb.cs" />
     <Compile Include="Models\TextSetDbmin.cs" />
     <Compile Include="Models\UserDb.cs" />
@@ -128,6 +133,9 @@
   <ItemGroup>
     <EmbeddedResource Include="Migrations\202008052250142_Init.resx">
       <DependentUpon>202008052250142_Init.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202008170903389_SingleGameAdd.resx">
+      <DependentUpon>202008170903389_SingleGameAdd.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

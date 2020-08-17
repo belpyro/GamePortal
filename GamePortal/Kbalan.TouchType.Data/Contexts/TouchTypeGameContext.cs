@@ -32,6 +32,8 @@ namespace Kbalan.TouchType.Data.Contexts
 
        public DbSet<ApplicationUser> ApplicationUsers { get; set; }
 
+        public DbSet<SingleGame> SingleGames { get; set; }
+
         protected override void OnModelCreating(DbModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);

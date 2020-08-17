@@ -285,6 +285,7 @@
     <Compile Include="Aspects\UserValidationInterceptor.cs" />
     <Compile Include="Dto\LoginDto.cs" />
     <Compile Include="Dto\NewUserDto.cs" />
+    <Compile Include="Dto\NewSingleGameDto.cs" />
     <Compile Include="Dto\TextSetDto.cs" />
     <Compile Include="Dto\TextSetDtomin.cs" />
     <Compile Include="Dto\UserDto%27s\UserStatisticDto.cs" />
@@ -296,7 +297,9 @@
     <Compile Include="Exceptions\TTGValidationException.cs" />
     <Compile Include="Extensions\IdentityExtension.cs" />
     <Compile Include="Services\EmailService.cs" />
+    <Compile Include="Services\ISingleGameService.cs" />
     <Compile Include="Services\IUploadService.cs" />
+    <Compile Include="Services\SingleGameService.cs" />
     <Compile Include="Services\UploadService.cs" />
     <Compile Include="TTGDIModule.cs" />
     <Compile Include="Profiles\TextSetProfile.cs" />
