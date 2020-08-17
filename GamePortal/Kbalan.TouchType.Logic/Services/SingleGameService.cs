@@ -17,6 +17,11 @@ namespace Kbalan.TouchType.Logic.Services
 {
     class SingleGameService: ISingleGameService
     {
+        //Constants for results of user turn
+        const int INCORRECT = 0;
+        const int CORRECT = 1;
+        const int WIN = 2;
+
         private UserManager<ApplicationUser> _userManager;
         private readonly IMapper _mapper;
         private readonly TouchTypeGameContext _gameContext;
@@ -28,13 +33,29 @@ namespace Kbalan.TouchType.Logic.Services
             this._gameContext = gameContext;
         }
 
+        /// <summary>
+        /// Creating new game. First of all checking if user with such id is exists.
+        /// Than checking if text with correct level is exists. If everything is ok
+        /// new SingleGame is created in Db. TextForTyping - random text from Db
+        /// which level is equal to user level. CurrentPartToType is equal to first symbol
+        /// of text. UserId equal to user id. Symbols to type is equal to text lengh
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
         public async Task<Result<NewSingleGameDto>> AddNewSingleGameAsync(string id)
         {
             try
             {
+                //find and check if user with such id is exists
                 var user = await _userManager.Users.Where(x => x.Id == id).Include("Setting")
                     .ProjectToSingleOrDefaultAsync<UserSettingDto>(_mapper.ConfigurationProvider)
                     .ConfigureAwait(false);
+                if (user == null)
+                {
+                    return Result.Failure<NewSingleGameDto>($"No user with such id {id} exists");
+                }
+
+                //find and check if text with user level is exists
                 var texts = await _gameContext.TextSets.Where(x => x.LevelOfText == user.Setting.LevelOfText)
                     .ToArrayAsync().ConfigureAwait(false);
                 if (texts.Length == 0)
@@ -44,6 +65,7 @@ namespace Kbalan.TouchType.Logic.Services
                
                 var text = _mapper.Map<TextSetDto>(texts.ElementAt(new Random().Next(0, texts.Length)));
 
+                //create new SingleGame and save it in Db
                 var resultDb = new SingleGame { 
                     TextForTyping = text.TextForTyping, 
                     CurrentPartToType = text.TextForTyping[0].ToString(),
@@ -53,6 +75,9 @@ namespace Kbalan.TouchType.Logic.Services
 
                 _gameContext.SingleGames.Add(resultDb);
                 await _gameContext.SaveChangesAsync().ConfigureAwait(false);
+
+                //create new NewSingleGameDto which contain text for typing and Single game id
+                //and transfer it to client
                 var resultDto = new NewSingleGameDto
                 {
                     Id = resultDb.Id,
@@ -64,6 +89,51 @@ namespace Kbalan.TouchType.Logic.Services
             {
                 return Result.Failure<NewSingleGameDto>(ex.Message);
             }
+        }
+
+        public async Task<Result<SingleGameResultDto>> UserTurnAsync(int id, string turn)
+        {
+            try
+            {
+                var singleGame = await _gameContext.SingleGames.FirstOrDefaultAsync(x => x.Id == id);
+                if(singleGame == null)
+                {
+                    return Result.Failure<SingleGameResultDto>($"No games with id {id} exists");
+                }
+
+                if(singleGame.CurrentPartToType.Equals(turn))
+                {
+                    singleGame.SymbolsTyped++;
+                    if(singleGame.SymbolsTyped == singleGame.SymbolsToType)
+                    {
+                        singleGame.IsGameFinished = true;
+                        _gameContext.SingleGames.Remove(singleGame);
+                        await _gameContext.SaveChangesAsync();
+
+                        return Result.Success(new SingleGameResultDto { TurnResult = WIN });
+                    }
+                    else
+                    {
+                        singleGame.CurrentPartToType = singleGame.TextForTyping.Substring(0, singleGame.SymbolsTyped+1);
+                        _gameContext.SingleGames.Attach(singleGame);
+                        var entry = _gameContext.Entry(singleGame);
+                        entry.Property(x => x.SymbolsTyped).IsModified = true;
+                        entry.Property(x => x.CurrentPartToType).IsModified = true;
+                        await _gameContext.SaveChangesAsync();
+                        return Result.Success(new SingleGameResultDto { TurnResult = CORRECT });
+                    }
+                }
+                else
+                {
+                    return Result.Success(new SingleGameResultDto { TurnResult = INCORRECT });
+                }
+            }
+            catch (SqlException ex)
+            {
+                return Result.Failure<SingleGameResultDto>(ex.Message);
+            }
+
+
         }
     }
 }
