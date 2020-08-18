@@ -1,3 +1,4 @@
+import { LogoutResolver } from './core/resolvers/logout.resolver';
 import { UserModule } from './user/user.module';
 import { BattleshipModule } from './battleship/battleship.module';
 import { CoreModule } from './core/core.module';
@@ -15,6 +16,11 @@ export const routes: Routes = [
   { path: 'home', component: HomeComponent },
   { path: 'play', component: GameBoardComponent, canActivate: [AuthGuard] },
   { path: 'login', component: LoginComponent },
+  {
+    path: 'logout',
+    resolve: { data: LogoutResolver },
+    component: HomeComponent,
+  },
   { path: 'profile', component: ProfileComponent, canActivate: [AuthGuard] },
   { path: '', redirectTo: 'home', pathMatch: 'full' },
   { path: '**', component: NotFoundComponent }
@@ -24,10 +30,10 @@ export const routes: Routes = [
   declarations: [],
   imports: [
     CommonModule,
-    CoreModule.forRoot(),
     BattleshipModule,
     UserModule,
-    RouterModule.forRoot(routes, { enableTracing: true })
+    RouterModule.forRoot(routes, { enableTracing: true }),
+    CoreModule.forRoot(),
   ],
   exports: [CoreModule, RouterModule]
 })

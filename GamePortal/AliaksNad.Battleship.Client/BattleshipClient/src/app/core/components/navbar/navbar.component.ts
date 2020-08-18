@@ -16,12 +16,10 @@ export class NavbarComponent implements OnInit {
   message: string;
   email: string;
   user$: Observable<UserDto>;
-  isLogged = false;
-  // private subscription: Subscription;
+  isLogged$: Observable<boolean>;
 
   ngOnDestroy(): void {
     // this.subscription.unsubscribe();
-
   }
 
   constructor(
@@ -31,8 +29,9 @@ export class NavbarComponent implements OnInit {
 
   ngOnInit(): void {
     this.ntf.Message$.subscribe(msg => this.message = msg);
-    // this.subscription = this.loginService.LoggedOn$.subscribe();
+
     this.user$ = this.loginService.LoggedOn$;
+    this.isLogged$ = this.loginService.isLoggedOn$;
   }
 
   logout() {

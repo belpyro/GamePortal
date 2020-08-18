@@ -13,7 +13,7 @@ import { LoginService } from './services/login.service';
 import { RouterModule } from '@angular/router';
 
 @NgModule({
-  declarations: [LoginComponent, NavbarComponent, NotFoundComponent, HomeComponent],
+  declarations: [LoginComponent, NotFoundComponent, HomeComponent, NavbarComponent],
   imports: [
     CommonModule,
     ReactiveFormsModule,
@@ -40,7 +40,7 @@ export class CoreModule {
   static forRoot(): ModuleWithProviders<CoreModule> {
     return {
       ngModule: CoreModule,
-      providers: [LoginService, NotificationService]
+      providers: [NotificationService]
     };
   }
 }
