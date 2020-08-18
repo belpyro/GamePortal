@@ -61,7 +61,7 @@ namespace AliaksNad.Battleship.Logic.Configuration
                 AllowAccessToAllScopes = true,
                 ClientName = "Battleship Web Client",
                 Flow = Flows.AuthorizationCode,
-                RedirectUris = new List<string>() { "https://localhost:44555", "http://localhost:4200/index.html" }
+                RedirectUris = new List<string>() { "http://localhost:4200/index.html", "https://aliaksnad-battleship.azurewebsites.net" },
             };
 
             var userClient = new Client
@@ -71,7 +71,7 @@ namespace AliaksNad.Battleship.Logic.Configuration
                 AllowAccessToAllScopes = true,
                 ClientName = "Battleship Web Client",
                 Flow = Flows.ResourceOwner,
-                RedirectUris = new List<string>() { "https://localhost:44555", "http://localhost:4200/index.html" }
+                RedirectUris = new List<string>() { "http://localhost:4200/index.html", "https://aliaksnad-battleship.azurewebsites.net" }
             };
 
             factory

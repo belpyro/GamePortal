@@ -1,28 +1,10 @@
+import { PASSWORD_FLOW_CONFIG, CODE_FLOW_CONFIG } from '../configs/auth.config';
 import { UserDto } from './../models/UserDto';
-import { OAuthModule, OAuthService, AuthConfig } from 'angular-oauth2-oidc';
-import { Injectable } from '@angular/core';
+import { OAuthService, AuthConfig } from 'angular-oauth2-oidc';
+import { Injectable, Inject } from '@angular/core';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { Router } from '@angular/router';
-import { environment } from 'src/environments/environment';
 import { filter, map } from 'rxjs/operators';
-
-export const oauthConfig: AuthConfig = {
-  issuer: environment.issuerUrl,
-  redirectUri: window.location.origin + '/index.html ',
-  // clientId: 'BattleshipWebClient',
-  clientId: 'BattleshipUserClient',
-  dummyClientSecret: 'secret',
-  // responseType: 'code',
-  scope: 'openid profile email',
-  requireHttps: false,
-  skipIssuerCheck: true,
-  // skipSubjectCheck: true,
-  // strictDiscoveryDocumentValidation: false,
-  showDebugInformation: true,
-  disablePKCE: true,
-  oidc: false,
-  postLogoutRedirectUri: window.location.origin + '/login',
-};
 
 @Injectable()
 export class LoginService {
@@ -30,9 +12,14 @@ export class LoginService {
   private loggedOnSubject: BehaviorSubject<UserDto> = new BehaviorSubject<UserDto>(null);
   private user: UserDto;
 
-  constructor(private router: Router, private oauth: OAuthService) {
-    this.oauth.configure(oauthConfig);
-    this.oauth.loadDiscoveryDocumentAndTryLogin();
+  constructor(
+    private router: Router,
+    private oauth: OAuthService,
+    @Inject(PASSWORD_FLOW_CONFIG) private passFlow: AuthConfig,
+    @Inject(CODE_FLOW_CONFIG) private codeFlow: AuthConfig,
+  ) {
+
+    this.oauth.tryLogin();
     this.oauth.events
       .pipe(
         filter((value) => value.type === 'token_received'),
@@ -45,28 +32,32 @@ export class LoginService {
     return this.loggedOnSubject.asObservable();
   }
 
-  get LoggedOn() {
+  get LoggedOn(): UserDto {
     return this.loggedOnSubject.value;
   }
 
-  login(userName?: string, password?: string) {
-    if (!userName || !password) {
-      this.oauth.initCodeFlow();
-    }
-
-    this.oauth
-      .fetchTokenUsingPasswordFlowAndLoadUserProfile(userName, password)
-      .then((userInfo) => {
-        this.user = Object.assign({} as UserDto, userInfo);
-        this.loggedOnSubject.next(this.user);
-      })
-      .catch((reason) => console.error(reason));
+  async loginWithCode() {
+    await this.configureOauth(this.codeFlow);
+    this.oauth.initCodeFlow();
   }
 
-  logout() {
+  async loginWithPass(userName: string, password: string) {
+    await this.configureOauth(this.passFlow);
+    const userInfo = await this.oauth
+      .fetchTokenUsingPasswordFlowAndLoadUserProfile(userName, password);
+    this.user = Object.assign({} as UserDto, userInfo);
+    this.loggedOnSubject.next(this.user);
+  }
+
+  logout(): void {
     this.user = null;
     this.loggedOnSubject.next(null);
     this.oauth.logOut(true);
     this.router.navigate(['home']);
+  }
+
+  private async configureOauth(config: AuthConfig) {
+    this.oauth.configure(config);
+    await this.oauth.loadDiscoveryDocument();
   }
 }

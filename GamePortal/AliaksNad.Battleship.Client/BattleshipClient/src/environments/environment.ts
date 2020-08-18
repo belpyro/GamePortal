@@ -4,8 +4,8 @@
 
 export const environment = {
   production: false,
-  backendUrl: 'https://localhost:44313/api/battleship',
-  issuerUrl: 'https://localhost:44313'
+  backendUrl: 'https://aliaksnad-battleship.azurewebsites.net/api/battleship',
+  issuerUrl: 'https://aliaksnad-battleship.azurewebsites.net'
 };
 
 /*

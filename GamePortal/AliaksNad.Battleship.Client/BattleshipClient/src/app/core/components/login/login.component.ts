@@ -40,13 +40,11 @@ export class LoginComponent implements OnInit {
   }
 
   login(): void {
-    this.loginService.login();
+    this.loginService.loginWithCode();
   }
 
   loginWithPassword(): void {
-    console.log('log');
-    console.log(this.loginGroup.value);
-    this.loginService.login(
+    this.loginService.loginWithPass(
       this.loginGroup.value.userName,
       this.loginGroup.value.password);
   }
