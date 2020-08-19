@@ -8,13 +8,16 @@ import { Session } from 'protractor';
   providedIn: 'root'
 })
 export class HomeService {
-
-  constructor(private http: HttpClient) { }
+  token;
+  user;
+  constructor(private http: HttpClient) {
+  this.token = sessionStorage.getItem('id_token_claims_obj');
+  this.user  = JSON.parse(this.token);
+}
 
   getUser(){
-    const token = sessionStorage.getItem('id_token_claims_obj');
-    const user = JSON.parse(token);
-    return this.http.get<UserProfileDto>(`${environment.backendurl}/api/users/${user.sub}`);
+
+    return this.http.get<UserProfileDto>(`${environment.backendurl}/api/users/${this.user.sub}`);
   }
   updateSetting(model){
     return this.http.put(`${environment.backendurl}/api/settings`, model);

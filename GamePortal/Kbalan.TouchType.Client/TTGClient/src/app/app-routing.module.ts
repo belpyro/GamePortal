@@ -13,6 +13,7 @@ import { TextModule } from './text/text.module';
 import { UsermanagerComponent } from './user/usermanager/usermanager.component';
 import { UserModule } from './user/user.module';
 import { HomeModule } from './home/home.module';
+import { SgameComponent } from './sgame/component/sgame/sgame.component';
 
 
 const routes: Routes = [
@@ -21,6 +22,7 @@ const routes: Routes = [
     {path: 'login', component: LoginComponent}
   ]
 },
+{path: 'sgame', component: SgameComponent, canActivate: [AuthGuard]},
 {path: 'text', component: TextblockComponent, canActivate: [AuthGuard]},
 {path: 'users', component: UsermanagerComponent, canActivate: [AuthGuard]},
 {path: 'home', component: HomecomponentComponent, canActivate: [AuthGuard]},
