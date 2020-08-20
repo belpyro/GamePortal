@@ -14,6 +14,7 @@ import { UsermanagerComponent } from './user/usermanager/usermanager.component';
 import { UserModule } from './user/user.module';
 import { HomeModule } from './home/home.module';
 import { SgameComponent } from './sgame/component/sgame/sgame.component';
+import { SgameModule } from './sgame/sgame.module';
 
 
 const routes: Routes = [
@@ -37,6 +38,7 @@ const routes: Routes = [
     CoreModule,
     TextModule,
     UserModule,
+    SgameModule,
     RouterModule.forRoot(routes)
   ],
   exports: [CoreModule , RouterModule]

@@ -1,6 +1,20 @@
-<div class="container" id="document">
+<div class="container" >
   <app-navbar></app-navbar>
-  <p class="correctText">{{correctText}}</p>
-  <p>{{newGame.Id}}</p>
-<p>{{newGame.TextForTyping}}</p>
+  <div class="timer">
+    <p>{{newGame.Name}}</p>
+    <p>{{speed}}</p>
+    <p>{{timeStart}} </p>
+  </div>
+  <div class="textZone">
+    <p id = "toTypeText">{{newGame.TextForTyping}}</p>
+    <p id="correctText">{{correctText}}</p>
+
+  </div>
+
+  <google-chart #googlechart
+  [type]="chart.type"
+  [data]="chart.data"
+  [options]="chart.options">
+</google-chart>
+
 </div>

@@ -1,10 +1,11 @@
 import { TextsetService } from '../../services/textset.service';
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { TextSetDto } from 'src/app/text/models/textsetDto';
 import { TextSetDtomin } from 'src/app/text/models/textsetDtomin';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import Swal from 'sweetalert2';
 import { ToastrService } from 'ngx-toastr';
+import { GoogleChartComponent } from 'angular-google-charts';
 
 
 @Component({
@@ -23,7 +24,26 @@ easytextset: TextSetDtomin[];
 middletextset: TextSetDtomin[];
 hardtextset: TextSetDtomin[];
 textGroup: FormGroup;
-
+@ViewChild('googlechart')
+  googlechart: GoogleChartComponent;
+  chart = {
+    type: 'Gauge',
+    data: [
+      ['Memory', 50],
+      ['CPU', 99]
+    ],
+    options: {
+      width: 400,
+      height: 400,
+      greenFrom: 0,
+      greenTo: 75,
+      redFrom: 90,
+      redTo: 100,
+      yellowFrom: 75,
+      yellowTo: 90,
+      minorTicks: 5
+    }
+  };
   constructor(private toastr: ToastrService, public textsetService: TextsetService, private fb: FormBuilder) {
     this.textGroup = this.fb.group({
       textname: [ '', [Validators.required, Validators.minLength(5)]],

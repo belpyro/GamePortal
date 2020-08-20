@@ -12,6 +12,7 @@ import { EntryMenuComponent } from './components/entrymenu/entrymenu.component';
 import { AppModule } from '../app.module';
 import { RouterModule } from '@angular/router';
 import { oauthCodeConfig, PASSWORD_FLOW_CONFIG, CODE_FLOW_CONFIG, oauthPassConfig } from './configs/auth.config';
+import { SgameComponent } from '../sgame/component/sgame/sgame.component';
 
 
 

@@ -1,3 +1,20 @@
-.correctText{
+
+#correctText {
+  float: left;
+  width: 45%;
   color: green;
+  font-size: 22px;
 }
+#toTypeText {
+  float: right;
+  width: 45%;
+  white-space: pre-wrap;
+  font-size: 22px;
+}
+.timer{
+  display: flex;
+  justify-content: space-around;
+  font-size: 36px;
+  color: rgb(66, 2, 10);
+}
+
