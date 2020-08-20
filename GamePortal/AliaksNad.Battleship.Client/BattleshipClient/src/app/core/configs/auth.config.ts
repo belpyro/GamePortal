@@ -4,7 +4,7 @@ import { InjectionToken } from '@angular/core';
 
 export const oauthPassConfig: AuthConfig = {
   issuer: environment.issuerUrl,
-  redirectUri: window.location.origin + '/index.html ',
+  redirectUri: window.location.origin + '/index.html',
   clientId: 'BattleshipUserClient',
   dummyClientSecret: 'secret',
   scope: 'openid profile email',

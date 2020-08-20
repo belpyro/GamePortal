@@ -29,7 +29,8 @@ namespace GamePortal.Web.Api
 
         public IValidator GetValidator(Type type)
         {
-            var result = GetKernelValidator(type);
+            var result = typeof(new Validator<type>);
+            var resultOld = GetKernelValidator(type);
 
             if (result == null)
             {

@@ -5,6 +5,7 @@ import { NgModule } from '@angular/core';
 import { AppComponent } from './app.component';
 import { CoreModule } from './core/core.module';
 import { HTTP_INTERCEPTORS } from '@angular/common/http';
+import { SimpleNotificationsModule } from 'angular2-notifications';
 
 
 @NgModule({
@@ -14,9 +15,11 @@ import { HTTP_INTERCEPTORS } from '@angular/common/http';
   imports: [
     BrowserModule,
     CoreModule,
+    SimpleNotificationsModule.forRoot(),
+    CoreModule.forRoot(),
     BattleshipRoutesModule,
   ],
-  providers: [{ provide: HTTP_INTERCEPTORS, useClass: AuthInterceptors, multi: true },
+  providers: [
   ],
   bootstrap: [AppComponent]
 })

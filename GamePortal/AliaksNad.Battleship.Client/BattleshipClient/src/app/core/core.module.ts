@@ -1,3 +1,4 @@
+import { HttpClientModule } from '@angular/common/http';
 import { NotificationService } from './services/notification.service';
 import { ReactiveFormsModule } from '@angular/forms';
 import { NotFoundComponent } from './components/notfound/notfound.component';
@@ -17,6 +18,7 @@ import { RouterModule } from '@angular/router';
   imports: [
     CommonModule,
     ReactiveFormsModule,
+    HttpClientModule,
     RouterModule,
     BattleshipModule,
     OAuthModule.forRoot(),

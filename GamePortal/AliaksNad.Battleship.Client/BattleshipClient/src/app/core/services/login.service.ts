@@ -20,17 +20,16 @@ export class LoginService {
   ) {
     this.oauth.configure(codeFlow);
     this.oauth.loadDiscoveryDocumentAndTryLogin().then(() => this.tryLogin());
-
     this.oauth.events
       .pipe(
         filter((value) => value instanceof OAuthSuccessEvent),
+        filter((value) => value.type === 'token_received'),
         switchMap((_) => from(this.oauth.loadUserProfile()))
       )
       .subscribe((u) => {
         this.loggedOnSubject.next(u);
         this.isLoggedOnSubject.next(true);
       });
-
   }
 
   get LoggedOn$(): Observable<UserDto> {
@@ -55,6 +54,7 @@ export class LoginService {
   }
 
   async loginWithPass(userName: string, password: string) {
+    await this.configureOauth(this.passFlow);
     await this.oauth.fetchTokenUsingPasswordFlow(userName, password);
   }
 
