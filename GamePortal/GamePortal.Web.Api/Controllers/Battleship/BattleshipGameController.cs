@@ -89,12 +89,12 @@ namespace GamePortal.Web.Api.Controllers.Battleship
         [Route("coordinates")]
         public async Task<IHttpActionResult> CheckHitAsync([CustomizeValidator(RuleSet = "PreValidation")][FromBody]TargetDto target)
         {
-            var validator = _kernal.Get<IValidator<TargetDto>>();
-            var validationResult = validator.Validate(target, "PreValidation");
-            if (!validationResult.IsValid)
-            {
-                return BadRequest(validationResult.Errors.ToString());
-            }
+            //var validator = _kernal.Get<IValidator<TargetDto>>();
+            //var validationResult = validator.Validate(target, "PreValidation");
+            //if (!validationResult.IsValid)
+            //{
+            //    return BadRequest(validationResult.Errors.ToString());
+            //}
 
             var result = await _gameService.CheckTargetAsync(target);
             if (result.IsFailure)
