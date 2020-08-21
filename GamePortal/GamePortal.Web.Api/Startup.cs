@@ -21,6 +21,7 @@ using Microsoft.Owin.Cors;
 using System.Web.Cors;
 using System.Threading.Tasks;
 using GamePortal.Web.Api.Config;
+using Microsoft.AspNet.SignalR;
 
 [assembly: OwinStartup(typeof(GamePortal.Web.Api.Startup))]
 
@@ -54,6 +55,8 @@ namespace GamePortal.Web.Api
                 })
             };
             app.UseCors(new CorsOptions { PolicyProvider = provide });
+
+            app.MapSignalR(new HubConfiguration { EnableDetailedErrors = true});
 
             app.UseStaticFiles();
             app.UseSwagger(typeof(Startup).Assembly).UseSwaggerUi3();
@@ -102,8 +105,7 @@ namespace GamePortal.Web.Api
 
             app.UseBattleshipIdentityServer(kernel);
 
-
-            app.UseNinjectMiddleware(() => kernel).UseNinjectWebApi(config);
+         app.UseNinjectMiddleware(() => kernel).UseNinjectWebApi(config);
         }
     }
 }

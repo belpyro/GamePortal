@@ -1,7 +1,9 @@
+import { NotificationsService } from 'angular2-notifications';
 import { Component, OnInit, ViewChild, ElementRef, Renderer2 } from '@angular/core';
 import { TableShipDto } from './TableShipDto';
 import { ShipDto } from '../../models/ShipsDto';
 import { CoordinatesDto } from '../../models/CoordinatesDto';
+import { SignalR, ISignalRConnection } from 'ng2-signalr';
 
 @Component({
   selector: 'app-battlefield',
@@ -31,10 +33,22 @@ export class BattlefieldComponent implements OnInit {
     isHorizontal: false,
     length: 1
   };
+  private connection: ISignalRConnection;
 
-  constructor(private renderer: Renderer2) { }
+  constructor(private renderer: Renderer2, private hub: SignalR, private ntf: NotificationsService) { }
   ngOnInit(): void {
     this.foo(this.size);
+
+    this.hub.connect()
+      .then((c) => {
+        this.connection = c;
+        this.connection.listenFor<string>('SendMessage')
+          .subscribe(msg => this.ntf.warn('Message', msg));
+        this.connection.listenFor<string>('AddAsync')
+          .subscribe(msg => this.ntf.warn('Message', msg));
+      })
+      .catch(reason =>
+        console.error(`Cannot connect to hub sample ${reason}`));
   }
 
   foo(size: number): void {
@@ -296,5 +310,12 @@ export class BattlefieldComponent implements OnInit {
       int = max;
     }
     return int;
+  }
+
+  pushMessage(): void {
+    if (this.connection) {
+      const msg = `Board size = ${this.size}`;
+      this.connection.invoke('SendMessage', msg);
+    }
   }
 }

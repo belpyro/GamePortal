@@ -5,7 +5,9 @@ using AliaksNad.Battleship.Logic.Services.Contracts;
 using FluentValidation;
 using FluentValidation.WebApi;
 using GamePortal.Web.Api.Filters.Battleship;
+using GamePortal.Web.Api.Hubs;
 using JetBrains.Annotations;
+using Microsoft.AspNet.SignalR;
 using Ninject;
 using System;
 using System.Collections.Generic;
@@ -42,6 +44,10 @@ namespace GamePortal.Web.Api.Controllers.Battleship
             {
                 return BadRequest(ModelState);
             }
+
+
+            var ctx = GlobalHost.ConnectionManager.GetHubContext<GameHub>();
+            ctx.Clients.All.GameStart("Game started");
 
             var result = await _gameService.AddAsync(BattleAreaDtoCoordinates);
             return result.IsSuccess ? Created($"api/battleship/game/fleets{result.Value}", result.Value) : (IHttpActionResult)BadRequest(result.Error);
