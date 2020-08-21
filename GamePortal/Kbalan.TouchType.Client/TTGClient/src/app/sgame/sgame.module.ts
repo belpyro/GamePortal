@@ -4,7 +4,7 @@ import { HttpClientModule } from '@angular/common/http';
 import { CoreModule } from '../core/core.module';
 import { GoogleChartsModule } from 'angular-google-charts';
 import { SgameComponent } from './component/sgame/sgame.component';
-
+import { RouterModule } from '@angular/router';
 
 @NgModule({
   declarations: [SgameComponent],
@@ -12,7 +12,8 @@ import { SgameComponent } from './component/sgame/sgame.component';
     CoreModule,
     CommonModule,
     HttpClientModule,
-    GoogleChartsModule
+    GoogleChartsModule,
+    RouterModule
   ]
 })
 export class SgameModule { }

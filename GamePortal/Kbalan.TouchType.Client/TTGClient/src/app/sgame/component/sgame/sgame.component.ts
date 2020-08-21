@@ -1,5 +1,5 @@
 import { TextSetDto } from './../../../text/models/textsetDto';
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { Component, OnInit, ViewChild, OnDestroy } from '@angular/core';
 import { HomeService } from 'src/app/home/services/home.service';
 import { UserProfileDto } from 'src/app/home/models/UserProfileDto';
 import { SgameService } from '../../services/sgame.service';
@@ -7,13 +7,17 @@ import { ToastrService } from 'ngx-toastr';
 import {  map } from 'rxjs/operators';
 import { fromEvent } from 'rxjs';
 import { GoogleChartComponent } from 'angular-google-charts';
+import Swal from 'sweetalert2';
+import { Router } from '@angular/router';
+import { StatisticDto } from 'src/app/home/models/StatisticDto';
+
 @Component({
   selector: 'app-sgame',
   templateUrl: './sgame.component.html',
   styleUrls: ['./sgame.component.scss']
 })
 export class SgameComponent implements OnInit {
-  timeStart = 0;
+  timeStart = 0.0;
   speed = 0;
   typedTextForSec = 0;
   interval;
@@ -22,31 +26,34 @@ export class SgameComponent implements OnInit {
   correctText = '';
   userProfile?: UserProfileDto;
   newGame?: TextSetDto;
-  isGameInProcess = false;
+  gameResult = 0;
   clicks = fromEvent(document, 'keydown');
   result = this.clicks.pipe( map((e: KeyboardEvent) => e.key));
   @ViewChild('googlechart')
   googlechart: GoogleChartComponent;
   chart = {
+    title: 'Typing speed',
     type: 'Gauge',
     data: [
       ['WPM', this.speed],
     ],
     options: {
-      width: 400,
-      height: 400,
+      width: 250,
+      height: 250,
       greenFrom: 0,
       greenTo: 75,
       redFrom: 120,
       redTo: 150,
       yellowFrom: 75,
       yellowTo: 120,
-      minorTicks: 1
+      minorTicks: 1,
+      max: 150
     }
   };
-  constructor(private homeservice: HomeService, private gameservice: SgameService, private toastr: ToastrService) {
+  constructor(private homeservice: HomeService, private gameservice: SgameService, private toastr: ToastrService, private router: Router) {
 
      }
+
 
   ngOnInit(): void {
     this.initUser();
@@ -59,11 +66,14 @@ export class SgameComponent implements OnInit {
      ); }
 
   async startnewgame(){
+    this.timeStart = 0.0;
+    this.typedTextForSec = 0;
+    this.textToCheck = '';
+    this.awaitedText = '';
+    this.correctText = '';
     this.startTimer();
     this.newGame = await this.gameservice.getnewgame(this.userProfile.Id);
-    this.isGameInProcess = true;
     this.result.subscribe(x => this.maketurn(x));
-
 
   }
    maketurn(key)
@@ -76,11 +86,46 @@ export class SgameComponent implements OnInit {
       this.newGame.TextForTyping = this.newGame.TextForTyping.slice(1, this.newGame.TextForTyping.length );
       if ( this.newGame.TextForTyping.length === 0)
       {
-        this.isGameInProcess = false;
+      this.gameResult = Math.round((this.correctText.length) / 5 /  (this.timeStart / 60));
+      this.gameFinish();
       }
     }
   }
 
+  gameFinish()
+  {
+    this.pauseTimer();
+    if  (this.gameResult > this.userProfile.Statistic.MaxSpeedRecord)
+    {
+      this.userProfile.Statistic.MaxSpeedRecord = this.gameResult;
+    }
+    this.userProfile.Statistic.AvarageSpeed =
+    (this.userProfile.Statistic.AvarageSpeed * this.userProfile.Statistic.NumberOfGamesPlayed + this.gameResult)
+    / (this.userProfile.Statistic.AvarageSpeed + 1 );
+    this.userProfile.Statistic.NumberOfGamesPlayed++;
+    const updateStatModel: StatisticDto  = {
+      StatisticId : this.userProfile.Statistic.StatisticId ,
+      AvarageSpeed : this.userProfile.Statistic.AvarageSpeed,
+      NumberOfGamesPlayed : this.userProfile.Statistic.NumberOfGamesPlayed,
+      MaxSpeedRecord : this.userProfile.Statistic.MaxSpeedRecord
+      };
+    this.gameservice.updateUserStatistic(updateStatModel).subscribe();
+    Swal.fire({
+      title: `Game is finished. You result is ${this.gameResult} wpm!`,
+      text: 'Do you want to repeat?',
+      icon: 'success',
+      showCancelButton: true,
+      confirmButtonColor: '#3085d6',
+      cancelButtonColor: '#d33',
+      confirmButtonText: 'Yes, let\'s play again '
+    }).then((playAgain) => {
+    if (playAgain.isConfirmed) {
+      this.changeText();
+    }else{
+      this.router.navigate(['/home']);
+    }
+  });
+  }
   startTimer() {
     this.interval = setInterval(() => {
      this.timeStart += 0.5;
@@ -88,7 +133,7 @@ export class SgameComponent implements OnInit {
      this.typedTextForSec = this.correctText.length;
      this.chart.data = [
       ['WPM', this.speed],
-    ]
+    ];
     }, 500);
   }
 
@@ -96,5 +141,9 @@ export class SgameComponent implements OnInit {
     clearInterval(this.interval);
   }
 
+  changeText(){
+    this.pauseTimer();
+    this.startnewgame();
+  }
 
 }

@@ -80,9 +80,4 @@
     <button class="btn btn-success" (click) = "sendTextToServer()" [disabled]="textGroup.invalid" *ngIf="!editTextbuttonEnable">Add text</button>
     <button class="btn btn-success" (click) = "sendEditedTexttoServer()" [disabled]="textGroup.invalid" *ngIf="editTextbuttonEnable">Edit text</button>
   </form>
-  <google-chart #googlechart
-  [type]="chart.type"
-  [data]="chart.data"
-  [options]="chart.options">
-</google-chart>
   </div>

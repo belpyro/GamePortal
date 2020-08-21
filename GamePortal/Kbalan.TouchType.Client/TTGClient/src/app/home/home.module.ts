@@ -4,6 +4,7 @@ import { HomecomponentComponent } from './component/homecomponent/homecomponent.
 import { CoreModule } from '../core/core.module';
 import { ReactiveFormsModule, FormsModule} from '@angular/forms';
 import { SharedModule } from '../shared/shared.module';
+import { RouterModule } from '@angular/router';
 
 
 @NgModule({
@@ -14,6 +15,7 @@ import { SharedModule } from '../shared/shared.module';
     FormsModule,
     ReactiveFormsModule,
     SharedModule,
+    RouterModule
   ]
 })
 export class HomeModule { }
