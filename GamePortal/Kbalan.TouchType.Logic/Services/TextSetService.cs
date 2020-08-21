@@ -6,6 +6,7 @@ using JetBrains.Annotations;
 using Kbalan.TouchType.Data.Contexts;
 using Kbalan.TouchType.Data.Models;
 using Kbalan.TouchType.Logic.Dto;
+using Microsoft.AspNet.Identity;
 using Serilog;
 using System;
 using System.Collections.Generic;
@@ -25,11 +26,13 @@ namespace Kbalan.TouchType.Logic.Services
 
         private readonly TouchTypeGameContext _gameContext;
         private readonly IMapper _mapper;
+        private readonly UserManager<ApplicationUser> _userManager;
 
-        public TextSetService([NotNull] TouchTypeGameContext gameContext, [NotNull]IMapper mapper)
+        public TextSetService([NotNull] TouchTypeGameContext gameContext, [NotNull]IMapper mapper, UserManager<ApplicationUser> userManager)
         {
             this._gameContext = gameContext;
             this._mapper = mapper;
+            this._userManager = userManager;
         }
 
         /// <summary>
@@ -159,15 +162,22 @@ namespace Kbalan.TouchType.Logic.Services
                 return Result.Failure<TextSetDto>(ex.Message);
             }   
         }
-        public async Task<Result<TextSetDto>> GetByLevelAsyncRandom(int level)
+        public async Task<Result<TextSetDto>> GetByLevelAsyncRandom(string id)
         {
+            var user = await _userManager.Users.Where(x => x.Id == id).Include("Setting")
+                    .ProjectToSingleOrDefaultAsync<UserSettingStatisticDto>(_mapper.ConfigurationProvider)
+                    .ConfigureAwait(false);
+            if (user == null)
+            {
+                return Result.Failure<TextSetDto>($"No user with id {id} exist");
+            }    
             try
             {
-                var texts = await _gameContext.TextSets.Where(x => x.LevelOfText == (LevelOfText)level)
+                var texts = await _gameContext.TextSets.Where(x => x.LevelOfText == user.Setting.LevelOfText)
                     .ToArrayAsync().ConfigureAwait(false);
                 if (texts.Length == 0)
                 {
-                    return Result.Failure<TextSetDto>($"No text set with level {level} exists");
+                    return Result.Failure<TextSetDto>($"No text set with level {user.Setting.LevelOfText} exists");
                 }
 
                 var text = _mapper.Map<TextSetDto>(texts.ElementAt(new Random().Next(0, texts.Length)));

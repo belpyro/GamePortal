@@ -114,6 +114,10 @@
     <Compile Include="Migrations\202008170903389_SingleGameAdd.designer.cs">
       <DependentUpon>202008170903389_SingleGameAdd.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\202008211351390_avarageSpeedToDouble.cs" />
+    <Compile Include="Migrations\202008211351390_avarageSpeedToDouble.designer.cs">
+      <DependentUpon>202008211351390_avarageSpeedToDouble.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\ApplicationUser.cs" />
     <Compile Include="Models\Entity.cs" />
@@ -136,6 +140,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\202008170903389_SingleGameAdd.resx">
       <DependentUpon>202008170903389_SingleGameAdd.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202008211351390_avarageSpeedToDouble.resx">
+      <DependentUpon>202008211351390_avarageSpeedToDouble.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

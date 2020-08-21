@@ -123,10 +123,10 @@ namespace Kbalan.TouchType.Logic.Services
                 return Result.Failure(ex.Message);
             }
         }
-        public async Task<Result> UpdateAsync(string id, StatisticDto model)
+        public async Task<Result> UpdateAsync(StatisticDto model)
         {
             //Cheking if user with id exist
-            var userModel = await _gameContext.ApplicationUsers.Include("Statistic").SingleOrDefaultAsync(x => x.Id == id)
+            var userModel = await _gameContext.ApplicationUsers.Include("Statistic").SingleOrDefaultAsync(x => x.Id == model.StatisticId)
                 .ConfigureAwait(false);
 
             //Replace model statistic id from Dto to correct id from Db and Valiate

@@ -49,13 +49,13 @@ namespace GamePortal.Web.Api.Controllers.TouchType
         //Update User Statistic by User Id
         [HttpPut]
         [Route("")]
-        public async Task<IHttpActionResult> UpdateAsync(string id, [FromBody]StatisticDto model)
+        public async Task<IHttpActionResult> UpdateAsync ([FromBody]StatisticDto model)
         {
 
             try
             {
-                var result = await _statisticService.UpdateAsync(id, model);
-                return result.IsSuccess ? Ok($"Statistic of user with id {id} updated succesfully!") : (IHttpActionResult)BadRequest(result.Error);
+                var result = await _statisticService.UpdateAsync( model);
+                return result.IsSuccess ? Ok($"Statistic of user with id {model.StatisticId} updated succesfully!") : (IHttpActionResult)BadRequest(result.Error);
             }
             catch (TTGValidationException ex)
             {
