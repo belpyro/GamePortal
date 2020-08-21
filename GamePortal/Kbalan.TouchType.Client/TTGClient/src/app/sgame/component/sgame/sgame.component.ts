@@ -101,7 +101,7 @@ export class SgameComponent implements OnInit {
     }
     this.userProfile.Statistic.AvarageSpeed =
     (this.userProfile.Statistic.AvarageSpeed * this.userProfile.Statistic.NumberOfGamesPlayed + this.gameResult)
-    / (this.userProfile.Statistic.AvarageSpeed + 1 );
+    / (this.userProfile.Statistic.NumberOfGamesPlayed + 1 );
     this.userProfile.Statistic.NumberOfGamesPlayed++;
     const updateStatModel: StatisticDto  = {
       StatisticId : this.userProfile.Statistic.StatisticId ,
