@@ -1,45 +1,26 @@
+import { NavbarComponent } from './core/components/navbar/navbar.component';
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
-import {ReactiveFormsModule, FormsModule} from '@angular/forms';
-import {HttpClientModule} from '@angular/common/http';
 import { AppComponent } from './app.component';
-import { NavbarComponent } from './components/navbar/navbar.component';
-import { LoginComponent } from './components/user/login/login.component';
-import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { ToastrModule } from 'ngx-toastr';
-import { RegistrationComponent } from './components/user/registration/registration.component';
 import { AppRoutingModule } from './app-routing.module';
-import { UserComponent } from './components/user/user.component';
-import { CommonModule } from '@angular/common';
-import { TextblockComponent } from './components/text/textblock/textblock.component';
-import { NotFoundComponent } from './components/not-found/not-found.component';
+import { HTTP_INTERCEPTORS } from '@angular/common/http';
+import { AuthInterceptor } from './core/interceptors/auth.interceptor';
+import { NoopAnimationsModule } from '@angular/platform-browser/animations';
+
 
 
 @NgModule({
-  declarations: [
-    AppComponent,
-    NavbarComponent,
-    LoginComponent,
-    RegistrationComponent,
-    UserComponent,
-    TextblockComponent,
-    NotFoundComponent,
-
-  ],
+  declarations: [AppComponent ],
   imports: [
     BrowserModule,
-    HttpClientModule,
-    FormsModule,
-    ReactiveFormsModule,
-    BrowserAnimationsModule,
-    ToastrModule.forRoot({
-      progressBar : true
-    }),
     AppRoutingModule,
-    CommonModule,
+    NoopAnimationsModule,
 
   ],
-  providers: [],
+
+  providers: [
+    { provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true },
+   ],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

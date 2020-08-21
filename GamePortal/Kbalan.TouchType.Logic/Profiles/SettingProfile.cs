@@ -8,7 +8,7 @@ namespace Kbalan.TouchType.Logic.Profiles
     {
         public SettingProfile()
         {
-            CreateMap<SettingDb, SettingDto>().ReverseMap();
+            CreateMap<SettingDb, SettingDto>().ForMember("Avatar", opt => opt.MapFrom(src => src.AvatarUrl)).ReverseMap();
         }
     }
 

@@ -23,6 +23,7 @@
             if (context.Roles.Any()) return;
 
             context.Roles.Add(new IdentityRole("user"));
+            context.Roles.Add(new IdentityRole("administrator"));
             context.SaveChanges();
         }
     }

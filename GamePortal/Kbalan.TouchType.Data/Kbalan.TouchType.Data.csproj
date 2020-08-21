@@ -105,20 +105,13 @@
     <Compile Include="Contexts\Configurations\StatisticDbConfiguration.cs" />
     <Compile Include="Contexts\Configurations\TextSetDbConfiguration.cs" />
     <Compile Include="Contexts\TouchTypeGameContext.cs" />
-    <Compile Include="Contexts\Configurations\UserDbConfiguration.cs" />
-    <Compile Include="Migrations\202005312241079_InitialCreate.cs" />
-    <Compile Include="Migrations\202005312241079_InitialCreate.Designer.cs">
-      <DependentUpon>202005312241079_InitialCreate.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\202006090833220_SqlServerLog.cs" />
-    <Compile Include="Migrations\202006090833220_SqlServerLog.designer.cs">
-      <DependentUpon>202006090833220_SqlServerLog.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\202006241429593_AspNetIdentity.cs" />
-    <Compile Include="Migrations\202006241429593_AspNetIdentity.designer.cs">
-      <DependentUpon>202006241429593_AspNetIdentity.cs</DependentUpon>
+    <Compile Include="Contexts\Configurations\ApplicationUserConfiguration.cs" />
+    <Compile Include="Migrations\202008052250142_Init.cs" />
+    <Compile Include="Migrations\202008052250142_Init.designer.cs">
+      <DependentUpon>202008052250142_Init.cs</DependentUpon>
     </Compile>
     <Compile Include="Migrations\Configuration.cs" />
+    <Compile Include="Models\ApplicationUser.cs" />
     <Compile Include="Models\Entity.cs" />
     <Compile Include="Models\LevelOfText.cs" />
     <Compile Include="Models\Role.cs" />
@@ -133,14 +126,8 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="Migrations\202005312241079_InitialCreate.resx">
-      <DependentUpon>202005312241079_InitialCreate.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\202006090833220_SqlServerLog.resx">
-      <DependentUpon>202006090833220_SqlServerLog.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\202006241429593_AspNetIdentity.resx">
-      <DependentUpon>202006241429593_AspNetIdentity.cs</DependentUpon>
+    <EmbeddedResource Include="Migrations\202008052250142_Init.resx">
+      <DependentUpon>202008052250142_Init.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

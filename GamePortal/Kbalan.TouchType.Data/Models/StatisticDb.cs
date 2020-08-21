@@ -6,7 +6,7 @@
     /// </summary>
     public class StatisticDb
     {
-        public int StatisticId { get; set; }
+        public string StatisticId { get; set; }
 
         public int MaxSpeedRecord { get; set; } 
 
@@ -14,6 +14,6 @@
 
         public int AvarageSpeed { get; set; }
 
-        public UserDb User { get; set; }
+        public ApplicationUser AppUser { get; set; }
     }
 }
