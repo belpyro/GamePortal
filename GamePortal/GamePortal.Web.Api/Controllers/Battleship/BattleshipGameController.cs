@@ -1,34 +1,29 @@
-﻿using AliaksNad.Battleship.Logic.Models;
-using AliaksNad.Battleship.Logic.Models.Game;
-using AliaksNad.Battleship.Logic.Services;
+﻿using AliaksNad.Battleship.Logic.Models.Game;
 using AliaksNad.Battleship.Logic.Services.Contracts;
-using FluentValidation;
+using CSharpFunctionalExtensions;
 using FluentValidation.WebApi;
 using GamePortal.Web.Api.Filters.Battleship;
 using GamePortal.Web.Api.Hubs;
 using JetBrains.Annotations;
 using Microsoft.AspNet.SignalR;
-using Ninject;
+using Swashbuckle.Swagger.Annotations;
 using System;
 using System.Collections.Generic;
 using System.Net;
 using System.Threading.Tasks;
-using System.Web;
 using System.Web.Http;
-using System.Web.Http.Description;
 
 namespace GamePortal.Web.Api.Controllers.Battleship
 {
-    [RoutePrefix("api/battleship/game"), ModelStateValidation]
+    [RoutePrefix("api/battleship/game"), ModelStateValidation/*, System.Web.Http.Authorize*/]
+    [SwaggerResponse(HttpStatusCode.Unauthorized)]
     public class BattleshipGameController : ApiController
     {
         private readonly IGameService _gameService;
-        private readonly IKernel _kernal;
 
-        public BattleshipGameController([NotNull] IGameService gameService, IKernel kernal)
+        public BattleshipGameController([NotNull] IGameService gameService)
         {
             this._gameService = gameService;
-            this._kernal = kernal;
         }
 
         /// <summary>
@@ -36,16 +31,11 @@ namespace GamePortal.Web.Api.Controllers.Battleship
         /// </summary>
         /// <param name="BattleAreaDtoCoordinates">Own fleet coordinates.</param>
         /// <returns></returns>
-        [HttpPost]
-        [Route("")]
+        [HttpPost, Route("")]
+        [SwaggerResponse(HttpStatusCode.Created, Type = typeof(BattleAreaDto))]
+        [SwaggerResponse(HttpStatusCode.BadRequest, Type = typeof(IEnumerable<Exception>))]
         public async Task<IHttpActionResult> AddAsync([CustomizeValidator(RuleSet = "PreValidation"), FromBody]BattleAreaDto BattleAreaDtoCoordinates)
         {
-            if (!ModelState.IsValid)
-            {
-                return BadRequest(ModelState);
-            }
-
-
             var ctx = GlobalHost.ConnectionManager.GetHubContext<GameHub>();
             ctx.Clients.All.GameStart("Game started");
 
@@ -58,6 +48,8 @@ namespace GamePortal.Web.Api.Controllers.Battleship
         /// </summary>
         /// <returns></returns>
         [HttpGet, Route("")]
+        [SwaggerResponse(HttpStatusCode.OK, Type = typeof(IEnumerable<BattleAreaDto>))]
+        [SwaggerResponse(HttpStatusCode.InternalServerError)]
         public async Task<IHttpActionResult> GetAllAsync()
         {
             var result = await _gameService.GetAllAsync();
@@ -69,8 +61,10 @@ namespace GamePortal.Web.Api.Controllers.Battleship
         /// </summary>
         /// <param name="id">battle area id.</param>
         /// <returns></returns>
-        [HttpGet]
-        [Route("{id:int:min(1)}")]      // TODO: Check Route Constraints 
+        [HttpGet, Route("{id:int:min(1)}")]
+        [SwaggerResponse(HttpStatusCode.InternalServerError)]
+        [SwaggerResponse(HttpStatusCode.NotFound)]
+        [SwaggerResponse(HttpStatusCode.OK, Type = typeof(BattleAreaDto))]
         public async Task<IHttpActionResult> GetByIdAsync(int id)
         {
             var battleArea = await _gameService.GetByIdAsync(id);
@@ -85,17 +79,12 @@ namespace GamePortal.Web.Api.Controllers.Battleship
         /// </summary>
         /// <param name="target">Enemy coordinates.</param>
         /// <returns></returns>
-        [HttpPost]
-        [Route("coordinates")]
+        [HttpPost, Route("launch")]
+        [SwaggerResponse(HttpStatusCode.InternalServerError)]
+        [SwaggerResponse(HttpStatusCode.OK)]
+        [SwaggerResponse(HttpStatusCode.NotFound)]
         public async Task<IHttpActionResult> CheckHitAsync([CustomizeValidator(RuleSet = "PreValidation")][FromBody]TargetDto target)
         {
-            //var validator = _kernal.Get<IValidator<TargetDto>>();
-            //var validationResult = validator.Validate(target, "PreValidation");
-            //if (!validationResult.IsValid)
-            //{
-            //    return BadRequest(validationResult.Errors.ToString());
-            //}
-
             var result = await _gameService.CheckTargetAsync(target);
             if (result.IsFailure)
                 return StatusCode(HttpStatusCode.InternalServerError);
@@ -109,11 +98,18 @@ namespace GamePortal.Web.Api.Controllers.Battleship
         /// <param name="id">Battle area id.</param>
         /// <returns></returns>
         [HttpDelete, Route("{id:int:min(1)}")]      
+        [SwaggerResponse(HttpStatusCode.NoContent)]
+        [SwaggerResponse(HttpStatusCode.InternalServerError)]
         public async Task<IHttpActionResult> DeleteByIdAsync(int id)
         {
             var result = await _gameService.DeleteBattleAreaAsync(id);
 
             return result.IsSuccess ? StatusCode(HttpStatusCode.NoContent) : StatusCode(HttpStatusCode.InternalServerError);
+        }
+
+        protected override void Dispose(bool disposing)
+        {
+            base.Dispose(disposing);
         }
     }
 }

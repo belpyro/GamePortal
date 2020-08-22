@@ -11,11 +11,11 @@ using Microsoft.Owin.Security.Google;
 
 namespace AliaksNad.Battleship.Logic.Configuration
 {
-    public sealed class BattleshipIdentityServerConfiguration
+    public sealed class BtlsIdentityServerConfig
     {
         private readonly UserManager<IdentityUser> _userManager;
 
-        public BattleshipIdentityServerConfiguration(UserManager<IdentityUser> userManager)
+        public BtlsIdentityServerConfig(UserManager<IdentityUser> userManager)
         {
             this._userManager = userManager;
         }

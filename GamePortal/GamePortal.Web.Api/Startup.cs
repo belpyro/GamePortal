@@ -59,6 +59,7 @@ namespace GamePortal.Web.Api
                     AllowAnyOrigin = true
                 })
             };
+
             app.UseCors(new CorsOptions { PolicyProvider = provide });
 
             app.MapSignalR(new HubConfiguration { EnableDetailedErrors = true});
@@ -76,37 +77,7 @@ namespace GamePortal.Web.Api
             app.UseCookieAuthentication(new CookieAuthenticationOptions
             {
                 AuthenticationType = DefaultAuthenticationTypes.ApplicationCookie,
-        });
-
-            app.UseGoogleAuthentication(new GoogleOAuth2AuthenticationOptions
-            {
-                ClientId = "719719063561-v05dg5416mu8km1u2filstn03oqj98s4.apps.googleusercontent.com",
-                ClientSecret = "n8sW2lGlSM7QsayPw97knojT",
-                AuthenticationType = "TTGGoogle"
             });
-
-            app.UseVKontakteAuthentication(new VKontakteAuthenticationOptions
-            {
-                ClientId = "7526371",
-                ClientSecret = "Z3blscBduDFc17p8NpWw",
-                AuthenticationType = "TTGVk",
-                Scope = { "email" }
-            });
-
-            app.Map("/ttg/login/google", b => b.Use<TTGGoogleAuthMiddleWare>());
-            app.Map("/ttg/login/vk", b => b.Use<TTGVkAuthMiddleWare>());
-
-            var provide = new CorsPolicyProvider
-            {
-                PolicyResolver = ctx => Task.FromResult(new CorsPolicy
-                {
-                    AllowAnyHeader = true,
-                    AllowAnyMethod = true,
-                    AllowAnyOrigin = true
-                })
-            };
-
-            app.UseCors(new CorsOptions { PolicyProvider = provide });
 
 
             app.UseBattleshipIdentityServer(kernel);
