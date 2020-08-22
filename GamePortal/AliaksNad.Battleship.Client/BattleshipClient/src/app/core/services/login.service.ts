@@ -1,7 +1,7 @@
-import { Configuration } from './configuration';
+import { BASE_PATH } from './../configs/variables';
+import { Configuration } from './../configs/configuration';
 import { Inject, Injectable, Optional } from '@angular/core';
 import { HttpClient, HttpHeaders, HttpParams, HttpResponse, HttpEvent } from '@angular/common/http';
-import { BASE_PATH } from './variables';
 import { Observable } from 'rxjs';
 import { environment } from '../../../environments/environment';
 

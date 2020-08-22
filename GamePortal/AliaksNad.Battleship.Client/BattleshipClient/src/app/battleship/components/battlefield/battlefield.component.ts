@@ -1,6 +1,6 @@
+import { TableShipDto } from './../../models/TableShipDto';
 import { NotificationsService } from 'angular2-notifications';
 import { Component, OnInit, ViewChild, ElementRef, Renderer2 } from '@angular/core';
-import { TableShipDto } from './TableShipDto';
 import { CoordinatesDto } from '../../models/CoordinatesDto';
 import { SignalR, ISignalRConnection } from 'ng2-signalr';
 import { ShipDto } from '../../models/shipDto';

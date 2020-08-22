@@ -9,9 +9,11 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { AuthGuard } from '../core/guards/authGuard';
 import { AuthInterceptors } from '../core/interceptors/auth.interceptors';
+import { BattleshipGameService } from './services/battleshipGame.service';
 
 export const routes: Routes = [
-  { path: '', component: BattlefieldComponent, canActivate: [AuthGuard] },
+  { path: 'test', component: BattlefieldComponent, canActivate: [AuthGuard] },
+  { path: '', component: GameBoardComponent, canActivate: [AuthGuard] },
 ];
 
 @NgModule({
@@ -29,6 +31,7 @@ export const routes: Routes = [
   ],
   providers: [
     { provide: HTTP_INTERCEPTORS, useClass: AuthInterceptors, multi: true },
+    BattleshipGameService,
   ],
   exports: [AreaComponent, BattlefieldComponent, GameBoardComponent, CellComponent]
 })

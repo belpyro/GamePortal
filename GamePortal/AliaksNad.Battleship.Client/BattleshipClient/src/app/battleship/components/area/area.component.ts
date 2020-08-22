@@ -1,31 +1,35 @@
 import { Component, OnInit, SkipSelf, Self, Input, ViewChild, ElementRef, Renderer2 } from '@angular/core';
-import { BattleAreaDto } from '../../models/BattleAreaDto';
-import { BattleshipGameService } from '../../services/battleshipGame.service';
 
 @Component({
   selector: 'app-area',
   templateUrl: './area.component.html',
-  styleUrls: ['./area.component.scss'],
-  providers: [BattleshipGameService]
+  styleUrls: [
+    '../battlefield/battlefield.component.scss',
+    './area.component.scss',
+  ],
 })
 export class AreaComponent implements OnInit {
 
-  @Input() battleArea: BattleAreaDto;
-  @ViewChild('table') table: ElementRef;
   size = 10;
+  arr = new Array();
+  sign = new Array();
 
   constructor(private renderer: Renderer2) { }
 
-  ngOnInit(): void { }
+  ngOnInit(): void {
+    this.initializeTable(this.size);
 
-  tableInitialize(): void {
-    const size = this.size;
+  }
+
+  initializeTable(size: number): void {
+    this.arr = new Array();
+    this.sign = new Array();
     for (let i = 0; i < size; i++) {
-      for (let j = 0; j < size; j++) {
-        // const cell = this.renderer.createComponent('div');
-
+      this.arr.push(i);
+      this.sign.push([]);
+      for (let g = 0; g < size; g++) {
+        this.sign[i].push('');
       }
     }
   }
-
 }

@@ -10,7 +10,7 @@ import { Observable } from 'rxjs';
 @Injectable()
 export class BattleshipGameService {
 
-  protected basePath = environment.backendUrl;
+  protected basePath = environment.issuerUrl;
   public defaultHeaders = new HttpHeaders();
   public configuration = new Configuration();
 

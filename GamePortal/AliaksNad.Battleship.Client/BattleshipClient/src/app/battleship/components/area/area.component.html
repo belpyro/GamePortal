@@ -1,1 +1,16 @@
 <table id="table"></table>
+
+<table>
+  <tr *ngFor="let item of arr; let trIndex = index">
+    <td
+      *ngFor="let item of arr; let tdIndex = index"
+      class="battlefield-cell battlefield-cell__busy battlefield-cell__done"
+    >
+      <div
+        class="battlefield-cell-content"
+        attr.Coordinate-X="{{ tdIndex }}"
+        attr.Coordinate-Y="{{ trIndex }}"
+      ></div>
+    </td>
+  </tr>
+</table>
