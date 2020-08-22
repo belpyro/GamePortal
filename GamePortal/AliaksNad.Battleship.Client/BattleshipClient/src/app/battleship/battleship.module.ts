@@ -1,3 +1,4 @@
+import { AreaService } from './services/areaService';
 import { CellComponent } from './components/cell/cell.component';
 import { GameBoardComponent } from './components/game-board/game-board.component';
 import { BattlefieldComponent } from './components/battlefield/battlefield.component';
@@ -32,6 +33,7 @@ export const routes: Routes = [
   providers: [
     { provide: HTTP_INTERCEPTORS, useClass: AuthInterceptors, multi: true },
     BattleshipGameService,
+    AreaService,
   ],
   exports: [AreaComponent, BattlefieldComponent, GameBoardComponent, CellComponent]
 })

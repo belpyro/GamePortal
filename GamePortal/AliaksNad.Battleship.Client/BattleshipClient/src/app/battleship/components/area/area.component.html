@@ -5,12 +5,19 @@
     <td
       *ngFor="let item of arr; let tdIndex = index"
       class="battlefield-cell battlefield-cell__busy battlefield-cell__done"
+      [class]="sign[tdIndex][trIndex]"
     >
       <div
         class="battlefield-cell-content"
+        id="{{ tdIndex }}*{{ trIndex }}"
         attr.Coordinate-X="{{ tdIndex }}"
         attr.Coordinate-Y="{{ trIndex }}"
-      ></div>
+        (click)="push(tdIndex, trIndex)"
+        (drop)="drop($event)"
+        (dragover)="allowDrop($event)"
+      >
+        <span draggable="false" class="z"></span>
+      </div>
     </td>
   </tr>
 </table>
