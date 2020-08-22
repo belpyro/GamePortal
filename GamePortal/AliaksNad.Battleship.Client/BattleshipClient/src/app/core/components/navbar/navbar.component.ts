@@ -1,4 +1,4 @@
-import { LoginService } from '../../services/login.service';
+import { LoginService } from '../../services/externalLogin.service';
 import { Component, OnInit } from '@angular/core';
 import { OAuthService } from 'angular-oauth2-oidc';
 import { NotificationService } from '../../services/notification.service';

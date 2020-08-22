@@ -9,9 +9,8 @@
  * https://github.com/swagger-api/swagger-codegen.git
  * Do not edit the class manually.
  */
+import { CoordinatesDto } from './coordinatesDto';
 
-
-export interface CoordinatesDto {
-    coordinateX: number;
-    coordinateY: number;
+export interface ShipDto {
+  coordinates?: Array<CoordinatesDto>;
 }

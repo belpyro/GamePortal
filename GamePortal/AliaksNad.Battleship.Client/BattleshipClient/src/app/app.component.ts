@@ -1,4 +1,4 @@
-import { LoginService } from './core/services/login.service';
+import { LoginService } from './core/services/externalLogin.service';
 import { Component, OnInit } from '@angular/core';
 import { NotificationsService } from 'angular2-notifications';
 

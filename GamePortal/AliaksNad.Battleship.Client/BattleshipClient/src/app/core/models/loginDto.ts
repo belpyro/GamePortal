@@ -11,7 +11,7 @@
  */
 
 
-export interface CoordinatesDto {
-    coordinateX: number;
-    coordinateY: number;
+export interface LoginDto2 {
+    userName?: string;
+    password?: string;
 }

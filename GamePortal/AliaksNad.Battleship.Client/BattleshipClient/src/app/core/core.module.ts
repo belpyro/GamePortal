@@ -10,7 +10,7 @@ import { OAuthModule } from 'angular-oauth2-oidc';
 import { HomeComponent } from './components/home/home.component';
 import { BattleshipModule } from '../battleship/battleship.module';
 import { PASSWORD_FLOW_CONFIG, CODE_FLOW_CONFIG, oauthPassConfig, oauthCodeConfig } from './configs/auth.config';
-import { LoginService } from './services/login.service';
+import { LoginService } from './services/externalLogin.service';
 import { RouterModule } from '@angular/router';
 
 @NgModule({
