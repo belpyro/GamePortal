@@ -1,3 +1,4 @@
+import { GameBoardService } from './../../services/game-board.service';
 import { AreaService } from './../../services/areaService';
 import { BattleshipGameService } from './../../services/battleshipGame.service';
 import { Component, OnInit, Input } from '@angular/core';
@@ -12,18 +13,13 @@ export class GameBoardComponent implements OnInit {
 
   btlarea: BattleAreaDto[] = [];
 
-  constructor(private gameService: BattleshipGameService, private areaService: AreaService) { }
-
-  ngOnInit(): void {
-    this.gameService.battleshipGameGetAll()
-      .subscribe(data => this.btlarea = data);
-  }
+  constructor(private gameBoardService: GameBoardService) { }
 
   generateFleet(): void {
-    this.areaService.ceedFleet();
+    this.gameBoardService.generateFleet();
   }
 
   deleteFleet(): void {
-    this.areaService.cleanArea();
+    this.gameBoardService.deleteFleet();
   }
 }

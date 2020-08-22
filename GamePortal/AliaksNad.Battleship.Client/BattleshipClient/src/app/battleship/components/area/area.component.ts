@@ -14,6 +14,7 @@ import { AffectedCellDto } from '../../models/affectedCell';
 })
 export class AreaComponent implements OnInit {
 
+  @Input() title = 'title';
   size = 10;
   arr = new Array();
   sign = new Array();
@@ -83,7 +84,7 @@ export class AreaComponent implements OnInit {
   }
 
   getCellById(model: CoordinatesDto): HTMLElement {
-    return document.getElementById(`${model.coordinateX}*${model.coordinateY}`);
+    return document.getElementById(`${this.title}_${model.coordinateX}*${model.coordinateY}`);
   }
 
   markCell(model: AffectedCellDto): void {

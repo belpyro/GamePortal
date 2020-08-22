@@ -1,7 +1,21 @@
-<div board="5px solid red"><app-area></app-area></div>
-<button class="btn btn-lg btn-primary btn-block" (click)="generateFleet()">
-  generate fleet
-</button>
-<button class="btn btn-lg btn-primary btn-block" (click)="deleteFleet()">
-  delete fleet
-</button>
+<div class="row">
+  <div class="column">
+    <app-own-area></app-own-area>
+  </div>
+  <div class="column">
+    <app-enemy-area></app-enemy-area>
+  </div>
+</div>
+
+<div>
+  <button
+    style="margin-top: 2.4em;"
+    class="btn btn-lg btn-primary btn-block"
+    (click)="generateFleet()"
+  >
+    generate fleet
+  </button>
+  <button class="btn btn-lg btn-primary btn-block" (click)="deleteFleet()">
+    delete fleet
+  </button>
+</div>
