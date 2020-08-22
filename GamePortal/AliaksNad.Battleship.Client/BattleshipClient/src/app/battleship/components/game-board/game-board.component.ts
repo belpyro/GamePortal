@@ -1,6 +1,6 @@
-import { GameService } from './../../services/game.service';
-import { BattleAreaDto } from './../../models/BattleAreaDto';
+import { BattleshipGameService } from './../../services/battleshipGame.service';
 import { Component, OnInit, Input } from '@angular/core';
+import { BattleAreaDto } from '../../models/BattleAreaDto';
 
 @Component({
   selector: 'app-game-board',
@@ -11,10 +11,10 @@ export class GameBoardComponent implements OnInit {
 
   btlarea: BattleAreaDto[] = [];
 
-  constructor(private gameService: GameService) { }
+  constructor(private gameService: BattleshipGameService) { }
 
   ngOnInit(): void {
-    this.gameService.getAll()
+    this.gameService.battleshipGameGetAll()
       .subscribe(data => this.btlarea = data);
   }
 }

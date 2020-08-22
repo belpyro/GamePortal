@@ -1,4 +1,4 @@
-import { CoordinatesDto } from '../../models/CoordinatesDto';
+import { CoordinatesDto } from '../../models/coordinatesDto';
 
 export interface TableShipDto {
   StartCoordinates: CoordinatesDto;

@@ -5,7 +5,7 @@ import { } from 'rxjs/Observable';
 import { LoginDto2 } from '../models/loginDto';
 import { NewUserDto2 } from '../models/newUserDto';
 import { BASE_PATH, COLLECTION_FORMATS } from './variables';
-import { Configuration } from './configuration';
+import { Configuration } from '../configs/configuration';
 import { environment } from '../../../environments/environment';
 import { Observable } from 'rxjs';
 

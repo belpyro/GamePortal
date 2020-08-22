@@ -1,12 +1,12 @@
 import { Component, OnInit, SkipSelf, Self, Input, ViewChild, ElementRef, Renderer2 } from '@angular/core';
-import { GameService } from '../../services/game.service';
 import { BattleAreaDto } from '../../models/BattleAreaDto';
+import { BattleshipGameService } from '../../services/battleshipGame.service';
 
 @Component({
   selector: 'app-area',
   templateUrl: './area.component.html',
   styleUrls: ['./area.component.scss'],
-  providers: [GameService]
+  providers: [BattleshipGameService]
 })
 export class AreaComponent implements OnInit {
 
