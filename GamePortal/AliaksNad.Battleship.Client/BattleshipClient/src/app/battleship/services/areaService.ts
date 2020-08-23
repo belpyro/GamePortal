@@ -1,7 +1,8 @@
+import { BattleAreaDto } from './../models/battleAreaDto';
 import { AffectedCellDto } from './../models/affectedCell';
 import { TableShipDto } from './../models/TableShipDto';
 import { ShipDto } from './../models/shipDto';
-import { CoordinatesDto } from './../models/coordinatesDto';
+import { CoordinatesDto } from './../models/CoordinatesDto';
 import { Injectable, Renderer2 } from '@angular/core';
 import { Subject } from 'rxjs';
 
@@ -49,8 +50,6 @@ export class AreaService {
       this.delShipSource.next(ship);
     }
 
-    console.log(this.tableFleet);
-
     this.busyCell = [];
     this.tableFleet = [];
   }
@@ -68,8 +67,8 @@ export class AreaService {
 
     for (const ship of fleet) {
       if (evId === ship.id) {
-        ship.StartCoordinates.coordinateX = ev.target.getAttribute('coordinate-x');
-        ship.StartCoordinates.coordinateY = ev.target.getAttribute('coordinate-y');
+        ship.StartCoordinates.CoordinateX = ev.target.getAttribute('Coordinate-x');
+        ship.StartCoordinates.CoordinateY = ev.target.getAttribute('Coordinate-y');
         if (!this.validationCheck(ship)) {
           ev.preventDefault();
         }
@@ -87,13 +86,12 @@ export class AreaService {
         this.busyCell = busyCell.concat(this.busyCell);
       }
     }
-    console.log(this.busyCell);
     this.pushBusy(this.busyCell);
   }
 
   pushBusy(area: CoordinatesDto[]): void {
     for (const cell of area) {
-      this.cssStyleSource.next({ coordinates: cell, cssStyle: 'battlefield-cell__miss' });
+      this.cssStyleSource.next({ Coordinates: cell, cssStyle: 'battlefield-cell__miss' });
     }
   }
 
@@ -111,12 +109,12 @@ export class AreaService {
 
     for (let i = 0; i < result.length; i++) {
       result[i] = {
-        coordinateX: +value.StartCoordinates.coordinateX + +xIncrease,
-        coordinateY: +value.StartCoordinates.coordinateY + +yIncrease,
+        CoordinateX: +value.StartCoordinates.CoordinateX + +xIncrease,
+        CoordinateY: +value.StartCoordinates.CoordinateY + +yIncrease,
       };
     }
 
-    return { coordinates: result };
+    return { Coordinates: result };
   }
 
   toShipDto(value: TableShipDto): ShipDto {
@@ -126,20 +124,48 @@ export class AreaService {
     if (value.isHorizontal) {
       for (let i = 0; i < result.length; i++) {
         result[i] = {
-          coordinateX: +value.StartCoordinates.coordinateX + +i,
-          coordinateY: +value.StartCoordinates.coordinateY
+          CoordinateX: +value.StartCoordinates.CoordinateX + +i,
+          CoordinateY: +value.StartCoordinates.CoordinateY
         };
       }
     } else {
       for (let i = 0; i < result.length; i++) {
         result[i] = {
-          coordinateX: +value.StartCoordinates.coordinateX,
-          coordinateY: +value.StartCoordinates.coordinateY + +i
+          CoordinateX: +value.StartCoordinates.CoordinateX,
+          CoordinateY: +value.StartCoordinates.CoordinateY + +i
         };
       }
     }
 
-    return { coordinates: result };
+    return { Coordinates: result };
+  }
+
+  toTableShipDto(btlArea: BattleAreaDto): void {
+    const value: ShipDto[] = btlArea.Ships;
+
+    let tblShip: TableShipDto;
+    this.tableFleet = [];
+
+    for (const ship of value) {
+      tblShip = {
+        id: this.generateId(),
+        StartCoordinates: {
+          CoordinateX: ship.Coordinates[0].CoordinateX,
+          CoordinateY: ship.Coordinates[0].CoordinateY,
+        },
+        isHorizontal: this.isHorizontal(ship),
+        length: ship.Coordinates.length
+      };
+    }
+    this.addShipSource.next(tblShip);
+    this.tableFleet.push(tblShip);
+  }
+
+  isHorizontal(ship: ShipDto): boolean {
+    if (ship.Coordinates.length > 1 && ship.Coordinates[0].CoordinateX === ship.Coordinates[1].CoordinateX) {
+      return true;
+    }
+    return false;
   }
 
   generateShip(shipSize: number): TableShipDto {
@@ -147,8 +173,8 @@ export class AreaService {
     do {
       ship = {
         StartCoordinates: {
-          coordinateX: this.randomBtw(0, 9),
-          coordinateY: this.randomBtw(0, 9)
+          CoordinateX: this.randomBtw(0, 9),
+          CoordinateY: this.randomBtw(0, 9)
         },
         isHorizontal: Math.random() >= 0.5,
         length: shipSize,
@@ -167,13 +193,13 @@ export class AreaService {
   }
   areaCheck(ship: TableShipDto): boolean {
     if (ship.isHorizontal) {
-      const maxX = +ship.StartCoordinates.coordinateX + +ship.length;
+      const maxX = +ship.StartCoordinates.CoordinateX + +ship.length;
       if (maxX > 10) {
         return true;
       }
       return false;
     } else {
-      const maxY = +ship.StartCoordinates.coordinateY + +ship.length;
+      const maxY = +ship.StartCoordinates.CoordinateY + +ship.length;
       if (maxY > 10) {
         return true;
       }
@@ -185,10 +211,10 @@ export class AreaService {
     const newShip = this.toShipDto(tableShip);
     const busyArea = this.busyCell as CoordinatesDto[];
 
-    for (const newCell of newShip.coordinates) {
+    for (const newCell of newShip.Coordinates) {
       for (const busyCell of busyArea) {
-        if (newCell.coordinateX === busyCell.coordinateX &&
-          newCell.coordinateY === busyCell.coordinateY) {
+        if (newCell.CoordinateX === busyCell.CoordinateX &&
+          newCell.CoordinateY === busyCell.CoordinateY) {
           return true;
         }
       }
@@ -203,8 +229,8 @@ export class AreaService {
   setBusyCell(value: TableShipDto): CoordinatesDto[] {
     const busyCell = new Array();
 
-    const fromX: number = (value.StartCoordinates.coordinateX) - 1;
-    const fromY: number = (value.StartCoordinates.coordinateY) - 1;
+    const fromX: number = (value.StartCoordinates.CoordinateX) - 1;
+    const fromY: number = (value.StartCoordinates.CoordinateY) - 1;
 
     let lengthX: number = (value.length) + 2;
     let lengthY: number = (value.length) + 2;
@@ -218,8 +244,8 @@ export class AreaService {
     for (let i = 0; i < lengthY; i++) {
       for (let g = 0; g < lengthX; g++) {
         busyCell.push({
-          coordinateX: this.getBeteen(fromX + g),
-          coordinateY: this.getBeteen(fromY + i)
+          CoordinateX: this.getBeteen(fromX + g),
+          CoordinateY: this.getBeteen(fromY + i)
         });
       }
     }

@@ -1,3 +1,5 @@
+import { filter } from 'rxjs/operators';
+import { BattleAreaDto } from './../../models/battleAreaDto';
 import { AreaService } from './../../services/areaService';
 import { Component, OnInit } from '@angular/core';
 import { Subject } from 'rxjs';
@@ -20,6 +22,15 @@ export class OwnAreaComponent implements OnInit {
 
     this.gameBoardService.deleteFleet$.subscribe(
       () => this.areaService.cleanArea());
+
+    this.gameBoardService.shipDto$.subscribe(
+      (value) => {
+        this.initializeArea(value);
+      });
+  }
+
+  initializeArea(btlArea: BattleAreaDto): void {
+    this.areaService.toTableShipDto(btlArea);
   }
 
 }

@@ -29,7 +29,7 @@ export class BattlefieldComponent implements OnInit {
   dirtyId: string;
   exapleShip: TableShipDto = {
     id: 'test',
-    StartCoordinates: { coordinateX: 9, coordinateY: 9 },
+    StartCoordinates: { CoordinateX: 9, CoordinateY: 9 },
     isHorizontal: false,
     length: 1
   };
@@ -80,8 +80,8 @@ export class BattlefieldComponent implements OnInit {
 
     for (const ship of fleet) {
       if (evId === ship.id) {
-        ship.StartCoordinates.coordinateX = ev.target.getAttribute('coordinate-x');
-        ship.StartCoordinates.coordinateY = ev.target.getAttribute('coordinate-y');
+        ship.StartCoordinates.CoordinateX = ev.target.getAttribute('coordinate-x');
+        ship.StartCoordinates.CoordinateY = ev.target.getAttribute('coordinate-y');
         if (!this.validationCheck(ship)) {
           ev.preventDefault();
         }
@@ -111,7 +111,7 @@ export class BattlefieldComponent implements OnInit {
   }
   pushBusy2(area: CoordinatesDto[]): void {
     for (const cell of area) {
-      this.sign[cell.coordinateX][cell.coordinateY] = 'battlefield-cell__hit';
+      this.sign[cell.CoordinateX][cell.CoordinateY] = 'battlefield-cell__hit';
     }
   }
 
@@ -135,7 +135,7 @@ export class BattlefieldComponent implements OnInit {
 
   pushBusy(area: CoordinatesDto[]): void {
     for (const cell of area) {
-      this.sign[cell.coordinateX][cell.coordinateY] = 'battlefield-cell__miss';
+      this.sign[cell.CoordinateX][cell.CoordinateY] = 'battlefield-cell__miss';
     }
   }
 
@@ -157,7 +157,7 @@ export class BattlefieldComponent implements OnInit {
     }
 
     const Cell = document.getElementById
-      (`${shipModel.StartCoordinates.coordinateX}*${shipModel.StartCoordinates.coordinateY}`);
+      (`${shipModel.StartCoordinates.CoordinateX}*${shipModel.StartCoordinates.CoordinateY}`);
     this.renderer.appendChild(Cell, ship);
   }
 
@@ -166,8 +166,8 @@ export class BattlefieldComponent implements OnInit {
     do {
       ship = {
         StartCoordinates: {
-          coordinateX: this.randomBtw(0, 9),
-          coordinateY: this.randomBtw(0, 9)
+          CoordinateX: this.randomBtw(0, 9),
+          CoordinateY: this.randomBtw(0, 9)
         },
         isHorizontal: Math.random() >= 0.5,
         length: shipSize,
@@ -182,14 +182,14 @@ export class BattlefieldComponent implements OnInit {
   }
   areaCheck(ship: TableShipDto): boolean {
     if (ship.isHorizontal) {
-      const maxX = +ship.StartCoordinates.coordinateX + +ship.length;
+      const maxX = +ship.StartCoordinates.CoordinateX + +ship.length;
       console.log(maxX);
       if (maxX > 10) {
         return true;
       }
       return false;
     } else {
-      const maxY = +ship.StartCoordinates.coordinateY + +ship.length;
+      const maxY = +ship.StartCoordinates.CoordinateY + +ship.length;
       console.log(maxY);
       if (maxY > 10) {
         return true;
@@ -202,10 +202,10 @@ export class BattlefieldComponent implements OnInit {
     const newShip = this.toShipDto(tableShip);
     const busyArea = this.busyCell as CoordinatesDto[];
 
-    for (const newCell of newShip.coordinates) {
+    for (const newCell of newShip.Coordinates) {
       for (const busyCell of busyArea) {
-        if (newCell.coordinateX === busyCell.coordinateX &&
-          newCell.coordinateY === busyCell.coordinateY) {
+        if (newCell.CoordinateX === busyCell.CoordinateX &&
+          newCell.CoordinateY === busyCell.CoordinateY) {
           return true;
         }
       }
@@ -227,8 +227,8 @@ export class BattlefieldComponent implements OnInit {
 
     for (let i = 0; i < result.length; i++) {
       result[i] = {
-        coordinateX: value.StartCoordinates.coordinateX,
-        coordinateY: value.StartCoordinates.coordinateY,
+        coordinateX: value.StartCoordinates.CoordinateX,
+        coordinateY: value.StartCoordinates.CoordinateY,
       };
     }
 
@@ -243,13 +243,13 @@ export class BattlefieldComponent implements OnInit {
 
     for (let i = 0; i < result.length; i++) {
       result[i] = {
-        coordinateX: +value.StartCoordinates.coordinateX + +xIncrease,
-        coordinateY: +value.StartCoordinates.coordinateY + +yIncrease,
+        coordinateX: +value.StartCoordinates.CoordinateX + +xIncrease,
+        coordinateY: +value.StartCoordinates.CoordinateY + +yIncrease,
       };
     }
 
 
-    return { coordinates: result };
+    return { Coordinates: result };
   }
 
   toShipDto(value: TableShipDto): ShipDto {
@@ -259,27 +259,27 @@ export class BattlefieldComponent implements OnInit {
     if (value.isHorizontal) {
       for (let i = 0; i < result.length; i++) {
         result[i] = {
-          coordinateX: +value.StartCoordinates.coordinateX + +i,
-          coordinateY: +value.StartCoordinates.coordinateY
+          coordinateX: +value.StartCoordinates.CoordinateX + +i,
+          coordinateY: +value.StartCoordinates.CoordinateY
         };
       }
     } else {
       for (let i = 0; i < result.length; i++) {
         result[i] = {
-          coordinateX: +value.StartCoordinates.coordinateX,
-          coordinateY: +value.StartCoordinates.coordinateY + +i
+          coordinateX: +value.StartCoordinates.CoordinateX,
+          coordinateY: +value.StartCoordinates.CoordinateY + +i
         };
       }
     }
 
-    return { coordinates: result };
+    return { Coordinates: result };
   }
 
   setBusyCell(value: TableShipDto): CoordinatesDto[] {
     const busyCell = new Array();
 
-    const fromX: number = (value.StartCoordinates.coordinateX) - 1;
-    const fromY: number = (value.StartCoordinates.coordinateY) - 1;
+    const fromX: number = (value.StartCoordinates.CoordinateX) - 1;
+    const fromY: number = (value.StartCoordinates.CoordinateY) - 1;
 
     let lengthX: number = (value.length) + 2;
     let lengthY: number = (value.length) + 2;

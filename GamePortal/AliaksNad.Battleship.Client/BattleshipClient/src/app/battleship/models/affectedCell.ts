@@ -1,6 +1,6 @@
 import { CoordinatesDto } from './coordinatesDto';
 
 export interface AffectedCellDto {
-  coordinates: CoordinatesDto;
+  Coordinates: CoordinatesDto;
   cssStyle: string;
 }

@@ -10,8 +10,7 @@
  * Do not edit the class manually.
  */
 
-
 export interface CoordinatesDto {
-    coordinateX: number;
-    coordinateY: number;
+  CoordinateX: number;
+  CoordinateY: number;
 }

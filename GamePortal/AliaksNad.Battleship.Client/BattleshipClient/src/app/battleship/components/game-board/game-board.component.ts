@@ -11,9 +11,9 @@ import { BattleAreaDto } from '../../models/BattleAreaDto';
 })
 export class GameBoardComponent implements OnInit {
 
-  btlarea: BattleAreaDto[] = [];
-
   constructor(private gameBoardService: GameBoardService) { }
+
+  ngOnInit(): void {}
 
   generateFleet(): void {
     this.gameBoardService.generateFleet();

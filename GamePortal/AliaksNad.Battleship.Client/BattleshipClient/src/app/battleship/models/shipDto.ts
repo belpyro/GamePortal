@@ -12,5 +12,5 @@
 import { CoordinatesDto } from './coordinatesDto';
 
 export interface ShipDto {
-  coordinates?: Array<CoordinatesDto>;
+  Coordinates?: Array<CoordinatesDto>;
 }

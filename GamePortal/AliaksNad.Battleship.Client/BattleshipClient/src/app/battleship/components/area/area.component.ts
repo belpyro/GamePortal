@@ -84,11 +84,11 @@ export class AreaComponent implements OnInit {
   }
 
   getCellById(model: CoordinatesDto): HTMLElement {
-    return document.getElementById(`${this.title}_${model.coordinateX}*${model.coordinateY}`);
+    return document.getElementById(`${this.title}_${model.CoordinateX}*${model.CoordinateY}`);
   }
 
   markCell(model: AffectedCellDto): void {
-    this.sign[model.coordinates.coordinateX][model.coordinates.coordinateY] = model.cssStyle;
+    this.sign[model.Coordinates.CoordinateX][model.Coordinates.CoordinateY] = model.cssStyle;
   }
 
   drop(ev): void {
