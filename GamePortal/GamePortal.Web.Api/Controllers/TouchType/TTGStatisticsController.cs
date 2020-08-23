@@ -1,6 +1,7 @@
 ﻿using FluentValidation;
 using JetBrains.Annotations;
 using Kbalan.TouchType.Logic.Dto;
+using Kbalan.TouchType.Logic.Exceptions;
 using Kbalan.TouchType.Logic.Services;
 using System;
 using System.Collections.Generic;
@@ -37,12 +38,8 @@ namespace GamePortal.Web.Api.Controllers.TouchType
         //Get Statistic Info by user Id
         [HttpGet]
         [Route("{id}")]
-        public async Task<IHttpActionResult> GetAllByIdAsync([FromUri]int id)
+        public async Task<IHttpActionResult> GetAllByIdAsync([FromUri]string id)
         {
-            if (id <= 0)
-            {
-                return BadRequest("ID must be greater than 0");
-            }
             var result = await _statisticService.GetByIdAsync(id);
             if (result.IsFailure)
                 return (IHttpActionResult)StatusCode(HttpStatusCode.InternalServerError);
@@ -52,11 +49,19 @@ namespace GamePortal.Web.Api.Controllers.TouchType
         //Update User Statistic by User Id
         [HttpPut]
         [Route("")]
-        public async Task<IHttpActionResult> UpdateAsync(int id, [FromBody]StatisticDto model)
+        public async Task<IHttpActionResult> UpdateAsync(string id, [FromBody]StatisticDto model)
         {
-            var result = await _statisticService.UpdateAsync(id, model);
-            return result.IsSuccess ? Ok($"Statistic of user with id {id} updated succesfully!") : (IHttpActionResult)BadRequest(result.Error);
 
+            try
+            {
+                var result = await _statisticService.UpdateAsync(id, model);
+                return result.IsSuccess ? Ok($"Statistic of user with id {id} updated succesfully!") : (IHttpActionResult)BadRequest(result.Error);
+            }
+            catch (TTGValidationException ex)
+            {
+
+                return (IHttpActionResult)BadRequest(ex.Message);
+            }
         }
     }
 }

@@ -1,23 +1,42 @@
+import { HomecomponentComponent } from './home/component/homecomponent/homecomponent.component';
+import { CoreModule } from './core/core.module';
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
-import { RegistrationComponent } from './components/user/registration/registration.component';
-import { UserComponent } from './components/user/user.component';
-import { LoginComponent } from './components/user/login/login.component';
-import { TextblockComponent } from './components/text/textblock/textblock.component';
+import { AuthGuard } from './core/guards/auth.guard';
+import { RegistrationComponent } from './core/components/registration/registration.component';
+import { LoginComponent } from './core/components/login/login.component';
+import { TextblockComponent } from './text/component/textblock/textblock.component';
+import { NotFoundComponent } from './core/components/not-found/not-found.component';
+import { EntryMenuComponent } from './core/components/entrymenu/entrymenu.component';
+import { CommonModule } from '@angular/common';
+import { TextModule } from './text/text.module';
+import { UsermanagerComponent } from './user/usermanager/usermanager.component';
+import { UserModule } from './user/user.module';
+import { HomeModule } from './home/home.module';
 
 
 const routes: Routes = [
-  {path: '', redirectTo: '/user/login', pathMatch: 'full'},
-  {path: 'user', component: UserComponent, children: [
+  {path: 'entry', component: EntryMenuComponent, children: [
     {path: 'registration', component: RegistrationComponent},
     {path: 'login', component: LoginComponent}
   ]
 },
-{path: 'text', component: TextblockComponent}
+{path: 'text', component: TextblockComponent, canActivate: [AuthGuard]},
+{path: 'users', component: UsermanagerComponent, canActivate: [AuthGuard]},
+{path: 'home', component: HomecomponentComponent, canActivate: [AuthGuard]},
+{path: '', redirectTo: '/entry/login', pathMatch: 'full'},
+{path: '**', component: NotFoundComponent}
 ];
 
 @NgModule({
-  imports: [RouterModule.forRoot(routes)],
-  exports: [RouterModule]
+  imports: [
+    HomeModule,
+    CommonModule,
+    CoreModule,
+    TextModule,
+    UserModule,
+    RouterModule.forRoot(routes)
+  ],
+  exports: [CoreModule , RouterModule]
 })
 export class AppRoutingModule { }

@@ -11,11 +11,13 @@ namespace Kbalan.TouchType.Logic.Dto
     /// </summary>
     public class UserSettingStatisticDto
     {
-        public int Id { get; set; }
+        public string Id { get; set; }
 
-        public string NickName { get; set; }
+        public string Username { get; set; }
 
-        public string Password { get; set; }
+        public string Email { get; set; }
+
+        public DateTime RegistrationDate { get; set; }
 
         public StatisticDto Statistic { get; set; }
 

@@ -7,8 +7,8 @@ namespace AliaksNad.Battleship.Data.Contexts.Configurations
     {
         public ShipsDbConfiguration()
         {
-            HasKey(x => x.Id).ToTable("Ships");
-            HasMany(x => x.ShipCoordinates).WithOptional(x => x.Ships).HasForeignKey(x => x.ShipsId);
+            HasKey(x => x.ShipId).ToTable("Ships");
+            HasMany(x => x.Coordinates).WithOptional(x => x.ShipDb).HasForeignKey(x => x.ShipId).WillCascadeOnDelete();
         }
     }
 }

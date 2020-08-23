@@ -36,30 +36,30 @@ namespace Kbalan.TouchType.Logic.Services
         /// Get All TextSet's
         /// </summary>
         /// <returns></returns>
-        public Result<IEnumerable<TextSetDto>> GetAll()
+        public Result<IEnumerable<TextSetDtomin>> GetAll()
         {
             try
             {
-                var getAllResult = _gameContext.TextSets.ProjectToArray<TextSetDto>(_mapper.ConfigurationProvider);
-                return Result.Success<IEnumerable<TextSetDto>>(getAllResult);
+                var getAllResult = _gameContext.TextSets.ProjectToArray<TextSetDtomin>(_mapper.ConfigurationProvider);
+                return Result.Success<IEnumerable<TextSetDtomin>>(getAllResult);
             }
             catch (SqlException ex)
             {
-                return Result.Failure<IEnumerable<TextSetDto>>(ex.Message);
+                return Result.Failure<IEnumerable<TextSetDtomin>>(ex.Message);
             }
 
         }
-        public  async Task<Result<IEnumerable<TextSetDto>>> GetAllAsync()
+        public  async Task<Result<IEnumerable<TextSetDtomin>>> GetAllAsync()
         {
             try
             {
-                var getAllResult = await _gameContext.TextSets.ProjectToArrayAsync<TextSetDto>(_mapper.ConfigurationProvider)
+                var getAllResult = await _gameContext.TextSets.ProjectToArrayAsync<TextSetDtomin>(_mapper.ConfigurationProvider)
                     .ConfigureAwait(false);
-                return Result.Success<IEnumerable<TextSetDto>>(getAllResult);
+                return Result.Success<IEnumerable<TextSetDtomin>>(getAllResult);
             }
             catch (SqlException ex)
             {
-                return Result.Failure<IEnumerable<TextSetDto>>(ex.Message);
+                return Result.Failure<IEnumerable<TextSetDtomin>>(ex.Message);
             }
         }
 
@@ -139,9 +139,9 @@ namespace Kbalan.TouchType.Logic.Services
         }
 
         /// <summary>
-        /// Get TextSet by level
+        /// Get TextSet by level random
         /// </summary>
-        public Result<TextSetDto> GetByLevel(int level)
+        public Result<TextSetDto> GetByLevelRandom(int level)
         {
             try
             {
@@ -159,7 +159,7 @@ namespace Kbalan.TouchType.Logic.Services
                 return Result.Failure<TextSetDto>(ex.Message);
             }   
         }
-        public async Task<Result<TextSetDto>> GetByLevelAsync(int level)
+        public async Task<Result<TextSetDto>> GetByLevelAsyncRandom(int level)
         {
             try
             {
@@ -176,6 +176,46 @@ namespace Kbalan.TouchType.Logic.Services
             catch (SqlException ex)
             {
                 return Result.Failure<TextSetDto>(ex.Message);
+            }
+        }
+
+        /// <summary>
+        /// Get TextSet by level
+        /// </summary>
+        public Result<IEnumerable<TextSetDto>> GetByLevel(int level)
+        {
+            try
+            {
+                var texts = _gameContext.TextSets.Where(x => x.LevelOfText == (LevelOfText)level).ToArray();
+                if (texts.Length == 0)
+                {
+                    return Result.Failure<IEnumerable<TextSetDto>>($"No text set with level {level} exists");
+                }
+
+                var text = _mapper.Map<IEnumerable<TextSetDto>>(texts);
+                return Result.Success(text);
+            }
+            catch (SqlException ex)
+            {
+                return Result.Failure<IEnumerable<TextSetDto>>(ex.Message);
+            }
+        }
+        public async Task<Result<IEnumerable<TextSetDto>>> GetByLevelAsync(int level)
+        {
+            try
+            {
+                var texts = await _gameContext.TextSets.Where(x => x.LevelOfText == (LevelOfText)level).ToArrayAsync();
+                if (texts.Length == 0)
+                {
+                    return Result.Failure<IEnumerable<TextSetDto>>($"No text set with level {level} exists");
+                }
+
+                var text = _mapper.Map<IEnumerable<TextSetDto>>(texts);
+                return Result.Success(text);
+            }
+            catch (SqlException ex)
+            {
+                return Result.Failure<IEnumerable<TextSetDto>>(ex.Message);
             }
         }
 

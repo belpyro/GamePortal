@@ -13,13 +13,12 @@ namespace Kbalan.TouchType.Logic.Profiles
     {
         public UserProfile()
         {
-            CreateMap<UserDb, UserSettingStatisticDto>().ReverseMap();
-            CreateMap<UserDb, UserDto>().ReverseMap();
-            CreateMap<UserSettingDto, UserDb>()
-                .ForMember(x => x.Statistic, d => d.MapFrom( m => new StatisticDb { AvarageSpeed =0, MaxSpeedRecord =0, NumberOfGamesPlayed =0} ) );
-            CreateMap<UserDb, UserSettingDto>();
-            CreateMap<UserDb, UserDb>();
-            
+            CreateMap<ApplicationUser, UserSettingStatisticDto>().ReverseMap();
+            CreateMap<ApplicationUser, UserDto>().ReverseMap();
+            CreateMap<ApplicationUser, ApplicationUser>();
+            CreateMap<ApplicationUser, UserStatisticDto>().ReverseMap();
+            CreateMap<ApplicationUser, UserSettingDto>().ReverseMap();
+
         }
     }
 

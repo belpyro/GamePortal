@@ -1,7 +1,4 @@
-﻿using System;
-using System.Threading.Tasks;
-using Igro.Quoridor.Logic;
-using Igro.Quoridor.Logic.Services;
+﻿using Igro.Quoridor.Logic;
 using AliaksNad.Battleship.Logic;
 using Kbalan.TouchType.Logic;
 using System.Web.Http;
@@ -12,29 +9,21 @@ using Owin;
 using NSwag.AspNet.Owin;
 using Ninject.Web.Common.OwinHost;
 using Ninject.Web.WebApi.OwinHost;
-using Ninject.Web.Common;
-using System.Web;
 using Microsoft.AspNet.Identity;
 using Microsoft.Owin.Security.Google;
 using GamePortal.Web.Api.Middleware;
 using Owin.Security.Providers.VKontakte;
-using IdentityServer3.Core.Configuration;
-using IdentityServer3.Core;
-using IdentityServer3.Core.Models;
-using IdentityServer3.Core.Services.InMemory;
-using System.Security.Claims;
-using System.Collections.Generic;
-using System.Security.Cryptography.X509Certificates;
-using System.IO;
-using System.Linq;
 using IdentityServer3.AccessTokenValidation;
-using IdentityServer3.AspNetIdentity;
-using Microsoft.AspNet.Identity.EntityFramework;
 using System.Web.Http.ExceptionHandling;
 using Elmah.Contrib.WebApi;
 using Microsoft.Owin.Security.Cookies;
 using Microsoft.Owin.Cors;
 using System.Web.Cors;
+using System.Threading.Tasks;
+using GamePortal.Web.Api.Config;
+using Microsoft.AspNetCore.Http.Features;
+using Microsoft.Owin.StaticFiles;
+using Microsoft.Extensions.FileProviders;
 
 [assembly: OwinStartup(typeof(GamePortal.Web.Api.Startup))]
 
@@ -45,7 +34,9 @@ namespace GamePortal.Web.Api
         public void Configuration(IAppBuilder app)
         {
             var config = new HttpConfiguration();
+
             config.MapHttpAttributeRoutes();
+
 
             config.Routes.MapHttpRoute(
                 name: "DefaultApi",
@@ -54,10 +45,11 @@ namespace GamePortal.Web.Api
             );
 
             var kernel = new StandardKernel(new NinjectSettings { LoadExtensions = true });
-
             kernel.Load(new LogicDIModule(), new TTGDIModule(), new BattleshipLogicDIModule());
 
             config.Services.Replace(typeof(IExceptionLogger), new ElmahExceptionLogger());   // Replace system logger for elmarh
+
+            app.UseSwagger(typeof(Startup).Assembly).UseSwaggerUi3();
 
             FluentValidationModelValidatorProvider.Configure(config, opt =>
             {
@@ -65,65 +57,39 @@ namespace GamePortal.Web.Api
             });
 
             app.UseExternalSignInCookie(DefaultAuthenticationTypes.ExternalCookie);
-            app.UseGoogleAuthentication(new GoogleOAuth2AuthenticationOptions
-            {
-                ClientId = "719719063561-v05dg5416mu8km1u2filstn03oqj98s4.apps.googleusercontent.com",
-                ClientSecret = "n8sW2lGlSM7QsayPw97knojT",
-                AuthenticationType = "TTGGoogle"
-            });
-
-            app.UseVKontakteAuthentication(new VKontakteAuthenticationOptions
-            {
-                ClientId = "7526371",
-                ClientSecret = "Z3blscBduDFc17p8NpWw",
-                AuthenticationType = "TTGVk",
-                Scope = { "email" }
-            });
-
-            app.Map("/ttg/login/google", b => b.Use<TTGGoogleAuthMiddleWare>());
-            app.Map("/ttg/login/vk", b => b.Use<TTGVkAuthMiddleWare>());
-
-            app.UseIdentityServerBearerTokenAuthentication(new IdentityServerBearerTokenAuthenticationOptions
-                {
-                    Authority = "http://localhost:10000/",
-                    ClientId = "TTGWebClient",
-                    ClientSecret = "secret",
-                    RequireHttps = false,
-                    ValidationMode = ValidationMode.Local,
-                    IssuerName = "http://localhost:10000/",
-                    ValidAudiences = new[] { "http://localhost:10000/resources" }
-                }) ;
 
             app.UseCookieAuthentication(new CookieAuthenticationOptions
             {
-                AuthenticationType = DefaultAuthenticationTypes.ApplicationCookie
-            });
+                AuthenticationType = DefaultAuthenticationTypes.ApplicationCookie,
+        });
 
 
-            app.UseGoogleAuthentication(new GoogleOAuth2AuthenticationOptions
+
+            var provide = new CorsPolicyProvider
             {
-                ClientId = "241000708571-qhb5s5fqe1nin8s33isgvmpfosa0cgpt.apps.googleusercontent.com",
-                ClientSecret = "G3VZRIXRrewqBkFlRKQtLN3o"
-            });
-            var provide = new CorsPolicyProvider();
-            provide.PolicyResolver = ctx => Task.FromResult(new CorsPolicy
-            {
-                AllowAnyHeader = true,
-                AllowAnyMethod = true,
-                AllowAnyOrigin = true
-            }); 
-            app.UseCors(new CorsOptions { PolicyProvider = provide});
+                PolicyResolver = ctx => Task.FromResult(new CorsPolicy
+                {
+                    AllowAnyHeader = true,
+                    AllowAnyMethod = true,
+                    AllowAnyOrigin = true
+                })
+            };
 
-            app.Map("/login/google", x => x.Use<GoogleAuthMiddleware>());
+            app.UseCors(new CorsOptions { PolicyProvider = provide });
 
-            app.UseSwagger(typeof(Startup).Assembly).UseSwaggerUi3()
-                .UseNinjectMiddleware(() => kernel).UseNinjectWebApi(config);          
-        }
 
-        private static X509Certificate2 LoadCertificate()
-        {
-            return new X509Certificate2(
-                Path.Combine(AppDomain.CurrentDomain.BaseDirectory, @"bin\Config\idsrv3test.pfx"), "idsrv3test");
+            app.UseBattleshipIdentityServer(kernel);
+
+            //TTG External Authentification Options
+            app.UseIdentityServerBearerTokenAuthentication(TTGAuthOptionsFactory.GetIdentityServerBearerTokenAuthenticationOptions());
+            app.UseGoogleAuthentication(TTGAuthOptionsFactory.GetGoogleAuthenticationOptions());
+            app.UseVKontakteAuthentication(TTGAuthOptionsFactory.GetVKontakteAuthenticationOptions());
+
+            //TTG External Authentification Maps
+            app.Map("/ttg/login/google", b => b.Use<TTGGoogleAuthMiddleWare>());
+            app.Map("/ttg/login/vk", b => b.Use<TTGVkAuthMiddleWare>());
+
+            app.UseNinjectMiddleware(() => kernel).UseNinjectWebApi(config);
         }
     }
 }

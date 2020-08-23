@@ -6,16 +6,18 @@ using System.Threading.Tasks;
 using System.Web;
 using System.Web.Http;
 using AliaksNad.Battleship.Logic.Models;
+using AliaksNad.Battleship.Logic.Models.User;
 using AliaksNad.Battleship.Logic.Services;
 using AliaksNad.Battleship.Logic.Services.Contracts;
 using FluentValidation;
 using FluentValidation.WebApi;
+using GamePortal.Web.Api.Filters.Battleship;
 using Microsoft.AspNet.Identity;
 using Microsoft.Owin.Security;
 
 namespace GamePortal.Web.Api.Controllers.Battleship
 {
-    [RoutePrefix("api/battleship/Users")]
+    [RoutePrefix("api/battleship/Users"), ModelStateValidation]
     public class UserController : ApiController
     {
         private readonly IUserService _userService;
@@ -33,7 +35,7 @@ namespace GamePortal.Web.Api.Controllers.Battleship
         /// <param name="model">New user model</param>
         /// <returns></returns>
         [HttpPost, Route("register")]
-        public async Task<IHttpActionResult> Register([FromBody]NewUserDto model)
+        public async Task<IHttpActionResult> Register([CustomizeValidator(RuleSet = "PreValidation"), FromBody]NewUserDto model)
         {
             if (!ModelState.IsValid) return BadRequest("Invalid model");
 
@@ -47,7 +49,7 @@ namespace GamePortal.Web.Api.Controllers.Battleship
         /// <param name="model">User name and password</param>
         /// <returns></returns>
         [HttpPost, Route("login")]
-        public async Task<IHttpActionResult> Login([FromBody]LoginDto model)
+        public async Task<IHttpActionResult> Login([CustomizeValidator(RuleSet = "PreValidation"), FromBody]LoginDto model)
         {
             if (!ModelState.IsValid) return BadRequest("Invalid model");
 
