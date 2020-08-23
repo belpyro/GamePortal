@@ -5,7 +5,7 @@
     /// </summary>
     public class StatisticDto
     {
-        public int StatisticId { get; set; }
+        public string StatisticId { get; set; }
 
         public int MaxSpeedRecord { get; set; }
 

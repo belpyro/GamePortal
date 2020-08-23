@@ -12,6 +12,7 @@ using System.Threading.Tasks;
 using Kbalan.TouchType.Logic.Validators;
 using Serilog;
 using Ninject.Extensions.Interception;
+using Kbalan.TouchType.Logic.Exceptions;
 
 namespace Kbalan.TouchType.Logic.Aspects
 {
@@ -26,54 +27,57 @@ namespace Kbalan.TouchType.Logic.Aspects
         {
             this._kernel = kernel;
         }
-        public void Intercept(IInvocation invocation)
+        public  void Intercept(IInvocation invocation)
         {
-            //model null checking
            
-            var text = invocation.Request.Arguments.OfType<TextSetDto>().FirstOrDefault();
-            if(text == null)
-            {
-                invocation.Proceed();
+
+                var text = invocation.Request.Arguments.OfType<TextSetDto>().FirstOrDefault();
+                //model null checking
+                if (text == null)
+                {
+                    invocation.Proceed();
                 return;
             }
-            //New logger and validator
-            var logger = _kernel.Get<ILogger>();
-            var validator = _kernel.Get<IValidator<TextSetDto>>();
+                //New logger and validator
+                var logger = _kernel.Get<ILogger>();
+                var validator = _kernel.Get<IValidator<TextSetDto>>();
 
-            //Prevalidation
-            if(invocation.Request.Method.Name.Equals("Add") || invocation.Request.Method.Name.Equals("Update"))
-            {
-                var preValidationResult = validator.Validate(text as TextSetDto, ruleSet: "PreValidation");
-                if (!preValidationResult.IsValid)
+                //Prevalidation
+                if (invocation.Request.Method.Name.Equals("AddAsync") || invocation.Request.Method.Name.Equals("UpdateAsync"))
                 {
-                    invocation.ReturnValue = Result.Failure<TextSetDto>(preValidationResult.Errors.Select(x => x.ErrorMessage).First());
-                    return;
+                    var preValidationResult = validator.Validate(text as TextSetDto, ruleSet: "PreValidation");
+                    if (!preValidationResult.IsValid)
+                    {
+                        invocation.ReturnValue = Result.Failure<TextSetDto>(preValidationResult.Errors.Select(x => x.ErrorMessage).First());
+                        throw new TTGValidationException(invocation.ReturnValue.ToString());
+                    }
                 }
-            }
 
-            //PostValidation of validation for Add method 
-            if (invocation.Request.Method.Name.Equals("Add"))
-            {
-                var postValidationResult = validator.Validate(text as TextSetDto, ruleSet: "PostValidation");
-                if (!postValidationResult.IsValid)
+                //PostValidation of validation for Add method 
+                if (invocation.Request.Method.Name.Equals("AddAsync"))
                 {
-                    invocation.ReturnValue = Result.Failure<TextSetDto>(postValidationResult.Errors.Select(x => x.ErrorMessage).First());
-                    return;
+                    var postValidationResult = validator.Validate(text as TextSetDto, ruleSet: "PostValidation");
+                    if (!postValidationResult.IsValid)
+                    {
+                        invocation.ReturnValue = Result.Failure<TextSetDto>(postValidationResult.Errors.Select(x => x.ErrorMessage).First());
+                        throw new TTGValidationException(invocation.ReturnValue.ToString());
+                    }
                 }
-            }
 
-            //PostValidation validation for Update method 
-            if (invocation.Request.Method.Name.Equals("Update"))
-            {
-                var postValidationResult = validator.Validate(text as TextSetDto, ruleSet: "PostValidationWithId");                 
-                if (!postValidationResult.IsValid)
+                //PostValidation validation for Update method 
+                if (invocation.Request.Method.Name.Equals("UpdateAsync"))
                 {
-                    invocation.ReturnValue = Result.Failure(postValidationResult.Errors.Select(x => x.ErrorMessage).First());
-                    return;
+                    var postValidationResult = validator.Validate(text as TextSetDto, ruleSet: "PostValidationWithId");
+                    if (!postValidationResult.IsValid)
+                    {
+                        invocation.ReturnValue = Result.Failure(postValidationResult.Errors.Select(x => x.ErrorMessage).First());
+                        throw new TTGValidationException(invocation.ReturnValue.ToString());
+                    }
                 }
-            }
 
-            invocation.Proceed();
+                invocation.Proceed();
+
+
         }
     }
 }

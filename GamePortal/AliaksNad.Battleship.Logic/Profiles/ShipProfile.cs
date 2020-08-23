@@ -1,11 +1,6 @@
 ﻿using AliaksNad.Battleship.Data.Models;
-using AliaksNad.Battleship.Logic.Models;
+using AliaksNad.Battleship.Logic.Models.Game;
 using AutoMapper;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace AliaksNad.Battleship.Logic.Profiles
 {

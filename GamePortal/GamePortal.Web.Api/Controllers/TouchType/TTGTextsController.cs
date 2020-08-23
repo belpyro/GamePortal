@@ -10,6 +10,7 @@ using FluentValidation;
 using JetBrains.Annotations;
 using Kbalan.TouchType.Logic.Dto;
 using Kbalan.TouchType.Logic.Services;
+using Kbalan.TouchType.Logic.Exceptions;
 
 namespace GamePortal.Web.Api.Controllers.TouchType
 {
@@ -17,6 +18,7 @@ namespace GamePortal.Web.Api.Controllers.TouchType
     /// Controller for TextSet
     /// </summary>
     [RoutePrefix("api/textsets")]
+    [Authorize]
     public class TTGTextsController : ApiController
     {
         private readonly ITextSetService _textSetService;
@@ -51,10 +53,25 @@ namespace GamePortal.Web.Api.Controllers.TouchType
             return result.Value.HasNoValue ? (IHttpActionResult)NotFound() :  Ok(result.Value.Value);
         }
 
+        ///Get Random TextSet by Level of the text random
+        [HttpGet]
+        [Route("searchbylevelrand/{level}")]
+        public async Task<IHttpActionResult> GetRandomByLevelAsync(int level)
+        {
+            if (level < 0 || level > 2)
+            {
+                return BadRequest("Level must be Easy, Middle or Hard");
+            }
+
+            var result = await _textSetService.GetByLevelAsyncRandom(level);
+            return result.IsSuccess ? Ok(result.Value) : (IHttpActionResult)BadRequest(result.Error);
+
+        }
+
         ///Get Random TextSet by Level of the text
         [HttpGet]
         [Route("searchbylevel/{level}")]
-        public async Task<IHttpActionResult> GetRandomByLevelAsync(int level)
+        public async Task<IHttpActionResult> GetByLevelAsync(int level)
         {
             if (level < 0 || level > 2)
             {
@@ -73,9 +90,17 @@ namespace GamePortal.Web.Api.Controllers.TouchType
         {
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
+            try
+            {
+                var result = await _textSetService.AddAsync(model);
+                return result.IsSuccess ? Created($"/textsets/{result.Value.Id}", result.Value) : (IHttpActionResult)BadRequest(result.Error);
+            }
+            catch (TTGValidationException ex)
+            {
 
-            var result = await _textSetService.AddAsync(model);
-            return result.IsSuccess ? Created($"/textsets/{result.Value.Id}", result.Value) : (IHttpActionResult)BadRequest(result.Error); 
+                return (IHttpActionResult)BadRequest(ex.Message);
+            }
+
         }
 
         //Update Text by Id 
@@ -85,9 +110,16 @@ namespace GamePortal.Web.Api.Controllers.TouchType
         {
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
+            try
+            {
+                var result = await _textSetService.UpdateAsync(model);
+                return result.IsSuccess ? Ok($"Text set with id {model.Id} updated succesfully!") : (IHttpActionResult)BadRequest(result.Error);
+            }
+            catch (TTGValidationException ex)
+            {
 
-            var result = await _textSetService.UpdateAsync(model);
-            return result.IsSuccess ? Ok($"Text set with id {model.Id} updated succesfully!") : (IHttpActionResult)BadRequest(result.Error);
+                return (IHttpActionResult)BadRequest(ex.Message);
+            }
 
         }
 
@@ -100,9 +132,8 @@ namespace GamePortal.Web.Api.Controllers.TouchType
             {
                 return BadRequest("ID must be greater than 0");
             }
-
             var result = await _textSetService.DeleteAsync(id);
-            return result.IsSuccess ? Ok($"Text set with id {id} deleted succesfully!") : (IHttpActionResult)BadRequest(result.Error);
+            return result.IsSuccess ? Ok($"Text with id {id} successfully deleted") : (IHttpActionResult)BadRequest(result.Error);
         }
     }
 }

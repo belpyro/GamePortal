@@ -25,15 +25,15 @@ namespace Kbalan.TouchType.Logic.Services
         /// </summary>
         /// <param name="Id">User ID</param>
         /// <returns>Statistic with user</returns>
-        Task<Result<Maybe<UserStatisticDto>>> GetByIdAsync(int id);
-        Result<Maybe<UserStatisticDto>> GetById(int id);
+        Task<Result<Maybe<UserStatisticDto>>> GetByIdAsync(string id);
+        Result<Maybe<UserStatisticDto>> GetById(string id);
 
         /// <summary>
         /// Updating existing user statistic
         /// </summary>
         /// <param name="id">User id</param>
         /// <returns></returns>
-        Task<Result> UpdateAsync(int id, StatisticDto model);
-        Result Update(int id, StatisticDto model);
+        Task<Result> UpdateAsync(string id, StatisticDto model);
+        Result Update(string id, StatisticDto model);
     }
 }

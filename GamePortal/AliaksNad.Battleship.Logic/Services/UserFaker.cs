@@ -1,4 +1,5 @@
 ﻿using AliaksNad.Battleship.Logic.Models;
+using AliaksNad.Battleship.Logic.Models.User;
 using Bogus;
 using System;
 using System.Collections.Generic;

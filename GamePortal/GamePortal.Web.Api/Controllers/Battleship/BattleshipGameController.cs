@@ -1,8 +1,12 @@
 ﻿using AliaksNad.Battleship.Logic.Models;
+using AliaksNad.Battleship.Logic.Models.Game;
 using AliaksNad.Battleship.Logic.Services;
 using AliaksNad.Battleship.Logic.Services.Contracts;
+using FluentValidation;
 using FluentValidation.WebApi;
+using GamePortal.Web.Api.Filters.Battleship;
 using JetBrains.Annotations;
+using Ninject;
 using System;
 using System.Collections.Generic;
 using System.Net;
@@ -13,14 +17,16 @@ using System.Web.Http.Description;
 
 namespace GamePortal.Web.Api.Controllers.Battleship
 {
-    [RoutePrefix("api/battleship/game")]
+    [RoutePrefix("api/battleship/game"), ModelStateValidation]
     public class BattleshipGameController : ApiController
     {
         private readonly IGameService _gameService;
+        private readonly IKernel _kernal;
 
-        public BattleshipGameController([NotNull] IGameService gameService)
+        public BattleshipGameController([NotNull] IGameService gameService, IKernel kernal)
         {
             this._gameService = gameService;
+            this._kernal = kernal;
         }
 
         /// <summary>
@@ -30,7 +36,7 @@ namespace GamePortal.Web.Api.Controllers.Battleship
         /// <returns></returns>
         [HttpPost]
         [Route("")]
-        public async Task<IHttpActionResult> AddAsync([CustomizeValidator(RuleSet = "PreValidation")][FromBody]BattleAreaDto BattleAreaDtoCoordinates)
+        public async Task<IHttpActionResult> AddAsync([CustomizeValidator(RuleSet = "PreValidation"), FromBody]BattleAreaDto BattleAreaDtoCoordinates)
         {
             if (!ModelState.IsValid)
             {
@@ -38,15 +44,14 @@ namespace GamePortal.Web.Api.Controllers.Battleship
             }
 
             var result = await _gameService.AddAsync(BattleAreaDtoCoordinates);
-            return result.IsSuccess ? Created($"api/battleship/game/fleets{result.Value.BattleAreaId}", result.Value) : (IHttpActionResult)BadRequest(result.Error);
+            return result.IsSuccess ? Created($"api/battleship/game/fleets{result.Value}", result.Value) : (IHttpActionResult)BadRequest(result.Error);
         }
 
         /// <summary>
         /// Get all battle area from logic layer.
         /// </summary>
         /// <returns></returns>
-        [HttpGet]
-        [Route("")]
+        [HttpGet, Route("")]
         public async Task<IHttpActionResult> GetAllAsync()
         {
             var result = await _gameService.GetAllAsync();
@@ -64,32 +69,45 @@ namespace GamePortal.Web.Api.Controllers.Battleship
         {
             var battleArea = await _gameService.GetByIdAsync(id);
             if (battleArea.IsFailure)
-            {
                 return StatusCode(HttpStatusCode.InternalServerError);
-            }
+
             return battleArea.Value.HasNoValue ? (IHttpActionResult)NotFound() : Ok(battleArea.Value.Value);
         }
 
         /// <summary>
         /// Checking hit by enemy coordinates on logic layer.
         /// </summary>
-        /// <param name="coordinatesOfHit">Enemy coordinates.</param>
+        /// <param name="target">Enemy coordinates.</param>
         /// <returns></returns>
         [HttpPost]
         [Route("coordinates")]
-        public async Task<IHttpActionResult> CheckHitAsync([FromBody]CoordinatesDto coordinatesOfHit)
+        public async Task<IHttpActionResult> CheckHitAsync([CustomizeValidator(RuleSet = "PreValidation")][FromBody]TargetDto target)
         {
-            if (!ModelState.IsValid)
+            var validator = _kernal.Get<IValidator<TargetDto>>();
+            var validationResult = validator.Validate(target, "PreValidation");
+            if (!validationResult.IsValid)
             {
-                return BadRequest(ModelState);
+                return BadRequest(validationResult.Errors.ToString());
             }
 
-            var result = await _gameService.CheckHitAsync(coordinatesOfHit);
+            var result = await _gameService.CheckTargetAsync(target);
             if (result.IsFailure)
-            {
                 return StatusCode(HttpStatusCode.InternalServerError);
-            }
-            return result.Value.HasValue ? Ok(result.Value.Value) : (IHttpActionResult)NotFound();
+
+            return result.Value.HasValue ? Ok() : (IHttpActionResult)NotFound();
+        }
+
+        /// <summary>
+        /// Delete battle area by id.
+        /// </summary>
+        /// <param name="id">Battle area id.</param>
+        /// <returns></returns>
+        [HttpDelete, Route("{id:int:min(1)}")]      
+        public async Task<IHttpActionResult> DeleteByIdAsync(int id)
+        {
+            var result = await _gameService.DeleteBattleAreaAsync(id);
+
+            return result.IsSuccess ? StatusCode(HttpStatusCode.NoContent) : StatusCode(HttpStatusCode.InternalServerError);
         }
     }
 }

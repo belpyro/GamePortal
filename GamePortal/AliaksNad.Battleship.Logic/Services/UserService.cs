@@ -2,6 +2,7 @@
 using AliaksNad.Battleship.Data.Models;
 using AliaksNad.Battleship.Logic.Extensions;
 using AliaksNad.Battleship.Logic.Models;
+using AliaksNad.Battleship.Logic.Models.User;
 using AliaksNad.Battleship.Logic.Services.Contracts;
 using AutoMapper;
 using CSharpFunctionalExtensions;
