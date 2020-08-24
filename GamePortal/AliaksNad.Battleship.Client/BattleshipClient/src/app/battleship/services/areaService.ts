@@ -5,6 +5,7 @@ import { TableShipDto } from './../models/TableShipDto';
 import { ShipDto } from './../models/shipDto';
 import { Injectable, Renderer2 } from '@angular/core';
 import { Subject } from 'rxjs';
+import { EmptyCellDto } from '../models/emptyCellDto';
 
 @Injectable()
 export class AreaService {
@@ -54,9 +55,11 @@ export class AreaService {
   }
 
   pushBtlArea(): void {
+    const empCell: EmptyCellDto[] = [{ Coordinates: this.busyCell }];
+
     this.btlarea.next({
       Ships: this.fleetDto,
-      EmptyCells: this.busyCell,
+      EmptyCells: empCell,
     });
 
   }

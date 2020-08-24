@@ -22,7 +22,8 @@ export class GameBoardService {
   affectedCell$ = this.affectedCell.asObservable();
 
   btlarea: BattleAreaDto;
-  btlAreaId = 16;
+  btlAreaId = 19;
+  // btlAreaId = 1;
 
   constructor(private gameService: BattleshipGameService) {
     this.gameService.battleshipGameGetById(this.btlAreaId)
@@ -40,7 +41,7 @@ export class GameBoardService {
   uploadArea(): void {
     const btlarea = this.btlarea;
 
-    this.btlarea.EmptyCells = new Array();
+    // this.btlarea.EmptyCells = new Array();
 
     this.gameService.battleshipGameAdd(btlarea)
       .subscribe((data) => { console.log(data); });
