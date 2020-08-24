@@ -8,7 +8,6 @@ import { CommonModule } from '@angular/common';
 import { LoginComponent } from './components/login/login.component';
 import { OAuthModule } from 'angular-oauth2-oidc';
 import { HomeComponent } from './components/home/home.component';
-import { BattleshipModule } from '../battleship/battleship.module';
 import { PASSWORD_FLOW_CONFIG, CODE_FLOW_CONFIG, oauthPassConfig, oauthCodeConfig } from './configs/auth.config';
 import { LoginService } from './services/externalLogin.service';
 import { RouterModule } from '@angular/router';
@@ -20,7 +19,6 @@ import { RouterModule } from '@angular/router';
     ReactiveFormsModule,
     HttpClientModule,
     RouterModule,
-    BattleshipModule,
     OAuthModule.forRoot(),
   ],
   providers: [

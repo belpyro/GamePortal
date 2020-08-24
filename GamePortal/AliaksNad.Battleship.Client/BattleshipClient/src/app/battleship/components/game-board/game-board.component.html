@@ -1,8 +1,8 @@
 <div class="row">
-  <div class="column">
+  <div class="column" [ngClass]="{ disabled: isDisabled }">
     <app-own-area></app-own-area>
   </div>
-  <div class="column">
+  <div class="column" [ngClass]="{ disabled: !isDisabled }">
     <app-enemy-area></app-enemy-area>
   </div>
 </div>
@@ -22,7 +22,8 @@
   <button class="btn btn-lg btn-primary btn-block" (click)="uploadFleet()">
     Upload Area
   </button>
-</div>
-<div class="row" style="margin-top: 2.4em;">
-  {{ btlarea | json }}
+
+  <button class="btn btn-lg btn-primary btn-block" (click)="doSmt()">
+    ng-disabled Directive
+  </button>
 </div>

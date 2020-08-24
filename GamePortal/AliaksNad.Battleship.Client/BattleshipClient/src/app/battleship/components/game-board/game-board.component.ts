@@ -12,6 +12,7 @@ import { BattleAreaDto } from '../../models/BattleAreaDto';
 export class GameBoardComponent implements OnInit {
 
   btlarea: BattleAreaDto[];
+  isDisabled = true;
 
   constructor(private gameBoardService: GameBoardService, private gameService: BattleshipGameService) { }
 
@@ -30,5 +31,9 @@ export class GameBoardComponent implements OnInit {
 
   uploadFleet(): void {
     this.gameBoardService.uploadArea();
+  }
+
+  doSmt(): void {
+    this.isDisabled = !this.isDisabled;
   }
 }

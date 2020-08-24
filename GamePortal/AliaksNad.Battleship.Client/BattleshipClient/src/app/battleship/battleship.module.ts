@@ -1,6 +1,4 @@
 import { GameBoardService } from './services/game-board.service';
-import { AreaService } from './services/areaService';
-import { CellComponent } from './components/cell/cell.component';
 import { GameBoardComponent } from './components/game-board/game-board.component';
 import { BattlefieldComponent } from './components/battlefield/battlefield.component';
 import { AreaComponent } from './components/area/area.component';
@@ -25,7 +23,6 @@ export const routes: Routes = [
     AreaComponent,
     BattlefieldComponent,
     GameBoardComponent,
-    CellComponent,
     OwnAreaComponent,
     EnemyAreaComponent,
   ],
@@ -40,6 +37,6 @@ export const routes: Routes = [
     BattleshipGameService,
     GameBoardService,
   ],
-  exports: [AreaComponent, BattlefieldComponent, GameBoardComponent, CellComponent]
+  exports: [AreaComponent, BattlefieldComponent, GameBoardComponent]
 })
 export class BattleshipModule { }

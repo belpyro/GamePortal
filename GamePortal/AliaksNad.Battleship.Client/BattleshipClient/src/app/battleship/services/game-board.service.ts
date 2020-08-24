@@ -41,18 +41,12 @@ export class GameBoardService {
   uploadArea(): void {
     const btlarea = this.btlarea;
 
-    // this.btlarea.EmptyCells = new Array();
-
     this.gameService.battleshipGameAdd(btlarea)
       .subscribe((data) => { console.log(data); });
   }
 
   checkHit(coordinates: CoordinatesDto): void {
     const target: TargetDto = { EnemyBattleAreaId: this.btlAreaId, Coordinates: coordinates };
-    // const result: AffectedCellDto = {
-    //   Coordinates: coordinates,
-    //   IsHited: false,
-    // };
 
     this.gameService.battleshipGameCheckHit(target)
       .subscribe((value) => { this.pushAffectedCell(coordinates, value); });

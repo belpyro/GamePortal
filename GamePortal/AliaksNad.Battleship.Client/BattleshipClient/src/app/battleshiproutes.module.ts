@@ -15,7 +15,7 @@ export const routes: Routes = [
   {
     path: 'play', loadChildren: () =>
       import('./battleship/battleship.module')
-        .then((d) => d.BattleshipModule),
+        .then(d => d.BattleshipModule)
   },
   { path: 'login', component: LoginComponent },
   {

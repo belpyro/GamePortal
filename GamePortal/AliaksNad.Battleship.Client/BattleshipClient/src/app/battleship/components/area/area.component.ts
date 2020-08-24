@@ -93,8 +93,6 @@ export class AreaComponent implements OnInit {
   markCell(model: AffectedCellDto): void {
     let cssStyle: string = this.cssMiss;
 
-    console.log(model);
-
     if (model.IsHited) {
       cssStyle = this.cssHit;
     }
