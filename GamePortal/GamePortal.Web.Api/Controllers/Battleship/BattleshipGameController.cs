@@ -15,7 +15,9 @@ using System.Web.Http;
 
 namespace GamePortal.Web.Api.Controllers.Battleship
 {
-    [RoutePrefix("api/battleship/game"), ModelStateValidation/*, System.Web.Http.Authorize*/]
+    [RoutePrefix("api/battleship/game"), ModelStateValidation
+        , System.Web.Http.Authorize
+        ]
     [SwaggerResponse(HttpStatusCode.Unauthorized)]
     public class BattleshipGameController : ApiController
     {
@@ -89,7 +91,7 @@ namespace GamePortal.Web.Api.Controllers.Battleship
             if (result.IsFailure)
                 return StatusCode(HttpStatusCode.InternalServerError);
 
-            return result.Value.HasValue ? Ok() : (IHttpActionResult)NotFound();
+            return result.Value.HasValue ? Ok(true) : Ok(false);
         }
 
         /// <summary>

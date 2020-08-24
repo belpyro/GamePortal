@@ -11,7 +11,6 @@
  */
 import { CoordinatesDto } from './coordinatesDto';
 
-
 export interface EmptyCellDto {
-    coordinates?: Array<CoordinatesDto>;
+  Coordinates?: Array<CoordinatesDto>;
 }

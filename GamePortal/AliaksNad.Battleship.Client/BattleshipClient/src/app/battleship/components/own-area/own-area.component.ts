@@ -24,9 +24,10 @@ export class OwnAreaComponent implements OnInit {
       () => this.areaService.cleanArea());
 
     this.gameBoardService.shipDto$.subscribe(
-      (value) => {
-        this.initializeArea(value);
-      });
+      (value) => { this.initializeArea(value); });
+
+    this.areaService.btlarea$.subscribe(
+      (value) => { this.gameBoardService.btlarea = value; });
   }
 
   initializeArea(btlArea: BattleAreaDto): void {

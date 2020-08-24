@@ -3,18 +3,21 @@ import { TableShipDto } from '../../models/TableShipDto';
 import { AreaService } from '../../services/areaService';
 import { CoordinatesDto } from '../../models/coordinatesDto';
 import { AffectedCellDto } from '../../models/affectedCell';
+import { style } from '@angular/animations';
 
 @Component({
   selector: 'app-area',
   templateUrl: './area.component.html',
   styleUrls: [
-    './area.component.scss',
     '../battlefield/battlefield.component.scss',
+    './area.component.scss',
   ],
 })
 export class AreaComponent implements OnInit {
 
   @Input() title = 'title';
+  cssHit = 'battlefield-cell__hit';
+  cssMiss = 'battlefield-cell__miss';
   size = 10;
   arr = new Array();
   sign = new Array();
@@ -88,7 +91,15 @@ export class AreaComponent implements OnInit {
   }
 
   markCell(model: AffectedCellDto): void {
-    this.sign[model.Coordinates.CoordinateX][model.Coordinates.CoordinateY] = model.cssStyle;
+    let cssStyle: string = this.cssMiss;
+
+    console.log(model);
+
+    if (model.IsHited) {
+      cssStyle = this.cssHit;
+    }
+
+    this.sign[model.Coordinates.CoordinateX][model.Coordinates.CoordinateY] = cssStyle;
   }
 
   drop(ev): void {
@@ -100,7 +111,8 @@ export class AreaComponent implements OnInit {
   }
 
   push(tdIndex, trIndex): void {
-    this.sign[tdIndex][trIndex] = 'battlefield-cell__hit';
+    this.areaService.pressedСell.next({ CoordinateX: tdIndex, CoordinateY: trIndex });
+    // this.sign[tdIndex][trIndex] = 'battlefield-cell__hit';
   }
 
   allowDrop(ev): void {

@@ -12,6 +12,6 @@
 import { CoordinatesDto } from './coordinatesDto';
 
 export interface TargetDto {
-  enemyBattleAreaId: number;
-  coordinates?: CoordinatesDto;
+  EnemyBattleAreaId: number;
+  Coordinates?: CoordinatesDto;
 }

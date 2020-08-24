@@ -11,9 +11,14 @@ import { BattleAreaDto } from '../../models/BattleAreaDto';
 })
 export class GameBoardComponent implements OnInit {
 
-  constructor(private gameBoardService: GameBoardService) { }
+  btlarea: BattleAreaDto[];
 
-  ngOnInit(): void {}
+  constructor(private gameBoardService: GameBoardService, private gameService: BattleshipGameService) { }
+
+  ngOnInit(): void {
+    this.gameService.battleshipGameGetAll()
+      .subscribe((data) => { this.btlarea = data; });
+  }
 
   generateFleet(): void {
     this.gameBoardService.generateFleet();
@@ -21,5 +26,9 @@ export class GameBoardComponent implements OnInit {
 
   deleteFleet(): void {
     this.gameBoardService.deleteFleet();
+  }
+
+  uploadFleet(): void {
+    this.gameBoardService.uploadArea();
   }
 }

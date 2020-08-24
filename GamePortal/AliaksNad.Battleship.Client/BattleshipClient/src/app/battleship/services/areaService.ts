@@ -1,8 +1,8 @@
+import { CoordinatesDto } from './../models/coordinatesDto';
 import { BattleAreaDto } from './../models/battleAreaDto';
 import { AffectedCellDto } from './../models/affectedCell';
 import { TableShipDto } from './../models/TableShipDto';
 import { ShipDto } from './../models/shipDto';
-import { CoordinatesDto } from './../models/CoordinatesDto';
 import { Injectable, Renderer2 } from '@angular/core';
 import { Subject } from 'rxjs';
 
@@ -10,8 +10,8 @@ import { Subject } from 'rxjs';
 export class AreaService {
 
   busyCell = new Array();
-  shipSize: number[] = [4, 3, 3, 2, 2, 2, 1, 1, 1, 1];
   fleetDto: ShipDto[] = new Array();
+  shipSize: number[] = [4, 3, 3, 2, 2, 2, 1, 1, 1, 1];
   tableFleet: TableShipDto[] = new Array();
   sign = new Array();
   dirtyId: string;
@@ -23,8 +23,14 @@ export class AreaService {
   private delShipSource = new Subject<TableShipDto>();
   delShipCalled$ = this.delShipSource.asObservable();
 
-  private cssStyleSource = new Subject<AffectedCellDto>();
+  cssStyleSource = new Subject<AffectedCellDto>();
   cssStyleCalled$ = this.cssStyleSource.asObservable();
+
+  private btlarea = new Subject<BattleAreaDto>();
+  btlarea$ = this.btlarea.asObservable();
+
+  pressedСell = new Subject<CoordinatesDto>();
+  pressedСell$ = this.pressedСell.asObservable();
 
   constructor() { }
 
@@ -43,6 +49,16 @@ export class AreaService {
       this.tableFleet.push(ship);
       this.addShipSource.next(ship);
     }
+
+    this.pushBtlArea();
+  }
+
+  pushBtlArea(): void {
+    this.btlarea.next({
+      Ships: this.fleetDto,
+      EmptyCells: this.busyCell,
+    });
+
   }
 
   cleanArea(): void {
@@ -91,7 +107,7 @@ export class AreaService {
 
   pushBusy(area: CoordinatesDto[]): void {
     for (const cell of area) {
-      this.cssStyleSource.next({ Coordinates: cell, cssStyle: 'battlefield-cell__miss' });
+      this.cssStyleSource.next({ Coordinates: cell, IsHited: true });
     }
   }
 
@@ -156,16 +172,16 @@ export class AreaService {
         isHorizontal: this.isHorizontal(ship),
         length: ship.Coordinates.length
       };
+      this.addShipSource.next(tblShip);
+      this.tableFleet.push(tblShip);
     }
-    this.addShipSource.next(tblShip);
-    this.tableFleet.push(tblShip);
   }
 
   isHorizontal(ship: ShipDto): boolean {
     if (ship.Coordinates.length > 1 && ship.Coordinates[0].CoordinateX === ship.Coordinates[1].CoordinateX) {
-      return true;
+      return false;
     }
-    return false;
+    return true;
   }
 
   generateShip(shipSize: number): TableShipDto {
@@ -262,5 +278,7 @@ export class AreaService {
     }
     return int;
   }
+
+
 
 }
