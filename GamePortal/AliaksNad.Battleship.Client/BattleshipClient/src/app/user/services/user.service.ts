@@ -1,18 +1,17 @@
+import { CustomHttpUrlEncodingCodec } from './../../configs/encoder';
+import { BASE_PATH } from './../../configs/variables';
+import { Configuration } from './../../configs/configuration';
 import { Inject, Injectable, Optional } from '@angular/core';
 import { HttpClient, HttpHeaders, HttpParams, HttpResponse, HttpEvent } from '@angular/common/http';
-import { CustomHttpUrlEncodingCodec } from './encoder';
-import { } from 'rxjs/Observable';
-import { LoginDto2 } from '../models/loginDto';
-import { NewUserDto2 } from '../models/newUserDto';
-import { BASE_PATH, COLLECTION_FORMATS } from './variables';
-import { Configuration } from '../configs/configuration';
+import { LoginDto } from '../../core/models/loginDto';
+import { NewUserDto } from '../../core/models/newUserDto';
 import { environment } from '../../../environments/environment';
 import { Observable } from 'rxjs';
 
 @Injectable()
 export class UserService {
 
-  protected basePath = environment.backendUrl;
+  protected basePath = environment.issuerUrl;
   public defaultHeaders = new HttpHeaders();
   public configuration = new Configuration();
 
@@ -206,10 +205,10 @@ export class UserService {
    * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
    * @param reportProgress flag to report request and response progress.
    */
-  public userLogin(model: LoginDto2, observe?: 'body', reportProgress?: boolean): Observable<any>;
-  public userLogin(model: LoginDto2, observe?: 'response', reportProgress?: boolean): Observable<HttpResponse<any>>;
-  public userLogin(model: LoginDto2, observe?: 'events', reportProgress?: boolean): Observable<HttpEvent<any>>;
-  public userLogin(model: LoginDto2, observe: any = 'body', reportProgress: boolean = false): Observable<any> {
+  public userLogin(model: LoginDto, observe?: 'body', reportProgress?: boolean): Observable<any>;
+  public userLogin(model: LoginDto, observe?: 'response', reportProgress?: boolean): Observable<HttpResponse<any>>;
+  public userLogin(model: LoginDto, observe?: 'events', reportProgress?: boolean): Observable<HttpEvent<any>>;
+  public userLogin(model: LoginDto, observe: any = 'body', reportProgress: boolean = false): Observable<any> {
 
     if (model === null || model === undefined) {
       throw new Error('Required parameter model was null or undefined when calling userLogin.');
@@ -253,10 +252,10 @@ export class UserService {
    * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
    * @param reportProgress flag to report request and response progress.
    */
-  public userRegister(model: NewUserDto2, observe?: 'body', reportProgress?: boolean): Observable<any>;
-  public userRegister(model: NewUserDto2, observe?: 'response', reportProgress?: boolean): Observable<HttpResponse<any>>;
-  public userRegister(model: NewUserDto2, observe?: 'events', reportProgress?: boolean): Observable<HttpEvent<any>>;
-  public userRegister(model: NewUserDto2, observe: any = 'body', reportProgress: boolean = false): Observable<any> {
+  public userRegister(model: NewUserDto, observe?: 'body', reportProgress?: boolean): Observable<any>;
+  public userRegister(model: NewUserDto, observe?: 'response', reportProgress?: boolean): Observable<HttpResponse<any>>;
+  public userRegister(model: NewUserDto, observe?: 'events', reportProgress?: boolean): Observable<HttpEvent<any>>;
+  public userRegister(model: NewUserDto, observe: any = 'body', reportProgress: boolean = false): Observable<any> {
 
     if (model === null || model === undefined) {
       throw new Error('Required parameter model was null or undefined when calling userRegister.');

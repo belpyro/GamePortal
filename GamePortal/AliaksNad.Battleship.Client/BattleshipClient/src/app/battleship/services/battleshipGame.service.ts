@@ -1,5 +1,5 @@
-import { BASE_PATH } from './../../core/configs/variables';
-import { Configuration } from './../../core/configs/configuration';
+import { BASE_PATH } from './../../configs/variables';
+import { Configuration } from './../../configs/configuration';
 import { environment } from './../../../environments/environment';
 import { Inject, Injectable, Optional } from '@angular/core';
 import { HttpClient, HttpHeaders, HttpParams, HttpResponse, HttpEvent } from '@angular/common/http';

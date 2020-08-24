@@ -10,8 +10,7 @@
  * Do not edit the class manually.
  */
 
-
-export interface LoginDto2 {
-    userName?: string;
-    password?: string;
+export interface LoginDto {
+  userName?: string;
+  password?: string;
 }

@@ -23,7 +23,7 @@ export const routes: Routes = [
     resolve: { data: LogoutResolver },
     component: HomeComponent,
   },
-  { path: 'profile', loadChildren: () => import('./user/user.module').then(u => u.UserModule) },
+  { path: 'user', loadChildren: () => import('./user/user.module').then(u => u.UserModule) },
   { path: '', redirectTo: 'login', pathMatch: 'full' },
   { path: '**', component: NotFoundComponent }
 ];
