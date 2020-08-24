@@ -1,4 +1,27 @@
 <div class="container" >
   <app-navbar></app-navbar>
+  <table class="table table-striped">
+    <thead>
+        <tr>
+            <td>Username</td>
+            <td>Number of games played</td>
+            <td>Maximum typing speed record(wpm)</td>
+            <td>Average typing speed(wpm)</td>
+        </tr>
+    </thead>
+    <tbody>
+        <tr *ngFor="let user of allUsers">
+            <ng-template [ngTemplateOutlet]="loadTemplate(user)"
+                        [ngTemplateOutletContext]="{ $implicit: user}">
+            </ng-template>
+        </tr>
+    </tbody>
+    <ng-template #readOnlyTemplate let-user>
+        <td>{{user.Username}}</td>
+        <td>{{user.Statistic.NumberOfGamesPlayed}}</td>
+        <td>{{user.Statistic.MaxSpeedRecord}}</td>
+        <td>{{user.Statistic.AvarageSpeed}}</td>
+    </ng-template>
+    </table>
 </div>
 
