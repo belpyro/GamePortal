@@ -1,77 +1,81 @@
-import { BASE_PATH } from './../configs/variables';
-import { Configuration } from './../configs/configuration';
-import { Inject, Injectable, Optional } from '@angular/core';
-import { HttpClient, HttpHeaders, HttpParams, HttpResponse, HttpEvent } from '@angular/common/http';
-import { Observable } from 'rxjs';
-import { environment } from '../../../environments/environment';
+import { PASSWORD_FLOW_CONFIG, CODE_FLOW_CONFIG } from '../configs/auth.config';
+import { UserDto } from '../models/UserDto';
+import { OAuthService, AuthConfig, OAuthSuccessEvent } from 'angular-oauth2-oidc';
+import { Injectable, Inject } from '@angular/core';
+import { BehaviorSubject, Observable, from } from 'rxjs';
+import { Router } from '@angular/router';
+import { filter, map, switchMap, share } from 'rxjs/operators';
 
-@Injectable()
+@Injectable({ providedIn: 'root' })
 export class LoginService {
 
-  protected basePath = environment.backendUrl;
-  public defaultHeaders = new HttpHeaders();
-  public configuration = new Configuration();
+  private loggedOnSubject = new BehaviorSubject<UserDto>(null);
+  private isLoggedOnSubject = new BehaviorSubject<boolean>(false);
 
-  constructor(protected httpClient: HttpClient, @Optional() @Inject(BASE_PATH) basePath: string, @Optional() configuration: Configuration) {
-    if (basePath) {
-      this.basePath = basePath;
-    }
-    if (configuration) {
-      this.configuration = configuration;
-      this.basePath = basePath || configuration.basePath || this.basePath;
-    }
+  constructor(
+    private router: Router,
+    private oauth: OAuthService,
+    @Inject(PASSWORD_FLOW_CONFIG) private passFlow: AuthConfig,
+    @Inject(CODE_FLOW_CONFIG) private codeFlow: AuthConfig,
+  ) {
+    this.oauth.configure(codeFlow);
+    this.oauth.loadDiscoveryDocumentAndTryLogin().then(() => this.tryLogin());
+    this.oauth.events
+      .pipe(
+        filter((value) => value instanceof OAuthSuccessEvent),
+        filter((value) => value.type === 'token_received'),
+        switchMap((_) => from(this.oauth.loadUserProfile()))
+      )
+      .subscribe((u) => {
+        this.loggedOnSubject.next(u);
+        this.isLoggedOnSubject.next(true);
+      });
   }
 
-  /**
-   * @param consumes string[] mime-types
-   * @return true: consumes contains 'multipart/form-data', false: otherwise
-   */
-  private canConsumeForm(consumes: string[]): boolean {
-    const form = 'multipart/form-data';
-    for (const consume of consumes) {
-      if (form === consume) {
-        return true;
-      }
-    }
-    return false;
+  get LoggedOn$(): Observable<UserDto> {
+    return this.loggedOnSubject.asObservable().pipe(share());
   }
 
-  /**
-   *
-   *
-   * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
-   * @param reportProgress flag to report request and response progress.
-   */
-  public loginGoogleLogin(observe?: 'body', reportProgress?: boolean): Observable<Blob>;
-  public loginGoogleLogin(observe?: 'response', reportProgress?: boolean): Observable<HttpResponse<Blob>>;
-  public loginGoogleLogin(observe?: 'events', reportProgress?: boolean): Observable<HttpEvent<Blob>>;
-  public loginGoogleLogin(observe: any = 'body', reportProgress: boolean = false): Observable<any> {
+  get LoggedOn(): UserDto {
+    return this.loggedOnSubject.value;
+  }
 
-    let headers = this.defaultHeaders;
+  get isLoggedOn$() {
+    return this.isLoggedOnSubject.asObservable().pipe(share());
+  }
 
-    // to determine the Accept header
-    let httpHeaderAccepts: string[] = [
-      'application/json'
-    ];
-    const httpHeaderAcceptSelected: string | undefined = this.configuration.selectHeaderAccept(httpHeaderAccepts);
-    if (httpHeaderAcceptSelected != undefined) {
-      headers = headers.set('Accept', httpHeaderAcceptSelected);
+  get isLoggedOn() {
+    return this.isLoggedOnSubject.value;
+  }
+
+  async loginWithCode() {
+    await this.configureOauth(this.codeFlow);
+    this.oauth.initCodeFlow();
+  }
+
+  async loginWithPass(userName: string, password: string) {
+    await this.configureOauth(this.passFlow);
+    await this.oauth.fetchTokenUsingPasswordFlow(userName, password);
+  }
+
+  async logout() {
+    this.loggedOnSubject.next(null);
+    this.isLoggedOnSubject.next(false);
+    this.oauth.logOut();
+    await this.router.navigate(['home']);
+  }
+
+  private async configureOauth(config: AuthConfig) {
+    this.oauth.configure(config);
+    await this.oauth.loadDiscoveryDocument();
+  }
+
+  private async tryLogin() {
+    if (this.oauth.hasValidAccessToken()) {
+      const user = await this.oauth.loadUserProfile();
+      this.isLoggedOnSubject.next(true);
+      this.loggedOnSubject.next(user);
     }
-
-    // to determine the Content-Type header
-    const consumes: string[] = [
-      'application/json'
-    ];
-
-    return this.httpClient.get(`${this.basePath}/external/google`,
-      {
-        responseType: "blob",
-        withCredentials: this.configuration.withCredentials,
-        headers: headers,
-        observe: observe,
-        reportProgress: reportProgress
-      }
-    );
   }
 
 }
