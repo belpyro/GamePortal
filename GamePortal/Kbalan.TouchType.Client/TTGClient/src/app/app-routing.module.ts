@@ -1,3 +1,4 @@
+import { StatisticModule } from './Statistic/statistic.module';
 import { HomecomponentComponent } from './home/component/homecomponent/homecomponent.component';
 import { CoreModule } from './core/core.module';
 import { NgModule } from '@angular/core';
@@ -15,6 +16,7 @@ import { UserModule } from './user/user.module';
 import { HomeModule } from './home/home.module';
 import { SgameComponent } from './sgame/component/sgame/sgame.component';
 import { SgameModule } from './sgame/sgame.module';
+import { StatisticComponent } from './Statistic/component/statistic/statistic.component';
 
 
 const routes: Routes = [
@@ -26,6 +28,7 @@ const routes: Routes = [
 {path: 'sgame', component: SgameComponent, canActivate: [AuthGuard]},
 {path: 'text', component: TextblockComponent, canActivate: [AuthGuard]},
 {path: 'users', component: UsermanagerComponent, canActivate: [AuthGuard]},
+{path: 'statistic', component: StatisticComponent, canActivate: [AuthGuard]},
 {path: 'home', component: HomecomponentComponent, canActivate: [AuthGuard]},
 {path: '', redirectTo: '/entry/login', pathMatch: 'full'},
 {path: '**', component: NotFoundComponent}
@@ -39,6 +42,7 @@ const routes: Routes = [
     TextModule,
     UserModule,
     SgameModule,
+    StatisticModule,
     RouterModule.forRoot(routes)
   ],
   exports: [CoreModule , RouterModule]
