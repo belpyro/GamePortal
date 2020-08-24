@@ -16,7 +16,6 @@ export class HomeService {
 }
 
   getUser(){
-
     return this.http.get<UserProfileDto>(`${environment.backendurl}/api/users/${this.user.sub}`);
   }
   updateSetting(model){
