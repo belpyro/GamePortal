@@ -6,14 +6,14 @@
           <div class="team-single-img">
               <img [src]="createImgPath()" alt="">
           </div>
-          <div class="bg-light-gray padding-30px-all md-padding-25px-all sm-padding-20px-all text-center">
+          <div class="padding-30px-all md-padding-25px-all sm-padding-20px-all text-center">
               <app-upload (onUploadFinished)="uploadFinished($event)"></app-upload>
           </div>
       </div>
 
       <div class="col-lg-8 col-md-7">
         <div class="team-single-text padding-50px-left sm-no-padding-left">
-            <h4 class="font-size38 sm-font-size32 xs-font-size30">{{userProfile.Username}}</h4>
+            <h4 class="font-size38 sm-font-size32 xs-font-size30">{{userProfile.Username}} {{homeservice.user.role}}</h4>
             <div class="contact-info-section margin-40px-tb">
                 <ul class="list-style9 no-margin">
                     <li>
@@ -114,8 +114,9 @@
     </div>
 
     <div class="col-md-12">
-
+      <button class="btn btn-success" routerLink="/sgame" >Play Single Game</button>
     </div>
+
 
 
 </div>

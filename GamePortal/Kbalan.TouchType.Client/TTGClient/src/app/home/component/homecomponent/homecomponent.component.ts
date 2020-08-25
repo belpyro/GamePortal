@@ -4,10 +4,9 @@ import { HomeService } from '../../services/home.service';
 import { UserProfileDto } from '../../models/UserProfileDto';
 import { Observable } from 'rxjs';
 import { UserDto } from 'src/app/core/models/UserDto';
-import { LoginService } from 'src/app/core/services/login.service';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { environment } from 'src/environments/environment';
-import { url } from 'inspector';
+
 
 
 @Component({
@@ -21,7 +20,7 @@ export class HomecomponentComponent implements OnInit {
   LevelGroup: FormGroup;
   linkPicture: string;
   timeStamp;
-  constructor(private homeservice: HomeService, private loginService: LoginService, private fb: FormBuilder) {
+  constructor(public homeservice: HomeService,  private fb: FormBuilder) {
     this.LevelGroup = this.fb.group({
       textradio: ['', [Validators.required]]
     });
@@ -59,6 +58,7 @@ export class HomecomponentComponent implements OnInit {
   async initUser(){
     await this.homeservice.getUser().subscribe(res => {
       this.userProfile = res;
+      this.userProfile.Statistic.AvarageSpeed = Math.round((this.userProfile.Statistic.AvarageSpeed + Number.EPSILON) * 100) / 100;
       this.setLinkPicture();
       this.LevelGroup.setValue({
       textradio: this.userProfile.Setting.LevelOfText }); } );

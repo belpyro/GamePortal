@@ -1,0 +1,32 @@
+
+#correctText {
+  padding-top: 20px;
+  float: left;
+  color: green;
+  font-size: 22px;
+}
+#toTypeText {
+  margin-top: 10px;
+  float: right;
+  white-space: pre-wrap;
+  font-size: 22px;
+}
+.timer{
+  display: flex;
+  justify-content: space-around;
+  font-size: 36px;
+  color: rgb(66, 2, 10);
+}
+
+.gameZone{
+  display: flex;
+  justify-content: space-around;
+  width: 100%;
+  margin-top: 30px;
+}
+
+.textZone{
+  width: 50%;
+  display: flex;
+  flex-direction: column;
+}

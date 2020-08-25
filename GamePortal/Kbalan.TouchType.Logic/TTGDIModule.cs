@@ -59,6 +59,7 @@ namespace Kbalan.TouchType.Logic
             this.Bind<IValidator<StatisticDto>>().To<StatisticDtoValidator>();
             this.Bind<IValidator<TextSetDto>>().To<TextSetDtoValidator>();
             this.Bind<IUploadService>().To<UploadService>();
+            this.Bind<ISingleGameService>().To<SingleGameService>();
 
             var textSetBinding = Bind<ITextSetService>().To<TextSetService>();
             textSetBinding.Intercept().With<TextSetValidationInterceptor>();

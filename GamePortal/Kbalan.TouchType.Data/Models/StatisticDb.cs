@@ -12,7 +12,7 @@
 
         public int NumberOfGamesPlayed { get; set; }
 
-        public int AvarageSpeed { get; set; }
+        public double AvarageSpeed { get; set; }
 
         public ApplicationUser AppUser { get; set; }
     }

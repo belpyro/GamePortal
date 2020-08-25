@@ -1,0 +1,39 @@
+<div class="container" >
+  <app-navbar></app-navbar>
+  <table class="table table-striped">
+    <thead>
+        <tr>
+            <td>
+              <button class="sortBtn" (click) = "sortbyNickName()">Username</button>
+            </td>
+            <td>
+              <button class="sortBtn" (click) = "sortbyNumberOfGamesPlayed()">Number of games played</button>
+            </td>
+            <td>
+              <button class="sortBtn" (click) = "sortbyMaxSpeed()">Maximum typing speed record(wpm)</button>
+            </td>
+            <td>
+              <button class="sortBtn" (click) = "sortbyAvarageSpeed()">Average typing speed(wpm)</button>
+            </td>
+        </tr>
+    </thead>
+    <tbody>
+        <tr *ngFor="let user of allUsers">
+            <ng-template [ngTemplateOutlet]="loadTemplate(user)"
+                        [ngTemplateOutletContext]="{ $implicit: user}">
+            </ng-template>
+        </tr>
+    </tbody>
+    <ng-template #readOnlyTemplate let-user>
+        <td>
+          <button class="userInfo" (click) = "showUserInfo(user.Id)">{{user.Username}}</button>
+        </td>
+        <td>{{user.Statistic.NumberOfGamesPlayed}}</td>
+        <td>{{user.Statistic.MaxSpeedRecord}}</td>
+        <td>{{user.Statistic.AvarageSpeed}}</td>
+
+    </ng-template>
+    </table>
+</div>
+
+

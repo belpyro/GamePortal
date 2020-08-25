@@ -34,7 +34,7 @@ namespace Kbalan.TouchType.Logic.Services
         /// <param name="level">text set level</param>
         /// <returns>Single text set from TextSetDto or null</returns>
         Result<TextSetDto> GetByLevelRandom(int level);
-        Task<Result<TextSetDto>> GetByLevelAsyncRandom(int level);
+        Task<Result<TextSetDto>> GetByLevelAsyncRandom(string id);
 
         /// <summary>
         /// Returns text set from TextSetDto collection by it's id.

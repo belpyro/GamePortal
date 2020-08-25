@@ -7,6 +7,7 @@ import { CoreModule } from '../core/core.module';
 import { ReactiveFormsModule, FormsModule} from '@angular/forms';
 import { TextblockComponent } from './component/textblock/textblock.component';
 
+
 @NgModule({
   declarations: [TextblockComponent],
   imports: [

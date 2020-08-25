@@ -2,13 +2,15 @@ import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { UploadComponent } from './upload/upload.component';
 
-
+import { RouterModule } from '@angular/router';
+import { AppModule } from '../app.module';
 
 @NgModule({
   declarations: [UploadComponent],
   imports: [
-    CommonModule
+    CommonModule,
+    RouterModule
   ],
-  exports: [UploadComponent],
+  exports: [UploadComponent]
 })
 export class SharedModule { }

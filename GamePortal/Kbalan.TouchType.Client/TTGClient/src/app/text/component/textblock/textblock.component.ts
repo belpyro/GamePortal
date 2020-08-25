@@ -1,10 +1,11 @@
 import { TextsetService } from '../../services/textset.service';
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { TextSetDto } from 'src/app/text/models/textsetDto';
 import { TextSetDtomin } from 'src/app/text/models/textsetDtomin';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import Swal from 'sweetalert2';
 import { ToastrService } from 'ngx-toastr';
+
 
 
 @Component({
@@ -23,7 +24,6 @@ easytextset: TextSetDtomin[];
 middletextset: TextSetDtomin[];
 hardtextset: TextSetDtomin[];
 textGroup: FormGroup;
-
   constructor(private toastr: ToastrService, public textsetService: TextsetService, private fb: FormBuilder) {
     this.textGroup = this.fb.group({
       textname: [ '', [Validators.required, Validators.minLength(5)]],
@@ -113,6 +113,7 @@ sendEditedTexttoServer()
       {
         this.toastr.success(`text ${newText.Name} successfully added to collection `);
         this.initTextSet();
+        this.textGroup.reset();
       }
     },
     err => {
@@ -121,6 +122,7 @@ sendEditedTexttoServer()
         this.toastr.error(err.error.Message);
       }
     });
+
 }
 
 sendTextToServer(){
@@ -135,6 +137,7 @@ sendTextToServer(){
     {
       this.toastr.success(`text ${newText.Name} successfully added to collection `);
       this.initTextSet();
+      this.textGroup.reset();
     }
   },
   err => {

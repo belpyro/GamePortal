@@ -513,6 +513,7 @@
     <Compile Include="Controllers\Sapper\SapperGameController.cs" />
     <Compile Include="Controllers\TouchType\TTGExternalLoginController.cs" />
     <Compile Include="Controllers\TouchType\TTGSettingsController.cs" />
+    <Compile Include="Controllers\TouchType\TTGSingleGameController.cs" />
     <Compile Include="Controllers\TouchType\TTGStatisticsController.cs" />
     <Compile Include="Controllers\TouchType\TTGUploadController.cs" />
     <Compile Include="Controllers\TouchType\TTGUsersController.cs" />
