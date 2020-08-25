@@ -1,0 +1,23 @@
+<table id="table"></table>
+
+<table>
+  <tr *ngFor="let item of arr; let trIndex = index">
+    <td
+      *ngFor="let item of arr; let tdIndex = index"
+      class="battlefield-cell battlefield-cell__busy battlefield-cell__done"
+      [class]="sign[tdIndex][trIndex]"
+    >
+      <div
+        class="battlefield-cell-content"
+        id="{{ title }}_{{ tdIndex }}*{{ trIndex }}"
+        attr.Coordinate-X="{{ tdIndex }}"
+        attr.Coordinate-Y="{{ trIndex }}"
+        (click)="push(tdIndex, trIndex)"
+        (drop)="drop($event)"
+        (dragover)="allowDrop($event)"
+      >
+        <span draggable="false" class="z"></span>
+      </div>
+    </td>
+  </tr>
+</table>

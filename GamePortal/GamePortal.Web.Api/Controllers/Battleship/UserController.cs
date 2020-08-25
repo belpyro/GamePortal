@@ -1,19 +1,16 @@
-﻿using System.Linq;
-using System.Net;
+﻿using System.Net;
 using System.Net.Http;
 using System.Security.Claims;
 using System.Threading.Tasks;
 using System.Web;
 using System.Web.Http;
-using AliaksNad.Battleship.Logic.Models;
 using AliaksNad.Battleship.Logic.Models.User;
-using AliaksNad.Battleship.Logic.Services;
 using AliaksNad.Battleship.Logic.Services.Contracts;
-using FluentValidation;
 using FluentValidation.WebApi;
 using GamePortal.Web.Api.Filters.Battleship;
 using Microsoft.AspNet.Identity;
 using Microsoft.Owin.Security;
+using Swashbuckle.Swagger.Annotations;
 
 namespace GamePortal.Web.Api.Controllers.Battleship
 {
@@ -21,12 +18,10 @@ namespace GamePortal.Web.Api.Controllers.Battleship
     public class UserController : ApiController
     {
         private readonly IUserService _userService;
-        private readonly IValidator<UserDto> _userDtoValidator;
 
-        public UserController(IUserService userService, IValidator<UserDto> userDtoValidator)
+        public UserController(IUserService userService)
         {
             this._userService = userService;
-            this._userDtoValidator = userDtoValidator;
         }
 
         /// <summary>
@@ -35,10 +30,10 @@ namespace GamePortal.Web.Api.Controllers.Battleship
         /// <param name="model">New user model</param>
         /// <returns></returns>
         [HttpPost, Route("register")]
+        [SwaggerResponse(HttpStatusCode.NoContent)]
+        [SwaggerResponse(HttpStatusCode.InternalServerError)]
         public async Task<IHttpActionResult> Register([CustomizeValidator(RuleSet = "PreValidation"), FromBody]NewUserDto model)
         {
-            if (!ModelState.IsValid) return BadRequest("Invalid model");
-
             var result = await _userService.RegisterAsync(model);
             return result.IsSuccess ? StatusCode(HttpStatusCode.NoContent) : StatusCode(HttpStatusCode.InternalServerError);
         }
@@ -49,10 +44,10 @@ namespace GamePortal.Web.Api.Controllers.Battleship
         /// <param name="model">User name and password</param>
         /// <returns></returns>
         [HttpPost, Route("login")]
+        [SwaggerResponse(HttpStatusCode.Unauthorized)]
+        [SwaggerResponse(HttpStatusCode.OK)]
         public async Task<IHttpActionResult> Login([CustomizeValidator(RuleSet = "PreValidation"), FromBody]LoginDto model)
         {
-            if (!ModelState.IsValid) return BadRequest("Invalid model");
-
             var result = await _userService.GetUserAsync(model.UserName, model.Password);
             if (result.HasNoValue) return Unauthorized();
 
@@ -74,10 +69,10 @@ namespace GamePortal.Web.Api.Controllers.Battleship
         /// <param name="email">User email</param>
         /// <returns></returns>
         [HttpPut, Route("resetpass")]
+        [SwaggerResponse(HttpStatusCode.OK)]
+        [SwaggerResponse(HttpStatusCode.InternalServerError)]
         public async Task<IHttpActionResult> ResetPassword([FromBody]string email)
         {
-            if (!ModelState.IsValid) return BadRequest("Invalid email");
-
             var result = await _userService.ResetPasswordAsync(email);
             return result.IsSuccess ? Ok() : (IHttpActionResult)StatusCode(HttpStatusCode.InternalServerError);
         }
@@ -90,10 +85,10 @@ namespace GamePortal.Web.Api.Controllers.Battleship
         /// <param name="newPassword">New password</param>
         /// <returns></returns>
         [HttpPut, Route("changepass")]
+        [SwaggerResponse(HttpStatusCode.NoContent)]
+        [SwaggerResponse(HttpStatusCode.InternalServerError)]
         public async Task<IHttpActionResult> ChangePassword(string userId, string token, string newPassword)
         {
-            if (!ModelState.IsValid) return BadRequest("Invalid model");
-
             var result = await _userService.ChangePasswordAsync(userId, token, newPassword);
             return result.IsSuccess ? StatusCode(HttpStatusCode.NoContent) : StatusCode(HttpStatusCode.InternalServerError);
         }
@@ -105,10 +100,10 @@ namespace GamePortal.Web.Api.Controllers.Battleship
         /// <param name="token">Validation token</param>
         /// <returns></returns>
         [HttpPut, Route("confirmemail")]
+        [SwaggerResponse(HttpStatusCode.NoContent)]
+        [SwaggerResponse(HttpStatusCode.InternalServerError)]
         public async Task<IHttpActionResult> ConfirmEmail(string userId, string token)
         {
-            if (!ModelState.IsValid) return BadRequest("Invalid model");
-
             var result = await _userService.ConfirmEmailAsync(userId, token);
             return result.IsSuccess ? StatusCode(HttpStatusCode.NoContent) : StatusCode(HttpStatusCode.InternalServerError);
         }
@@ -118,6 +113,8 @@ namespace GamePortal.Web.Api.Controllers.Battleship
         /// </summary>
         /// <param name="userId">User ID</param>
         [HttpDelete, Route(""), Authorize]
+        [SwaggerResponse(HttpStatusCode.NoContent)]
+        [SwaggerResponse(HttpStatusCode.InternalServerError)]
         public async Task<IHttpActionResult> Delete()
         {
             var userId = User.Identity.GetUserId();

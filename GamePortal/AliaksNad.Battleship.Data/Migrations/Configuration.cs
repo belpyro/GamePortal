@@ -1,5 +1,6 @@
 ﻿namespace AliaksNad.Battleship.Data.Migrations
 {
+    using Microsoft.AspNet.Identity.EntityFramework;
     using System;
     using System.Data.Entity;
     using System.Data.Entity.Migrations;
@@ -24,6 +25,11 @@
             {
                 context.Users.Add(user); 
             }
+
+            if (context.Roles.Any()) return;
+
+            context.Roles.Add(new IdentityRole("user"));
+            context.SaveChanges();
 
             //  You can use the DbSet<T>.AddOrUpdate() helper extension method
             //  to avoid creating duplicate seed data.

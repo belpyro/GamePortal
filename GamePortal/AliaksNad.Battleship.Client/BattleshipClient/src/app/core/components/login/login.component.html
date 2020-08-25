@@ -1,0 +1,50 @@
+<form
+  class="form-signin"
+  [formGroup]="loginGroup"
+  (ngSubmit)="this.loginWithPassword()"
+>
+  <div class="text-center mb-4">
+    <h1 class="h3 mb-3 font-weight-normal">Login</h1>
+  </div>
+
+  <div class="form-label-group">
+    <input
+      id="inputEmail"
+      class="form-control"
+      placeholder="UserName"
+      autofocus=""
+      formControlName="userName"
+    />
+    <label for="inputEmail">User Name</label>
+  </div>
+
+  <div class="form-label-group">
+    <input
+      type="password"
+      id="inputPassword"
+      class="form-control"
+      placeholder="Password"
+      formControlName="password"
+    />
+    <label for="inputPassword">Password</label>
+  </div>
+
+  <div class="checkbox mb-3">
+    <label>
+      <input type="checkbox" value="remember-me" formControlName="remember" />
+      Remember me
+    </label>
+  </div>
+  <div></div>
+  <button class="btn btn-lg btn-primary btn-block" type="submit">
+    Sign in
+  </button>
+  <button
+    type="button"
+    class="btn btn-lg btn-secondary btn-block"
+    (click)="this.login()"
+  >
+    Sign in (with Identity Server)
+  </button>
+  <p class="mt-5 mb-3 text-muted text-center">© 2020</p>
+</form>

@@ -29,6 +29,8 @@ namespace GamePortal.Web.Api
 
         public IValidator GetValidator(Type type)
         {
+            return kernel.TryGet(typeof(IValidator<>).MakeGenericType(type)) as IValidator;
+
             var result = GetKernelValidator(type);
 
             if (result == null)

@@ -1,0 +1,100 @@
+<div class="row">
+  <div class="column" style="margin-top: 4em;">
+    <td class="battlefield-cell battlefield-cell__busy battlefield-cell__done">
+      <div
+        class="battlefield-cell-content"
+        (drop)="drop($event)"
+        draggable="false"
+        (dragenter)="allowDrop($event)"
+      >
+        <span draggable="false" class="z"></span>
+        <div
+          id="drag6"
+          draggable="true"
+          (dragstart)="drag($event)"
+          class="ship-box ui-draggable ship-zero"
+        ></div>
+      </div>
+    </td>
+  </div>
+  <div class="column">
+    <table draggable="false">
+      <tr *ngFor="let item of arr; let trIndex = index" draggable="false">
+        <td
+          draggable="false"
+          *ngFor="let item of arr; let tdIndex = index"
+          (click)="push(tdIndex, trIndex)"
+          [class]="sign[tdIndex][trIndex]"
+          class="battlefield-cell battlefield-cell__busy battlefield-cell__done"
+        >
+          <div
+            id="{{ tdIndex }}*{{ trIndex }}"
+            attr.Coordinate-X="{{ tdIndex }}"
+            attr.Coordinate-Y="{{ trIndex }}"
+            class="battlefield-cell-content"
+            draggable="false"
+            (drop)="drop($event)"
+            (dragover)="allowDrop($event)"
+          >
+            <span draggable="false" class="z"></span>
+          </div>
+        </td>
+      </tr>
+    </table>
+  </div>
+  <div>
+    <button class="button" (click)="ceedFleet()"></button>
+    <button class="button" (click)="pushMessage()"></button>
+  </div>
+</div>
+<div class="row" #elem>
+  <a class="column">fleetDto = {{ fleetDto | json }}</a>
+  <a class="column">tableFleet = {{ tableFleet | json }}</a>
+  <a class="column">busyCell = {{ busyCell | json }}</a>
+</div>
+
+<div class="margin">
+  <h1>Table {{ size }}</h1>
+  <input type="number" [(ngModel)]="size" />
+  <button (click)="foo(size)">PRESS</button>
+
+  <table class="margin">
+    <tr *ngFor="let item of arr; let trIndex = index">
+      <td
+        *ngFor="let item of arr; let tdIndex = index"
+        (click)="push(trIndex, tdIndex)"
+        [class]="sign[trIndex][tdIndex]"
+        class="battlefield-cell battlefield-cell__busy battlefield-cell__done"
+      >
+        <div class="battlefield-cell-content">
+          <span class="z"></span>
+        </div>
+      </td>
+    </tr>
+  </table>
+  <label>arr = {{ arr | json }}</label>
+  <label>sign = {{ sign | json }} </label>
+</div>
+
+<div class="margin">
+  <td class="battlefield-cell battlefield-cell__busy">
+    <div class="battlefield-cell-content" data-y="2" data-x="5">
+      <span class="z"></span>&nbsp;
+      <div
+        data-id="JmTQRvOYiE3O"
+        data-length="1"
+        data-position="h"
+        class="ship-box ship-box__h ui-draggable ship-box__draggable"
+        style="
+          width: 2em;
+          height: 2em;
+          padding-right: 0px;
+          padding-bottom: 0px;
+          left: 0px;
+          top: 0px;
+          margin: -2px;
+        "
+      ></div>
+    </div>
+  </td>
+</div>

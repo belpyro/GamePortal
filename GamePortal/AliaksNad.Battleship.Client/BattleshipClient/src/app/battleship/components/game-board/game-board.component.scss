@@ -1,0 +1,14 @@
+.row {
+  border: 4px solid #fcffcb;
+}
+.column {
+  margin: auto;
+  margin-left: auto;
+  margin-right: auto;
+}
+.disabled {
+  pointer-events: none;
+  /* for "disabled" effect */
+  opacity: 0.5;
+  background: #ccc;
+}

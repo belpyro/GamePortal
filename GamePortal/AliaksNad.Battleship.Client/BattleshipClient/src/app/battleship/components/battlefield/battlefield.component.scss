@@ -1,0 +1,115 @@
+.margin {
+  margin: 2em;
+}
+.divcss {
+  border: 5px solid fuchsia;
+}
+table {
+  border-collapse: collapse;
+  border: 2px solid grey;
+  background-color: lightcyan;
+}
+td {
+  border: 1px solid grey;
+}
+td:hover {
+  background-color: cyan;
+}
+
+.row {
+  border: 4px solid #fcffcb;
+}
+.column {
+  margin: auto;
+  margin-left: 8em;
+  margin-right: 2em;
+}
+.button {
+  height: 3em;
+  width: 7em;
+  margin-top: 5em;
+  border-radius: 15px;
+}
+
+.battlefield-cell-content {
+  position: relative;
+  height: 2em;
+  width: 2em;
+}
+.battlefield-cell__hit .battlefield-cell-content .z {
+  height: 100%;
+  width: 100%;
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: 1;
+  overflow: hidden;
+  box-sizing: border-box;
+}
+.battlefield-cell__hit .battlefield-cell-content .z:after,
+.battlefield-cell__hit .battlefield-cell-content .z:before {
+  content: "";
+  position: absolute;
+  z-index: -1;
+  background: brown;
+  -webkit-transform: rotate(-45deg);
+  -moz-transform: rotate(-45deg);
+  -ms-transform: rotate(-45deg);
+  transform: rotate(-45deg);
+}
+.battlefield-cell__hit .battlefield-cell-content .z:before {
+  left: 50%;
+  width: 2px;
+  top: -25%;
+  height: 150%;
+  margin-top: 1px;
+}
+.battlefield-cell__hit .battlefield-cell-content .z:after {
+  top: 50%;
+  height: 2px;
+  left: -25%;
+  width: 150%;
+  margin-left: -1px;
+}
+.battlefield-cell__miss .battlefield-cell-content .z {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  height: 5px;
+  width: 5px;
+  background: green;
+  border-radius: 50%;
+  margin-top: -2px;
+  margin-left: -2px;
+}
+.battlefield-cell {
+  border: 1px solid #b4b4ff;
+  padding: 0;
+}
+.battlefield-cell__busy {
+  border-color: rgba(0, 0, 255, 0.1);
+}
+.ship-box {
+  z-index: 0;
+  left: 0;
+  top: 0;
+  border: 2px solid #00f;
+  background: rgba(0, 0, 255, 0.05);
+  position: absolute !important;
+  margin: -2px;
+}
+.ship-box-start {
+  border: green;
+}
+.ui-draggable {
+  cursor: move !important;
+}
+.ship-zero {
+  padding-right: 0px;
+  padding-bottom: 0px;
+  left: 0px;
+  top: 0px;
+  margin: 0px;
+  width: 2em;
+  height: 2em;
+}

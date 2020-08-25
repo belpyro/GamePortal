@@ -1,0 +1,63 @@
+table {
+  border-collapse: collapse;
+  border: 2px solid grey;
+  background-color: lightgray;
+}
+.battlefield-cell {
+  border: 1px solid #babacc;
+  padding: 0;
+}
+.battlefield-cell__busy {
+  border-color: rgba(61, 61, 94, 0.1);
+}
+.battlefield-cell-content {
+  position: relative;
+  height: 2em;
+  width: 2em;
+}
+.battlefield-cell__hit .battlefield-cell-content .z {
+  height: 100%;
+  width: 100%;
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: 1;
+  overflow: hidden;
+  box-sizing: border-box;
+}
+.battlefield-cell__hit .battlefield-cell-content .z:after,
+.battlefield-cell__hit .battlefield-cell-content .z:before {
+  content: "";
+  position: absolute;
+  z-index: -1;
+  background: brown;
+  -webkit-transform: rotate(-45deg);
+  -moz-transform: rotate(-45deg);
+  -ms-transform: rotate(-45deg);
+  transform: rotate(-45deg);
+}
+.battlefield-cell__hit .battlefield-cell-content .z:before {
+  left: 50%;
+  width: 2px;
+  top: -25%;
+  height: 150%;
+  margin-top: 1px;
+}
+.battlefield-cell__hit .battlefield-cell-content .z:after {
+  top: 50%;
+  height: 2px;
+  left: -25%;
+  width: 150%;
+  margin-left: -1px;
+}
+.battlefield-cell__miss .battlefield-cell-content .z {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  height: 5px;
+  width: 5px;
+  background: green;
+  border-radius: 50%;
+  margin-top: -2px;
+  margin-left: -2px;
+}

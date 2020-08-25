@@ -147,6 +147,12 @@
     <Reference Include="Microsoft.AspNetCore.WebUtilities, Version=2.2.0.0, Culture=neutral, PublicKeyToken=adb9793829ddae60, processorArchitecture=MSIL">
       <HintPath>..\packages\Microsoft.AspNetCore.WebUtilities.2.2.0\lib\netstandard2.0\Microsoft.AspNetCore.WebUtilities.dll</HintPath>
     </Reference>
+    <Reference Include="Microsoft.AspNet.SignalR.Core, Version=2.4.1.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.AspNet.SignalR.Core.2.4.1\lib\net45\Microsoft.AspNet.SignalR.Core.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.AspNet.SignalR.SystemWeb, Version=2.4.1.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.AspNet.SignalR.SystemWeb.2.4.1\lib\net45\Microsoft.AspNet.SignalR.SystemWeb.dll</HintPath>
+    </Reference>
     <Reference Include="Microsoft.Azure.Services.AppAuthentication, Version=1.4.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <HintPath>..\packages\Microsoft.Azure.Services.AppAuthentication.1.4.0\lib\net472\Microsoft.Azure.Services.AppAuthentication.dll</HintPath>
     </Reference>
@@ -486,6 +492,11 @@
   <ItemGroup>
     <Content Include="App_Readme\Elmah.txt" />
     <Content Include="FodyWeavers.xml" />
+    <None Include="Scripts\jquery-1.6.4-vsdoc.js" />
+    <Content Include="Scripts\jquery-1.6.4.js" />
+    <Content Include="Scripts\jquery-1.6.4.min.js" />
+    <Content Include="Scripts\jquery.signalR-2.4.1.js" />
+    <Content Include="Scripts\jquery.signalR-2.4.1.min.js" />
     <Content Include="Web.config" />
   </ItemGroup>
   <ItemGroup>
@@ -508,6 +519,7 @@
     <Compile Include="Controllers\TouchType\TTGTextsController.cs" />
     <Compile Include="Filters\Battleship\ModelStateValidationAttribute.cs" />
     <Compile Include="HttpApplicationInitializationHttpModule.cs" />
+    <Compile Include="Hubs\GameHub.cs" />
     <Compile Include="Middleware\BattleshipIdentityServerExtension.cs" />
     <Compile Include="Middleware\TTGAuthMiddleware\TTGGoogleAuthMiddleWare.cs" />
     <Compile Include="Middleware\TTGAuthMiddleware\TTGVkAuthMiddleWare.cs" />
@@ -524,6 +536,7 @@
       <SubType>Designer</SubType>
     </None>
     <None Include="packages.config" />
+    <None Include="Properties\PublishProfiles\AliaksNad-Battleship - Web Deploy.pubxml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>

@@ -1,38 +1,41 @@
-import { BattleshipRoutesModule } from './battleshiproutes/battleshiproutes.module';
+import { AuthInterceptors } from './core/interceptors/auth.interceptors';
+import { BattleshipRoutesModule } from './battleshiproutes.module';
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
-
 import { AppComponent } from './app.component';
-import { NavbarComponent } from './components/main/navbar/navbar.component';
-import { LoginComponent } from './components/security/login/login.component';
-import { AreaComponent } from './components/game/area/area.component';
-import { HttpClientModule } from '@angular/common/http';
-import { HomeComponent } from './components/main/home/home.component';
-import { NotFoundComponent } from './components/main/notfound/notfound.component';
-import { GameBoardComponent } from './components/game/game-board/game-board.component';
-import { ReactiveFormsModule } from '@angular/forms';
-import { ProfileComponent } from './components/main/profile/profile.component';
-import { BattlefieldComponent } from './components/game/battlefield/battlefield.component';
+import { CoreModule } from './core/core.module';
+import { HTTP_INTERCEPTORS } from '@angular/common/http';
+import { NoopAnimationsModule } from '@angular/platform-browser/animations';
+import { SimpleNotificationsModule } from 'angular2-notifications';
+import { SignalRModule, SignalRConfiguration, ConnectionTransport, ConnectionTransports } from 'ng2-signalr';
 
+export function initConfig(): SignalRConfiguration {
+  const cfg = new SignalRConfiguration();
+
+  cfg.hubName = 'gameHub';
+  cfg.url = 'https://aliaksnad-battleship.azurewebsites.net';
+  cfg.transport = [
+    ConnectionTransports.webSockets,
+    ConnectionTransports.longPolling,
+  ];
+
+  return cfg;
+}
 @NgModule({
   declarations: [
     AppComponent,
-    NavbarComponent,
-    LoginComponent,
-    AreaComponent,
-    HomeComponent,
-    NotFoundComponent,
-    GameBoardComponent,
-    ProfileComponent,
-    BattlefieldComponent,
   ],
   imports: [
     BrowserModule,
-    ReactiveFormsModule,
-    HttpClientModule,
-    BattleshipRoutesModule
+    CoreModule,
+    NoopAnimationsModule,
+    SimpleNotificationsModule.forRoot(),
+    CoreModule.forRoot(),
+    SignalRModule.forRoot(initConfig),
+    BattleshipRoutesModule,
   ],
-  providers: [],
+  providers: [
+  ],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

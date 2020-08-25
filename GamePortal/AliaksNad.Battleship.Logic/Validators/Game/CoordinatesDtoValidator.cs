@@ -10,10 +10,10 @@ namespace AliaksNad.Battleship.Logic.Validators.Game
         {
             RuleSet("PreValidation", () =>
             {
-                RuleFor(x => x.CoordinateX).NotNull().InclusiveBetween(1, 10)
-                    .WithMessage("Coordinate 'X' must be in range from 1 to 10.");
-                RuleFor(x => x.CoordinateY).NotNull().InclusiveBetween(1, 10)
-                    .WithMessage("Coordinate 'Y' must be in range from 1 to 10.");
+                RuleFor(x => x.CoordinateX).NotNull().InclusiveBetween(0, 9)
+                    .WithMessage("Coordinate 'X' must be in range from 0 to 9.");
+                RuleFor(x => x.CoordinateY).NotNull().InclusiveBetween(0, 9)
+                    .WithMessage("Coordinate 'Y' must be in range from 0 to 9.");
             });
         }
     }

@@ -1,0 +1,29 @@
+<div class="row">
+  <div class="column" [ngClass]="{ disabled: isDisabled }">
+    <app-own-area></app-own-area>
+  </div>
+  <div class="column" [ngClass]="{ disabled: !isDisabled }">
+    <app-enemy-area></app-enemy-area>
+  </div>
+</div>
+
+<div>
+  <button
+    style="margin-top: 2.4em;"
+    class="btn btn-lg btn-primary btn-block"
+    (click)="generateFleet()"
+  >
+    generate fleet
+  </button>
+  <button class="btn btn-lg btn-primary btn-block" (click)="deleteFleet()">
+    delete fleet
+  </button>
+
+  <button class="btn btn-lg btn-primary btn-block" (click)="uploadFleet()">
+    Upload Area
+  </button>
+
+  <button class="btn btn-lg btn-primary btn-block" (click)="doSmt()">
+    ng-disabled Directive
+  </button>
+</div>

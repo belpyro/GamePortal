@@ -21,6 +21,7 @@ using Microsoft.Owin.Cors;
 using System.Web.Cors;
 using System.Threading.Tasks;
 using GamePortal.Web.Api.Config;
+using Microsoft.AspNet.SignalR;
 using Microsoft.AspNetCore.Http.Features;
 using Microsoft.Owin.StaticFiles;
 using Microsoft.Extensions.FileProviders;
@@ -49,6 +50,21 @@ namespace GamePortal.Web.Api
 
             config.Services.Replace(typeof(IExceptionLogger), new ElmahExceptionLogger());   // Replace system logger for elmarh
 
+            var provide = new CorsPolicyProvider
+            {
+                PolicyResolver = ctx => Task.FromResult(new CorsPolicy
+                {
+                    AllowAnyHeader = true,
+                    AllowAnyMethod = true,
+                    AllowAnyOrigin = true
+                })
+            };
+
+            app.UseCors(new CorsOptions { PolicyProvider = provide });
+
+            app.MapSignalR(new HubConfiguration { EnableDetailedErrors = true});
+
+            app.UseStaticFiles();
             app.UseSwagger(typeof(Startup).Assembly).UseSwaggerUi3();
 
             FluentValidationModelValidatorProvider.Configure(config, opt =>
@@ -61,21 +77,7 @@ namespace GamePortal.Web.Api
             app.UseCookieAuthentication(new CookieAuthenticationOptions
             {
                 AuthenticationType = DefaultAuthenticationTypes.ApplicationCookie,
-        });
-
-
-
-            var provide = new CorsPolicyProvider
-            {
-                PolicyResolver = ctx => Task.FromResult(new CorsPolicy
-                {
-                    AllowAnyHeader = true,
-                    AllowAnyMethod = true,
-                    AllowAnyOrigin = true
-                })
-            };
-
-            app.UseCors(new CorsOptions { PolicyProvider = provide });
+            });
 
 
             app.UseBattleshipIdentityServer(kernel);
