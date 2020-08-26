@@ -38,11 +38,17 @@ namespace GamePortal.Web.Api.Controllers.Battleship
         [SwaggerResponse(HttpStatusCode.BadRequest, Type = typeof(IEnumerable<Exception>))]
         public async Task<IHttpActionResult> AddAsync([CustomizeValidator(RuleSet = "PreValidation"), FromBody]BattleAreaDto BattleAreaDtoCoordinates)
         {
-            var ctx = GlobalHost.ConnectionManager.GetHubContext<GameHub>();
-            ctx.Clients.All.GameStart("Game started");
-
             var result = await _gameService.AddAsync(BattleAreaDtoCoordinates);
-            return result.IsSuccess ? Created($"api/battleship/game/fleets{result.Value}", result.Value) : (IHttpActionResult)BadRequest(result.Error);
+
+            if (result.IsSuccess)
+            {
+                var ctx = GlobalHost.ConnectionManager.GetHubContext<GameHub>();
+                ctx.Clients.All.GameStart(BattleAreaDtoCoordinates);
+
+                return Created($"api/battleship/game/fleets{result.Value}", result.Value);
+            }
+
+            return BadRequest(result.Error);
         }
 
         /// <summary>

@@ -44,7 +44,7 @@ export class AreaService {
       const busyCell = this.setBusyCell(ship);
 
       this.busyCell = busyCell.concat(this.busyCell);
-      this.pushBusy(busyCell);
+      // this.pushBusy(busyCell);
 
       this.fleetDto.push(this.toShipDto(ship));
       this.tableFleet.push(ship);
@@ -105,7 +105,7 @@ export class AreaService {
         this.busyCell = busyCell.concat(this.busyCell);
       }
     }
-    this.pushBusy(this.busyCell);
+    // this.pushBusy(this.busyCell);
   }
 
   pushBusy(area: CoordinatesDto[]): void {

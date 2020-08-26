@@ -11,22 +11,17 @@ import { LoginService } from '../../services/externalLogin.service';
 })
 export class LoginComponent implements OnInit {
   loginGroup: FormGroup;
-  //   {
-  //   email: new FormControl('', [Validators.required, Validators.email]),
-  //   pass: new FormControl('', [Validators.required]),
-  //   remember: new FormControl('true'),
-  // });
+  registerForm: FormGroup;
+  submitted = false;
 
-  // emailControl = new FormControl('', [Validators.required, Validators.email]);
-  // passControl = new FormControl('', [Validators.required]);
 
 
   constructor(
     private loginService: LoginService,
     private router: Router,
-    private fb: FormBuilder
+    private formBuilder: FormBuilder
   ) {
-    this.loginGroup = this.fb.group({
+    this.loginGroup = this.formBuilder.group({
       userName: [''],
       password: [''],
       remember: ['true'],
@@ -37,7 +32,27 @@ export class LoginComponent implements OnInit {
     this.loginService.LoggedOn$.subscribe((_) => {
       this.router.navigate(['play']);
     });
+
+    this.registerForm = this.formBuilder.group({
+      name: ['', Validators.required],
+      password: ['', [Validators.required, Validators.minLength(6)]],
+    }, {
+      });
   }
+
+  onSubmit() {
+    this.submitted = true;
+
+    if (this.registerForm.invalid) {
+      return;
+    }
+
+    alert('SUCCESS!! :-)\n\n' + JSON.stringify(this.registerForm.value))
+    this.loginWithPassword();
+  }
+
+  get formControls() { return this.registerForm.controls; }
+
 
   login(): void {
     this.loginService.loginWithCode();

@@ -110,7 +110,6 @@ export class AreaComponent implements OnInit {
 
   push(tdIndex, trIndex): void {
     this.areaService.pressedСell.next({ CoordinateX: tdIndex, CoordinateY: trIndex });
-    // this.sign[tdIndex][trIndex] = 'battlefield-cell__hit';
   }
 
   allowDrop(ev): void {
