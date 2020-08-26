@@ -1,3 +1,4 @@
+import { ExternalLoginService } from './../../services/external.login.service';
 import { LoginService } from '../../../core/services/login.service';
 import { UserService } from './../../services/user.service';
 import { Component, OnInit } from '@angular/core';
@@ -15,7 +16,12 @@ export class SignUpComponent implements OnInit {
   signupGroup: FormGroup;
   subscription$: Subscription;
 
-  constructor(private fb: FormBuilder, private userService: UserService, private loginService: LoginService) {
+  constructor(
+    private fb: FormBuilder,
+    private userService: UserService,
+    private loginService: LoginService,
+    private extloginService: ExternalLoginService
+  ) {
     this.signupGroup = this.fb.group({
       userName: [''],
       userEmail: [''],
@@ -39,7 +45,7 @@ export class SignUpComponent implements OnInit {
   }
 
   signUpWithGoogle(): void {
-
+    this.extloginService.loginGoogleLogin()
+      .subscribe(() => alert('google login'));
   }
-
 }

@@ -520,7 +520,8 @@
     <Compile Include="Filters\Battleship\ModelStateValidationAttribute.cs" />
     <Compile Include="HttpApplicationInitializationHttpModule.cs" />
     <Compile Include="Hubs\GameHub.cs" />
-    <Compile Include="Middleware\BattleshipIdentityServerExtension.cs" />
+    <Compile Include="Middleware\BattleshipMiddleware\BattleshipIdentityServerExtension.cs" />
+    <Compile Include="Middleware\BattleshipMiddleware\GoogleAuthMiddleware.cs" />
     <Compile Include="Middleware\TTGAuthMiddleware\TTGGoogleAuthMiddleWare.cs" />
     <Compile Include="Middleware\TTGAuthMiddleware\TTGVkAuthMiddleWare.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

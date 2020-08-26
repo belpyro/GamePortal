@@ -1,3 +1,4 @@
+import { ExternalLoginService } from './services/external.login.service';
 import { UserService } from './services/user.service';
 import { RouterModule, Routes } from '@angular/router';
 import { ReactiveFormsModule } from '@angular/forms';
@@ -19,7 +20,7 @@ export const routes: Routes = [
     RouterModule.forChild(routes),
     ReactiveFormsModule,
   ],
-  providers: [UserService],
+  providers: [UserService, ExternalLoginService],
   exports: [ProfileComponent, SignUpComponent]
 })
 export class UserModule { }

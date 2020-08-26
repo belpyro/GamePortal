@@ -248,8 +248,8 @@
   <ItemGroup>
     <Compile Include="Aspects\LoggerInterceptor.cs" />
     <Compile Include="Aspects\ValidationInterceptor.cs" />
-    <Compile Include="Configuration\BtlsIdentityServerConfig.cs" />
-    <Compile Include="Configuration\BtlsTokenAuthenticationConfig.cs" />
+    <Compile Include="Configuration\BattleshipISConfig.cs" />
+    <Compile Include="Configuration\BattleshipISAuthConfig.cs" />
     <Compile Include="DIModules\ContextModule.cs" />
     <Compile Include="DIModules\IdentityServerModule.cs" />
     <Compile Include="DIModules\LoggerModule.cs" />
