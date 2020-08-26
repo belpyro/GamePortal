@@ -26,8 +26,16 @@ const routes: Routes = [
   ]
 },
 {path: 'sgame', component: SgameComponent, canActivate: [AuthGuard]},
-{path: 'text', component: TextblockComponent, canActivate: [AuthGuard]},
-{path: 'users', component: UsermanagerComponent, canActivate: [AuthGuard]},
+{path: 'text', component: TextblockComponent, canActivate: [AuthGuard],
+data: {
+  role: 'administrator'
+}
+},
+{path: 'users', component: UsermanagerComponent, canActivate: [AuthGuard],
+data: {
+  role: 'administrator'
+}
+},
 {path: 'statistic', component: StatisticComponent, canActivate: [AuthGuard]},
 {path: 'home', component: HomecomponentComponent, canActivate: [AuthGuard]},
 {path: '', redirectTo: '/entry/login', pathMatch: 'full'},

@@ -38,6 +38,7 @@ export class LoginService {
         this.isLoggedOnSubject.next(true);
         this.toastr.success(`Welcome, ${u.preferred_username}`);
         this.lastLoginDateUpdate(u.sub).subscribe();
+        this.router.navigate(['home']);
       });
   }
 
@@ -80,7 +81,7 @@ export class LoginService {
     this.loggedOnSubject.next(null);
     this.isLoggedOnSubject.next(false);
     this.oauth.logOut();
-    await this.router.navigate(['home']);
+    await this.router.navigate(['entry/login']);
   }
 
   private async configureOauth(config: AuthConfig) {
@@ -93,6 +94,7 @@ export class LoginService {
       const user = await this.oauth.loadUserProfile();
       this.isLoggedOnSubject.next(true);
       this.loggedOnSubject.next(user);
+      this.router.navigate(['home']);
     }
   }
 

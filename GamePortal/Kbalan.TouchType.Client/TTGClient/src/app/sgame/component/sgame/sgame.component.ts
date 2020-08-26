@@ -66,15 +66,55 @@ export class SgameComponent implements OnInit {
      ); }
 
   async startnewgame(){
+    if (this.userProfile.IsBlocked)
+    {
+      Swal.fire({
+        icon: 'warning',
+        title: 'You are blocked',
+        text: 'Ask administrator for help!',
+        showConfirmButton: false,
+        timer: 3000
+      }).then(() => {
+        this.router.navigate(['home']);
+        return;
+    });
+    }
+    else{
     this.timeStart = 0.0;
     this.typedTextForSec = 0;
     this.textToCheck = '';
     this.awaitedText = '';
     this.correctText = '';
-    this.startTimer();
     this.newGame = await this.gameservice.getnewgame(this.userProfile.Id);
-    this.result.subscribe(x => this.maketurn(x));
+    let timerInterval;
+    Swal.fire({
+    title: 'GET READY!',
+    html: 'Game will start in <b></b> seconds.',
+    timer: 4000,
+    timerProgressBar: true,
+    onBeforeOpen: () => {
+      Swal.showLoading();
+      timerInterval = setInterval(() => {
+        const content = Swal.getContent();
+        if (content) {
+          const b = content.querySelector('b');
+          if (b) {
+            b.textContent = Math.round(Swal.getTimerLeft() / 1000).toString();
+          }
+        }
+      }, 1000);
+    },
+    onClose: () => {
+      clearInterval(timerInterval);
+    }
+    }).then((result) => {
+    if (result.dismiss === Swal.DismissReason.timer) {
+      this.startTimer();
+      this.result.subscribe(x => this.maketurn(x));
+    }
+    });
 
+  }
   }
    maketurn(key)
   {

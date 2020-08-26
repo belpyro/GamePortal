@@ -1,83 +1,80 @@
-
-<div class="container text-container">
-  <app-navbar></app-navbar>
-<button type="button" class=" btn-success btn-addtext " (click) = "addNewTextSet()">Add new textset </button>
-<div class="dropgroup">
-  <div class="btn-group ">
-    <button type="button" class="btn btn-danger dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-      Hard
-    </button>
-    <div class="dropdown-menu dropdown-menu_hard">
-      <a class="dropdown-item"  *ngFor="let hardtext of hardtextset"
-      (click) = "SelectText(hardtext.Id)">{{hardtext.Name}}</a>
-    </div>
-  </div>
-  <div class="btn-group ">
-    <button type="button" class="btn btn-success dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-      Medium
-    </button>
-    <div class="dropdown-menu dropdown-menu_medium">
-      <a  class="dropdown-item"  *ngFor="let middletext of middletextset"
-      (click) = "SelectText(middletext.Id)">{{middletext.Name}}</a>
-    </div>
-  </div>
-  <div class="btn-group ">
-    <button type="button" class="btn btn-warning dropdown-toggle" data-toggle="dropdown" >
-      Easy
-    </button>
-    <div class="dropdown-menu dropdown-menu_all">
-      <a class="dropdown-item"  *ngFor="let easytext of easytextset"
-      (click) = "SelectText(easytext.Id)">{{easytext.Name}}</a>
-    </div>
-  </div>
-  <div class="btn-group ">
-    <button type="button" class="btn btn-info dropdown-toggle" data-toggle="dropdown" >
-      All
-    </button>
-    <div class="dropdown-menu dropdown-menu_all">
-      <a class="dropdown-item"  *ngFor="let alltext of alltextset"
-      (click) = "SelectText(alltext.Id)">{{alltext.Name}}</a>
-    </div>
-  </div>
-</div>
-
-
-  <div class="wrapper-textset" *ngIf="isTextSelected">
-
-    <div class="blog-post">
-      <h2 class="blog-post-title">{{selectedtext.Name || 'Unknown'}}</h2>
-      <p class="blog-post-level">{{selectedtext.LevelOfText || 'Unknown'}}</p>
-      <p class="blog-post-text">{{selectedtext.TextForTyping || 'Unknown'}}</p>
-      <div class="editdelete-btn">
-        <button type="button" (click) = "editText()" class="btn btn-success">Edit</button>
-        <button type="button" (click) = "deleteText(selectedtext.Id)" class="btn btn-danger">Delete</button>
+<div class="wrapper">
+  <div class="container text-container">
+    <app-navbar></app-navbar>
+    <button type="button" class=" btn-success btn-addtext " (click) = "addNewTextSet()">Add new textset </button>
+    <div class="dropgroup">
+      <div class="btn-group ">
+        <button type="button" class="btn btn-danger dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+          Hard
+        </button>
+        <div class="dropdown-menu dropdown-menu_hard">
+          <a class="dropdown-item"  *ngFor="let hardtext of hardtextset"
+          (click) = "SelectText(hardtext.Id)">{{hardtext.Name}}</a>
+        </div>
+      </div>
+      <div class="btn-group ">
+        <button type="button" class="btn btn-success dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+          Medium
+        </button>
+        <div class="dropdown-menu dropdown-menu_medium">
+          <a  class="dropdown-item"  *ngFor="let middletext of middletextset"
+          (click) = "SelectText(middletext.Id)">{{middletext.Name}}</a>
+        </div>
+      </div>
+      <div class="btn-group ">
+        <button type="button" class="btn btn-warning dropdown-toggle" data-toggle="dropdown" >
+          Easy
+        </button>
+        <div class="dropdown-menu dropdown-menu_all">
+          <a class="dropdown-item"  *ngFor="let easytext of easytextset"
+          (click) = "SelectText(easytext.Id)">{{easytext.Name}}</a>
+        </div>
+      </div>
+      <div class="btn-group ">
+        <button type="button" class="btn btn-info dropdown-toggle" data-toggle="dropdown" >
+          All
+        </button>
+        <div class="dropdown-menu dropdown-menu_all">
+          <a class="dropdown-item"  *ngFor="let alltext of alltextset"
+          (click) = "SelectText(alltext.Id)">{{alltext.Name}}</a>
+        </div>
       </div>
     </div>
+    <div class="wrapper-textset" *ngIf="isTextSelected">
+      <div class="blog-post">
+        <h2 class="blog-post-title">{{selectedtext.Name || 'Unknown'}}</h2>
+        <p class="blog-post-level">{{selectedtext.LevelOfText || 'Unknown'}}</p>
+        <p class="blog-post-text">{{selectedtext.TextForTyping || 'Unknown'}}</p>
+        <div class="editdelete-btn">
+          <button type="button" (click) = "editText()" class="btn btn-success">Edit</button>
+          <button type="button" (click) = "deleteText(selectedtext.Id)" class="btn btn-danger">Delete</button>
+        </div>
+      </div>
+    </div>
+    <form [formGroup] = "this.textGroup" class="textadd-form" *ngIf="addNewText">
+      <div class="form-group">
+        <label for="textname">Name of text</label>
+        <input class="form-control" id="textname" placeholder="name of text"  formControlName = "textname">
+      </div>
+      <div class="form-group">
+        <label for="maintext">Text</label>
+        <textarea class="form-control" id="maintext" rows="5" placeholder="text..." formControlName = "textarea"></textarea>
+      </div>
+      <div class="form-check form-check-inline">
+        <input class="form-check-input" type="radio"  id="textLevelEasy" value='Easy' formControlName = "textradio">
+        <label class="form-check-label" for="textLevelEasy">easy</label>
+      </div>
+      <div class="form-check form-check-inline">
+        <input class="form-check-input" type="radio" id="textLevelMiddle" value='Medium' formControlName = "textradio">
+        <label class="form-check-label" for="textLevelMiddle">middle</label>
+      </div>
+      <div class="form-check form-check-inline">
+        <input class="form-check-input" type="radio" id="textLevelHard" value='Hard' formControlName = "textradio">
+        <label class="form-check-label" for="textLevelHard">hard</label>
+      </div>
+      <br>
+      <button class="btn btn-success" (click) = "sendTextToServer()" [disabled]="textGroup.invalid" *ngIf="!editTextbuttonEnable">Add text</button>
+      <button class="btn btn-success" (click) = "sendEditedTexttoServer()" [disabled]="textGroup.invalid" *ngIf="editTextbuttonEnable">Edit text</button>
+    </form>
   </div>
-
-  <form [formGroup] = "this.textGroup" class="textadd-form" *ngIf="addNewText">
-    <div class="form-group">
-      <label for="textname">Name of text</label>
-      <input class="form-control" id="textname" placeholder="name of text"  formControlName = "textname">
-    </div>
-    <div class="form-group">
-      <label for="maintext">Text</label>
-      <textarea class="form-control" id="maintext" rows="5" placeholder="text..." formControlName = "textarea"></textarea>
-    </div>
-    <div class="form-check form-check-inline">
-      <input class="form-check-input" type="radio"  id="textLevelEasy" value='Easy' formControlName = "textradio">
-      <label class="form-check-label" for="textLevelEasy">easy</label>
-    </div>
-    <div class="form-check form-check-inline">
-      <input class="form-check-input" type="radio" id="textLevelMiddle" value='Medium' formControlName = "textradio">
-      <label class="form-check-label" for="textLevelMiddle">middle</label>
-    </div>
-    <div class="form-check form-check-inline">
-      <input class="form-check-input" type="radio" id="textLevelHard" value='Hard' formControlName = "textradio">
-      <label class="form-check-label" for="textLevelHard">hard</label>
-    </div>
-    <br>
-    <button class="btn btn-success" (click) = "sendTextToServer()" [disabled]="textGroup.invalid" *ngIf="!editTextbuttonEnable">Add text</button>
-    <button class="btn btn-success" (click) = "sendEditedTexttoServer()" [disabled]="textGroup.invalid" *ngIf="editTextbuttonEnable">Edit text</button>
-  </form>
-  </div>
+</div>

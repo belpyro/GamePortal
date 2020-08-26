@@ -9,4 +9,5 @@ export interface UserProfileDto {
   Statistic?: StatisticDto;
   Setting?: SettingDto;
   Avatar?: string;
+  IsBlocked?: boolean;
 }

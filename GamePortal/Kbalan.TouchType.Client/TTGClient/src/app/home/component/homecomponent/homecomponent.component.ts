@@ -58,6 +58,7 @@ export class HomecomponentComponent implements OnInit {
   async initUser(){
     await this.homeservice.getUser().subscribe(res => {
       this.userProfile = res;
+      console.log(this.userProfile);
       this.userProfile.Statistic.AvarageSpeed = Math.round((this.userProfile.Statistic.AvarageSpeed + Number.EPSILON) * 100) / 100;
       this.setLinkPicture();
       this.LevelGroup.setValue({

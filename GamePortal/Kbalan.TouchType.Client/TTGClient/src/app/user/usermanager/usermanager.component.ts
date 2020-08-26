@@ -71,7 +71,6 @@ export class UsermanagerComponent implements OnInit {
         else{
           Swal.fire({
             title: 'Do you want to block yourself?',
-            text: 'You will not be able to unblock you!',
             icon: 'warning',
             showCancelButton: true,
             confirmButtonColor: '#3085d6',
@@ -81,7 +80,6 @@ export class UsermanagerComponent implements OnInit {
           if (willDelete.isConfirmed) {
             this.allUsers[i].blocked = true;
             this.userservice.block(this.allUsers[i].id).subscribe();
-            this.loginService.logout();
           }
         });
         }
@@ -111,13 +109,15 @@ export class UsermanagerComponent implements OnInit {
       cancelButtonColor: '#d33',
       confirmButtonText: 'Yes, delete it!'
     }).then((willDelete) => {
-    if (willDelete) {
+    if (willDelete.isConfirmed) {
     for (let i = 0; i < this.allUsers.length; i++) {
       if (this.allUsers[i].selected === true)
       {
         if (this.allUsers[i].id !== this.loginService.LoggedOn.sub)
         {
           this.userservice.delete(this.allUsers[i].id).subscribe();
+          this.allUsers.splice(i, 1);
+          i--;
         }else
         {
           Swal.fire({
@@ -131,12 +131,12 @@ export class UsermanagerComponent implements OnInit {
           }).then((deleteYourSelf) => {
           if (deleteYourSelf.isConfirmed) {
             this.userservice.delete(this.allUsers[i].id).subscribe();
+            this.allUsers.splice(i, 1);
+            i--;
             this.loginService.logout();
           }
           });
         }
-        this.allUsers.splice(i, 1);
-        i--;
       }
     }
   }

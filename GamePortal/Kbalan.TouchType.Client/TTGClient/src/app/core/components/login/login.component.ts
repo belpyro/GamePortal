@@ -29,7 +29,6 @@ export class LoginComponent implements OnInit {
 
   ngOnInit(): void {
     this.loginService.LoggedOn$.subscribe((_) => {
-        this.router.navigate(['text']);
     });
   }
 

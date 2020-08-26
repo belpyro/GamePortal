@@ -11,10 +11,10 @@
           <a class="nav-link" routerLink="/statistic" routerLinkActive = "active">Statistic</a>
         </li>
         <li class="nav-item">
-          <a class="nav-link" routerLink = "/text" routerLinkActive = "active">Text</a>
+          <a class="nav-link" *ngIf="user.role === 'administrator'" routerLink = "/text" routerLinkActive = "active">Text</a>
         </li>
         <li class="nav-item">
-          <a class="nav-link " routerLink="/users" routerLinkActive = "active">Users</a>
+          <a class="nav-link " *ngIf="user.role === 'administrator'" routerLink="/users" routerLinkActive = "active">Users</a>
         </li>
         <li class="nav-item">
           <a class="nav-link " href="#" (click)="this.logout()" >Logout</a>

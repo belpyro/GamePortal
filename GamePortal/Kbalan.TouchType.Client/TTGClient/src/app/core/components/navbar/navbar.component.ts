@@ -14,10 +14,14 @@ export class NavbarComponent implements OnInit, OnDestroy {
   email: string;
   user$: Observable<UserDto>;
   isLoggedOn$: Observable<boolean>;
-
+  token;
+  user;
   constructor(
     private loginService: LoginService,
-  ) {}
+  ) {
+    this.token = sessionStorage.getItem('id_token_claims_obj');
+    this.user  = JSON.parse(this.token);
+}
 
   ngOnDestroy(): void {
   }

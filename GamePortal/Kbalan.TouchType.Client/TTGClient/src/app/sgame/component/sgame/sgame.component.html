@@ -1,28 +1,29 @@
-<div class="container" >
-  <app-navbar></app-navbar>
-  <div class="timer">
-    <p>{{newGame.Name}}</p>
-    <p>{{timeStart | number : '1.0-0' }}</p>
-    <label type="button" class="btn btn-primary btn-info" (click)="changeText()" >
-      <span >Change text</span>
-    </label>
-    <label type="button" class="btn btn-primary btn-danger" routerLink="/home" >
-      <span >Quit game</span>
-    </label>
-  </div>
-  <div class="gameZone">
-    <div>
-      <google-chart #googlechart
-      [title]="chart.title"
-      [type]="chart.type"
-      [data]="chart.data"
-      [options]="chart.options">
-      </google-chart>
+<div class="wrapper">
+  <div class="container" >
+    <app-navbar></app-navbar>
+    <div class="timer">
+      <p>{{newGame.Name}}</p>
+      <p>{{timeStart | number : '1.0-0' }}</p>
+      <label type="button" class="btn btn-primary btn-info" (click)="changeText()" >
+        <span >Change text</span>
+      </label>
+      <label type="button" class="btn btn-primary btn-danger" routerLink="/home" >
+        <span >Quit game</span>
+      </label>
     </div>
-    <div class="textZone">
-      <p id = "toTypeText">{{newGame.TextForTyping}}</p>
-      <p id="correctText">{{correctText}}</p>
+    <div class="gameZone">
+      <div>
+        <google-chart #googlechart
+        [title]="chart.title"
+        [type]="chart.type"
+        [data]="chart.data"
+        [options]="chart.options">
+        </google-chart>
+      </div>
+      <div class="textZone">
+        <p id = "toTypeText">{{newGame.TextForTyping}}</p>
+        <p id="correctText">{{correctText}}</p>
+      </div>
     </div>
   </div>
-
 </div>
