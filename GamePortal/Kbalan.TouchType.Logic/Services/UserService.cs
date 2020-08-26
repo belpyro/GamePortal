@@ -145,6 +145,13 @@ namespace Kbalan.TouchType.Logic.Services
             }
         }
 
+        public async Task<string> GetRoleByIdAsync(string id)
+        {
+            var roles = await _userManager.GetRolesAsync(id);
+            var role = roles.FirstOrDefault();
+            return role;
+        }
+
         /// <summary>
         /// Delete user from Db async by id
         /// </summary>

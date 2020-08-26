@@ -24,8 +24,8 @@ getAllTextSet(){
     return this.http.get<TextSetDtomin[]>(`${environment.backendurl}/api/textsets/searchbylevel/${level}`);
   }
 
-  getTextSetByLevelRandom(level: number){
-    return this.http.get<TextSetDto>(`${environment.backendurl}/api/textsets/searchbylevelrand/${level}`);
+  async getTextSetByLevelRandom(level: number){
+    return await this.http.get<TextSetDto>(`${environment.backendurl}/api/textsets/searchbylevelrand/${level}`);
   }
 
   addTextSetToDb(model){

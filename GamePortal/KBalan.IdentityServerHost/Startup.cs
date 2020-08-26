@@ -64,17 +64,16 @@ namespace KBalan.IdentityServerHost
                 PostLogoutRedirectUris = new List<string>() { "https://localhost:5555", "http://localhost:4200/entry/login" }
             };
 
-
             factory.UseInMemoryScopes(StandardScopes.All.Append(
                     new Scope
                     {
-                        Name = "member",
-                        DisplayName = "member",
+                        Name = "Role",
+                        DisplayName = "Role",
                         Type = ScopeType.Identity,
 
                         Claims = new List<ScopeClaim>
         {
-              new ScopeClaim("role"),
+              new ScopeClaim("Role"),
         },
 
                         IncludeAllClaimsForUser = true
@@ -90,10 +89,10 @@ namespace KBalan.IdentityServerHost
             app.UseIdentityServer(new IdentityServerOptions
             {
                 EnableWelcomePage = true,
-#if DEBUG
+
                 RequireSsl = false,
-                
-#endif
+
+
                 LoggingOptions = new LoggingOptions
                 {
                     EnableHttpLogging = true,
@@ -108,14 +107,15 @@ namespace KBalan.IdentityServerHost
                     {
                         SlidingExpiration = true,
                         IsPersistent = true,
-                        
+
                     },
                     RequireSignOutPrompt = true,
                 },
                 SiteName = "TouchTypeGame",
                 Factory = factory,
+                
                 SigningCertificate = LoadCertificate()
-            }); 
+            }) ; 
 
         }
 

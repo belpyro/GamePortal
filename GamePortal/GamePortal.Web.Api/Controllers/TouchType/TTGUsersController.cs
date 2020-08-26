@@ -10,6 +10,7 @@ using System.Web.Configuration;
 using System.Web.Http;
 using FluentValidation;
 using FluentValidation.WebApi;
+using GamePortal.Web.Api.Filters.TTG;
 using JetBrains.Annotations;
 using Kbalan.TouchType.Logic.Dto;
 using Kbalan.TouchType.Logic.Exceptions;
@@ -23,6 +24,8 @@ namespace GamePortal.Web.Api.Controllers.TouchType
     /// <summary>
     /// Controller for User
     /// </summary>
+    [Authorize]
+    [CustomAuthorization("administrator")]
     [RoutePrefix("api/users")]
     public class TTGUsersController : ApiController
     {
@@ -37,6 +40,7 @@ namespace GamePortal.Web.Api.Controllers.TouchType
         }
 
         [HttpPost, Route("register")]
+        [AllowAnonymous]
         public async Task<IHttpActionResult> Register([FromBody]NewUserDto model)
         {
             if (!ModelState.IsValid) return BadRequest("Invalid model");
@@ -58,6 +62,7 @@ namespace GamePortal.Web.Api.Controllers.TouchType
         //Get All RegisterUsers
         [HttpGet]
         [Route("")]
+        [CustomAuthorization("administrator", "user")]
         public async Task<IHttpActionResult> GetAllAsync()
         {
             var result = await _userService.GetAllAsync();
@@ -67,12 +72,14 @@ namespace GamePortal.Web.Api.Controllers.TouchType
         //Get User by Id
         [HttpGet]
         [Route("{id}")]
+        [CustomAuthorization("administrator", "user")]
         public async Task<IHttpActionResult> GetAsync(string id)
         {
             var result = await _userService.GetAsync(id);
             return result.IsSuccess ? Ok(result.Value.Value) : (IHttpActionResult)BadRequest(result.Error);
         }
-
+        
+        [AllowAnonymous]
         [HttpPost, Route("login")]
         public async Task<IHttpActionResult> Login([FromBody]LoginDto model)
         {
@@ -143,6 +150,7 @@ namespace GamePortal.Web.Api.Controllers.TouchType
 
         [HttpGet]
         [Route("logdate/{id}")]
+        [CustomAuthorization("administrator", "user")]
         //Post : /api/users/logdate/id
         public async Task<IHttpActionResult> UpdateLoginDateAsync(string id)
         {

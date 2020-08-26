@@ -15,6 +15,7 @@ using System.Web.Http;
 namespace GamePortal.Web.Api.Controllers.TouchType
 {
     [RoutePrefix("api/upload")]
+    [Authorize]
     public class TTGUploadController : ApiController
     {
         private readonly IUploadService _uploadService;

@@ -69,7 +69,7 @@ textGroup: FormGroup;
       cancelButtonColor: '#d33',
       confirmButtonText: 'Yes, delete it!'
     }).then((willDelete) => {
-    if (willDelete) {
+    if (willDelete.isConfirmed) {
   ( this.textsetService.deleteTextfromDb(id).subscribe(  (res: any ) => {
     if (res != null)
     {

@@ -17,6 +17,8 @@ namespace Kbalan.TouchType.Logic.Dto
 
         public string Email { get; set; }
 
+        public bool IsBlocked { get; set; }
+
         public DateTime RegistrationDate { get; set; }
 
         public StatisticDto Statistic { get; set; }

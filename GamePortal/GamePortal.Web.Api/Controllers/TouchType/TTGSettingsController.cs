@@ -17,6 +17,7 @@ namespace GamePortal.Web.Api.Controllers.TouchType
     /// Controller for User Settings
     /// </summary>
     [RoutePrefix("api/settings")]
+    [Authorize]
     public class TTGSettingsController : ApiController
     {
         private readonly ISettingService _settingService;

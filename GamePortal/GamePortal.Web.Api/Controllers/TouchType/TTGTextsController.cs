@@ -11,6 +11,9 @@ using JetBrains.Annotations;
 using Kbalan.TouchType.Logic.Dto;
 using Kbalan.TouchType.Logic.Services;
 using Kbalan.TouchType.Logic.Exceptions;
+using Microsoft.AspNetCore.Http;
+using System.Diagnostics;
+using GamePortal.Web.Api.Filters.TTG;
 
 namespace GamePortal.Web.Api.Controllers.TouchType
 {
@@ -19,9 +22,11 @@ namespace GamePortal.Web.Api.Controllers.TouchType
     /// </summary>
     [RoutePrefix("api/textsets")]
     [Authorize]
+    //[CustomAuthorization("administrator")]
     public class TTGTextsController : ApiController
     {
         private readonly ITextSetService _textSetService;
+    
 
         public TTGTextsController([NotNull]ITextSetService textSetService)
         {
@@ -55,9 +60,12 @@ namespace GamePortal.Web.Api.Controllers.TouchType
 
         ///Get Random TextSet by Level of the text random
         [HttpGet]
+        [Authorize]
+       // [CustomAuthorization("administrator", "user")]
         [Route("searchbylevelrand/{id}")]
         public async Task<IHttpActionResult> GetRandomByLevelAsync(string id)
         {
+
 
             var result = await _textSetService.GetByLevelAsyncRandom(id);
             return result.IsSuccess ? Ok(result.Value) : (IHttpActionResult)BadRequest(result.Error);

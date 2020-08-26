@@ -17,6 +17,7 @@ namespace GamePortal.Web.Api.Controllers.TouchType
     /// Controller for User Statistic
     /// </summary>
     [RoutePrefix("api/statistic")]
+    [Authorize]
     public class TTGStatisticsController : ApiController
     {
         private readonly IStatisticService _statisticService;
