@@ -10,49 +10,40 @@ import { LoginService } from '../../services/externalLogin.service';
   styleUrls: ['./login.component.scss']
 })
 export class LoginComponent implements OnInit {
-  loginGroup: FormGroup;
-  registerForm: FormGroup;
+
+  loginForm: FormGroup;
   submitted = false;
-
-
 
   constructor(
     private loginService: LoginService,
     private router: Router,
     private formBuilder: FormBuilder
-  ) {
-    this.loginGroup = this.formBuilder.group({
-      userName: [''],
-      password: [''],
-      remember: ['true'],
-    });
-  }
+  ) { }
 
   ngOnInit(): void {
     this.loginService.LoggedOn$.subscribe((_) => {
       this.router.navigate(['play']);
     });
 
-    this.registerForm = this.formBuilder.group({
-      name: ['', Validators.required],
-      password: ['', [Validators.required, Validators.minLength(6)]],
-    }, {
-      });
+    this.loginForm = this.formBuilder.group({
+      userName: ['', Validators.required],
+      password: ['', [Validators.required, Validators.minLength(3)]],
+      remember: ['true']
+    }, {});
   }
 
   onSubmit() {
     this.submitted = true;
 
-    if (this.registerForm.invalid) {
+    if (this.loginForm.invalid) {
       return;
     }
 
-    alert('SUCCESS!! :-)\n\n' + JSON.stringify(this.registerForm.value))
+    // alert('SUCCESS!! :-)\n\n' + JSON.stringify(this.loginForm.value))
     this.loginWithPassword();
   }
 
-  get formControls() { return this.registerForm.controls; }
-
+  get formControls() { return this.loginForm.controls; }
 
   login(): void {
     this.loginService.loginWithCode();
@@ -60,8 +51,8 @@ export class LoginComponent implements OnInit {
 
   loginWithPassword(): void {
     this.loginService.loginWithPass(
-      this.loginGroup.value.userName,
-      this.loginGroup.value.password);
+      this.loginForm.value.userName,
+      this.loginForm.value.password);
   }
 
 }

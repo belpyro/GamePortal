@@ -2,7 +2,7 @@
   <div class="container">
     <div class="row">
       <div class="col-md-4 offset-md-4">
-        <form [formGroup]="loginGroup" (ngSubmit)="onSubmit()">
+        <form [formGroup]="loginForm" (ngSubmit)="onSubmit()">
           <div class="text-center mb-4">
             <h1 class="h3 mb-3 font-weight-normal">Login</h1>
           </div>
@@ -11,17 +11,17 @@
             <label>Name</label>
             <input
               type="text"
-              formControlName="name"
+              formControlName="userName"
               class="form-control"
               [ngClass]="{
-                'is-invalid': submitted && formControls.name.errors
+                'is-invalid': submitted && formControls.userName.errors
               }"
             />
             <div
-              *ngIf="submitted && formControls.name.errors"
+              *ngIf="submitted && formControls.userName.errors"
               class="invalid-feedback"
             >
-              <div *ngIf="formControls.name.errors.required">
+              <div *ngIf="formControls.userName.errors.required">
                 name is required
               </div>
             </div>
