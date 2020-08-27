@@ -23,7 +23,7 @@ export class OwnAreaComponent implements OnInit {
     this.gameBoardService.deleteFleet$.subscribe(
       () => this.areaService.cleanArea());
 
-    this.gameBoardService.shipDto$.subscribe(
+    this.gameBoardService.loadArea$.subscribe(
       (value) => { this.initializeArea(value); });
 
     this.areaService.btlarea$.subscribe(

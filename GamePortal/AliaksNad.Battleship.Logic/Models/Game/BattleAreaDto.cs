@@ -9,6 +9,8 @@ namespace AliaksNad.Battleship.Logic.Models.Game
     [Validator(typeof(CoordinatesDtoValidator))]
     public class BattleAreaDto
     {
+        public int AreaId { get; set; }
+
         public IEnumerable<ShipDto> Ships { get; set; }
 
         public IEnumerable<EmptyCellDto> EmptyCells { get; set; }

@@ -10,9 +10,11 @@ namespace GamePortal.Web.Api.Hubs
 {
     public interface IGameClient
     {
-        Task GameStart(BattleAreaDto dto);
+        Task GameStart(int AreaId);
 
         Task SendMessage(string msg);
+
+        Task SendAreaId(int AreaId);
     }
 
     public class GameHub : Hub<IGameClient>
@@ -20,6 +22,11 @@ namespace GamePortal.Web.Api.Hubs
         public async Task SendMessage(string message)
         {
             await Clients.All.SendMessage(message);
+        }
+
+        public async Task SendAreaId(int AreaId)
+        {
+            await Clients.Others.SendAreaId(AreaId);
         }
     }
 }

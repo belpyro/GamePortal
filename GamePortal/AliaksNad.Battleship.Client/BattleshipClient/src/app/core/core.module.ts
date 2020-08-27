@@ -11,10 +11,9 @@ import { HomeComponent } from './components/home/home.component';
 import { PASSWORD_FLOW_CONFIG, CODE_FLOW_CONFIG, oauthPassConfig, oauthCodeConfig } from './configs/auth.config';
 import { LoginService } from './services/externalLogin.service';
 import { RouterModule } from '@angular/router';
-import { BattleshipModalComponent } from './components/battleship-modal/battleship-modal.component';
 
 @NgModule({
-  declarations: [LoginComponent, NotFoundComponent, HomeComponent, NavbarComponent, BattleshipModalComponent],
+  declarations: [LoginComponent, NotFoundComponent, HomeComponent, NavbarComponent],
   imports: [
     CommonModule,
     ReactiveFormsModule,

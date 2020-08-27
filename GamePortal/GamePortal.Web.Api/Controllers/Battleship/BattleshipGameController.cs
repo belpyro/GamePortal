@@ -43,9 +43,8 @@ namespace GamePortal.Web.Api.Controllers.Battleship
             if (result.IsSuccess)
             {
                 var ctx = GlobalHost.ConnectionManager.GetHubContext<GameHub>();
-                ctx.Clients.All.GameStart(BattleAreaDtoCoordinates);
-
-                return Created($"api/battleship/game/fleets{result.Value}", result.Value);
+                ctx.Clients.All.GameStart(BattleAreaDtoCoordinates.AreaId);
+                return Created($"api/battleship/game/fleets{result.Value.AreaId}", result.Value);
             }
 
             return BadRequest(result.Error);

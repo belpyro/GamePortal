@@ -13,6 +13,7 @@ import { EmptyCellDto } from './emptyCellDto';
 import { ShipDto } from './shipDto';
 
 export interface BattleAreaDto {
+  AreaId: number;
   Ships?: Array<ShipDto>;
   EmptyCells?: Array<EmptyCellDto>;
 }

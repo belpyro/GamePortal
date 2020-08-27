@@ -15,29 +15,15 @@ export class GameBoardComponent implements OnInit {
 
   btlarea: BattleAreaDto[];
   isDisabled = true;
-  private connection: ISignalRConnection;
 
   constructor(
     private gameBoardService: GameBoardService,
     private gameService: BattleshipGameService,
-    private hub: SignalR,
-    private ntf: NotificationsService
-  ) {
-    this.hub.connect()
-      .then((c) => {
-        this.connection = c;
-        this.connection.listenFor<string>('SendMessage')
-          .subscribe(msg => this.ntf.warn('Message', msg));
-        this.connection.listenFor<string>('GameStart')
-          .subscribe(msg => this.ntf.warn('Message', msg));
-      })
-      .catch(reason =>
-        console.error(`Cannot connect to hub sample ${reason}`));
-  }
+  ) { }
 
   ngOnInit(): void {
-    this.gameService.battleshipGameGetAll()
-      .subscribe((data) => { this.btlarea = data; });
+    // this.gameService.battleshipGameGetAll()
+    //   .subscribe((data) => { this.btlarea = data; });
   }
 
   generateFleet(): void {
