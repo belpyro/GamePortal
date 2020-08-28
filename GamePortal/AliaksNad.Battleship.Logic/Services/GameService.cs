@@ -50,6 +50,8 @@ namespace AliaksNad.Battleship.Logic.Services
                 _battleAreaContext.BattleAreas.Add(dbBattleAreaModel);
                 await _battleAreaContext.SaveChangesAsync();
 
+                BattleAreaModel.AreaId = dbBattleAreaModel.BattleAreaId;
+
                 return Result.Success(BattleAreaModel);
             }
             catch (DbUpdateException ex)

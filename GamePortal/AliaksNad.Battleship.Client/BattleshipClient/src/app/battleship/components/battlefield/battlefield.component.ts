@@ -44,7 +44,7 @@ export class BattlefieldComponent implements OnInit {
         this.connection = c;
         this.connection.listenFor<string>('SendMessage')
           .subscribe(msg => this.ntf.warn('Message', msg));
-        this.connection.listenFor<string>('AddAsync')
+        this.connection.listenFor<string>('GameStart')
           .subscribe(msg => this.ntf.warn('Message', msg));
       })
       .catch(reason =>

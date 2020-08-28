@@ -7,8 +7,8 @@ namespace AliaksNad.Battleship.Logic.DIModules
     {
         public override void Load()
         {
-            this.Bind<BtlsIdentityServerConfig>().ToSelf();
-            this.Bind<BtlsTokenAuthenticationConfig>().ToSelf();
+            this.Bind<BattleshipISConfig>().ToSelf();
+            this.Bind<BattleshipISAuthConfig>().ToSelf();
         }
     }
 }

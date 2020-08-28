@@ -38,13 +38,14 @@ export class AreaService {
   ceedFleet(): void {
     this.cleanArea();
     const shipSize = this.shipSize;
+    this.tableFleet = new Array();
+    this.fleetDto = new Array();
 
     for (const size of shipSize) {
       const ship = this.generateShip(size);
       const busyCell = this.setBusyCell(ship);
 
       this.busyCell = busyCell.concat(this.busyCell);
-      this.pushBusy(busyCell);
 
       this.fleetDto.push(this.toShipDto(ship));
       this.tableFleet.push(ship);
@@ -58,6 +59,7 @@ export class AreaService {
     const empCell: EmptyCellDto[] = [{ Coordinates: this.busyCell }];
 
     this.btlarea.next({
+      AreaId: 0,
       Ships: this.fleetDto,
       EmptyCells: empCell,
     });
@@ -105,7 +107,7 @@ export class AreaService {
         this.busyCell = busyCell.concat(this.busyCell);
       }
     }
-    this.pushBusy(this.busyCell);
+    // this.pushBusy(this.busyCell);
   }
 
   pushBusy(area: CoordinatesDto[]): void {

@@ -1,9 +1,9 @@
-import { Component, OnInit, SkipSelf, Self, Input, ViewChild, ElementRef, Renderer2 } from '@angular/core';
+import { Subscription } from 'rxjs';
+import { Component, OnInit, Input, Renderer2 } from '@angular/core';
 import { TableShipDto } from '../../models/TableShipDto';
 import { AreaService } from '../../services/areaService';
 import { CoordinatesDto } from '../../models/coordinatesDto';
 import { AffectedCellDto } from '../../models/affectedCell';
-import { style } from '@angular/animations';
 
 @Component({
   selector: 'app-area',
@@ -21,29 +21,26 @@ export class AreaComponent implements OnInit {
   size = 10;
   arr = new Array();
   sign = new Array();
+  subscription = new Subscription();
 
   constructor(private renderer: Renderer2, private areaService: AreaService) { }
 
   ngOnInit(): void {
     this.initializeTable(this.size);
 
-    this.areaService.delShipCalled$.subscribe(
-      (model) => {
-        this.deleteShip(model);
-      }
-    );
+    this.subscription.add(this.areaService.delShipCalled$
+      .subscribe((model) => { this.deleteShip(model); }));
 
-    this.areaService.addShipCalled$.subscribe(
-      (model) => {
-        this.initializeShip(model);
-      }
-    );
+    this.subscription.add(this.areaService.addShipCalled$
+      .subscribe((model) => { this.initializeShip(model); }));
 
-    this.areaService.cssStyleCalled$.subscribe(
-      (model) => {
-        this.markCell(model);
-      }
-    );
+    this.subscription.add(this.areaService.cssStyleCalled$
+      .subscribe((model) => { this.markCell(model); }));
+
+  }
+
+  ngOnDestroy() {
+    this.subscription.unsubscribe();
   }
 
   initializeTable(size: number): void {
@@ -110,7 +107,6 @@ export class AreaComponent implements OnInit {
 
   push(tdIndex, trIndex): void {
     this.areaService.pressedСell.next({ CoordinateX: tdIndex, CoordinateY: trIndex });
-    // this.sign[tdIndex][trIndex] = 'battlefield-cell__hit';
   }
 
   allowDrop(ev): void {

@@ -38,11 +38,9 @@ namespace GamePortal.Web.Api.Controllers.Battleship
         [SwaggerResponse(HttpStatusCode.BadRequest, Type = typeof(IEnumerable<Exception>))]
         public async Task<IHttpActionResult> AddAsync([CustomizeValidator(RuleSet = "PreValidation"), FromBody]BattleAreaDto BattleAreaDtoCoordinates)
         {
-            var ctx = GlobalHost.ConnectionManager.GetHubContext<GameHub>();
-            ctx.Clients.All.GameStart("Game started");
-
             var result = await _gameService.AddAsync(BattleAreaDtoCoordinates);
-            return result.IsSuccess ? Created($"api/battleship/game/fleets{result.Value}", result.Value) : (IHttpActionResult)BadRequest(result.Error);
+
+            return result.IsSuccess ? Created($"api/battleship/game/fleets{result.Value.AreaId}", result.Value) : (IHttpActionResult)BadRequest(result.Error);
         }
 
         /// <summary>
@@ -91,7 +89,20 @@ namespace GamePortal.Web.Api.Controllers.Battleship
             if (result.IsFailure)
                 return StatusCode(HttpStatusCode.InternalServerError);
 
-            return result.Value.HasValue ? Ok(true) : Ok(false);
+            var ctx = GlobalHost.ConnectionManager.GetHubContext<GameHub>();
+            var targetResult = new TargetResultDto();
+            targetResult.Target = target;
+
+            if (result.Value.HasValue)
+            {
+                targetResult.Result = true;
+                ctx.Clients.All.TargetResult(targetResult);
+                return Ok(true);
+            }
+
+            targetResult.Result = false;
+            ctx.Clients.All.TargetResult(targetResult);
+            return Ok(false);
         }
 
         /// <summary>

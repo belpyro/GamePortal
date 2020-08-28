@@ -72,13 +72,13 @@ namespace GamePortal.Web.Api
                 opt.ValidatorFactory = new CustomValidatorFactory(kernel);
             });
 
-            app.UseExternalSignInCookie(DefaultAuthenticationTypes.ExternalCookie);
 
             app.UseCookieAuthentication(new CookieAuthenticationOptions
             {
                 AuthenticationType = DefaultAuthenticationTypes.ApplicationCookie,
             });
 
+            app.UseExternalSignInCookie(DefaultAuthenticationTypes.ExternalCookie);
 
             app.UseBattleshipIdentityServer(kernel);
 

@@ -3,7 +3,7 @@
 
 namespace AliaksNad.Battleship.Logic.Configuration
 {
-    public class BtlsTokenAuthenticationConfig
+    public class BattleshipISAuthConfig
     {
         public IdentityServerBearerTokenAuthenticationOptions Get()
         {
