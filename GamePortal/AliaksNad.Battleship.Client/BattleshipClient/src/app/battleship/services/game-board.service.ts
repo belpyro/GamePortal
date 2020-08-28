@@ -45,13 +45,12 @@ export class GameBoardService {
       .then((c) => {
         this.connection = c;
         this.connection.listenFor<TargetResultDto>('TargetResult')
-          .subscribe((result) => {
-            this.implementTargetResult(result);
-          });
+          .subscribe((result) => { this.implementTargetResult(result); });
         this.connection.listenFor<number>('SendAreaId')
           .subscribe((enemyAreaId) => {
             this.enemyBtlAreaId = enemyAreaId;
             this.isEnemyTurn.next(false);
+            this.ntf.success('Game strted!');
             console.log(`enemy id = ${enemyAreaId}`);
           });
       })

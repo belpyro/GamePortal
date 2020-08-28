@@ -1,10 +1,7 @@
 import { GameBoardService } from './../../services/game-board.service';
-import { AreaService } from './../../services/areaService';
-import { BattleshipGameService } from './../../services/battleshipGame.service';
-import { Component, OnInit, Input } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { BattleAreaDto } from '../../models/BattleAreaDto';
-import { SignalR, ISignalRConnection } from 'ng2-signalr';
-import { NotificationsService } from 'angular2-notifications';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-game-board',
@@ -16,14 +13,9 @@ export class GameBoardComponent implements OnInit {
   btlarea: BattleAreaDto[];
   isOwnAreaDisabled = false;
   isEnemyAreaDisabled = true;
+  subscription = new Subscription();
 
-  constructor(
-    private gameBoardService: GameBoardService,
-    private gameService: BattleshipGameService,
-  ) {
-    this.gameBoardService.isEnemyTurn$.subscribe(
-      (result) => this.moveResolution(result));
-  }
+  constructor(private gameBoardService: GameBoardService) { }
 
   moveResolution(bool: boolean): void {
     if (this.isOwnAreaDisabled) {
@@ -32,8 +24,13 @@ export class GameBoardComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    // this.gameService.battleshipGameGetAll()
-    //   .subscribe((data) => { this.btlarea = data; });
+    const subscription1$ = this.gameBoardService.isEnemyTurn$
+      .subscribe((result) => this.moveResolution(result));
+    this.subscription.add(subscription1$);
+  }
+
+  ngOnDestroy() {
+    this.subscription.unsubscribe();
   }
 
   generateFleet(): void {

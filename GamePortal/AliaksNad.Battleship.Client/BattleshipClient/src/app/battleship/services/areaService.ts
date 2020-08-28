@@ -46,7 +46,6 @@ export class AreaService {
       const busyCell = this.setBusyCell(ship);
 
       this.busyCell = busyCell.concat(this.busyCell);
-      // this.pushBusy(busyCell);
 
       this.fleetDto.push(this.toShipDto(ship));
       this.tableFleet.push(ship);
