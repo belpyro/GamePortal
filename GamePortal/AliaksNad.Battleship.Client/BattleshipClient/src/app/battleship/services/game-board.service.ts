@@ -1,3 +1,4 @@
+import { TargetResultDto } from './../models/targetResultDto';
 import { AffectedCellDto } from './../models/affectedCell';
 import { TargetDto } from './../models/targetDto';
 import { CoordinatesDto } from './../models/coordinatesDto';
@@ -20,8 +21,14 @@ export class GameBoardService {
   private loadArea = new Subject<BattleAreaDto>();
   loadArea$ = this.loadArea.asObservable();
 
-  private affectedCell = new Subject<AffectedCellDto>();
-  affectedCell$ = this.affectedCell.asObservable();
+  private enemyAffectedCell = new Subject<AffectedCellDto>();
+  enemyAffectedCell$ = this.enemyAffectedCell.asObservable();
+
+  private ownAffectedCell = new Subject<AffectedCellDto>();
+  ownAffectedCell$ = this.ownAffectedCell.asObservable();
+
+  private isEnemyTurn = new Subject<boolean>();
+  isEnemyTurn$ = this.isEnemyTurn.asObservable();
 
   private connection: ISignalRConnection;
 
@@ -37,16 +44,14 @@ export class GameBoardService {
     this.hub.connect()
       .then((c) => {
         this.connection = c;
-        this.connection.listenFor<number>('GameStart')
-          .subscribe((areaId) => {
-            this.ntf.info(`Battlearea id = ${areaId}`);
-            this.enemyBtlAreaId = areaId;
-            console.log(`game start id = ${areaId}`);
-            this.loadAreaById(+areaId);
+        this.connection.listenFor<TargetResultDto>('TargetResult')
+          .subscribe((result) => {
+            this.implementTargetResult(result);
           });
         this.connection.listenFor<number>('SendAreaId')
           .subscribe((enemyAreaId) => {
             this.enemyBtlAreaId = enemyAreaId;
+            this.isEnemyTurn.next(false);
             console.log(`enemy id = ${enemyAreaId}`);
           });
       })
@@ -73,6 +78,7 @@ export class GameBoardService {
     this.gameService.battleshipGameAdd(this.btlarea)
       .subscribe((model) => {
         console.log(`ownAreaaId = ${+model.AreaId}`);
+        this.ownBtlAreaId = model.AreaId;
         this.pushMessage(+model.AreaId);
       });
   }
@@ -81,14 +87,27 @@ export class GameBoardService {
     const target: TargetDto = { EnemyBattleAreaId: this.enemyBtlAreaId, Coordinates: coordinates };
 
     this.gameService.battleshipGameCheckHit(target)
-      .subscribe((value) => { this.pushAffectedCell(coordinates, value); });
+      .subscribe((value) => {
+        this.pushAffectedCell(coordinates, value);
+        this.isEnemyTurn.next(!value);
+      });
   }
 
   pushAffectedCell(coordinates: CoordinatesDto, bool: boolean): void {
-    this.affectedCell.next({
+    this.enemyAffectedCell.next({
       Coordinates: coordinates,
       IsHited: bool,
     });
+  }
+
+  implementTargetResult(result: TargetResultDto): void {
+    if (result.Target.EnemyBattleAreaId === this.ownBtlAreaId) {
+      this.isEnemyTurn.next(result.Result);
+      this.ownAffectedCell.next({
+        Coordinates: result.Target.Coordinates,
+        IsHited: result.Result,
+      });
+    }
   }
 
   private pushMessage(id: number): void {

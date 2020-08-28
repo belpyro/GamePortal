@@ -259,6 +259,7 @@
     <Compile Include="DIModules\ValidatorModule.cs" />
     <Compile Include="Models\Game\EmptyCellDto.cs" />
     <Compile Include="Models\Game\TargetDto.cs" />
+    <Compile Include="Models\Game\TargetResultDto.cs" />
     <Compile Include="Models\User\LoginDto.cs" />
     <Compile Include="Models\User\NewUserDto.cs" />
     <Compile Include="Models\User\UserDto.cs" />

@@ -15,7 +15,7 @@ export class EnemyAreaComponent implements OnInit {
   ngOnInit(): void {
     this.areaService.pressedСell$.subscribe((value) => this.gameBoardService.checkHit(value));
 
-    this.gameBoardService.affectedCell$.subscribe(
+    this.gameBoardService.enemyAffectedCell$.subscribe(
       (value) => this.areaService.cssStyleSource.next(value));
   }
 }

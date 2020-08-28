@@ -14,12 +14,22 @@ import { NotificationsService } from 'angular2-notifications';
 export class GameBoardComponent implements OnInit {
 
   btlarea: BattleAreaDto[];
-  isDisabled = true;
+  isOwnAreaDisabled = false;
+  isEnemyAreaDisabled = true;
 
   constructor(
     private gameBoardService: GameBoardService,
     private gameService: BattleshipGameService,
-  ) { }
+  ) {
+    this.gameBoardService.isEnemyTurn$.subscribe(
+      (result) => this.moveResolution(result));
+  }
+
+  moveResolution(bool: boolean): void {
+    if (this.isOwnAreaDisabled) {
+      this.isEnemyAreaDisabled = bool;
+    }
+  }
 
   ngOnInit(): void {
     // this.gameService.battleshipGameGetAll()
@@ -35,10 +45,13 @@ export class GameBoardComponent implements OnInit {
   }
 
   uploadFleet(): void {
+    this.isOwnAreaDisabled = !this.isOwnAreaDisabled;
+
     this.gameBoardService.uploadArea();
   }
 
   doSmt(): void {
-    this.isDisabled = !this.isDisabled;
+    this.isOwnAreaDisabled = !this.isOwnAreaDisabled;
+    this.isEnemyAreaDisabled = !this.isEnemyAreaDisabled;
   }
 }

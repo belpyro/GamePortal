@@ -28,6 +28,11 @@ export class OwnAreaComponent implements OnInit {
 
     this.areaService.btlarea$.subscribe(
       (value) => { this.gameBoardService.btlarea = value; });
+
+    this.gameBoardService.ownAffectedCell$.subscribe(
+      (value) => {
+        this.areaService.cssStyleSource.next(value)
+      });
   }
 
   initializeArea(btlArea: BattleAreaDto): void {

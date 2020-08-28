@@ -15,6 +15,8 @@ namespace GamePortal.Web.Api.Hubs
         Task SendMessage(string msg);
 
         Task SendAreaId(int AreaId);
+
+        Task TargetResult(TargetResultDto target);
     }
 
     public class GameHub : Hub<IGameClient>
