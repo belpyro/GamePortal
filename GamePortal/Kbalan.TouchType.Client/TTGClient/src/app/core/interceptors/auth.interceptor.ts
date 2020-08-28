@@ -4,6 +4,7 @@ import {
   HttpEvent,
   HttpHandler,
   HttpRequest,
+  HttpHeaders,
 } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { OAuthService } from 'angular-oauth2-oidc';
@@ -17,11 +18,24 @@ export class AuthInterceptor implements HttpInterceptor {
     next: HttpHandler
   ): Observable<HttpEvent<any>> {
     const token = this.oauth.getAccessToken();
-
-    const authReq = req.clone({
-      headers: req.headers.set('Authorization', `Bearer ${token}`),
+    if (sessionStorage.getItem('id_token_claims_obj') !== null)
+    {
+      const idtoken = JSON.parse(sessionStorage.getItem('id_token_claims_obj'));
+      const authReq = req.clone({
+        headers: new HttpHeaders({
+          'id-token':  idtoken.role,
+          Authorization: `Bearer ${token}`
+        })
     });
-
-    return next.handle(authReq);
+      return next.handle(authReq);
+    }else{
+      const authReq = req.clone({
+        headers: new HttpHeaders({
+          Authorization: `Bearer ${token}`
+        })
+    });
+      return next.handle(authReq);
   }
-}
+    }
+  }
+

@@ -11,12 +11,14 @@ import Swal from 'sweetalert2';
 import { Router } from '@angular/router';
 import { StatisticDto } from 'src/app/home/models/StatisticDto';
 
+
 @Component({
   selector: 'app-sgame',
   templateUrl: './sgame.component.html',
   styleUrls: ['./sgame.component.scss']
 })
 export class SgameComponent implements OnInit {
+
   timeStart = 0.0;
   speed = 0;
   typedTextForSec = 0;
@@ -50,7 +52,8 @@ export class SgameComponent implements OnInit {
       max: 150
     }
   };
-  constructor(private homeservice: HomeService, private gameservice: SgameService, private toastr: ToastrService, private router: Router) {
+  constructor(private homeservice: HomeService, private gameservice: SgameService,
+              private toastr: ToastrService, private router: Router) {
 
      }
 
@@ -58,7 +61,9 @@ export class SgameComponent implements OnInit {
   ngOnInit(): void {
     this.initUser();
 
-  }
+}
+
+
 
   initUser(){
      this.homeservice.getUser().subscribe(res => {

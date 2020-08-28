@@ -133,6 +133,7 @@ namespace Kbalan.TouchType.Logic.Services
             model.StatisticId = userModel.Statistic.StatisticId;
             try
             {
+
                 var modelDb = _mapper.Map<StatisticDb>(model);
 
                 modelDb.StatisticId = userModel.Statistic.StatisticId;

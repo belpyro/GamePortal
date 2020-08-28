@@ -25,6 +25,7 @@ using Microsoft.AspNet.SignalR;
 using Microsoft.AspNetCore.Http.Features;
 using Microsoft.Owin.StaticFiles;
 using Microsoft.Extensions.FileProviders;
+using GamePortal.Web.Api.SignalRIdProviders;
 
 [assembly: OwinStartup(typeof(GamePortal.Web.Api.Startup))]
 
@@ -45,6 +46,7 @@ namespace GamePortal.Web.Api
                 defaults: new { id = RouteParameter.Optional }
             );
 
+
             var kernel = new StandardKernel(new NinjectSettings { LoadExtensions = true });
             kernel.Load(new LogicDIModule(), new TTGDIModule(), new BattleshipLogicDIModule());
 
@@ -62,7 +64,10 @@ namespace GamePortal.Web.Api
 
             app.UseCors(new CorsOptions { PolicyProvider = provide });
 
-            app.MapSignalR(new HubConfiguration { EnableDetailedErrors = true});
+            app.MapSignalR(new HubConfiguration { EnableDetailedErrors = true });
+
+
+
 
             app.UseStaticFiles();
             app.UseSwagger(typeof(Startup).Assembly).UseSwaggerUi3();
@@ -80,18 +85,23 @@ namespace GamePortal.Web.Api
             });
 
 
+
             app.UseBattleshipIdentityServer(kernel);
 
             //TTG External Authentification Options
             app.UseIdentityServerBearerTokenAuthentication(TTGAuthOptionsFactory.GetIdentityServerBearerTokenAuthenticationOptions());
             app.UseGoogleAuthentication(TTGAuthOptionsFactory.GetGoogleAuthenticationOptions());
             app.UseVKontakteAuthentication(TTGAuthOptionsFactory.GetVKontakteAuthenticationOptions());
+        
+
 
             //TTG External Authentification Maps
             app.Map("/ttg/login/google", b => b.Use<TTGGoogleAuthMiddleWare>());
             app.Map("/ttg/login/vk", b => b.Use<TTGVkAuthMiddleWare>());
 
             app.UseNinjectMiddleware(() => kernel).UseNinjectWebApi(config);
+
+
         }
     }
 }

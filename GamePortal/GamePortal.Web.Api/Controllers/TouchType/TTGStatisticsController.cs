@@ -1,8 +1,10 @@
 ﻿using FluentValidation;
+using GamePortal.Web.Api.Hubs;
 using JetBrains.Annotations;
 using Kbalan.TouchType.Logic.Dto;
 using Kbalan.TouchType.Logic.Exceptions;
 using Kbalan.TouchType.Logic.Services;
+using Microsoft.AspNet.SignalR;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -17,7 +19,7 @@ namespace GamePortal.Web.Api.Controllers.TouchType
     /// Controller for User Statistic
     /// </summary>
     [RoutePrefix("api/statistic")]
-    [Authorize]
+    [System.Web.Http.Authorize]
     public class TTGStatisticsController : ApiController
     {
         private readonly IStatisticService _statisticService;

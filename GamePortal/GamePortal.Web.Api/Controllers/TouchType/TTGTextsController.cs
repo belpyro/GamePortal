@@ -14,6 +14,8 @@ using Kbalan.TouchType.Logic.Exceptions;
 using Microsoft.AspNetCore.Http;
 using System.Diagnostics;
 using GamePortal.Web.Api.Filters.TTG;
+using Microsoft.AspNet.SignalR;
+using GamePortal.Web.Api.Hubs;
 
 namespace GamePortal.Web.Api.Controllers.TouchType
 {
@@ -21,8 +23,7 @@ namespace GamePortal.Web.Api.Controllers.TouchType
     /// Controller for TextSet
     /// </summary>
     [RoutePrefix("api/textsets")]
-    [Authorize]
-    //[CustomAuthorization("administrator")]
+    [System.Web.Http.Authorize]
     public class TTGTextsController : ApiController
     {
         private readonly ITextSetService _textSetService;
@@ -36,6 +37,7 @@ namespace GamePortal.Web.Api.Controllers.TouchType
         //Get All TextSets
         [HttpGet]
         [Route("")]
+        [CustomAuthorization("administrator")]
         public async Task<IHttpActionResult> GetAllAsync()
         {
             var result = await _textSetService.GetAllAsync();
@@ -60,13 +62,10 @@ namespace GamePortal.Web.Api.Controllers.TouchType
 
         ///Get Random TextSet by Level of the text random
         [HttpGet]
-        [Authorize]
-       // [CustomAuthorization("administrator", "user")]
+        [CustomAuthorization("administrator", "user")]
         [Route("searchbylevelrand/{id}")]
         public async Task<IHttpActionResult> GetRandomByLevelAsync(string id)
-        {
-
-
+        { 
             var result = await _textSetService.GetByLevelAsyncRandom(id);
             return result.IsSuccess ? Ok(result.Value) : (IHttpActionResult)BadRequest(result.Error);
 
@@ -75,6 +74,7 @@ namespace GamePortal.Web.Api.Controllers.TouchType
         ///Get Random TextSet by Level of the text
         [HttpGet]
         [Route("searchbylevel/{level}")]
+        [CustomAuthorization("administrator")]
         public async Task<IHttpActionResult> GetByLevelAsync(int level)
         {
             if (level < 0 || level > 2)
@@ -90,6 +90,7 @@ namespace GamePortal.Web.Api.Controllers.TouchType
         //Add new text
         [HttpPost]
         [Route("")]
+        [CustomAuthorization("administrator")]
         public async Task<IHttpActionResult> AddAsync([FromBody]TextSetDto model)
         {
             if (!ModelState.IsValid)
@@ -110,6 +111,7 @@ namespace GamePortal.Web.Api.Controllers.TouchType
         //Update Text by Id 
         [HttpPut]
         [Route("")]
+        [CustomAuthorization("administrator")]
         public async Task<IHttpActionResult> UpdateAsync([FromBody]TextSetDto model)
         {
             if (!ModelState.IsValid)
@@ -130,6 +132,7 @@ namespace GamePortal.Web.Api.Controllers.TouchType
         //Delete Text by Id
         [HttpDelete]
         [Route("{id}")]
+        [CustomAuthorization("administrator")]
         public async Task<IHttpActionResult> DeleteAsync(int id)
         {
             if (id <= 0)

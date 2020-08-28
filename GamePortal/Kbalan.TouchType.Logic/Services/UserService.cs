@@ -152,6 +152,11 @@ namespace Kbalan.TouchType.Logic.Services
             return role;
         }
 
+        public string GetNameById(string id)
+        {
+            return _userManager.FindById(id).UserName;
+        }
+
         /// <summary>
         /// Delete user from Db async by id
         /// </summary>

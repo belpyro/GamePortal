@@ -6,10 +6,18 @@ import { AppRoutingModule } from './app-routing.module';
 import { HTTP_INTERCEPTORS } from '@angular/common/http';
 import { AuthInterceptor } from './core/interceptors/auth.interceptor';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
+import { SignalRModule, SignalRConfiguration, ConnectionTransports, ConnectionTransport} from 'ng2-signalr';
+import { environment } from 'src/environments/environment';
 
 
+export function initConfig(): SignalRConfiguration{
+  const cfg = new SignalRConfiguration();
 
-
+  cfg.hubName = 'GameHub';
+  cfg.url = `${environment.backendurl}`;
+  cfg.transport = [ConnectionTransports.webSockets, ConnectionTransports.longPolling];
+  return cfg;
+}
 
 
 
@@ -19,7 +27,7 @@ import { NoopAnimationsModule } from '@angular/platform-browser/animations';
     BrowserModule,
     AppRoutingModule,
     NoopAnimationsModule,
-
+    SignalRModule.forRoot(initConfig),
   ],
 
   providers: [

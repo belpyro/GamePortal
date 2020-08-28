@@ -35,5 +35,6 @@ namespace Kbalan.TouchType.Logic.Services
         /// <returns></returns>
         Task<Result> UpdateAsync( StatisticDto model);
         Result Update(string id, StatisticDto model);
+
     }
 }

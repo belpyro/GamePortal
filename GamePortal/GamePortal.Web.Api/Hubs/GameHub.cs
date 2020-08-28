@@ -1,4 +1,5 @@
 ﻿using AliaksNad.Battleship.Logic.Models.Game;
+using Kbalan.TouchType.Logic.Dto;
 using Microsoft.AspNet.SignalR;
 using System;
 using System.Collections.Generic;
@@ -13,6 +14,9 @@ namespace GamePortal.Web.Api.Hubs
         Task GameStart(BattleAreaDto dto);
 
         Task SendMessage(string msg);
+
+        Task DeleteUser(string msg);
+
     }
 
     public class GameHub : Hub<IGameClient>

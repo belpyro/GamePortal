@@ -81,7 +81,7 @@ export class LoginService {
     this.loggedOnSubject.next(null);
     this.isLoggedOnSubject.next(false);
     this.oauth.logOut();
-    await this.router.navigate(['entry/login']);
+    this.router.navigate(['entry/login']);
   }
 
   private async configureOauth(config: AuthConfig) {

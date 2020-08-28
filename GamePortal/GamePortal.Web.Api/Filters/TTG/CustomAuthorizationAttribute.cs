@@ -14,42 +14,38 @@ using Kbalan.TouchType.Logic.Services;
 using JetBrains.Annotations;
 using Ninject;
 using Kbalan.TouchType.Logic;
-
+using System.Security.Claims;
+using System.Diagnostics;
+using Newtonsoft.Json;
 
 namespace GamePortal.Web.Api.Filters.TTG
 {
 
         public class CustomAuthorizationAttribute : Attribute, IAuthorizationFilter
         {
-        private readonly IUserService userService;
-
         private string[] usersList;
 
-        IKernel kernel = new StandardKernel(new TTGDIModule());
+
         public CustomAuthorizationAttribute( params string[] users)
             {
-            this.userService = kernel.Get<IUserService>();
-  
             this.usersList = users;
             }
-            public async Task<HttpResponseMessage> ExecuteAuthorizationFilterAsync(HttpActionContext actionContext,
-                            CancellationToken cancellationToken, Func<Task<HttpResponseMessage>> continuation)
-            {
 
-            IPrincipal principal = actionContext.RequestContext.Principal;
+        public async Task<HttpResponseMessage> ExecuteAuthorizationFilterAsync(HttpActionContext actionContext,
+                        CancellationToken cancellationToken, Func<Task<HttpResponseMessage>> continuation)
+        {
 
-            string id = principal.Identity.GetUserId();
-            var userrole = await userService.GetRoleByIdAsync(id);
-            if (principal == null || !usersList.Contains(userrole))
+            string id = HttpContext.Current.Request.Headers["id-token"];
+            if (id == null || !usersList.Contains(id))
                 {
                     return await Task.FromResult<HttpResponseMessage>(
-                           actionContext.Request.CreateResponse(HttpStatusCode.Unauthorized));
+                            actionContext.Request.CreateResponse(HttpStatusCode.Unauthorized));
                 }
                 else
                 {
                     return await continuation();
                 }
-            }
+        }
             public bool AllowMultiple
             {
                 get { return false; }

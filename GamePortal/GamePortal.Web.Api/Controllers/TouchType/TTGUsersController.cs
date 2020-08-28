@@ -11,12 +11,15 @@ using System.Web.Http;
 using FluentValidation;
 using FluentValidation.WebApi;
 using GamePortal.Web.Api.Filters.TTG;
+using GamePortal.Web.Api.Hubs;
+using IdentityModel;
 using JetBrains.Annotations;
 using Kbalan.TouchType.Logic.Dto;
 using Kbalan.TouchType.Logic.Exceptions;
 using Kbalan.TouchType.Logic.Services;
 using Kbalan.TouchType.Logic.Validators;
 using Microsoft.AspNet.Identity;
+using Microsoft.AspNet.SignalR;
 using Microsoft.Owin.Security;
 
 namespace GamePortal.Web.Api.Controllers.TouchType
@@ -24,8 +27,7 @@ namespace GamePortal.Web.Api.Controllers.TouchType
     /// <summary>
     /// Controller for User
     /// </summary>
-    [Authorize]
-    [CustomAuthorization("administrator")]
+    [System.Web.Http.Authorize]
     [RoutePrefix("api/users")]
     public class TTGUsersController : ApiController
     {
@@ -79,6 +81,7 @@ namespace GamePortal.Web.Api.Controllers.TouchType
             return result.IsSuccess ? Ok(result.Value.Value) : (IHttpActionResult)BadRequest(result.Error);
         }
         
+        //login
         [AllowAnonymous]
         [HttpPost, Route("login")]
         public async Task<IHttpActionResult> Login([FromBody]LoginDto model)
@@ -104,9 +107,12 @@ namespace GamePortal.Web.Api.Controllers.TouchType
         //Delete User by Id
         [HttpDelete]
         [Route("{id}")]
+        [CustomAuthorization("administrator")]
         public async Task<IHttpActionResult> DeleteAsync(string id)
         {
-
+            var name = _userService.GetNameById(id);
+            var ctx = GlobalHost.ConnectionManager.GetHubContext<GameHub>();
+            ctx.Clients.All.DeleteUser(id);
             var result =  await _userService.DeleteAsync(id);
             return result.IsSuccess ? Ok($"User {id} deleted with his setting and statistic succesfully!") : (IHttpActionResult)BadRequest(result.Error);
 
@@ -114,6 +120,7 @@ namespace GamePortal.Web.Api.Controllers.TouchType
 
         [HttpGet]
         [Route("block/{id}")]
+        [CustomAuthorization("administrator")]
         //Post : /api/users/block/id
         public async Task<IHttpActionResult> BlockAsync(string id)
         {
@@ -123,6 +130,7 @@ namespace GamePortal.Web.Api.Controllers.TouchType
 
         [HttpGet]
         [Route("unblock/{id}")]
+        [CustomAuthorization("administrator")]
         //Post : /api/users/block/id
         public async Task<IHttpActionResult> UnBlockAsync(string id)
         {
@@ -132,6 +140,7 @@ namespace GamePortal.Web.Api.Controllers.TouchType
 
         [HttpGet]
         [Route("mkadmin/{id}")]
+        [CustomAuthorization("administrator")]
         //Post : /api/users/mkadmin/id
         public async Task<IHttpActionResult> MakeRoleAdminAsync(string id)
         {
@@ -141,6 +150,7 @@ namespace GamePortal.Web.Api.Controllers.TouchType
 
         [HttpGet]
         [Route("mkuser/{id}")]
+        [CustomAuthorization("administrator")]
         //Post : /api/users/mkuser/id
         public async Task<IHttpActionResult> MakeRoleUserAsync(string id)
         {
